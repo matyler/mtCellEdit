@@ -1,0 +1,116 @@
+CEDUTILS
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedutils - spreadsheet utilities
+
+
+= SYNOPSIS =
+**cedutils** [ **OPTION** ]...
+
+
+= DESCRIPTION =
+mtCedUtils is a collection of command line functions for manipulating TSV or CSV spreadsheet text.  These functions can be executed using **cedutils** or the function names directly as listed in the **SEE ALSO** section.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-anti**
+	Rotate clockwise (default).
+**-case**
+	Case sensitive search.
+**-clock**
+	Rotate clockwise (default).
+**-col**
+	**cedappend** - Place the following files horizontally.
+	**cedcut** - Cut column(s).
+	**cedflip** - Flip columns horizontally.
+	**cedinsert** - Insert column(s).
+	**cedsort** - Sort columns.
+**-com** STRING
+	Change command (with or without ced prefix).  Available commands:
+	cedappend,
+	cedclear,
+	cedcut,
+	ceddiff,
+	cedeval,
+	cedfind,
+	cedflip,
+	cedinsert,
+	cedls,
+	cedpaste,
+	cedrotate,
+	cedset,
+	cedsort,
+	cedtranspose
+**-csv**
+	The following input file is CSV.
+**-dest** STRING
+	Paste to this section of the sheet (default = r1c1:r1c1 ).
+	When a single cell, paste whole of input.  Otherwise truncate
+	or repeat input data to fill the dest range.
+**-i** STRING
+	Load this input file.  "-" loads from stdin.
+**-num**
+	Find numerical value.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-range** STRING
+	**cedclear** - Clear these cells (default = r1c1:r_c_ ).
+	**cedfind** - Search in this range (default = r1c1:r_c_ ).
+	**cedpaste** - Paste from this section of the input file (default = r1c1:r_c_ ).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-row**
+	**cedappend** - Place the following files vertically (default).
+	**cedcut** - Cut row(s) (default).
+	**cedlip** - Flip rows vertically (default).
+	**cedinsert** - Insert row(s) (default).
+	**cedsort** - Sort rows (default)
+**-start** INTEGER
+	**cedcut** - Start cutting at this row or column (default = 1).
+	**cedinsert** - Start inserting at this row or column (default = 1).
+	**cedsort** - First row/column to sort from (default = 1).
+**-total** INTEGER
+	**cedcut** - Total number of rows or columns to cut (default = 1).
+	**cedinsert** - Total number of rows or columns to insert (default = 1).
+	**cedsort** - Total rows/colums to sort (default = 1 = all).
+**-tsv**
+	The following input file is TSV (default).
+**-v**
+	Verbose.
+	**cedfind** - Output the cell content as well as the address.
+**-wildcard**
+	* and ? characters are wildcards.
+
+
+= SEE ALSO =
+cedappend(1),
+cedclear(1),
+cedcut(1),
+ceddiff(1),
+cedeval(1),
+cedfind(1),
+cedflip(1),
+cedinsert(1),
+cedls(1),
+cedpaste(1),
+cedrotate(1),
+cedset(1),
+cedsort(1),
+cedtranspose(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

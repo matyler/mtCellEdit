@@ -1,0 +1,13 @@
+Source: mtraft-qt4
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtcelledit, libqt4-dev, libmtqex4
+Standards-Version: 3.9.3
+Homepage: http://mtcelledit.sourceforge.net/
+
+Package: mtraft-qt4
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt4 Directory Analysis Tool
+ .

@@ -1,0 +1,72 @@
+set cell rubbish
+new
+
+set cell "more rubbish"
+new book
+
+# ERROR - nothing to undo or redo
+undo
+undo
+redo
+redo
+
+set cell "default cell position"
+
+select r3c3
+set cell -0.01234567
+
+select r4c3:r5c4
+set cell "= 2.14 + 3.0 + 17 - 2.2"
+
+select r5c3
+set cell "25/11/1912"
+
+select r6c3
+set cell "25/11/12"
+
+select r7c3
+set cell "double quotes \" test"
+
+select r8c3
+set cell "'single quotes ' test"
+
+undo
+undo
+undo
+undo
+undo
+undo
+
+save as tmp/base_undo0.tsv.zip
+save as tmp/base_undo1.tsv.zip
+
+redo
+redo
+redo
+redo
+redo
+redo
+
+save
+
+duplicate sheet
+new sheet
+rename sheet "A new empty sheet"
+
+set cell "=sum( 'Sheet 1'r1c1:r_c_ )"
+
+save as		tmp/base0.tsv.zip
+save as		tmp/base1.tsv.zip	tsv_book
+save as		tmp/base2.tsv.zip	tsv_value_book
+save as		tmp/base3.ledger.zip	ledger_book
+save as		tmp/base4.ledger.zip	ledger_value_book
+
+# ERROR - bad file type
+save as tmp/base5.tsv.zip "strange file type"
+
+quit
+
+# ERROR - we have quit at this point
+save as tmp/base6.tsv.zip
+
+

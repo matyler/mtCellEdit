@@ -1,0 +1,4 @@
+load			tmp/base1.51.02.tsv.zip
+
+print prefs book
+list files

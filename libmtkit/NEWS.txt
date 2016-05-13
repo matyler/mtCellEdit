@@ -1,0 +1,76 @@
+2.7	2016-5-14
+
+	* mtString added.
+	* mtImage inherited from old libmtIMG.
+
+2.6	2015-9-6
+
+	* Compiles with older versions of GCC.
+	* mtkit_strfreeswap() renamed mtkit_strfreedup()
+
+2.5	2015-5-24
+
+	* mtkit_zip_load() now always returns a 0 NUL byte after bytes loaded from file. i.e. buf[buf_len] == 0
+	* BUGFIX: memory leak and other errors cleared up (clang analyzer)
+	* BUGFIX: mtkit_prefs_new() & mtkit_prefs_add()
+
+2.4	2014-8-10
+
+	* unsigned int types cleaned up.
+	* mtkit_strncpy0 -> mtkit_strnncpy and hardened.
+	* Hardening: sprintf -> snprintf, mtkit_strnncat.
+	* mtKit renamed to libmtKit.
+
+2.3	2014-2-22
+
+
+2.3	2014-2-22
+
+	* mtkit_utf8_from_cstring() added
+	* Prefs changes: No static table required any more as all data is now dynamic in the tree.
+
+2.2	2013-8-25
+
+	* Simplifications, cruft removal, and other housekeeping.
+
+2.1	2013-3-24
+
+	* mtkit_string_argv [_free] added.
+	* mtkit_file_header_ (gz,zip) added.
+	* mtkit_strtoddt() now relaxed about whitespaces between items.
+
+2.0	2012-3-25
+
+1.6.0	2012-1-25
+
+	* mtFile added for memory/disk file creation.
+	* mtkit_utree_save_file_mem() added.
+
+1.4.1	2011-8-14
+
+	* mtkit_prefs_value_copy() added
+
+1.4.0	2011-4-25
+
+	* mtkit_strtoi() - String read as hex for 0x prefix
+	* API for saving ZIP file changed
+	* mtkit_file_load_zip: directories are now skipped (0 byte files ending with /)
+	* System endian flags added: MTKIT_ENDIAN_LITTLE MTKIT_ENDIAN_BIG
+	* Comments in utree files can now appear anywhere
+
+1.2.0	2010-12-25
+
+	* mtkit_file_readline() added
+	* utree.c - empty comment /**/ is now illegal and won't be parsed
+	* utree.c - & substitution changed to \ - see examples/utree
+
+1.0.0	2010-6-25
+
+0.10.0	2010-1-5
+
+	* mtkit_file_load/save functions added including gzip compression
+	* mtkit_file_zip* functions added to read/write ZIP archive files
+
+0.9.0	2009-1-26
+
+	* Project started as fork from mtMintKit 0.9.0

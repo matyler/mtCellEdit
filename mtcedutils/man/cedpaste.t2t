@@ -1,0 +1,50 @@
+CEDPASTE
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedpaste - paste data into spreadsheet
+
+
+= SYNOPSIS =
+**cedpaste** [ [ **OPTION** ] [ FILE ] ]...
+
+
+= DESCRIPTION =
+Load first file, and paste subsequent files onto the sheet.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	The following input file is CSV.
+**-dest** STRING
+	Paste to this section of the sheet (default = r1c1:r1c1 ).
+	When a single cell, paste whole of input.  Otherwise truncate
+	or repeat input data to fill the dest range.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-range** STRING
+	Paste from this section of the input file (default = r1c1:r_c_ ).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

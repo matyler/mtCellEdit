@@ -1,0 +1,48 @@
+CEDAPPEND
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedappend - append spreadsheet cells
+
+
+= SYNOPSIS =
+**cedappend** [ [ **OPTION** ] [ FILE ] ]...
+
+
+= DESCRIPTION =
+Append TSV and CSV file data vertically or horizontally.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-col**
+	Place the following files horizontally.
+**-csv**
+	The following input file is CSV.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-row**
+	Place the following files vertically (default).
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

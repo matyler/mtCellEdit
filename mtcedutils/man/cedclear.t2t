@@ -1,0 +1,46 @@
+CEDCLEAR
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedclear - clear spreadsheet cells
+
+
+= SYNOPSIS =
+**cedclear** [ [ **OPTION** ] [ FILE ] ]...
+
+
+= DESCRIPTION =
+Clear cells in a spreadsheet.  If FILE=="" then use the current sheet in memory.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	The following input file is CSV.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-range** STRING
+	Clear these cells (default = r1c1:r_c_ ).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

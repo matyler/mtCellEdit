@@ -1,0 +1,38 @@
+CEDDIFF
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+ceddiff - compare spreadsheet cells
+
+
+= SYNOPSIS =
+**ceddiff** [ [ **OPTION** ] [ FILE ] ]...
+
+
+= DESCRIPTION =
+Compare spreadsheet files cell by cell.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	The following input file is CSV.
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

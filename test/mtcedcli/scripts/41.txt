@@ -1,0 +1,24 @@
+load tmp/base1.31.tsv.zip
+
+info
+find 1 value all
+list sheets
+
+print prefs sheet
+print prefs state
+
+set sheet "Sheet 1"
+select r4c3:r14c5
+
+print cell num
+print cell text
+print cell type
+print prefs cell
+print
+
+recalc book
+recalc sheet
+recalc
+
+= 2 + 3.1 + 4.3 - 1.35
+= sin( 1.2 ) + cos( 0.5 )

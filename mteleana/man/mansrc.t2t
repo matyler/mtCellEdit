@@ -1,0 +1,35 @@
+@BIN_UPPER@
+mtEleana @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+@BIN_NAME@ - election analysis
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+mtEleana is a program that allows the user to study the results of the UK General Elections from 1945 to 2015.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

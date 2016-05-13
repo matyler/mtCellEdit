@@ -1,0 +1,23 @@
+# Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+pkgname=mtrdc
+pkgver
+pkgrel=@MT_RELVER@
+pkgdesc="Random Data Creator"
+arch=('i686' 'x86_64' 'arm')
+license=('GPL3')
+depends=('libmtkit' 'libmtcelledit')
+source=($pkgname-$pkgver.tar.gz)
+md5sums
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  @MT_CONF@
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+}

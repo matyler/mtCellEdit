@@ -1,0 +1,3978 @@
+=counta( r[2]c:r_c )	=sum( r[2]c:r_c )	=counta( r[2]c:r_c )		=sum( r[2]c:r_c )	= 100 * rc5 / rc2
+Constituency Name	Electorate	Candidate (* = incumbent MP)	Party	Votes	County	Region
+
+Aberavon	49660	Hywel Francis	Labour	19063	West Glamorgan	Wales
+		Lisa Turnbull	Plaid Cymru	2955
+		Chris Davies	Liberal Democrats	2933
+		Ali Miraj	Conservative	2296
+		Andrew Tutton	Ratepayers & Tenants	1960
+		Captain Beany	New Millennium Bean Party	727
+		Martin Chapman	Socialist Alliance	256
+
+Aberdeen Central	50098	Frank Doran	Labour	12025	Grampian	East Scotland
+		Wayne Gault	Scottish National Party	5379
+		Eleanor Anderson	Liberal Democrats	4547
+		Stewart Whyte	Conservative	3761
+		Andy Cumbers	Scottish Socialist Party	717
+
+Aberdeen North	52746	Malcolm Savidge	Labour	13157	Grampian	East Scotland
+		Alasdair Allan	Scottish National Party	8708
+		Jim Donaldson	Liberal Democrats	4991
+		Richard Cowling	Conservative	3047
+		Shona Forman	Scottish Socialist Party	454
+
+Aberdeen South	58907	Anne Begg	Labour	14696	Grampian	East Scotland
+		Ian Yuill	Liberal Democrats	10308
+		Moray Macdonald	Conservative	7098
+		Ian Angus	Scottish National Party	4293
+		David Watt	Scottish Socialist Party	495
+
+Aberdeenshire West and Kincardine	61180	Robert Smith	Liberal Democrats	16507	Grampian	East Scotland
+		Tom Kerr	Conservative	11686
+		Kevin Hutchens	Labour	4669
+		John Green	Scottish National Party	4634
+		Alan Manley	Scottish Socialist Party	418
+
+Airdrie and Shotts	58349	Helen Liddell	Labour	18478	Glasgow area	West Scotland
+		Alison Lindsay	Scottish National Party	6138
+		John Love	Liberal Democrats	2376
+		Gordon McIntosh	Conservative	1960
+		Mary Dempsey	Scottish Unionist Party	1439
+		Kenny McGuigan	Scottish Socialist Party	1171
+		Christopher Herriot	Socialist Labour Party	174
+
+Aldershot	78262	Gerald Howarth	Conservative	19106	Hampshire	South
+		Adrian Collett	Liberal Democrats	12542
+		Luke Akehurst	Labour	11391
+		Derek Rumsey	UK Independence Party	797
+		Adam Stacey	Green	630
+		Arthur Pendragon	Independent	459
+		Alan Hope	Monster Raving Loony	390
+
+Aldridge-Brownhills	62388	Richard Shepherd	Conservative	18974	West Midlands	West Midlands
+		Ian Geary	Labour	15206
+		Monica Howes	Liberal Democrats	3251
+		John Rothery	Socialist Alliance	379
+
+Altrincham and Sale West	71820	Graham Brady	Conservative	20113	Central Manchester	Greater Manchester
+		Janet Baugh	Labour	17172
+		Christopher Gaskell	Liberal Democrats	6283
+
+Alyn and Deeside	60478	Mark Tami	Labour	18525	Clwyd	Wales
+		Mark Isherwood	Conservative	9303
+		Derek Burnham	Liberal Democrats	4585
+		Richard Coombs	Plaid Cymru	1182
+		Klaus Armstrong-Braun	Green	881
+		William Crawford	UK Independence Party	481
+		Max Cooksey	Independent	253
+		Glyn Davies	Communist of Britain	211
+
+Amber Valley	73798	Judy Mallaber	Labour	23101	Derbyshire	East Midlands
+		Gillian Shaw	Conservative	15874
+		Kate Smith	Liberal Democrats	5538
+
+Angus	59004	Michael Weir	Scottish National Party	12347	Tayside	East Scotland
+		Marcus Booth	Conservative	8736
+		Ian McFatridge	Labour	8183
+		Peter Nield	Liberal Democrats	5015
+		Bruce Wallace	Scottish Socialist Party	732
+
+Antrim East	60897	Roy Beggs	Ulster Unionist Party	13101	Northern Ireland	Northern Ireland
+		Sammy Wilson	Democratic Unionist Party	12973
+		John Mathews	Alliance Party of Northern Ireland	4483
+		Danny O'Connor	Social Democratic and Labour Party	2641
+		Robert Mason	Independent	1092
+		Jeanette Graffin	Sinn Fein	903
+		Alan Greer	Conservative	807
+
+Antrim North	74451	Ian Paisley	Democratic Unionist Party	24539	Northern Ireland	Northern Ireland
+		Lexie Scott	Ulster Unionist Party	10315
+		Sean Farren	Social Democratic and Labour Party	8283
+		John Kelly	Sinn Fein	4822
+		Jayne Dunlop	Alliance Party of Northern Ireland	1258
+
+Antrim South	70651	David Burnside	Ulster Unionist Party	16366	Northern Ireland	Northern Ireland
+		Robert McCrea	Democratic Unionist Party	15355
+		Sean McKee	Social Democratic and Labour Party	5336
+		Martin Meehan	Sinn Fein	4160
+		David Ford	Alliance Party of Northern Ireland	1969
+		Norman Boyd	Northern Ireland Unionist	972
+
+Argyll and Bute	49175	Alan Reid	Liberal Democrats	9245	Argyll and Bute	West Scotland
+		Hugh Raven	Labour	7592
+		David Petrie	Conservative	6436
+		Agnes Samuel	Scottish National Party	6433
+		Des Divers	Scottish Socialist Party	1251
+
+Arundel and South Downs	70956	Howard Flight	Conservative	23969	West Sussex	South East
+		Derek Deedman	Liberal Democrats	10265
+		Charles Taylor	Labour	9488
+		Robert Perrin	UK Independence Party	2167
+
+Ashfield	73428	Geoff Hoon	Labour	22875	Nottinghamshire	East Midlands
+		Julian Leigh	Conservative	9607
+		Bill Smith	Liberal Democrats	4428
+		Melvin Harby	Independent	1471
+		George Watson	Socialist Alliance	589
+		Katrina Howse	Socialist Labour Party	380
+
+Ashford	76699	Damien Green	Conservative	22739	Kent	South East
+		John Adams	Labour	15380
+		Keith Fitchett	Liberal Democrats	7236
+		Richard Boden	Green	1353
+		David Waller	UK Independence Party	1229
+
+Ashton under Lyne	72820	David Heyes	Labour	22340	Eastern Manchester	Greater Manchester
+		Tim Charlesworth	Conservative	6822
+		Kate Fletcher	Liberal Democrats	4237
+		Roger Woods	British National Party	1617
+		Nigel Rolland	Green	748
+
+Aylesbury	80002	David Lidington	Conservative	23230	Buckinghamshire	Essex
+		Peter Jones	Liberal Democrats	13221
+		Keith White	Labour	11388
+		Justin Harper	UK Independence Party	1248
+
+Ayr	55630	Sandra Osborne	Labour	16801	Ayrshire and Lanark	West Scotland
+		Phil Gallie	Conservative	14256
+		Jim Mather	Scottish National Party	4621
+		Stuart Ritchie	Liberal Democrats	2089
+		James Stewart	Scottish Socialist Party	692
+		Joseph Smith	UK Independence Party	101
+
+Banbury	83392	Anthony Baldry	Conservative	23271	Oxfordshire	West
+		Leslie Sibley	Labour	18052
+		Tony Worgan	Liberal Democrats	8216
+		Bevis Cotton	Green	1281
+		Stephen Harris	UK Independence Party	695
+
+Banff and Buchan	56496	Alex Salmond	Scottish National Party	16710	Grampian	East Scotland
+		Alexander Wallace	Conservative	6207
+		Edward Harris	Labour	4363
+		Douglas Herbison	Liberal Democrats	2769
+		Alice Rowan	Scottish Socialist Party	447
+		Eric Davidson	UK Independence Party	310
+
+Barking	55229	Margaret Hodge	Labour	15302	Barking and Dagenham	North London
+		Mike Weatherley	Conservative	5768
+		Anura Keppetipola	Liberal Democrats	2450
+		Mark Toleman	British National Party	1606
+
+Barnsley Central	60086	Eric Illsley	Labour	19181	South Yorkshire	Humberside
+		Alan Hartley	Liberal Democrats	4051
+		Ian McCord	Conservative	3608
+		Henry Rajch	Socialist Alliance	703
+
+Barnsley East and Mexborough	65655	Jeff Ennis	Labour	21945	South Yorkshire	Humberside
+		Sharron Brook	Liberal Democrats	5156
+		Matthew Offord	Conservative	4024
+		Terry Robinson	Socialist Labour Party	722
+		George Savage	UK Independence Party	662
+
+Barnsley West and Penistone	65291	Michael Clapham	Labour	20244	South Yorkshire	Humberside
+		William Rowe	Conservative	7892
+		Miles Crompton	Liberal Democrats	6428
+
+Barrow and Furness	64746	John Hutton	Labour	21724	Cumbria	North
+		James Airey	Conservative	11835
+		Barry Rabone	Liberal Democrats	4750
+		John Smith	UK Independence Party	711
+
+Basildon	74121	Angela Smith	Labour	21551	Essex	Essex
+		Dominic Schofield	Conservative	13813
+		Jane Smithard	Liberal Democrats	3691
+		Frank Mallon	UK Independence Party	1397
+		Dick Duane	Socialist Alliance	423
+
+Basingstoke	79110	Andrew Hunter	Conservative	20490	Hampshire	South
+		Jon Hartley	Labour	19610
+		Steve Sollitt	Liberal Democrats	6693
+		Kim-Elisbeth Graham	UK Independence Party	1202
+
+Bassetlaw	68302	John Mann	Labour	21506	Nottinghamshire	East Midlands
+		Alison Holley	Conservative	11758
+		Neil Taylor	Liberal Democrats	4942
+		Kevin Meloy	Socialist Labour Party	689
+
+Bath	71372	Don Foster	Liberal Democrats	23372	Bristol Area	West
+		Ashley Fox	Conservative	13478
+		Marilyn Hawkings	Labour	7269
+		Mike Boulton	Green	1469
+		Andrew Tettenborn	UK Independence Party	708
+
+Batley and Spen	63665	Mike Wood	Labour	19224	West Yorkshire	Yorkshire
+		Elizabeth Peacock	Conservative	14160
+		Kath Pinnock	Liberal Democrats	3989
+		Clive Lord	Green	595
+		Allen Burton	UK Independence Party	574
+
+Battersea	67495	Martin Linton	Labour	18498	Wandsworth	South London
+		Lucy Shersby	Conservative	13445
+		Siobhan Vitelli	Liberal Democrats	4450
+		Thomas Barber	Independent	411
+
+Beaconsfield	68378	Dominic Grieve	Conservative	20233	Buckinghamshire	Essex
+		Stephen Lathrope	Labour	9168
+		Stephen Lloyd	Liberal Democrats	9117
+		Andrew Moffatt	UK Independence Party	1626
+
+Beckenham	72241	Jacqui Lait	Conservative	20618	Bromley	South London
+		Richard Watts	Labour	15659
+		Alex Feakes	Liberal Democrats	7308
+		Karen Moran	Green	961
+		Christopher Pratt	UK Independence Party	782
+		Rif Winfield	Liberal	234
+
+Bedford	67763	Patrick Hall	Labour	19454	Bedfordshire	East Anglia
+		Nicky Attenborough	Conservative	13297
+		Michael Headley	Liberal Democrats	6425
+		Richard Rawlins	Independent	973
+		Jennifer L Bianco	UK Independence Party	430
+
+Bedfordshire Mid	70594	Jonathan Sayeed	Conservative	22109	Bedfordshire	East Anglia
+		James Valentine	Labour	14043
+		Graham Mabbutt	Liberal Democrats	9205
+		Christopher Laurence	UK Independence Party	1281
+
+Bedfordshire North East	69451	Alistair Burt	Conservative	22586	Bedfordshire	East Anglia
+		Philip Ross	Labour	14009
+		Dan Rogerson	Liberal Democrats	7409
+		Ros Hill	UK Independence Party	1242
+
+Bedfordshire South West	72126	Andrew Selous	Conservative	18477	Bedfordshire	East Anglia
+		Andrew Date	Labour	17701
+		Martin Pantling	Liberal Democrats	6473
+		Tom Wise	UK Independence Party	1203
+
+Belfast East	58455	Peter Robinson	Democratic Unionist Party	15667	Northern Ireland	Northern Ireland
+		Tim Lemon	Ulster Unionist Party	8550
+		David Alderdice	Alliance Party of Northern Ireland	5832
+		David Ervine	Progressive Unionist	3669
+		Joe O'Donnell	Sinn Fein	1237
+		Ciara Farren	Social Democratic and Labour Party	880
+		Terry Dick	Conservative	800
+		Joseph Bell	Workers Party of Ireland	123
+		Rainbow George Weiss	Independent Vote For Yourself	71
+
+Belfast North	60941	Nigel Dodds	Democratic Unionist Party	16718	Northern Ireland	Northern Ireland
+		Gerry Kelly	Sinn Fein	10331
+		Alban Maginness	Social Democratic and Labour Party	8592
+		Cecil Walker	Ulster Unionist Party	4904
+		Marcella Delaney	Workers Party of Ireland	253
+		Rainbow George Weiss	Independent Vote For Yourself	134
+
+Belfast South	59436	Martin Smyth	Ulster Unionist Party	17008	Northern Ireland	Northern Ireland
+		Alasdair McDonnell	Social Democratic and Labour Party	11609
+		Monica McWilliams	Women's Coalition (NI)	2968
+		Alex Maskey	Sinn Fein	2894
+		Geraldine Rice	Alliance Party of Northern Ireland	2042
+		Dawn Purvis	Progressive Unionist	1112
+		Paddy Lynn	Workers Party of Ireland	204
+		Rainbow George Weiss	Independent Vote For Yourself	115
+
+Belfast West	59617	Gerry Adams	Sinn Fein	27096	Northern Ireland	Northern Ireland
+		Alex Attwood	Social Democratic and Labour Party	7754
+		Eric Smyth	Democratic Unionist Party	2641
+		Chris McGimpsey	Ulster Unionist Party	2541
+		John Lowry	Workers Party of Ireland	736
+		David Kerr	Third Way	116
+		Rainbow George Weiss	Independent Vote For Yourself	98
+
+Berwick-upon-Tweed	56918	Alan Beith	Liberal Democrats	18651	Northumberland	North
+		Glen Sanderson	Conservative	10193
+		Martin Walker	Labour	6435
+		John Pearson	UK Independence Party	1029
+
+Bethnal Green and Bow	79192	Oona King	Labour	19380	Tower Hamlets	North London
+		Shahagir Faruk	Conservative	9323
+		Janet Ludlow	Liberal Democrats	5946
+		Anna Bragga	Green	1666
+		Michael Davidson	British National Party	1267
+		Dennis Delderfield	New Britain	888
+
+Beverley and Holderness	75146	James Cran	Conservative	19168	Humberside	Humberside
+		Pippa Langford	Labour	18387
+		Stewart Willie	Liberal Democrats	7356
+		Stephen Wallis	UK Independence Party	1464
+
+Bexhill and Battle	69010	Greg Barker	Conservative	21555	East Sussex	South East
+		Stephen Hardy	Liberal Democrats	11052
+		Anne Moore-Williams	Labour	8702
+		Nigel Farage	UK Independence Party	3474
+
+Bexleyheath and Crayford	63580	Nigel Beard	Labour	17593	Bexley	South London
+		David Evennett	Conservative	16121
+		Nickolas O'Hare	Liberal Democrats	4476
+		Colin Smith	British National Party	1408
+		John Dunford	UK Independence Party	780
+
+Billericay	78528	John Baron	Conservative	21608	Essex	Essex
+		Amanda Campbell	Labour	16595
+		Frank Bellard	Liberal Democrats	6323
+		Nick Yeomans	UK Independence Party	1072
+
+Birkenhead	60726	Frank Field	Labour	20418	Merseyside	Lancashire
+		Brian Stewart	Conservative	4827
+		Roy Wood	Liberal Democrats	3722
+
+Birmingham Edgbaston	67405	Gisela Stuart	Labour	18517	Birmingham	West Midlands
+		Nigel Hastilow	Conservative	13819
+		Nicola Davies	Liberal Democrats	4528
+		John Gretton	Pro-Euro Conservative	454
+		Sam Brackenbury	Socialist Labour Party	431
+
+Birmingham Erdington	65668	Sion Llewelyn Simon	Labour	17375	Birmingham	West Midlands
+		Oliver Lodge	Conservative	7413
+		Sandra Johnson	Liberal Democrats	3602
+		Michael Shore	National Front	681
+		Steve Goddard	Socialist Alliance	669
+		Mark Nattrass	UK Independence Party	521
+		Judith Sambrook-Marshall	Socialist Labour Party	343
+
+Birmingham Hall Green	57563	Stephen McCabe	Labour	18049	Birmingham	West Midlands
+		Chris White	Conservative	11401
+		Punjab Singh	Liberal Democrats	2926
+		Peter Johnson	UK Independence Party	708
+
+Birmingham Hodge Hill	55254	Terry Davis	Labour	16901	Birmingham	West Midlands
+		Debbie Lewis	Conservative	5283
+		Alistair Dow	Liberal Democrats	2147
+		Lee Windridge	British National Party	889
+		Parwez Hussain	People's Justice	561
+		Dennis Cridge	Socialist Labour Party	284
+		Harvey Vivian	UK Independence Party	275
+		Ayub Khan	Muslim	125
+
+Birmingham Ladywood	71113	Clare Short	Labour	21694	Birmingham	West Midlands
+		Benjamin Prentice	Conservative	3551
+		Mahmood Chaudhry	Liberal Democrats	2586
+		Allah Ditta	People's Justice	2112
+		Surinder Virdee	Socialist Labour Party	443
+		Mahmood Hussain	Muslim	432
+		James Caffery	ProLife Alliance	392
+		Anneliese Nattrass	UK Independence Party	283
+
+Birmingham Northfield	55922	Richard Burden	Labour	16528	Birmingham	West Midlands
+		Nils Purser	Conservative	8730
+		Trevor Sword	Liberal Democrats	3322
+		Stephen Rogers	UK Independence Party	550
+		Clive Walder	Socialist Alliance	193
+		Zane Carpenter	Socialist Labour Party	151
+		Andrew Chaffer	Communist of Britain	60
+
+Birmingham Perry Barr	71121	Khalid Mahmood	Labour	17415	Birmingham	West Midlands
+		David Binns	Conservative	8662
+		Jon Hunt	Liberal Democrats	8566
+		Avtar Singh Jouhl	Socialist Labour Party	1544
+		Caroline Johnson	Socialist Alliance	465
+		Natalya Nattrass	UK Independence Party	352
+		Michael Roche	Marxist	221
+		Robert Davidson	Muslim	192
+
+Birmingham Selly Oak	71237	Lynne Jones	Labour	21015	Birmingham	West Midlands
+		Ken Hardeman	Conservative	10676
+		David Osborne	Liberal Democrats	6532
+		Barney Smith	Green	1309
+		Beryl Williams	UK Independence Party	568
+
+Birmingham Yardley	52444	Estelle Morris	Labour	14085	Birmingham	West Midlands
+		John Hemming	Liberal Democrats	11507
+		Barrie Roberts	Conservative	3941
+		Alan Ware	UK Independence Party	329
+		Colin Wren	Socialist Labour Party	151
+
+Bishop Auckland	67377	Derek Foster	Labour	22680	Durham	North
+		Fiona McNish	Conservative	8754
+		Chris Foote-Wood	Liberal Democrats	6073
+		Carl Bennett	Green	1052
+
+Blaby	73907	Andrew Robathan	Conservative	22104	Leicestershire	East Midlands
+		David Morgan	Labour	15895
+		Geoff Welsh	Liberal Democrats	8286
+		Edward Scott	British National Party	1357
+
+Blackburn	72621	Jack Straw	Labour	21808	Lancashire	Lancashire
+		John Cotton	Conservative	12559
+		Imtiaz Patel	Liberal Democrats	3264
+		Dorothy Baxter	UK Independence Party	1185
+		Paul Morris	Independent	577
+		Terence Cullen	Socialist Labour Party	559
+		Frederick Nichol	Independent Socialist	532
+
+Blackpool North and Fleetwood	74456	Joan Humble	Labour	21610	Lancashire	Lancashire
+		Alan Vincent	Conservative	15889
+		Steven Bate	Liberal Democrats	4132
+		Colin Porter	UK Independence Party	950
+
+Blackpool South	74311	Gordon Marsden	Labour	21060	Lancashire	Lancashire
+		David Morris	Conservative	12798
+		Doreen Holt	Liberal Democrats	4115
+		Val Cowell	UK Independence Party	819
+
+Blaenau Gwent	53353	Llewellyn Smith	Labour	22855	Mid Glamorgan and Gwent	Wales
+		Adam Rykala	Plaid Cymru	3542
+		Edward Townsend	Liberal Democrats	2945
+		Huw Williams	Conservative	2383
+
+Blaydon	64574	John McWilliam	Labour	20340	Newcastle area	North
+		Peter Maughan	Liberal Democrats	12531
+		Mark Watson	Conservative	4215
+
+Blyth Valley	63274	Ronnie Campbell	Labour	20627	Northumberland	North
+		Jeff Reid	Liberal Democrats	8439
+		Wayne Daley	Conservative	5484
+
+Bognor Regis and Littlehampton	66903	Nick Gibb	Conservative	17602	West Sussex	South East
+		George O'Neill	Labour	11959
+		Pamela Peskett	Liberal Democrats	6846
+		George Stride	UK Independence Party	1779
+		Lilias Rider Haggar Cheyne	Green	782
+
+Bolsover	67537	Dennis Skinner	Labour	26249	Derbyshire	East Midlands
+		Simon Massey	Conservative	7472
+		Marie Bradley	Liberal Democrats	4550
+
+Bolton North East	69514	David Crausby	Labour	21166	Western Manchester	Greater Manchester
+		Michael Winstanley	Conservative	12744
+		Tim Perkins	Liberal Democrats	4004
+		Kenneth McIvor	Green	629
+		Lynne Lowe	Socialist Labour Party	407
+
+Bolton South East	68140	Brian Iddon	Labour	21129	Western Manchester	Greater Manchester
+		Haroon Rashid	Conservative	8258
+		Frank Harasiwka	Liberal Democrats	3941
+		William John Kelly	Socialist Labour Party	826
+
+Bolton West	66033	Ruth Kelly	Labour	19381	Western Manchester	Greater Manchester
+		James Stevens	Conservative	13863
+		Barbara Ronson	Liberal Democrats	7573
+		David Toomer	Socialist Alliance	397
+
+Bootle	56320	Joe E Benton	Labour	21400	Merseyside	Lancashire
+		Jim Murray	Liberal Democrats	2357
+		Judith Symes	Conservative	2194
+		Dave Flynn	Socialist Labour Party	971
+		Peter Glover	Socialist Alliance	672
+
+Boston and Skegness	69010	Mark Simmonds	Conservative	17298	Lincolnshire	Humberside
+		Elaine Bird	Labour	16783
+		Duncan Moffatt	Liberal Democrats	4994
+		Cyril Wakefield	UK Independence Party	717
+		Martin Harrison	Green	521
+
+Bosworth	69992	David Tredinnick	Conservative	20030	Leicestershire	East Midlands
+		Andrew Furlong	Labour	17750
+		Jon Ellis	Liberal Democrats	7326
+
+Bournemouth East	60454	David Atkinson	Conservative	15501	Dorset	South West
+		Andrew Garratt	Liberal Democrats	12067
+		Paul Nicholson	Labour	7107
+		George Chamberlaine	UK Independence Party	1124
+
+Bournemouth West	62038	John Butterfill	Conservative	14417	Dorset	South West
+		David Stokes	Labour	9699
+		Fiona Hornby	Liberal Democrats	8468
+		Cynthia Blake	UK Independence Party	1064
+
+Bracknell	81118	Andrew Mackay	Conservative	22962	Berkshire	South
+		Janet Keene	Labour	16249
+		Ray Earwicker	Liberal Democrats	8424
+		Lawrence Boxall	UK Independence Party	1266
+		Dominica Roberts	ProLife Alliance	324
+
+Bradford North	66454	Terry Rooney	Labour	17419	West Yorkshire	Yorkshire
+		Zahid Iqbal	Conservative	8450
+		David Ward	Liberal Democrats	6924
+		John Brayshaw	British National Party	1613
+		Steven Schofield	Green	611
+
+Bradford South	68450	Gerry Sutcliffe	Labour	19603	West Yorkshire	Yorkshire
+		Graham Tennyson	Conservative	9941
+		Alexander Wilson-Fletcher	Liberal Democrats	3717
+		Peter North	UK Independence Party	783
+		Tony Kelly	Socialist Labour Party	571
+		Ateeq Siddique	Socialist Alliance	302
+		George Riseborough	Defend The Welfare State Against Blairism	220
+
+Bradford West	71620	Marsha Singh	Labour	18401	West Yorkshire	Yorkshire
+		Mohammed Riaz	Conservative	14236
+		John Robinson	Green	2672
+		Abdul Rauf Khan	Liberal Democrats	2437
+		Imran Hussain	UK Independence Party	427
+		Farhan Khokhar	Asian League	197
+
+Braintree	79157	Alan Hurst	Labour	21123	Essex	Essex
+		Brooks Newmark	Conservative	20765
+		Peter Turner	Liberal Democrats	5664
+		James Abbott	Green	1241
+		Michael Nolan	Legalise Cannabis Alliance	774
+		Charles Cole	UK Independence Party	748
+
+Brecon and Radnorshire	52247	Roger Williams	Liberal Democrats	13824	Powys	Wales
+		Felix Aubel	Conservative	13073
+		Huw Irranca-Davis	Labour	8024
+		Brynach Parri	Plaid Cymru	1301
+		Ian Mitchell	Independent	762
+		Elizabeth Phillips	UK Independence Party	452
+		Robert Nicholson	Independent	80
+
+Brent East	58095	Paul Daisley	Labour	18325	Brent	North London
+		David Gauke	Conservative	5278
+		Nowsheen Bhatti	Liberal Democrats	3065
+		Simone Aspis	Green	1361
+		Sarah Macken	ProLife Alliance	392
+		Iris Cremer	Socialist Labour Party	383
+		Ashwin Tanna	UK Independence Party	188
+
+Brent North	58789	Barry Gardiner	Labour	20149	Brent	North London
+		Philip Allott	Conservative	9944
+		Paul Lorber	Liberal Democrats	3846
+
+Brent South	55891	Paul Boateng	Labour	20984	Brent	North London
+		Carupiah Selvarajah	Conservative	3604
+		Havard Hughes	Liberal Democrats	3098
+		Mick McDonnell	Socialist Alliance	491
+		Thomas Ma Stiofain	Residents and Motorists of Great Britain	460
+
+Brentford and Isleworth	84049	Ann Keen	Labour	23275	Hounslow	South London
+		Tim Mack	Conservative	12957
+		Gareth Hartwell	Liberal Democrats	5994
+		Nic Ferriday	Green	1324
+		Gerald Ingram	UK Independence Party	412
+		Danny Faith	Socialist Alliance	408
+		Asa Khaira	Independent	144
+
+Brentwood and Ongar	64695	Eric Pickles	Conservative	16558	Essex	Essex
+		Martin Bell	Independent	13737
+		David Kendall	Liberal Democrats	6772
+		Diana Johnson	Labour	5505
+		Ken Gulleford	UK Independence Party	611
+		Peter Pryke	Independent	239
+		David Bishop	Church of the Militant Elvis Party	68
+		Tony Appleton	Independent	52
+
+Bridgend	61496	Win Griffiths	Labour	19422	Mid Glamorgan and Gwent	Wales
+		Tania Brisby	Conservative	9377
+		Jean Barraclough	Liberal Democrats	5330
+		Monica Mahoney	Plaid Cymru	2652
+		Sara Jeremy	ProLife Alliance	223
+
+Bridgwater	74079	Ian Liddell-Grainger	Conservative	19354	Somerset	South West
+		Ian Thorn	Liberal Democrats	14367
+		William Monteith	Labour	12803
+		Vicky Gardner	UK Independence Party	1323
+
+Brigg and Goole	63536	Ian Cawsey	Labour	20066	Humberside	Humberside
+		Don Stewart	Conservative	16105
+		David Nolan	Liberal Democrats	3796
+		Godfrey Bloom	UK Independence Party	688
+		Michael Kenny	Socialist Labour Party	399
+
+Brighton Kemptown	67621	Desmond Turner	Labour	18745	East Sussex	South East
+		Geoffrey Theobald	Conservative	13823
+		Jan Marshall	Liberal Democrats	4064
+		Hugh Miller	Green	1290
+		James Chamberlain-Webber	UK Independence Party	543
+		John McLeod	Socialist Labour Party	364
+		Dave Dobbs	Free	227
+		Elaine Cook	ProLife Alliance	147
+
+Brighton Pavilion	69200	David Lepper	Labour	19846	East Sussex	South East
+		David Gold	Conservative	10203
+		Ruth Berry	Liberal Democrats	5348
+		Keith Taylor	Green	3806
+		Ian Fyvie	Socialist Labour Party	573
+		Bob Dobbs	Free	409
+		Stuart Hutchin	UK Independence Party	361
+		Marie Paragallo	ProLife Alliance	177
+
+Bristol East	70279	Jean Corston	Labour	22180	Bristol Area	West
+		Jack Lo-Presti	Conservative	8788
+		Brian Niblett	Liberal Democrats	6915
+		Geoff Collard	Green	1110
+		Roger Marsh	UK Independence Party	572
+		Mike Langley	Socialist Labour Party	438
+		Andy Pryor	Socialist Alliance	331
+
+Bristol North West	76756	Doug Naysmith	Labour	24436	Bristol Area	West
+		Charles Hansard	Conservative	13349
+		Peter Tyzack	Liberal Democrats	7387
+		Diane Carr	UK Independence Party	1149
+		Vince Horrigan	Socialist Labour Party	371
+
+Bristol South	72490	Dawn Primarolo	Labour	23299	Bristol Area	West
+		Richard Eddy	Conservative	9118
+		James Main	Liberal Democrats	6078
+		Glenn Vowles	Green	1233
+		Chris Prasad	UK Independence Party	496
+		Brian Drummond	Socialist Alliance	496
+		Giles Shorter	Socialist Labour Party	250
+
+Bristol West	84821	Valerie Davey	Labour	20505	Bristol Area	West
+		Stephen Williams	Liberal Democrats	16079
+		Pamela Chesters	Conservative	16040
+		John Devaney	Green	1961
+		Bernard Kennedy	Socialist Labour Party	590
+		Simon Muir	UK Independence Party	490
+
+Bromley and Chislehurst	68763	Eric Forth	Conservative	21412	Bromley	South London
+		Sue Polydorou	Labour	12375
+		Geoff Payne	Liberal Democrats	8180
+		Rob Bryant	UK Independence Party	1264
+
+Bromsgrove	68115	Julie Kirkbride	Conservative	23640	Hereford and Worcestershire	Severn
+		Peter McDonald	Labour	15502
+		Margaret Rowley	Liberal Democrats	5430
+		Ian Gregory	UK Independence Party	1112
+
+Broxbourne	68982	Marion Roe	Conservative	20487	Hertfordshire	Essex
+		David Prendergast	Labour	11494
+		Julia Davies	Liberal Democrats	4158
+		Martin Harvey	UK Independence Party	858
+		John Cope	British National Party	848
+
+Broxtowe	73675	Nick Palmer	Labour	23836	Nottinghamshire	East Midlands
+		Pauline Latham	Conservative	17963
+		David Watts	Liberal Democrats	7205
+
+Buckingham	65270	John Bercow	Conservative	24296	Buckinghamshire	Essex
+		Mark Seddon	Labour	10971
+		Isobel Wilson	Liberal Democrats	9037
+		Christopher Silcock	UK Independence Party	968
+
+Burnley	66393	Peter Pike	Labour	18195	Lancashire	Lancashire
+		Robert Frost	Conservative	7697
+		Paul Wright	Liberal Democrats	5975
+		Steven Smith	British National Party	4151
+		Richard Buttrey	UK Independence Party	866
+
+Burton	75194	Janet Dean	Labour	22783	Staffordshire	Severn
+		Maggie Punyer	Conservative	17934
+		David Fletcher	Liberal Democrats	4468
+		Ian Crompton	UK Independence Party	984
+		John Taylor	ProLife Alliance	288
+
+Bury North	71108	David Chaytor	Labour	22945	Western Manchester	Greater Manchester
+		John Walsh	Conservative	16413
+		Bryn Hackley	Liberal Democrats	5430
+
+Bury South	67276	Ivan Lewis	Labour	23406	Western Manchester	Greater Manchester
+		Nicola L Page	Conservative	10634
+		Tim Pickstone	Liberal Democrats	5499
+
+Bury St Edmunds	76146	David Ruffley	Conservative	21850	Suffolk	East Anglia
+		Mark Ereira	Labour	19347
+		Richard Williams	Liberal Democrats	6998
+		John Howlett	UK Independence Party	831
+		Mike Brundle	Independent	651
+		Michael Benwell	Socialist Labour Party	580
+
+Caernarfon	47354	Hywel Williams	Plaid Cymru	12894	Gwynedd	Wales
+		Martin Eaglestone	Labour	9383
+		Bronwen Naish	Conservative	4403
+		Mel Owain	Liberal Democrats	1823
+		Ifor Lloyd	UK Independence Party	550
+
+Caerphilly	67593	Wayne David	Labour	22597	Mid Glamorgan and Gwent	Wales
+		Lindsay Whittle	Plaid Cymru	8172
+		David Simmonds	Conservative	4413
+		Rob Roffe	Liberal Democrats	3649
+
+Caithness Sutherland and Easter Ross	41225	Vicount Thurso	Liberal Democrats	9041	Highland	East Scotland
+		Michael Meighan	Labour	6297
+		John Macadam	Scottish National Party	5273
+		Robert Rowantree	Conservative	3513
+		Karn Mabon	Scottish Socialist Party	544
+		Gordon Campbell	Independent	199
+
+Calder Valley	75298	Christine McCafferty	Labour	20244	West Yorkshire	Yorkshire
+		Sue Robson-Catling	Conservative	17150
+		Michael Taylor	Liberal Democrats	7596
+		Steve Hutton	Green	1034
+		John Nunn	UK Independence Party	729
+		Philip Lockwood	Legalise Cannabis Alliance	672
+
+Camberwell and Peckham	53694	Harriet Harman	Labour	17473	Southwark	South London
+		Donnachadh McCarthy	Liberal Democrats	3350
+		Jonathan Morgan	Conservative	2740
+		Storm Poorun	Green	805
+		John Mulrenan	Socialist Alliance	478
+		Robert Adams	Socialist Labour Party	188
+		Frank Sweeney	Workers Revolutionary Party	70
+
+Cambridge	70663	Anne Campbell	Labour	19316	Cambridgeshire	East Anglia
+		David Howarth	Liberal Democrats	10737
+		Graham Stuart	Conservative	9829
+		Stephen Lawrence	Green	1413
+		Howard Senter	Socialist Alliance	716
+		Len Baynes	UK Independence Party	532
+		Clare Underwood	ProLife Alliance	232
+		Margaret Courtney	Workers Revolutionary Party	61
+
+Cambridgeshire North East	79891	Malcolm Moss	Conservative	23132	Cambridgeshire	East Anglia
+		Dil Owen	Labour	16759
+		Richard Renaut	Liberal Democrats	6733
+		John Stevens	UK Independence Party	1189
+		Tony Hoey	ProLife Alliance	238
+
+Cambridgeshire North West	70569	Brian Mawhinney	Conservative	21895	Cambridgeshire	East Anglia
+		Anthea Cox	Labour	13794
+		Alastair Taylor	Liberal Democrats	6957
+		Barry Hudson	UK Independence Party	881
+		David Hall	Independent	429
+
+Cambridgeshire South	72095	Andrew Lansley	Conservative	21387	Cambridgeshire	East Anglia
+		Amanda Taylor	Liberal Democrats	12984
+		Joan Herbert	Labour	11737
+		Simon Saggers	Green	1182
+		Helene Davies	UK Independence Party	875
+		Beata Klepacka	ProLife Alliance	176
+
+Cambridgeshire South East	81663	James Paice	Conservative	22927	Cambridgeshire	East Anglia
+		Sal Brinton	Liberal Democrats	13937
+		Andrew Inchley	Labour	13714
+		Neil Scarr	UK Independence Party	1308
+
+Cannock Chase	73423	Ton Wright	Labour	23049	Staffordshire	Severn
+		Gavin Smithers	Conservative	12345
+		Stewart Reynolds	Liberal Democrats	5670
+
+Canterbury	74159	Julian Brazier	Conservative	18711	Kent	South East
+		Emily Thornberry	Labour	16642
+		Peter Wales	Liberal Democrats	8056
+		Hazel Dawe	Green	920
+		Lisa Moore	UK Independence Party	803
+
+Cardiff Central	59785	Jon Owen Jones	Labour	13451	South Glamorgan	Wales
+		Jenny Willott	Liberal Democrats	12792
+		Gregory Walker	Conservative	5537
+		Richard Grigg	Plaid Cymru	1680
+		Stephen Bartley	Green	661
+		Julian Goss	Socialist Alliance	283
+		Frank Hughes	UK Independence Party	221
+		Madeleine Jeremy	ProLife Alliance	217
+
+Cardiff North	62634	Julie Morgan	Labour	19845	South Glamorgan	Wales
+		Alastair Watson	Conservative	13680
+		John Dixon	Liberal Democrats	6631
+		Sion Jobbins	Plaid Cymru	2471
+		Don Hulston	UK Independence Party	613
+
+Cardiff South and Penarth	62125	Alun Michael	Labour	20094	South Glamorgan	Wales
+		Maureen Kell Owen	Conservative	7807
+		Rodney Berman	Liberal Democrats	4572
+		Lila Haines	Plaid Cymru	1983
+		Justin Callan	UK Independence Party	501
+		Dave Bartlett	Socialist Alliance	427
+		Anne Savoury	ProLife Alliance	367
+
+Cardiff West	58348	Kevin Brennan	Labour	18594	South Glamorgan	Wales
+		Andrew Davies	Conservative	7273
+		Jacqui Gasson	Liberal Democrats	4458
+		Delme Bowen	Plaid Cymru	3296
+		Joyce Jenking	UK Independence Party	462
+
+Carlisle	58811	Eric Martlew	Labour	17856	Cumbria	North
+		Mike Mitchelson	Conservative	12154
+		John Guest	Liberal Democrats	4076
+		Colin Paisley	Legalise Cannabis Alliance	554
+		Paul Wilcox	Socialist Alliance	269
+
+Carmarthen East and Dinefwr	54035	Adam Price	Plaid Cymru	16130	Dyfed	Wales
+		Alan Williams	Labour	13540
+		David Thomas	Conservative	4912
+		Doiran Evans	Liberal Democrats	2815
+		Mike Squires	UK Independence Party	656
+
+Carmarthen West and Pembrokeshire South	56518	Nick Ainger	Labour	15349	Dyfed	Wales
+		Robert Wilson	Conservative	10811
+		Llyr Hughe Griffiths	Plaid Cymru	6893
+		William Jeremy	Liberal Democrats	3248
+		Ian Phillips	UK Independence Party	537
+		Nick Turner	Direct Customer Service	78
+
+Carrick Cumnock and Doon Valley	64919	George Foulkes	Labour	22174	Ayrshire and Lanark	West Scotland
+		Gordon Miller	Conservative	7318
+		Tom Wilson	Scottish National Party	6258
+		Amy Rogers	Liberal Democrats	2932
+		Amanda McFarlane	Scottish Socialist Party	1058
+		James McDaid	Socialist Labour Party	367
+
+Carshalton and Wallington	67337	Tom Brake	Liberal Democrats	18289	Sutton	South London
+		Ken Andrew	Conservative	13742
+		Margaret Cooper	Labour	7466
+		Simon Dixon	Green	614
+		Martin Haley	UK Independence Party	501
+
+Castle Point	68108	Robert Spink	Conservative	17738	Essex	Essex
+		Christine Butler	Labour	16753
+		Billy Boulton	Liberal Democrats	3116
+		Ron Hurrell	UK Independence Party	1273
+		Douglas Roberts	Independent	663
+		Nik Searle	Truth	220
+
+Ceredigion	56118	Simon Thomas	Plaid Cymru	13241	Dyfed	Wales
+		Mark Williams	Liberal Democrats	9297
+		Paul Davies	Conservative	6730
+		David Grace	Labour	5338
+
+Charnwood	74836	Stephen Dorrell	Conservative	23283	Leicestershire	East Midlands
+		Sean Sheahan	Labour	15544
+		Susan King	Liberal Democrats	7835
+		Jamie Bye	UK Independence Party	1603
+
+Chatham and Aylesford	69759	Jonathan Shaw	Labour	19180	Kent	South East
+		Sean Holden	Conservative	14840
+		David Lettington	Liberal Democrats	4705
+		Gregory Knopp	UK Independence Party	1010
+
+Cheadle	69002	Patsy Calton	Liberal Democrats	18477	Eastern Manchester	Greater Manchester
+		Stephen Day	Conservative	18444
+		Howard Dawber	Labour	6086
+		Vincent Cavanagh	UK Independence Party	599
+
+Chelmsford West	78291	Simon Burns	Conservative	20446	Essex	Essex
+		Adrian Longden	Labour	14185
+		Stephen Robinson	Liberal Democrats	11197
+		Eleanor Burgess	Green	837
+		Ken Wedon	UK Independence Party	785
+		Christopher Philbin	Legalise Cannabis Alliance	693
+
+Cheltenham	67563	Nigel Jones	Liberal Democrats	19970	Gloucestershire	West
+		Rob Garnham	Conservative	14715
+		Andy Erlam	Labour	5041
+		Keith Bessant	Green	735
+		Dancing Ken Hanks	Monster Raving Loony	513
+		Jim Carver	UK Independence Party	482
+		Anthony Gates	ProLife Alliance	272
+		Roger Everest	Independent	107
+
+Chesham and Amersham	70021	Cheryl Gillan	Conservative	22867	Buckinghamshire	Essex
+		John Ford	Liberal Democrats	10985
+		Ken Hulme	Labour	8497
+		Ian Harvey	UK Independence Party	1367
+		Nick Wilkins	Green	1114
+		Gillian Duval	ProLife Alliance	453
+
+Chester, City Of	70382	Christine Russell	Labour	21760	Cheshire	Severn
+		David Jones	Conservative	14866
+		Tony Dawson	Liberal Democrats	6589
+		Allan Weddell	UK Independence Party	899
+		George Rogers	Independent	763
+
+Chesterfield	73252	Paul Holmes	Liberal Democrats	21249	Derbyshire	East Midlands
+		Reg Race	Labour	18663
+		Simon Hitchcock	Conservative	3613
+		Jeannie Robinson	Socialist Alliance	437
+		Bill Harrison	Socialist Labour Party	295
+		Christopher Rawson	Independent	184
+
+Chichester	77703	Andrew Tyrie	Conservative	23320	West Sussex	South East
+		Lynne Ravenscroft	Liberal Democrats	11965
+		Celia Barlow	Labour	10627
+		Douglas Denny	UK Independence Party	2308
+		Gavin Graham	Green	1292
+
+Chingford and Woodford Green	63252	George Iain Duncan Smith	Conservative	17834	Waltham Forest	North London
+		Jessica Webb	Labour	12347
+		John Beanse	Liberal Democrats	5739
+		Jean Griffin	British National Party	1062
+
+Chipping Barnet	70217	Sydney B Chapman	Conservative	19702	Barnet	North London
+		Damien Welfare	Labour	17001
+		Sean Hooker	Liberal Democrats	5753
+
+Chorley	77036	Lindsay Hoyle	Labour	25088	Lancashire	Lancashire
+		Peter Booth	Conservative	16644
+		Stephen Fenn	Liberal Democrats	5372
+		Graham Frost	UK Independence Party	848
+
+Christchurch	73503	Christopher Chope	Conservative	27306	Dorset	South West
+		Dorothy Webb	Liberal Democrats	13762
+		Judith Begg	Labour	7506
+		Margaret Strange	UK Independence Party	993
+
+Cities of London and Westminster	71935	Mark Field	Conservative	15737	City of Westminster	North London
+		Michael Katz	Labour	11238
+		Martin Horwood	Liberal Democrats	5218
+		Hugo Charlton	Green	1318
+		Colin Merton	UK Independence Party	464
+
+Cleethorpes	68392	Shona McIsaac	Labour	21032	Humberside	Humberside
+		Stephen Howd	Conservative	15412
+		Gordon Smith	Liberal Democrats	5080
+		Janet Hatton	UK Independence Party	894
+
+Clwyd South	53680	Martyn Jones	Labour	17217	Clwyd	Wales
+		Tom Biggins	Conservative	8319
+		Dyfed Edwards	Plaid Cymru	3982
+		David Griffiths	Liberal Democrats	3426
+		Edwina Theunissen	UK Independence Party	552
+
+Clwyd West	53960	Gareth Thomas	Labour	13426	Clwyd	Wales
+		Jimmy James	Conservative	12311
+		Elfed Williams	Plaid Cymru	4453
+		Bobbie Feeley	Liberal Democrats	3934
+		Matthew Guest	UK Independence Party	476
+
+Clydebank and Milngavie	52534	Tony Worthington	Labour	17249	Glasgow area	West Scotland
+		Jim Yuill	Scottish National Party	6525
+		Rod Ackland	Liberal Democrats	3909
+		Catherine Pickering	Conservative	3514
+		Dawn Brennan	Scottish Socialist Party	1294
+
+Clydesdale	64423	Jimmy Hood	Labour	17822	Dumfries and Galloway	West Scotland
+		Jim Wright	Scottish National Party	10028
+		Kevin Newton	Conservative	5034
+		Moira Craig	Liberal Democrats	4111
+		Paul Cockshott	Scottish Socialist Party	974
+		Donald MacKay	UK Independence Party	253
+
+Coatbridge and Chryston	52178	Tom Clarke	Labour	19807	Glasgow area	West Scotland
+		Peter Kearney	Scottish National Party	4493
+		Alistair Tough	Liberal Democrats	2293
+		Patrick Ross-Taylor	Conservative	2171
+		Lynne Sheridan	Scottish Socialist Party	1547
+
+Colchester	78955	Bob Russell	Liberal Democrats	18627	Essex	Essex
+		Kevin Bentley	Conservative	13074
+		Chris Fegan	Labour	10925
+		Roger Lord	UK Independence Party	631
+		Leonard Overy-Owen	Grey	479
+
+Colne Valley	74192	Kali Mountford	Labour	18967	West Yorkshire	Yorkshire
+		Philip Davies	Conservative	14328
+		Gordon Beever	Liberal Democrats	11694
+		Richard Plunkett	Green	1081
+		Arthur Quarmby	UK Independence Party	917
+
+Congleton	71941	Ann Winterton	Conservative	20872	Cheshire	Severn
+		John Flanagan	Labour	13738
+		David Lloyd-Griffiths	Liberal Democrats	9719
+		Bill Young	UK Independence Party	754
+
+Conwy	54751	Betty Williams	Labour	14366	Clwyd	Wales
+		David Logan	Conservative	8147
+		Vicky Macdonald	Liberal Democrats	5800
+		Ann Owen	Plaid Cymru	5665
+		Alan Barham	UK Independence Party	388
+
+Copeland	53526	Jack Cunningham	Labour	17991	Cumbria	North
+		Mike Graham	Conservative	13027
+		Mark Gayler	Liberal Democrats	3732
+
+Corby	72304	Phil Hope	Labour	23283	Northamptonshire	East Anglia
+		Andrew Griffith	Conservative	17583
+		Kevin Scudder	Liberal Democrats	4751
+		Ian Gillman	UK Independence Party	855
+		Andrew Dickson	Socialist Labour Party	750
+
+Cornwall North	84662	Paul Tyler	Liberal Democrats	28082	Cornwall	South West
+		John Weller	Conservative	18250
+		Mike Goodman	Labour	5257
+		Steve Protz	UK Independence Party	2394
+
+Cornwall South East	79090	Colin Breed	Liberal Democrats	23756	Cornwall	South West
+		Ashley Gray	Conservative	18381
+		Bill Stevens	Labour	6429
+		Graham Palmer	UK Independence Party	1978
+		Ken George	Mebyon Kernow	1209
+
+The Cotswolds	68154	Geoffrey Clifton-Brown	Conservative	23133	Gloucestershire	West
+		Angela Lawrence	Liberal Democrats	11150
+		Richard Wilkins	Labour	10383
+		Jill Stopps	UK Independence Party	1315
+
+Coventry North East	73998	Robert Ainsworth	Labour	22739	West Midlands	West Midlands
+		Gordon Bell	Conservative	6988
+		Geoffrey Sewards	Liberal Democrats	4163
+		David J Nellist	Socialist Alliance	2638
+		Edward Sheppard	British National Party	737
+
+Coventry North West	76652	Geoffrey Robinson	Labour	21892	West Midlands	West Midlands
+		Andrew Fairburn	Conservative	11018
+		Napier Penlington	Liberal Democrats	5832
+		Christine Oddy	Independent	3159
+		Mark Benson	UK Independence Party	650
+
+Coventry South	72527	Jim Cunningham	Labour	20125	West Midlands	West Midlands
+		Heather Wheeler	Conservative	11846
+		Vincent McKee	Liberal Democrats	5672
+		Rob Windsor	Socialist Alliance	1475
+		Irene Rogers	Independent	564
+		Timothy Logan	Socialist Labour Party	414
+
+Crawley	71626	Laura Moffatt	Labour	19488	West Sussex	South East
+		Henry Smith	Conservative	12718
+		Linda Seekings	Liberal Democrats	5009
+		Brian Galloway	UK Independence Party	1137
+		Claire Staniford	Monster Raving Loony	388
+		Arshad Khan	Justice Party	271
+		Karl Stewart	Socialist Labour Party	260
+		Muriel Hirsch	Socialist Alliance	251
+
+Crewe and Nantwich	69040	Gwyneth Dunwoody	Labour	22556	Cheshire	Severn
+		Donald Potter	Conservative	12650
+		David Cannon	Liberal Democrats	5595
+		Roger Croston	UK Independence Party	746
+
+Crosby	57375	Claire Curtis-Thomas	Labour	20327	Merseyside	Lancashire
+		Robert Collinson	Conservative	11974
+		Tim Drake	Liberal Democrats	4084
+		Mark Holt	Socialist Labour Party	481
+
+Croydon Central	77567	Geraint Davies	Labour	21643	Croydon	South London
+		David L Congdon	Conservative	17659
+		Paul Booth	Liberal Democrats	5156
+		James Feisenberger	UK Independence Party	545
+		Lynda Miller	British National Party	449
+		John Cartwright	Monster Raving Loony	408
+
+Croydon North	76600	Malcolm Wicks	Labour	26610	Croydon	South London
+		Simon Allison	Conservative	9752
+		Sandra Lawman	Liberal Democrats	4375
+		Alan Smith	UK Independence Party	606
+		Don Madgwick	Socialist Alliance	539
+
+Croydon South	73402	Richard Ottaway	Conservative	22169	Croydon	South London
+		Gerry Ryan	Labour	13472
+		Anne Gallop	Liberal Democrats	8226
+		Kathleen Garner	UK Independence Party	998
+		Mark Samuel	People's Choice	195
+
+Cumbernauld and Kilsyth	49739	Rosemary McKenna	Labour	16144	Glasgow area	West Scotland
+		David McGlashan	Scottish National Party	8624
+		John O'Donnell	Liberal Democrats	1934
+		Alison Ross	Conservative	1460
+		Kenny McEwan	Scottish Socialist Party	1287
+		Thomas Taylor	Scottish Freedom Referendum	250
+
+Cunninghame North	54993	Brian Wilson	Labour	15571	Glasgow area	West Scotland
+		Campbell Martin	Scottish National Party	7173
+		Richard Wilkinson	Conservative	6666
+		Ross Chmiel	Liberal Democrats	3060
+		Sean Scott	Scottish Socialist Party	964
+		Louise McDaid	Socialist Labour Party	382
+
+Cunninghame South	49982	Brian Donohoe	Labour	16424	Glasgow area	West Scotland
+		Bill Kidd	Scottish National Party	5194
+		Pam Paterson	Conservative	2682
+		John Boyd	Liberal Democrats	2094
+		Rosemary Byrne	Scottish Socialist Party	1233
+		Bobby Cochrane	Socialist Labour Party	382
+
+Cynon Valley	48591	Ann Clwyd	Labour	17685	Mid Glamorgan and Gwent	Wales
+		Steven Cornelius	Plaid Cymru	4687
+		Ian Parry	Liberal Democrats	2541
+		Julian Waters	Conservative	2045
+
+Dagenham	59340	Jon Cruddas	Labour	15784	Barking and Dagenham	North London
+		Michael White	Conservative	7091
+		Adrian Gee-Turner	Liberal Democrats	2820
+		David Hill	British National Party	1378
+		Berlyne Hamilton	Socialist Alliance	262
+		Robert Siggins	Socialist Labour Party	245
+
+Darlington	64328	Alan Milburn	Labour	22479	Cleveland	North
+		Tony Richmond	Conservative	12950
+		Robert Adamson	Liberal Democrats	4358
+		Alan Docherty	Socialist Alliance	469
+		Craig Platt	Independent	269
+		Amanda Rose	Socialist Labour Party	229
+
+Dartford	72258	Howard Stoate	Labour	21466	Kent	South East
+		Bob Dunn	Conservative	18160
+		Graham Morgan	Liberal Democrats	3781
+		Mark Croucher	UK Independence Party	989
+		Keith Davenport	Fancy Dress Party	344
+
+Daventry	86537	Tim Boswell	Conservative	27911	Northamptonshire	East Anglia
+		Kevin Quigley	Labour	18262
+		Jamie Calder	Liberal Democrats	9130
+		Peter Baden	UK Independence Party	1381
+
+Delyn	54732	David Hanson	Labour	17825	Clwyd	Wales
+		Paul Brierley	Conservative	9220
+		Tudor Jones	Liberal Democrats	5329
+		Paul Rowlinson	Plaid Cymru	2262
+
+Denton and Reddish	69236	Andrew Bennett	Labour	21913	Eastern Manchester	Greater Manchester
+		Paul Newman	Conservative	6583
+		Roger Fletcher	Liberal Democrats	4152
+		Alan Cadwallender	UK Independence Party	945
+
+Derby North	76489	Bob Laxton	Labour	22415	Derbyshire	East Midlands
+		Barrie Holden	Conservative	15433
+		Robert Charlesworth	Liberal Democrats	6206
+
+Derby South	77366	Margaret Beckett	Labour	24310	Derbyshire	East Midlands
+		Simon Spencer	Conservative	10455
+		Anders Hanson	Liberal Democrats	8310
+
+Derbyshire North East	71527	Harry Barnes	Labour	23437	Derbyshire	East Midlands
+		James Hollingsworth	Conservative	11179
+		Mark Higginbottom	Liberal Democrats	7508
+
+Derbyshire South	81010	Mark Todd	Labour	26338	Derbyshire	East Midlands
+		James Hakewill	Conservative	18487
+		Russell Eagling	Liberal Democrats	5233
+		John Blunt	UK Independence Party	1074
+		Paul Liversuch	Socialist Labour Party	564
+		James Taylor	Independent	249
+
+Derbyshire West	75067	Patrick McLoughlin	Conservative	24280	Derbyshire	East Midlands
+		Stephen J Clamp	Labour	16910
+		Jeremy Beckett	Liberal Democrats	7922
+		Stuart Bavester	UK Independence Party	672
+		Nick Delves	Monster Raving Loony	472
+		Robert Goodall	Independent	333
+
+Devizes	83655	Michael Ancram	Conservative	25159	Wiltshire	West
+		Jim Thorpe	Labour	13263
+		Helen Frances	Liberal Democrats	11756
+		Alan Wood	UK Independence Party	1521
+		Ludovic Kennedy	Independent	1078
+		Vanessa Potter	Monster Raving Loony	472
+
+Devon East	70278	Hugo Swire	Conservative	22681	Devon	South West
+		Tim Dumper	Liberal Democrats	14486
+		Phil Starr	Labour	7974
+		David Wilson	UK Independence Party	2696
+
+Devon North	72100	Nick Harvey	Liberal Democrats	21784	Devon	South West
+		Clive Allen	Conservative	18800
+		Viv Gale	Labour	4995
+		Roger Knapman	UK Independence Party	2484
+		Tony Bown	Green	1191
+
+Devon South West	70922	Gary Streeter	Conservative	21970	Devon	South West
+		Christopher Mavin	Labour	14826
+		Phil Hutty	Liberal Democrats	8616
+		Roger Bullock	UK Independence Party	1492
+
+Devon West and Torridge	78976	John Burnett	Liberal Democrats	23474	Devon	South West
+		Geoffrey Cox	Conservative	22280
+		David Brenton	Labour	5959
+		Bob Edwards	UK Independence Party	2674
+		Martin Quinn	Green	1297
+
+Dewsbury	62344	Ann Taylor	Labour	18524	West Yorkshire	Yorkshire
+		Robert Cole	Conservative	11075
+		Ian Cuthbertson	Liberal Democrats	4382
+		Russell Smith	British National Party	1632
+		Brenda Smithson	Green	560
+		David Peace	UK Independence Party	478
+
+Don Valley	66244	Caroline Flint	Labour	20009	South Yorkshire	Humberside
+		James Browne	Conservative	10489
+		Phillip Smith	Liberal Democrats	4089
+		Tony Wilde	Independent	800
+		David Cooper	UK Independence Party	777
+		Nigel Ball	Socialist Labour Party	466
+
+Doncaster Central	65087	Rosie Winterton	Labour	20034	South Yorkshire	Humberside
+		Gary Meggitt	Conservative	8035
+		Michael Southcombe	Liberal Democrats	4390
+		David Gordon	UK Independence Party	926
+		Janet Terry	Socialist Alliance	517
+
+Doncaster North	62124	Kevin Hughes	Labour	19788	South Yorkshire	Humberside
+		Anita Kapoor	Conservative	4601
+		Colin Ross	Liberal Democrats	3323
+		Martin Williams	Independent	2926
+		John Wallis	UK Independence Party	725
+
+Dorset Mid and Poole North	66675	Annette Brooke	Liberal Democrats	18358	Dorset	South West
+		Christopher Fraser	Conservative	17974
+		James Selby-Bennett	Labour	6765
+		Jeff Mager	UK Independence Party	621
+
+Dorset North	72140	Robert Walter	Conservative	22314	Dorset	South West
+		Emily Gasson	Liberal Democrats	18517
+		Mark Wareham	Labour	5334
+		Peter Jenkins	UK Independence Party	1019
+		Joseph Duthie	Low Excise Duty	391
+		Cora Bone	Independent	246
+
+Dorset South	69233	Jim Knight	Labour	19027	Dorset	South West
+		Ian Cameron Bruce	Conservative	18874
+		Andrew Canning	Liberal Democrats	6531
+		Laurence Moss	UK Independence Party	913
+
+Dorset West	74016	Oliver Letwin	Conservative	22126	Dorset	South West
+		Simon Green	Liberal Democrats	20712
+		Richard Hyde	Labour	6733
+
+Dover	69025	Gwyn Prosser	Labour	21943	Kent	South East
+		Paul Watkins	Conservative	16744
+		Antony Hook	Liberal Democrats	5131
+		Lee Speakman	UK Independence Party	1142
+
+Down North	63212	Sylvia Hermon	Ulster Unionist Party	20833	Northern Ireland	Northern Ireland
+		Robert McCartney	United Kingdom Unionist	13509
+		Marietta Farrell	Social Democratic and Labour Party	1275
+		Julian Robertson	Conservative	815
+		Chris C Carter	Independent	444
+		Eamon McConvey	Sinn Fein	313
+
+Down South	73519	Eddie McGrady	Social Democratic and Labour Party	24136	Northern Ireland	Northern Ireland
+		Mick Murphy	Sinn Fein	10278
+		Dermot Nesbitt	Ulster Unionist Party	9173
+		Jim Wells	Democratic Unionist Party	7802
+		Betty Campbell	Alliance Party of Northern Ireland	685
+
+Dudley North	68964	Ross Cranston	Labour	20095	West Midlands	West Midlands
+		Andrew Griffiths	Conservative	13295
+		Richard Burt	Liberal Democrats	3352
+		Simon Darby	British National Party	1822
+
+Dudley South	65578	Ian Pearson	Labour	18109	West Midlands	West Midlands
+		Jason Sugarman	Conservative	11292
+		Lorely Burt	Liberal Democrats	5421
+		John Westwood	UK Independence Party	859
+		Angela Thompson	Socialist Alliance	663
+
+Dulwich and West Norwood	70497	Tessa Jowell	Labour	20999	Lambeth	South London
+		Nick Vineall	Conservative	8689
+		Caroline Pidgeon	Liberal Democrats	5806
+		Jenny Jones	Green	1914
+		Brian Kelly	Socialist Alliance	839
+
+Dumbarton	56267	John McFall	Labour	16151	Glasgow area	West Scotland
+		Iain Robertson	Scottish National Party	6576
+		Eric Thompson	Liberal Democrats	5265
+		Peter Ramsay	Conservative	4648
+		Les Robertson	Scottish Socialist Party	1354
+
+Dumfries	62931	Russell Brown	Labour	20830	Dumfries and Galloway	West Scotland
+		John Charteris	Conservative	11996
+		John Ros Scott	Liberal Democrats	4955
+		Gerry Fisher	Scottish National Party	4103
+		John Dennis	Scottish Socialist Party	702
+
+Dundee East	56535	Iain Luke	Labour	14635	Tayside	East Scotland
+		Stewart Hosie	Scottish National Party	10160
+		Alan Donnelly	Conservative	3900
+		Raymond Lawrie	Liberal Democrats	2784
+		Harvey Duke	Scottish Socialist Party	879
+
+Dundee West	53760	Ernie Ross	Labour	14787	Tayside	East Scotland
+		Gordon Archer	Scottish National Party	7987
+		Ian Hail	Conservative	2656
+		Elizabeth Dick	Liberal Democrats	2620
+		Jim McFarlane	Scottish Socialist Party	1192
+
+Dunfermline East	52811	James Gordon Brown	Labour	19487	Fife	East Scotland
+		John Mellon	Scottish National Party	4424
+		Stuart Randall	Conservative	2838
+		John Mainland	Liberal Democrats	2281
+		Andy Jackson	Scottish Socialist Party	770
+		Tom Dunsmore	UK Independence Party	286
+
+Dunfermline West	54293	Rachel Squire	Labour	16370	Fife	East Scotland
+		Brian Goodall	Scottish National Party	5390
+		Russell McPhate	Liberal Democrats	4832
+		James Mackie	Conservative	3166
+		Kate Stewart	Scottish Socialist Party	746
+		Alastair Harper	UK Independence Party	471
+
+Durham North	67610	Kevan Jones	Labour	25920	Durham	North
+		Matthew Palmer	Conservative	7237
+		Carole Field	Liberal Democrats	5411
+
+Durham North West	67062	Hilary Armstrong	Labour	24526	Durham	North
+		William Clouston	Conservative	8193
+		Alan Ord	Liberal Democrats	5846
+		Joan Hartnell	Socialist Labour Party	661
+
+Durham, City Of	69633	Gerry Steinberg	Labour	23254	Durham	North
+		Carol Woods	Liberal Democrats	9813
+		Nick Cartmell	Conservative	7167
+		Chris Williamson	UK Independence Party	1252
+
+Ealing Acton and Shepherd's Bush	70697	Clive Soley	Labour	20144	Ealing	South London
+		Justine Greening	Conservative	9355
+		Martin Tod	Liberal Democrats	6171
+		Nick Grant	Socialist Alliance	529
+		Andrew Lawrie	UK Independence Party	476
+		Carlos Rule	Socialist Labour Party	301
+		Rebecca Ng	ProLife Alliance	225
+
+Ealing North	77524	Stephen Pound	Labour	25022	Ealing	South London
+		Charles Walker	Conservative	13185
+		Francesco Fruzza	Liberal Democrats	5043
+		Astra Seibe	Green	1039
+		Daniel Moss	UK Independence Party	668
+
+Ealing Southall	82373	Piara Khabra	Labour	22239	Ealing	South London
+		Daniel Kawczynski	Conservative	8556
+		Avtar Lit	Chairman of Sunrise Radio	5764
+		Baldev Sharma	Liberal Democrats	4680
+		Jane Cook	Green	2119
+		Salvinder Dhillon	Community Candidate Empowering Change	1214
+		Mushtaq Choudhry	Independent	1166
+		Harpal Brar	Socialist Labour Party	921
+		Mohammed Bhutta	Qari	169
+
+Easington	61532	John Cummings	Labour	25360	Durham	North
+		Philip Lovel	Conservative	3411
+		Christopher Ord	Liberal Democrats	3408
+		Dave Robinson	Socialist Labour Party	831
+
+East Ham	71255	Stephen Timms	Labour	27241	Newham	North London
+		Peter Campbell	Conservative	6209
+		Bridget Fox	Liberal Democrats	2600
+		Rod Finlayson	Socialist Labour Party	783
+
+East Kilbride	66572	Adam Ingram	Labour	22205	Ayrshire and Lanark	West Scotland
+		Archie Buchanan	Scottish National Party	9450
+		Ewan Hawthorn	Liberal Democrats	4278
+		Margaret McCulloch	Conservative	4238
+		David Stevenson	Scottish Socialist Party	1519
+
+East Lothian	58987	Anne Picking	Labour	17407	Edinburgh area	East Scotland
+		Hamish Mair	Conservative	6577
+		Judy Hayman	Liberal Democrats	6506
+		Hilary Brown	Scottish National Party	5381
+		Derrick White	Scottish Socialist Party	624
+		Jake Herriot	Socialist Labour Party	376
+
+Eastbourne	73784	Nigel Waterson	Conservative	19738	East Sussex	South East
+		Chris Berry	Liberal Democrats	17584
+		Gillian Roles	Labour	5967
+		Barry Jones	UK Independence Party	907
+		Theresia Williamson	Liberal	574
+
+Eastleigh	74603	David Chidgey	Liberal Democrats	19360	Hampshire	South
+		Conor Burns	Conservative	16302
+		Sam Jaffa	Labour	10426
+		Stephen Challis	UK Independence Party	849
+		Martha Lyn	Green	636
+
+Eastwood	68378	Jim Murphy	Labour	23036	Glasgow area	West Scotland
+		Raymond Robertson	Conservative	13895
+		Allan Steele	Liberal Democrats	6239
+		Stewart Maxwell	Scottish National Party	4137
+		Peter Murray	Scottish Socialist Party	814
+		Manar Tayan	Independent	247
+
+Eccles	68764	Ian Stewart	Labour	21395	Central Manchester	Greater Manchester
+		Peter Caillard	Conservative	6867
+		Bob Boyd	Liberal Democrats	4920
+
+Eddisbury	69181	Stephen O'Brien	Conservative	20556	Cheshire	Severn
+		Bill Eyres	Labour	15988
+		Paul Roberts	Liberal Democrats	6975
+		David Carson	UK Independence Party	868
+
+Edinburgh Central	66089	Alistair Darling	Labour	14495	Edinburgh area	East Scotland
+		Andrew Myles	Liberal Democrats	6353
+		Alastair Orr	Conservative	5643
+		Ian McKee	Scottish National Party	4832
+		Graeme Farmer	Green	1809
+		Kevin Williamson	Scottish Socialist Party	1258
+
+Edinburgh East and Musselburgh	59241	Gavin Strang	Labour	18124	Edinburgh area	East Scotland
+		Rob Munn	Scottish National Party	5956
+		Gary Peacock	Liberal Democrats	4981
+		Peter Finnie	Conservative	3906
+		Derek Durkin	Scottish Socialist Party	1487
+
+Edinburgh North and Leith	62475	Mark Lazarowicz	Labour	15271	Edinburgh area	East Scotland
+		Sebastian Tombs	Liberal Democrats	6454
+		Kaukab Stewart	Scottish National Party	5290
+		Iain Mitchell	Conservative	4626
+		Catriona Grant	Scottish Socialist Party	1334
+		Don Jacobsen	Socialist Labour Party	259
+
+Edinburgh Pentlands	59841	Lynda Clark	Labour	15797	Edinburgh area	East Scotland
+		Malcolm Rifkind	Conservative	14055
+		Stewart Gibb	Scottish National Party	4210
+		David Walker	Liberal Democrats	4210
+		James Mearns	Scottish Socialist Party	555
+		William McMurdo	UK Independence Party	105
+
+Edinburgh South	64012	Nigel Griffiths	Labour	15671	Edinburgh area	East Scotland
+		Marilyne MacLaren	Liberal Democrats	10172
+		Geoffrey Buchan	Conservative	6172
+		Heather Williams	Scottish National Party	3683
+		Colin Fox	Scottish Socialist Party	933
+		Linda Hendry	Legalise Cannabis Alliance	535
+
+Edinburgh West	61895	John Barrett	Liberal Democrats	16719	Edinburgh area	East Scotland
+		Elspeth Alexandra	Labour	9130
+		Iain Whyte	Conservative	8894
+		Alyn Smith	Scottish National Party	4047
+		Bill Scott	Scottish Socialist Party	688
+
+Edmonton	62294	Andy Love	Labour	20481	Enfield	North London
+		David Burrowes	Conservative	10709
+		Douglas Taylor	Liberal Democrats	2438
+		Gwyneth Rolph	UK Independence Party	406
+		Erol Basarik	Reform 2000	344
+		Howard Medwell	Socialist Alliance	296
+		Ram Saxena	Independent	100
+
+Ellesmere Port and Neston	68147	Andrew Miller	Labour	22964	Cheshire	Severn
+		Gareth Williams	Conservative	12103
+		Stuart Kelly	Liberal Democrats	4828
+		Henry Crocker	UK Independence Party	824
+		Geoff Nicholls	Green	809
+
+Elmet	70041	Colin Burgon	Labour	22038	West Yorkshire	Yorkshire
+		Andrew Millard	Conservative	17867
+		Madeleine Kirk	Liberal Democrats	5001
+		Andrew Spence	UK Independence Party	1031
+
+Eltham	57519	Clive Efford	Labour	17855	Greenwich	South London
+		Sharon Massey	Conservative	10859
+		Martin Morris	Liberal Democrats	4121
+		Terry Jones	UK Independence Party	706
+		Andrew Graham	Independent	251
+
+Enfield North	67756	Joan Ryan	Labour	17888	Enfield	North London
+		Nick Bois	Conservative	15597
+		Hilary Leighter	Liberal Democrats	3355
+		Ramon Johns	British National Party	605
+		Brian Hall	UK Independence Party	247
+		Michael Akerman	ProLife Alliance	241
+		Richard Course	Independent	210
+
+Enfield Southgate	66418	Stephen Twigg	Labour	21727	Enfield	North London
+		John Flack	Conservative	16181
+		Wayne Hoban	Liberal Democrats	2935
+		Elaine Graham-Leigh	Green	662
+		Roy Freshwater	UK Independence Party	298
+		Andrew Malakouna	Independent	105
+
+Epping Forest	72645	Eleanor Laing	Conservative	20833	Essex	Essex
+		Christopher Naylor	Labour	12407
+		Michael Heavens	Liberal Democrats	7884
+		Andrew Smith	UK Independence Party	1290
+
+Epsom and Ewell	74266	Chris Grayling	Conservative	22430	Surrey	South
+		Charles Mansell	Labour	12350
+		John Vincent	Liberal Democrats	10316
+		Graham Webster-Gardiner	UK Independence Party	1547
+
+Erewash	78484	Liz Blackman	Labour	23915	Derbyshire	East Midlands
+		Gregor MacGregor	Conservative	16983
+		Martin Garnett	Liberal Democrats	5586
+		Louise Smith	UK Independence Party	692
+		Steven Belshaw	British National Party	591
+		R U Seerius	Monster Raving Loony	428
+		Peter Waldock	Socialist Labour Party	401
+
+Erith and Thamesmead	66371	John Austin	Labour	19769	Bexley	South London
+		Mark Brooks	Conservative	8602
+		James Kempton	Liberal Democrats	3800
+		Hardev Dhillon	Socialist Labour Party	1180
+
+Esher and Walton	73541	Ian Taylor	Conservative	22296	Surrey	South
+		Joe McGowan	Labour	10758
+		Mark Marsh	Liberal Democrats	10241
+		Bernard Collignon	UK Independence Party	2236
+
+Essex North	71680	Bernard Jenkin	Conservative	21325	Essex	Essex
+		Philip Hawkins	Labour	14139
+		Trevor Ellis	Liberal Democrats	7867
+		George Curtis	UK Independence Party	1613
+
+Exeter	81942	Ben Bradshaw	Labour	26194	Devon	South West
+		Anne Jobson	Conservative	14435
+		Richard Copus	Liberal Democrats	6512
+		David Morrish	Liberal	2596
+		Paul Edwards	Green	1240
+		John Stuart	UK Independence Party	1109
+		Francis Choules	Socialist Alliance	530
+
+Falkirk East	57633	Michael Connarty	Labour	18536	Central	East Scotland
+		Isabel Hutton	Scottish National Party	7824
+		Bill Stevenson	Conservative	3252
+		Karen Utting	Liberal Democrats	2992
+		Tony Weir	Scottish Socialist Party	725
+		Raymond Stead	Socialist Labour Party	373
+
+Falkirk West	53583	Eric Joyce	Labour	16022	Central	East Scotland
+		David Kerr	Scottish National Party	7490
+		Simon Murray	Conservative	2321
+		Hugh O'Donnell	Liberal Democrats	2203
+		William Buchanan	Independent	1464
+		Mhairi McAlpine	Scottish Socialist Party	707
+		Hugh Lynch	Independent	490
+		Ronnie Forbes	Socialist Labour Party	194
+
+Falmouth and Camborne	72833	Candy Atherton	Labour	18532	Cornwall	South West
+		Nick Serpell	Conservative	14005
+		Julian Brazil	Liberal Democrats	11453
+		John Browne	UK Independence Party	1328
+		Hilda Wasley	Mebyon Kernow	853
+		Paul Holmes	Liberal	649
+
+Fareham	72678	Mark Hoban	Conservative	21389	Hampshire	South
+		James Carr	Labour	14380
+		Hugh Pritchard	Liberal Democrats	8503
+		William O'Brien	UK Independence Party	1175
+
+Faversham and Mid Kent	67995	Hugh Robertson	Conservative	18739	Kent	South East
+		Grahame Birchall	Labour	14556
+		Mike Sole	Liberal Democrats	5529
+		Jim Gascoyne	UK Independence Party	828
+		Penny Kemp	Green	799
+		Norman Davidson	Rock 'n' Roll Loony Party	600
+
+Feltham and Heston	73229	Alan Keen	Labour	21406	Hounslow	South London
+		Liz Mammatt	Conservative	8749
+		Andy Darley	Liberal Democrats	4998
+		Surinder Cheema	Socialist Labour Party	651
+		Warwick Prachar	Independent	204
+		Asa Khaira	Independent	169
+
+Fermanagh and South Tyrone	66640	Michelle Gildernew	Sinn Fein	17739	Northern Ireland	Northern Ireland
+		James Cooper	Ulster Unionist Party	17686
+		Tommy Gallagher	Social Democratic and Labour Party	9706
+		Jim Dixon	Independent	6843
+
+Fife Central	59597	John MacDougall	Labour	18310	Fife	East Scotland
+		David Alexander	Scottish National Party	8235
+		Elizabeth Riches	Liberal Democrats	2775
+		Jeremy Balfour	Conservative	2351
+		Morag Balfour	Scottish Socialist Party	841
+
+Fife North East	61900	Menzies Campbell	Liberal Democrats	17926	Fife	East Scotland
+		Mike Scott-Hayward	Conservative	8190
+		Claire Brennan	Labour	3950
+		Kris Murray-Browne	Scottish National Party	3596
+		Keith White	Scottish Socialist Party	610
+		Leslie Vo Goetz	Legalise Cannabis Alliance	420
+
+Finchley and Golders Green	76175	Rudi Vis	Labour	20205	Barnet	North London
+		John Marshall	Conservative	16489
+		Sarah Teather	Liberal Democrats	5266
+		Miranda Dunn	Green	1385
+		John de Roeck	UK Independence Party	330
+
+Folkestone and Hythe	71503	Michael Howard	Conservative	20645	Kent	South East
+		Peter Carroll	Liberal Democrats	14738
+		Albert Catterall	Labour	9260
+		John Baker	UK Independence Party	1212
+
+Forest of Dean	66240	Diana Organ	Labour	19350	Gloucestershire	West
+		Mark Harper	Conservative	17301
+		David Gayler	Liberal Democrats	5762
+		Simon Pickering	Green	1254
+		Allen Prout	UK Independence Party	661
+		Gerald Morgan	Independent	279
+
+Foyle	70943	John Hume	Social Democratic and Labour Party	24538	Northern Ireland	Northern Ireland
+		Mitchel McLaughlin	Sinn Fein	12988
+		William Hay	Democratic Unionist Party	7414
+		Andrew Davidson	Ulster Unionist Party	3360
+		Colm Cavanagh	Alliance Party of Northern Ireland	579
+
+Fylde	72207	Michael Jack	Conservative	23383	Lancashire	Lancashire
+		John Stockton	Labour	13773
+		John Begg	Liberal Democrats	6599
+		Lesley Brown	UK Independence Party	982
+
+Gainsborough	65871	Edward Leigh	Conservative	19555	Lincolnshire	Humberside
+		Alan Rhodes	Labour	11484
+		Steve Taylor	Liberal Democrats	11280
+
+Galloway and Upper Nithsdale	52756	Peter Duncan	Conservative	12222	Dumfries and Galloway	West Scotland
+		Malcolm Fleming	Scottish National Party	12148
+		Thomas Sloan	Labour	7258
+		Neil Wallace	Liberal Democrats	3698
+		Andy Harvey	Scottish Socialist Party	588
+
+Gateshead East and Washington West	64041	Joyce Quin	Labour	22903	Newcastle area	North
+		Ron Beadle	Liberal Democrats	4999
+		Elizabeth Campbell	Conservative	4970
+		Martin Rouse	UK Independence Party	743
+
+Gedling	68540	Vernon Coaker	Labour	22383	Nottinghamshire	East Midlands
+		Jonathan Bullock	Conservative	16785
+		Tony Gillam	Liberal Democrats	4648
+
+Gillingham	70898	Paul Clark	Labour	18782	Kent	South East
+		Tim Butcher	Conservative	16510
+		Jonathan Hunt	Liberal Democrats	5755
+		Tony Scholefield	UK Independence Party	933
+		Wynford Vaughan	Socialist Alliance	232
+
+Glasgow Anniesland	53290	John Robertson	Labour	15102	Glasgow area	West Scotland
+		Grant Thoms	Scottish National Party	4048
+		Christopher McGinty	Liberal Democrats	3244
+		Stewart Connell	Conservative	2651
+		Charlie McCarthy	Scottish Socialist Party	1486
+		Katherine McGavigan	Socialist Labour Party	191
+
+Glasgow Baillieston	49268	Jimmy Wray	Labour	14200	Glasgow area	West Scotland
+		Lachlan McNeill	Scottish National Party	4361
+		David Comrie	Conservative	1580
+		Jim McVicar	Scottish Socialist Party	1569
+		Charles Dundas	Liberal Democrats	1551
+
+Glasgow Cathcart	52094	Tom Harris	Labour	14902	Glasgow area	West Scotland
+		Josephine Docherty	Scottish National Party	4086
+		Richard Cook	Conservative	3662
+		Tom Henery	Liberal Democrats	3006
+		Ronnie Stevenson	Scottish Socialist Party	1730
+
+Glasgow Govan	54068	Mohammad Sarwar	Labour	12464	Glasgow area	West Scotland
+		Karen Neary	Scottish National Party	6064
+		Bob Stewart	Liberal Democrats	2815
+		Mark Menzies	Conservative	2167
+		Willie McGartland	Scottish Socialist Party	1531
+		John Foster	Communist of Britain	174
+		Badar Mirza	Independent	69
+
+Glasgow Kelvin	61534	George Galloway	Labour	12014	Glasgow area	West Scotland
+		Tamsin Mayberry	Liberal Democrats	4754
+		Frank Rankin	Scottish National Party	4513
+		Davina Rankin	Conservative	2388
+		Heather Ritchie	Scottish Socialist Party	1847
+		Tim Shand	Green	1286
+
+Glasgow Maryhill	55431	Ann McKechin	Labour	13420	Glasgow area	West Scotland
+		Alex Dingwall	Scottish National Party	3532
+		Stuart Callison	Liberal Democrats	2372
+		Gordon Scott	Scottish Socialist Party	1745
+		Gawain Towler	Conservative	1162
+
+Glasgow Pollok	49201	Ian Davidson	Labour	15487	Glasgow area	West Scotland
+		David Ritchie	Scottish National Party	4219
+		Keith Baldassara	Scottish Socialist Party	2512
+		Isabel Nelson	Liberal Democrats	1602
+		Rory O'Brien	Conservative	1407
+
+Glasgow Rutherglen	51855	Tommy McAvoy	Labour	16760	Glasgow area	West Scotland
+		Anne McLaughlin	Scottish National Party	4135
+		David Jackson	Liberal Democrats	3689
+		Malcolm Macaskill	Conservative	3301
+		William Bonnar	Scottish Socialist Party	1328
+
+Glasgow Shettleston	51557	David Marshall	Labour	13235	Glasgow area	West Scotland
+		Jim Byrne	Scottish National Party	3417
+		Rosie Kane	Scottish Socialist Party	1396
+		Lewis Hutton	Liberal Democrats	1105
+		Campbell Murdoch	Conservative	1082
+		Murdo Ritchie	Socialist Labour Party	230
+
+Glasgow Springburn	55192	Michael Martin	Speaker	16053	Glasgow area	West Scotland
+		Sandy Bain	Scottish National Party	4675
+		Carolyn Leckie	Scottish Socialist Party	1879
+		Daniel Houston	Scottish Unionist Party	1289
+		Richard Silvester	Independent	208
+
+Gloucester	81144	Parmjit Dhanda	Labour	22067	Gloucestershire	West
+		Paul James	Conservative	18187
+		Tim Bullamore	Liberal Democrats	6875
+		Terry Lines	UK Independence Party	822
+		Stewart Smyth	Socialist Alliance	272
+
+Gordon	59996	Malcolm G Bruce	Liberal Democrats	15928	Grampian	East Scotland
+		Nanette Milne	Conservative	8049
+		Rhona Kemp	Scottish National Party	5760
+		Ellis Thorpe	Labour	4730
+		John Sangster	Scottish Socialist Party	534
+
+Gosport	69626	Peter J Viggers	Conservative	17364	Hampshire	South
+		Richard Williams	Labour	14743
+		Roger Roberts	Liberal Democrats	6011
+		John Bowles	UK Independence Party	1162
+		Kevin Chetwynd	Socialist Labour Party	509
+
+Gower	58943	Martin Caton	Labour	17676	West Glamorgan	Wales
+		John Bushell	Conservative	10281
+		Sheila Waye	Liberal Democrats	4507
+		Siân Caiach	Plaid Cymru	3865
+		Tina Shrewsbury	Green	607
+		Darran Hickery	Socialist Labour Party	417
+
+Grantham and Stamford	74459	Quentin Davies	Conservative	21329	Lincolnshire	Humberside
+		John Robinson	Labour	16811
+		Jane Carr	Liberal Democrats	6665
+		Marilyn Swain	UK Independence Party	1484
+
+Gravesham	69590	Chris Pond	Labour	21773	Kent	South East
+		Jacques Arnold	Conservative	16911
+		Bruce Parmenter	Liberal Democrats	4031
+		William Jenner	UK Independence Party	924
+
+Great Grimsby	63157	Austin Mitchell	Labour	19118	Humberside	Humberside
+		James Cousins	Conservative	7634
+		Andrew d'Freitas	Liberal Democrats	6265
+
+Great Yarmouth	69131	Tony Wright	Labour	20344	Norfolk	East Anglia
+		Charles Reynolds	Conservative	15780
+		Maurice Leeke	Liberal Democrats	3392
+		Bertie Poole	UK Independence Party	850
+
+Greenock and Inverclyde	47884	David Cairns	Labour	14929	Glasgow area	West Scotland
+		Chic Brodie	Liberal Democrats	5039
+		Andrew Murie	Scottish National Party	4248
+		Alistair Haw	Conservative	3000
+		Davey Landels	Scottish Socialist Party	1203
+
+Greenwich and Woolwich	62530	Nick Raynsford	Labour	19691	Greenwich	South London
+		Richard Forsdyke	Conservative	6258
+		Russell Pyne	Liberal Democrats	5082
+		Stan Gain	UK Independence Party	672
+		Kirstie Paton	Socialist Alliance	481
+		Margaret Sharkey	Socialist Labour Party	352
+
+Guildford	76046	Sue Doughty	Liberal Democrats	20358	Surrey	South
+		Nick Aubyn	Conservative	19820
+		Joyce Still	Labour	6558
+		Sonya Porter	UK Independence Party	736
+		John Morris	Pacifist for Peace, Justice, Cooperation, Environment	370
+
+Hackney North and Stoke Newington	60444	Diane Abbott	Labour	18081	Hackney	North London
+		Pauline Dye	Conservative	4430
+		Meral Ece	Liberal Democrats	4170
+		Chit Yen Chong	Green	2184
+		Sukant Chandan	Socialist Labour Party	756
+
+Hackney South and Shoreditch	63990	Brian Sedgemore	Labour	19471	Hackney	North London
+		Tony Vickers	Liberal Democrats	4422
+		Paul White	Conservative	4180
+		Cecilia Prosper	Socialist Alliance	1401
+		Saim Kokshal	Reform 2000	471
+		Ivan Beavis	Communist of Britain	259
+		William Rogers	Workers Revolutionary Party	143
+
+Halesowen and Rowley Regis	65683	Sylvia Heal	Labour	20804	West Midlands	West Midlands
+		Les Jones	Conservative	13445
+		Patrick Harley	Liberal Democrats	4089
+		Alan Sheath	UK Independence Party	936
+
+Halifax	69870	Alice Mahon	Labour	19800	West Yorkshire	Yorkshire
+		James Walsh	Conservative	13671
+		John Durkin	Liberal Democrats	5878
+		Helen Martinek	UK Independence Party	1041
+
+Haltemprice and Howden	67055	David Davis	Conservative	18994	Humberside	Humberside
+		John Neal	Liberal Democrats	17091
+		Leslie Howell	Labour	6898
+		Joanne Robinson	UK Independence Party	945
+
+Halton	63673	Derek Twigg	Labour	23841	Cheshire	Severn
+		Chris Davenport	Conservative	6413
+		Peter Walker	Liberal Democrats	4216
+
+Hamilton North and Bellshill	53539	John Reid	Labour	18786	Ayrshire and Lanark	West Scotland
+		Chris Stephens	Scottish National Party	5225
+		William Frai Bell	Conservative	2649
+		Keith Legg	Liberal Democrats	2360
+		Shareen Blackall	Scottish Socialist Party	1189
+		Steve Mayes	Socialist Labour Party	195
+
+Hamilton South	46665	Bill Tynan	Labour	15965	Ayrshire and Lanark	West Scotland
+		John Wilson	Scottish National Party	5190
+		John Oswald	Liberal Democrats	2381
+		Neil Richardson	Conservative	1876
+		Gena Mitchell	Scottish Socialist Party	1187
+		Janice Murdoch	UK Independence Party	151
+
+Hammersmith and Fulham	79302	Iain Coleman	Labour	19801	Hammersmith and Fulham	North London
+		Matthew Carrington	Conservative	17786
+		Jon Burden	Liberal Democrats	5294
+		Daniel Lopez Dias	Green	1444
+		Gerald Roberts	UK Independence Party	375
+
+Hampshire East	78802	Michael Mates	Conservative	23950	Hampshire	South
+		Robert Booker	Liberal Democrats	15060
+		Barbara Burfoot	Labour	9866
+		Stephen R Coles	UK Independence Party	1413
+
+Hampshire North East	71323	James Arbuthnot	Conservative	23379	Hampshire	South
+		Mike Plummer	Liberal Democrats	10122
+		Barry Jones	Labour	8744
+		Graham Mellstrom	UK Independence Party	1702
+
+Hampshire North West	76359	George Young	Conservative	24374	Hampshire	South
+		Mick Mumford	Labour	12365
+		Alex Bentley	Liberal Democrats	10329
+		Stanley Oram	UK Independence Party	1563
+
+Hampstead and Highgate	65309	Glenda Jackson	Labour	16601	Camden	North London
+		Andrew Mennear	Conservative	8725
+		Jonathan Simpson	Liberal Democrats	7273
+		Andrew Cornwell	Green	1654
+		Helen Cooper	Socialist Alliance	559
+		Thomas McDermott	UK Independence Party	316
+		Sister XNunoftheabove	Independent	144
+		Mary Teale	ProLife Alliance	92
+		Amos Klein	Independent	43
+
+Harborough	73300	Edward Garnier	Conservative	20748	Leicestershire	East Midlands
+		Jill Hope	Liberal Democrats	15496
+		Raj Jethwa	Labour	9271
+		David Knight	UK Independence Party	912
+
+Harlow	67074	Bill Rammell	Labour	19169	Essex	Essex
+		Robert Halfon	Conservative	13941
+		Lorna Spenceley	Liberal Democrats	5381
+		Tony Bennett	UK Independence Party	1223
+		John Hobbs	Socialist Alliance	401
+
+Harrogate and Knaresborough	65185	Phil Willis	Liberal Democrats	23445	North Yorkshire	Yorkshire
+		Andrew Jones	Conservative	14600
+		Alastair MacDonald	Labour	3101
+		Bill Brown	UK Independence Party	761
+		John Cornforth	ProLife Alliance	272
+
+Harrow East	81575	Tony McNulty	Labour	26590	Harrow	North London
+		Peter Wilding	Conservative	15466
+		George Kershaw	Liberal Democrats	6021
+
+Harrow West	73505	Gareth Thomas	Labour	23142	Harrow	North London
+		Danny Finkelstein	Conservative	16986
+		Christopher Noyce	Liberal Democrats	5995
+		Peter Kefford	UK Independence Party	525
+
+Hartlepool	67652	Peter Mandelson	Labour	22506	Cleveland	North
+		Gus Robinson	Conservative	7935
+		Nigel Boddy	Liberal Democrats	5717
+		Arthur Scargill	Socialist Labour Party	912
+		Ian Cameron	Independent	557
+		John Booth	Independent	424
+
+Harwich	77539	Ivan Henderson	Labour	21951	Essex	Essex
+		Ian Sproat	Conservative	19355
+		Peter Wilcock	Liberal Democrats	4099
+		Tony Finnegan-Butler	UK Independence Party	2463
+		Clive Lawrance	Independent	247
+
+Hastings and Rye	70632	Michael Foster	Labour	19402	East Sussex	South East
+		Mark Coote	Conservative	15094
+		Graem Peters	Liberal Democrats	4266
+		Alan Coomber	UK Independence Party	911
+		Sally Phillips	Green	721
+		Gillian Bargery	Independent	486
+		John Ord-Clarke	Monster Raving Loony	198
+		Brett McLean	Rock 'n' Roll Loony Party	140
+
+Havant	70246	David Willetts	Conservative	17769	Hampshire	South
+		Peter Guthrie	Labour	13562
+		Helena Cole	Liberal Democrats	7508
+		Kevin Jacks	Green	793
+		Tim Cuell	UK Independence Party	561
+		Roy Stanley	Independent	244
+
+Hayes and Harlington	57561	John McDonnell	Labour	21279	Hillingdon	South London
+		Robert McLean	Conservative	7813
+		Nahid Boethe	Liberal Democrats	1958
+		Gary Burch	British National Party	705
+		Wally Kennedy	Socialist Alternative Party	648
+
+Hazel Grove	65107	Andrew Stunell	Liberal Democrats	20020	Eastern Manchester	Greater Manchester
+		Nadine Bargery	Conservative	11585
+		Martin Miller	Labour	6230
+		Gerald Price	UK Independence Party	643
+
+Hemel Hempstead	72086	Tony McWalter	Labour	25175	Hertfordshire	Essex
+		Paul Ivey	Conservative	17647
+		Neil Stuart	Liberal Democrats	5877
+		Barry Newton	UK Independence Party	920
+
+Hemsworth	67948	Jon Trickett	Labour	23036	West Yorkshire	Yorkshire
+		Elizabeth Truss	Conservative	7400
+		Ed Waller	Liberal Democrats	3990
+		Paul Turek	Socialist Labour Party	801
+
+Hendon	78212	Andrew Dismore	Labour	21432	Barnet	North London
+		Richard Evans	Conservative	14015
+		Wayne Casey	Liberal Democrats	4724
+		Craig Crosbie	UK Independence Party	409
+		Stella Taylor	Workers Revolutionary Party	164
+		Michael Stewart	Progress Democratic Members Decide Policy	107
+
+Henley	69081	Boris Johnson	Conservative	20466	Oxfordshire	West
+		Catherine Bearder	Liberal Democrats	12008
+		Janet Mathews	Labour	9367
+		Philip Collings	UK Independence Party	1413
+		Oliver Tickell	Green	1147
+
+Hereford	70305	Paul Keetch	Liberal Democrats	18244	Hereford and Worcestershire	Severn
+		Virginia Taylor	Conservative	17276
+		David Hallam	Labour	6739
+		Clive Easton	UK Independence Party	1184
+		David Gillett	Green	1181
+
+Hertford and Stortford	75141	Mark Prisk	Conservative	21074	Hertfordshire	Essex
+		Simon Speller	Labour	15471
+		Mione Goldspink	Liberal Democrats	9388
+		Stuart Rising	UK Independence Party	1243
+
+Hertfordshire North East	68790	Oliver Heald	Conservative	19695	Hertfordshire	Essex
+		Ivan Gibbons	Labour	16251
+		Alison Kingman	Liberal Democrats	7686
+		Michael Virgo	UK Independence Party	1013
+
+Hertfordshire South West	73367	Richard Page	Conservative	20933	Hertfordshire	Essex
+		Graham Dale	Labour	12752
+		Ed Featherstone	Liberal Democrats	12431
+		Colin Dale-Mills	UK Independence Party	847
+		Julia Goffin	ProLife Alliance	306
+
+Hertsmere	68780	James Clappison	Conservative	19855	Hertfordshire	Essex
+		Hilary Broderick	Labour	14953
+		Paul Thompson	Liberal Democrats	6300
+		James Dry	Socialist Labour Party	397
+
+Hexham	59807	Peter Atkinson	Conservative	18917	Northumberland	North
+		Paul Brannen	Labour	16388
+		Philip Latham	Liberal Democrats	6380
+		Alan Patterson	UK Independence Party	728
+
+Heywood and Middleton	73005	Jim Dobbin	Labour	22377	Eastern Manchester	Greater Manchester
+		Marilyn Hopkins	Conservative	10707
+		Ian Greenhalgh	Liberal Democrats	4329
+		Philip Burke	Liberal	1021
+		Christine West	Christian Democratic Party	345
+
+High Peak	73774	Tom Levitt	Labour	22430	Derbyshire	East Midlands
+		Simon Chapman	Conservative	17941
+		Peter Ashenden	Liberal Democrats	7743
+
+Hitchin and Harpenden	67196	Peter Lilley	Conservative	21271	Hertfordshire	Essex
+		Alan Amos	Labour	14608
+		John Murphy	Liberal Democrats	8076
+		John Saunders	UK Independence Party	606
+		Peter Rigby	Independent	363
+
+Holborn and St Pancras	62813	Frank Dobson	Labour	16770	Camden	North London
+		Nathaniel Green	Liberal Democrats	5595
+		Roseanne Serelli	Conservative	5258
+		Rob Whitley	Green	1875
+		Candy Udwin	Socialist Alliance	971
+		Joti Brar	Socialist Labour Party	359
+		Magnus Nielsen	UK Independence Party	301
+
+Hornchurch	61008	John Cryer	Labour	16514	Havering	North London
+		Robin Squire	Conservative	15032
+		Sarah Lea	Liberal Democrats	2928
+		Lawrence Webb	UK Independence Party	893
+		David Durant	Third Way	190
+
+Hornsey and Wood Green	75967	Barbara Roche	Labour	21967	Haringey	North London
+		Lynne Featherstone	Liberal Democrats	11353
+		Jason Hollands	Conservative	6921
+		Jayne Forbes	Green	2228
+		Louise Christian	Socialist Alliance	1106
+		Ella Rule	Socialist Labour Party	294
+		Erdil Ataman	Reform 2000	194
+
+Horsham	79604	Francis Maude	Conservative	26134	West Sussex	South East
+		Hubert Carr	Liberal Democrats	12468
+		Janet Sully	Labour	10267
+		Hugo Miller	UK Independence Party	1472
+		Jim Duggan	Independent	429
+
+Houghton and Washington East	67946	Fraser Kemp	Labour	24628	Newcastle area	North
+		Tony Devenish	Conservative	4810
+		Richard Ormerod	Liberal Democrats	4203
+
+Hove	70889	Ivor Caplin	Labour	19253	East Sussex	South East
+		Jenny Langston	Conservative	16082
+		Harold d'Souza	Liberal Democrats	3823
+		Anthea Ballam	Green	1369
+		Andy Richards	Socialist Alliance	531
+		Richard Franklin	UK Independence Party	358
+		Nigel Donovan	Liberal	316
+		Simon Dobbshead	Free	196
+		Thomas Major	Independent	60
+
+Huddersfield	64349	Barry Sheerman	Labour	18840	West Yorkshire	Yorkshire
+		Paul Baverstock	Conservative	8794
+		Neil Bentley	Liberal Democrats	5300
+		John Phillips	Green	1254
+		Judith Longman	UK Independence Party	613
+		Graham Hellawell	Socialist Alliance	374
+		George Randall	Socialist Labour Party	208
+
+Hull East	66473	John Prescott	Labour	19938	Humberside	Humberside
+		Jo Swinson	Liberal Democrats	4613
+		Sandip Verma	Conservative	4276
+		Jeanette Jenkinson	UK Independence Party	1218
+		Linda Muir	Socialist Labour Party	830
+
+Hull North	63022	Kevin McNamara	Labour	16364	Humberside	Humberside
+		Simone Butterworth	Liberal Democrats	5643
+		Paul Charlson	Conservative	4902
+		Tineka Robinson	UK Independence Party	655
+		Roger Smith	Socialist Alliance	490
+		Carl Wagner	Legalise Cannabis Alliance	478
+		Christopher Veasey	Independent	101
+
+Hull West and Hessle	63077	Alan Johnson	Labour	16880	Humberside	Humberside
+		John Sharp	Conservative	5929
+		Angela Wastling	Liberal Democrats	4364
+		John Cornforth	UK Independence Party	878
+		David Harris	Independent	512
+		David Skinner	Socialist Labour Party	353
+
+Huntingdon	78604	Jonathan Djanogly	Conservative	24507	Cambridgeshire	East Anglia
+		Michael Pope	Liberal Democrats	11715
+		Takki Sulaiman	Labour	11211
+		Derek Norman	UK Independence Party	1656
+
+Hyndburn	66445	Greg Pope	Labour	20900	Lancashire	Lancashire
+		Peter Britcliffe	Conservative	12681
+		Bill Greene	Liberal Democrats	3680
+		John Tomlin	UK Independence Party	982
+
+Ilford North	68893	Linda Perham	Labour	18428	Redbridge	North London
+		Vivian Bendall	Conservative	16313
+		Gavin Stollar	Liberal Democrats	4717
+		Martin Levin	UK Independence Party	776
+
+Ilford South	76025	Mike Gapes	Labour	24619	Redbridge	North London
+		Suresh Kuma	Conservative	10622
+		Ralph Scott	Liberal Democrats	4647
+		Harun Khan	UK Independence Party	1407
+
+Inverness East Nairn and Lochaber	67139	David Stewart	Labour	15605	Highland	East Scotland
+		Angus MacNeil	Scottish National Party	10889
+		Patsy Kenton	Liberal Democrats	9420
+		Richard Jenkins	Conservative	5653
+		Steve Arnott	Scottish Socialist Party	894
+
+Ipswich	68198	Jamie Cann	Labour	19952	Suffolk	East Anglia
+		Edward Wild	Conservative	11871
+		Terry Gilbert	Liberal Democrats	5904
+		William Vinyard	UK Independence Party	624
+		Peter Leach	Socialist Alliance	305
+		Shaun Gratton	Socialist Labour Party	217
+
+Isle of Wight	106305	Andrew Turner	Conservative	25223	Hampshire	South
+		Peter Brand	Liberal Democrats	22397
+		Deborah Gardiner	Labour	9676
+		David Lott	UK Independence Party	2106
+		David Holmes	Independent	1423
+		Paul Scivier	Green	1279
+		Philip Murray	Isle of Wight Party	1164
+		James Spensley	Socialist Labour Party	214
+
+Islington North	61970	Jeremy Corbyn	Labour	18699	Islington	North London
+		Laura Willoughby	Liberal Democrats	5741
+		Neil Rands	Conservative	3249
+		Chris M Ashby	Green	1876
+		Steve Cook	Socialist Labour Party	512
+		Emine Hassan	Reform 2000	139
+
+Islington South and Finsbury	59515	Chris Smith	Labour	15217	Islington	North London
+		Keith Sharp	Liberal Democrats	7937
+		Nicky Morgan	Conservative	3860
+		Janine Booth	Socialist Alliance	817
+		Thomas McCarthy	Independent	267
+		Charles Thomson	Stuckist	108
+
+Islwyn	51230	Don Touhig	Labour	19505	Mid Glamorgan and Gwent	Wales
+		Kevin Etheridge	Liberal Democrats	4196
+		Leigh Thomas	Plaid Cymru	3767
+		Philip Howells	Conservative	2543
+		Paul Taylor	Independent	1263
+		Mary Millington	Socialist Labour Party	417
+
+Jarrow	63172	Stephen Hepburn	Labour	22777	Newcastle area	North
+		James Selby	Liberal Democrats	5182
+		Donald Wood	Conservative	5056
+		Alan Badger	UK Independence Party	716
+		Alan Blond	Independent	391
+		John Bissett	Socialist	357
+
+Keighley	68349	Ann Cryer	Labour	20888	West Yorkshire	Yorkshire
+		Simon Cooke	Conservative	16883
+		Mike Doyle	Liberal Democrats	4722
+		Michael Cassidy	UK Independence Party	840
+
+Kensington and Chelsea	62007	Michael Portillo	Conservative	15270	Kensington and Chelsea	North London
+		Simon Stanley	Labour	6499
+		Kishwer Falkner	Liberal Democrats	4416
+		Julia Stephenson	Green	1158
+		Nicholas Hockney	UK Independence Party	416
+		Josephine Quintavalle	ProLife Alliance	179
+		Ginger Crab	Jam Wrestling	100
+
+Kettering	79697	Philip Sawford	Labour	24034	Northamptonshire	East Anglia
+		Philip Hollobone	Conservative	23369
+		Roger Aron	Liberal Democrats	5469
+		Barry Mahoney	UK Independence Party	880
+
+Kilmarnock and Loudoun	61049	Desmond Browne	Labour	19926	Ayrshire and Lanark	West Scotland
+		John Brady	Scottish National Party	9592
+		Donald Reece	Conservative	3943
+		John Stewart	Liberal Democrats	3177
+		Jason Muir	Scottish Socialist Party	1027
+
+Kingston and Surbiton	72687	Edward Davey	Liberal Democrats	29542	Kingston upon Thames	South London
+		David Shaw	Conservative	13866
+		Phil Woodford	Labour	4302
+		Chris Spruce	Green	572
+		Amy Burns	UK Independence Party	438
+		John Hayball	Socialist Labour Party	319
+		Jeremy Middleton	Unrepresented People's	54
+
+Kingswood	80531	Roger Berry	Labour	28903	Bristol Area	West
+		Robert Marven	Conservative	14941
+		Christopher Greenfield	Liberal Democrats	7747
+		David Smith	UK Independence Party	1085
+
+Kirkcaldy	51559	Lewis Moonie	Labour	15227	Fife	East Scotland
+		Shirley-Anne Somerville	Scottish National Party	6264
+		Scott Campbell	Conservative	3013
+		Andrew Weston	Liberal Democrats	2849
+		Dougie Kinnear	Scottish Socialist Party	804
+
+Knowsley North and Sefton East	70781	George Howarth	Labour	25035	Merseyside	Lancashire
+		Keith Chapman	Conservative	6108
+		Richard Roberts	Liberal Democrats	5173
+		Ron Waugh	Socialist Labour Party	574
+		Thomas Rossiter	Independent	356
+		David Jones	Independent	271
+
+Knowsley South	70681	Eddie O'Hara	Labour	26071	Merseyside	Lancashire
+		David Smithson	Liberal Democrats	4755
+		Paul Jemetta	Conservative	4250
+		Alan Fogg	Socialist Labour Party	1068
+		Mona McNee	Independent	446
+
+Lagan Valley	72671	Jeffrey Donaldson	Ulster Unionist Party	25966	Northern Ireland	Northern Ireland
+		Seamus A Close	Alliance Party of Northern Ireland	7624
+		Edwin Poots	Democratic Unionist Party	6164
+		Patricia Lewsley	Social Democratic and Labour Party	3462
+		Paul Butler	Sinn Fein	2725
+
+Lancashire West	72858	Colin Pickthall	Labour	23404	Lancashire	Lancashire
+		Jeremy Myers	Conservative	13761
+		John Thornton	Liberal Democrats	4966
+		David Hill	Independent	523
+		David Braid	Independent	317
+
+Lancaster and Wyre	78964	Hilton Dawson	Labour	22556	Lancashire	Lancashire
+		Steve Barclay	Conservative	22075
+		Liz Scott	Liberal Democrats	5383
+		John Whitelegg	Green	1595
+		John Whittaker	UK Independence Party	741
+
+Leeds Central	65497	Hilary Benn	Labour	18277	West Yorkshire	Yorkshire
+		Victoria Richmond	Conservative	3896
+		Stewart Arnold	Liberal Democrats	3607
+		David Burgess	UK Independence Party	775
+		Steve Johnson	Socialist Alliance	751
+
+Leeds East	56400	George Mudie	Labour	18290	West Yorkshire	Yorkshire
+		Barry Anderson	Conservative	5647
+		Brian Jennings	Liberal Democrats	3923
+		Raymond Northgreaves	UK Independence Party	634
+		Mark King	Socialist Labour Party	419
+		Peter Socrates	Independent	142
+
+Leeds North East	64123	Fabian Hamilton	Labour	19540	West Yorkshire	Yorkshire
+		Owain Rhys	Conservative	12451
+		Jonathan Brown	Liberal Democrats	6325
+		Celia Foote	Left Alliance	770
+		Jeffrey Miles	UK Independence Party	382
+		Colin Muir	Socialist Labour Party	173
+		Mohammed Zaman	Independent	132
+
+Leeds North West	72945	Harold Best	Labour	17794	West Yorkshire	Yorkshire
+		Adam Pritchard	Conservative	12558
+		David Hall-Matthews	Liberal Democrats	11431
+		Simon Jones	UK Independence Party	668
+
+Leeds West	64218	John Battle	Labour	19943	West Yorkshire	Yorkshire
+		Kris Hopkins	Conservative	5008
+		Darren Finlay	Liberal Democrats	3350
+		David Blackburn	Green	2573
+		William Finley	UK Independence Party	758
+		Noel Nowosielski	Liberal	462
+
+Leicester East	65527	Keith Vaz	Labour	23402	Leicestershire	East Midlands
+		John Mugglestone	Conservative	9960
+		Harpinder Athwal	Liberal Democrats	4989
+		Dave Roberts	Socialist Labour Party	837
+		Clive Potter	British National Party	772
+		Shirley Bennett	Independent	701
+
+Leicester South	72671	Jim Marshall	Labour	22958	Leicestershire	East Midlands
+		Richard Hoile	Conservative	9715
+		Parmjit Sing Gill	Liberal Democrats	7243
+		Margaret Layton	Green	1217
+		Arnold Gardner	Socialist Labour Party	676
+		Kirti Ladwa	UK Independence Party	333
+
+Leicester West	65267	Patricia Hewitt	Labour	18014	Leicestershire	East Midlands
+		Chris Shaw	Conservative	8375
+		Andrew Vincent	Liberal Democrats	5085
+		Matthew Gough	Green	1074
+		Sean Kirkpatrick	Socialist Labour Party	350
+		Steve Score	Socialist Alliance	321
+
+Leicestershire North West	68414	David Taylor	Labour	23431	Leicestershire	East Midlands
+		Nick Weston	Conservative	15274
+		Charlie Fraser-Fleming	Liberal Democrats	4651
+		William Nattrass	UK Independence Party	1021
+		Robert Nettleton	Independent	632
+
+Leigh	71054	Andrew Burnham	Labour	22783	Western Manchester	Greater Manchester
+		Andrew Oxley	Conservative	6421
+		Ray Atkins	Liberal Democrats	4524
+		William Kelly	Socialist Labour Party	820
+		Chris Best	UK Independence Party	750
+
+Leominster	68695	Bill Wiggin	Conservative	22879	Hereford and Worcestershire	Severn
+		Celia Downie	Liberal Democrats	12512
+		Stephen Hart	Labour	7872
+		Pippa Bennett	Green	1690
+		Christopher Kingsley	UK Independence Party	1590
+		John Haycock	Independent	186
+
+Lewes	66332	Norman J Baker	Liberal Democrats	25588	East Sussex	South East
+		Simon Sinnatt	Conservative	15878
+		Paul Richards	Labour	3317
+		John Harvey	UK Independence Party	650
+
+Lewisham Deptford	62869	Joan Ruddock	Labour	18915	Lewisham	South London
+		Cordelia McCartney	Conservative	3622
+		Andrew Wiseman	Liberal Democrats	3409
+		Darren Johnson	Green	1901
+		Ian Page	Socialist Alliance	1260
+
+Lewisham East	58302	Bridget Prentice	Labour	16116	Lewisham	South London
+		David McInnes	Conservative	7157
+		David Buxton	Liberal Democrats	4937
+		Barry Roberts	British National Party	1005
+		Jean Kysow	Socialist Alliance	464
+		Maurice Link	UK Independence Party	361
+
+Lewisham West	60947	Jim Dowd	Labour	18816	Lewisham	South London
+		Gary Johnson	Conservative	6896
+		Richard Thomas	Liberal Democrats	4146
+		Frederick Pearson	UK Independence Party	485
+		Nick Long	Independent	472
+
+Leyton and Wanstead	61549	Harry M Cohen	Labour	19558	Waltham Forest	North London
+		Edward Heckels	Conservative	6654
+		Alex Wilcock	Liberal Democrats	5389
+		Ashley Gunstock	Green	1030
+		Sally Labern	Socialist Alliance	709
+		Michael Skaif DIngerthorp	UK Independence Party	378
+
+Lichfield	63794	Michael Fabricant	Conservative	20480	Staffordshire	Severn
+		Martin Machray	Labour	16054
+		Phillip Bennion	Liberal Democrats	4462
+		John Phazey	UK Independence Party	684
+
+Lincoln	66299	Gillian Merron	Labour	20003	Lincolnshire	Humberside
+		Christine Talbot	Conservative	11583
+		Lisa Gabriel	Liberal Democrats	4703
+		Roger Doughty	UK Independence Party	836
+
+Linlithgow	54599	Tam Dalyell	Labour	17207	Central	East Scotland
+		Jim Sibbald	Scottish National Party	8078
+		Gordon Lindhurst	Conservative	2836
+		Martin Oliver	Liberal Democrats	2628
+		Eddie Cornoch	Scottish Socialist Party	695
+		Helen Cronin	Rock 'n' Roll Loony Party	211
+
+Liverpool Garston	65094	Maria Eagle	Labour	20043	Merseyside	Lancashire
+		Paula Keaveney	Liberal Democrats	7549
+		Helen Sutton	Conservative	5059
+
+Liverpool Riverside	74827	Louise Ellman	Labour	18201	Merseyside	Lancashire
+		Richard Marbrow	Liberal Democrats	4251
+		Judith Edwards	Conservative	2142
+		Cathy Wilson	Socialist Alliance	909
+
+Liverpool Walton	66237	Peter Kilfoyle	Labour	22143	Merseyside	Lancashire
+		Kiron Reid	Liberal Democrats	4147
+		Stephen Horgan	Conservative	1726
+		Paul Forrest	UK Independence Party	442
+
+Liverpool West Derby	67921	Robert Wareing	Labour	20454	Merseyside	Lancashire
+		Steve Radford	Liberal	4601
+		Patrick Moloney	Liberal Democrats	3366
+		Bill Clare	Conservative	2486
+
+Livingston	64850	Robin Cook	Labour	19108	Edinburgh area	East Scotland
+		Graham Sutherland	Scottish National Party	8492
+		Gordon Mackenzie	Liberal Democrats	3969
+		Ian Mowat	Conservative	2995
+		Wendy Milne	Scottish Socialist Party	1110
+		Robert Kingdon	UK Independence Party	359
+
+Llanelli	58148	Denzil Davies	Labour	17586	Dyfed	Wales
+		Dyfan Jones	Plaid Cymru	11183
+		Simon Hayes	Conservative	3442
+		Ken Rees	Liberal Democrats	3065
+		Jan Cliff	Green	515
+		John Willock	Socialist Labour Party	407
+
+Londonderry East	60276	Gregory Campbell	Democratic Unionist Party	12813	Northern Ireland	Northern Ireland
+		William Ross	Ulster Unionist Party	10912
+		John Dallat	Social Democratic and Labour Party	8298
+		Francie Brolly	Sinn Fein	6221
+		Yvonne Boyle	Alliance Party of Northern Ireland	1625
+
+Loughborough	70077	Andy Reed	Labour	22016	Leicestershire	East Midlands
+		Neil Lyon	Conservative	15638
+		Julie Simons	Liberal Democrats	5667
+		John Bigger	UK Independence Party	933
+
+Louth and Horncastle	71556	Peter Tapsell	Conservative	21543	Lincolnshire	Humberside
+		David Bolland	Labour	13989
+		Fiona Martin	Liberal Democrats	8928
+
+Ludlow	63053	Matthew Green	Liberal Democrats	18620	Shropshire	Severn
+		Martin Taylor-Smith	Conservative	16990
+		Nigel Knowles	Labour	5785
+		Jim Gaffney	Green	871
+		Phil Gutteridge	UK Independence Party	858
+
+Luton North	65998	Kelvin Hopkins	Labour	22187	Bedfordshire	East Anglia
+		Amanda Sater	Conservative	12210
+		Bob Hoyle	Liberal Democrats	3795
+		Colin Brown	UK Independence Party	934
+
+Luton South	68985	Margaret Moran	Labour	21719	Bedfordshire	East Anglia
+		Gordon Henderson	Conservative	11586
+		Rabi Martins	Liberal Democrats	4292
+		Marc Scheimann	Green	798
+		Charles Lawman	UK Independence Party	578
+		Joe Hearne	Socialist Alliance	271
+		Robert Bolton	Workers Revolutionary Party	107
+
+Macclesfield	73123	Nicholas Winterton	Conservative	22284	Cheshire	Severn
+		Stephen Carter	Labour	15084
+		Mike Flynn	Liberal Democrats	8217
+
+Maidenhead	68130	Theresa May	Conservative	19506	Berkshire	South
+		Kathryn Newbound	Liberal Democrats	16222
+		John O'Farrell	Labour	6577
+		Denis Cooper	UK Independence Party	741
+		Lloyd Clarke	Monster Raving Loony	272
+
+Maidstone and The Weald	74002	Ann Widdecombe	Conservative	22621	Kent	South East
+		Mark Davis	Labour	12303
+		Allison Wainman	Liberal Democrats	9064
+		John Botting	UK Independence Party	978
+		Neil Hunt	Independent	611
+
+Makerfield	68457	Ian McCartney	Labour	23879	Western Manchester	Greater Manchester
+		Jane Brooks	Conservative	6129
+		David Crowther	Liberal Democrats	3990
+		Malcolm Jones	Socialist Alliance	858
+
+Maldon and Chelmsford East	69201	John Whittingdale	Conservative	21719	Essex	Essex
+		Russell Kennedy	Labour	13257
+		Jane Jackson	Liberal Democrats	7002
+		Geoffrey Harris	UK Independence Party	1135
+		Walter Schwarz	Green	987
+
+Manchester Blackley	59111	Graham Stringer	Labour	18285	Central Manchester	Greater Manchester
+		Lance Stanbury	Conservative	3821
+		Gary Riding	Liberal Democrats	3015
+		Kevin Barr	Socialist Labour Party	485
+		Karen Reissmann	Socialist Alliance	461
+		Aziz Bhatti	Anti-Corruption Forum	456
+
+Manchester Central	66268	Tony Lloyd	Labour	17812	Central Manchester	Greater Manchester
+		Philip Hobson	Liberal Democrats	4070
+		Aaron Powell	Conservative	2328
+		Vanessa Hall	Green	1018
+		Ron Sinclair	Socialist Labour Party	484
+		Terrenia Brosnan	ProLife Alliance	216
+
+Manchester Gorton	63834	Gerald Kaufman	Labour	17099	Central Manchester	Greater Manchester
+		Jackie Pearcey	Liberal Democrats	5795
+		Christopher Causer	Conservative	2705
+		Bruce Bingham	Green	835
+		Rashid Bhatti	UK Independence Party	462
+		Kirsty Muir	Socialist Labour Party	333
+
+Manchester Withington	67480	Keith Bradley	Labour	19239	Central Manchester	Greater Manchester
+		Yasmin Zalzala	Liberal Democrats	7715
+		Julian Samways	Conservative	5349
+		Michelle Valentine	Green	1539
+		John Clegg	Socialist Alliance	1208
+
+Mansfield	66748	Alan Meale	Labour	21050	Nottinghamshire	East Midlands
+		William Wellesley	Conservative	10012
+		Tim Hill	Liberal Democrats	5790
+
+Medway	64930	Robert Marshall-Andrews	Labour	18914	Kent	South East
+		Mark Reckless	Conservative	15134
+		Geoffrey Juby	Liberal Democrats	3604
+		Nikki Sinclaire	UK Independence Party	958
+
+Meirionnydd Nant Conwy	33175	Elfyn Llwyd	Plaid Cymru	10459	Gwynedd	Wales
+		Denise Idris Jones	Labour	4775
+		Lisa Francis	Conservative	3962
+		Dafydd Raw-Rees	Liberal Democrats	1872
+
+Meriden	74439	Caroline Spelman	Conservative	21246	West Midlands	West Midlands
+		Christine Shawcroft	Labour	17462
+		Nigel Hicks	Liberal Democrats	4941
+		Richard Adams	UK Independence Party	910
+
+Merthyr Tydfil and Rhymney	55368	Dai Havard	Labour	19574	Mid Glamorgan and Gwent	Wales
+		Robert Hughes	Plaid Cymru	4651
+		Keith Rogers	Liberal Democrats	2385
+		Richard Cuming	Conservative	2272
+		Jeff Edwards	Independent	1936
+		Ken Evans	Socialist Labour Party	692
+		Anthony Lewis	ProLife Alliance	174
+
+Middlesbrough	67659	Stuart Bell	Labour	22783	Cleveland	North
+		Alex Finn	Conservative	6453
+		Geoff Kerr-Morgan	Socialist Alliance	3512
+		Keith Miller	Liberal Democrats	577
+		Kai Andersen	Socialist Labour Party	392
+
+Middlesbrough South and Cleveland East	71485	Ashok Kumar	Labour	24321	Cleveland	North
+		Barbara Harpham	Conservative	14970
+		Linda Parrish	Liberal Democrats	4700
+
+Midlothian	48625	David Hamilton	Labour	15145	Edinburgh area	East Scotland
+		Ian Goldie	Scottish National Party	6131
+		Jacqueline Bell	Liberal Democrats	3686
+		Robin Traquair	Conservative	2748
+		Bob Goupillot	Scottish Socialist Party	837
+		Terence Holden	ProLife Alliance	177
+
+Milton Keynes North East	75526	Brian White	Labour	19761	Buckinghamshire	Essex
+		Marion Rix	Conservative	17932
+		David Yeoward	Liberal Democrats	8375
+		Michael Phillips	UK Independence Party	1026
+
+Milton Keynes South West	76607	Phyllis Starkey	Labour	22484	Buckinghamshire	Essex
+		Iain Stewart	Conservative	15506
+		Nazar Mohammad	Liberal Democrats	4828
+		Alan Francis	Green	957
+		Clive Davies	UK Independence Party	848
+		Patrick Denning	Legalise Cannabis Alliance	500
+		Dave Bradbury	Socialist Alliance	261
+
+Mitcham and Morden	65671	Siobhain McDonagh	Labour	22936	Merton	South London
+		Harry Stokes	Conservative	9151
+		Nicholas Harris	Liberal Democrats	3820
+		Tom Walsh	Green	926
+		John Tyndall	British National Party	642
+		Adrian Roberts	UK Independence Party	486
+
+Mole Valley	67770	Paul Beresford	Conservative	23790	Surrey	South
+		Celia Savage	Liberal Democrats	13637
+		Dan Redford	Labour	7837
+		Ron Walters	UK Independence Party	1333
+		William Newton	ProLife Alliance	475
+
+Monmouth	62202	Huw Edwards	Labour	19021	Mid Glamorgan and Gwent	Wales
+		Roger Evans	Conservative	18637
+		Neil Parker	Liberal Democrats	5080
+		Marc Hubbard	Plaid Cymru	1068
+		David Rowlands	UK Independence Party	656
+
+Montgomeryshire	44243	Lembit Öpik	Liberal Democrats	14319	Powys	Wales
+		David Jones	Conservative	8085
+		Paul Davies	Labour	3443
+		David Senior	Plaid Cymru	1969
+		David William Rowlands	UK Independence Party	786
+		Ruth Davies	ProLife Alliance	210
+		Reg Taylor	Independent	171
+
+Moray	58008	Angus Robertson	Scottish National Party	10076	Grampian	East Scotland
+		Catriona Munro	Labour	8332
+		Frank Spencer-Nairn	Conservative	7677
+		Linda Gorn	Liberal Democrats	5224
+		Norma Anderson	Scottish Socialist Party	821
+		Bill Jappy	Independent	802
+		Nigel Kenyon	UK Independence Party	291
+
+Morecambe and Lunesdale	68607	Geraldine Smith	Labour	20646	Lancashire	Lancashire
+		David Nuttall	Conservative	15554
+		Chris Cotton	Liberal Democrats	3817
+		Gregg Beaman	UK Independence Party	935
+		Cherith Adams	Green	703
+
+Morley and Rothwell	71815	Colin Challen	Labour	21919	West Yorkshire	Yorkshire
+		David Schofield	Conservative	9829
+		Stewart Golton	Liberal Democrats	5446
+		John Bardsley	UK Independence Party	1248
+
+Motherwell and Wishaw	52418	Frank Roy	Labour	16681	Glasgow area	West Scotland
+		Jim McGuigan	Scottish National Party	5725
+		Mark Nolan	Conservative	3155
+		Iain Brown	Liberal Democrats	2791
+		Stephen Smellie	Scottish Socialist Party	1260
+		Claire Watt	Socialist Labour Party	61
+
+Neath	56107	Peter Hain	Labour	21253	West Glamorgan	Wales
+		Alun Llywelyn	Plaid Cymru	6437
+		David Davies	Liberal Democrats	3335
+		David Devine	Conservative	3310
+		Huw Pudner	Socialist Alliance	483
+		Gerardo Brienza	ProLife Alliance	202
+
+New Forest East	66767	Julian Lewis	Conservative	17902	Hampshire	South
+		Brian Dash	Liberal Democrats	14073
+		Alan Goodfellow	Labour	9141
+		William Howe	UK Independence Party	1062
+
+New Forest West	67806	Desmond Swayne	Conservative	24575	Hampshire	South
+		Mike Bignell	Liberal Democrats	11384
+		Crada Onuegbu	Labour	6481
+		Michael Clark	UK Independence Party	1647
+
+Newark	71089	Patrick Mercer	Conservative	20983	Nottinghamshire	East Midlands
+		Fiona Jones	Labour	16910
+		David Harding-Price	Liberal Democrats	5970
+		Donald Haxby	Independent	822
+		Ian Thomson	Socialist Alliance	462
+
+Newbury	75490	David Rendel	Liberal Democrats	24507	Berkshire	South
+		Richard Benyon	Conservative	22092
+		Steve Billcliffe	Labour	3523
+		Delphine Gray-Fisk	UK Independence Party	685
+
+Newcastle upon Tyne Central	65739	Jim Cousins	Labour	19169	Newcastle area	North
+		Stephen Psallidas	Liberal Democrats	7564
+		Aidan Ruff	Conservative	7414
+		Gordon Potts	Socialist Labour Party	723
+
+Newcastle upon Tyne East and Wallsend	67970	Nick H Brown	Labour	20642	Newcastle area	North
+		David Ord	Liberal Democrats	6419
+		Tim Troman	Conservative	3873
+		Andrew Gray	Green	651
+		Harash Narang	Independent	563
+		Blanch Carpenter	Socialist Labour Party	420
+		Martin Levy	Communist of Britain	126
+
+Newcastle upon Tyne North	61494	Doug Henderson	Labour	21874	Newcastle area	North
+		Phillip Smith	Conservative	7424
+		Graham Soult	Liberal Democrats	7070
+
+Newcastle-under-Lyme	63208	Paul Farrelly	Labour	20650	Staffordshire	Severn
+		Mike Flynn	Conservative	10664
+		Jerry Roodhouse	Liberal Democrats	5993
+		Robert Fyson	Independent	773
+		Paul Godfrey	UK Independence Party	594
+
+Newport East	56118	Alan Howarth	Labour	17120	Mid Glamorgan and Gwent	Wales
+		Ian Oakley	Conservative	7246
+		Alistair Cameron	Liberal Democrats	4394
+		Madoc Batcup	Plaid Cymru	1519
+		Liz Screen	Socialist Labour Party	420
+		Neal Reynolds	UK Independence Party	410
+		Robert Griffiths	Communist of Britain	173
+
+Newport West	59742	Paul Flynn	Labour	18489	Mid Glamorgan and Gwent	Wales
+		William Morgan	Conservative	9185
+		Veronica Watkins	Liberal Democrats	4095
+		Anthony Salkeld	Plaid Cymru	2510
+		Hugh Moelwyn-Hughes	UK Independence Party	506
+		Terry Cavill	British National Party	278
+
+Newry and Armagh	72466	Seamus Mallon	Social Democratic and Labour Party	20784	Northern Ireland	Northern Ireland
+		Conor Murphy	Sinn Fein	17209
+		Paul Berry	Democratic Unionist Party	10795
+		Sylvia McRoberts	Ulster Unionist Party	6833
+
+Norfolk Mid	74911	Keith Simpson	Conservative	23519	Norfolk	East Anglia
+		Daniel Zeichner	Labour	18957
+		Vivienne Clifford-Jackson	Liberal Democrats	7621
+		John Agnew	UK Independence Party	1333
+		Peter Reeve	Green	1118
+
+Norfolk North	80061	Norman Lamb	Liberal Democrats	23978	Norfolk	East Anglia
+		David Prior	Conservative	23495
+		Michael Gates	Labour	7490
+		Mike Sheridan	Green	649
+		Paul Simison	UK Independence Party	608
+
+Norfolk North West	77387	Henry Bellingham	Conservative	24846	Norfolk	East Anglia
+		George Turner	Labour	21361
+		Ian Mack	Liberal Democrats	4292
+		Ian Durrant	UK Independence Party	704
+
+Norfolk South	82710	Richard Bacon	Conservative	23589	Norfolk	East Anglia
+		Anne Lee	Liberal Democrats	16696
+		Mark Wells	Labour	13719
+		Stephanie Ross-Wagenknecht	Green	1069
+		Joseph Neal	UK Independence Party	856
+
+Norfolk South West	83903	Gillian Shephard	Conservative	27633	Norfolk	East Anglia
+		Anne Hanson	Labour	18267
+		Gordon Dean	Liberal Democrats	5681
+		Ian Smith	UK Independence Party	1368
+
+Normanton	65392	William O'Brien	Labour	19152	West Yorkshire	Yorkshire
+		Graham Smith	Conservative	9215
+		Stephen Pearson	Liberal Democrats	4990
+		Mick Appleyard	Socialist Labour Party	798
+
+Northampton North	74124	Sally Keeble	Labour	20507	Northamptonshire	East Anglia
+		John Whelan	Conservative	12614
+		Richard Church	Liberal Democrats	7363
+		Dusan Torbica	UK Independence Party	596
+		Gordon White	Socialist Alliance	414
+
+Northampton South	85271	Tony Clarke	Labour	21882	Northamptonshire	East Anglia
+		Shailesh Vara	Conservative	20997
+		Andrew Simpson	Liberal Democrats	6355
+		Derek Clark	UK Independence Party	1237
+		Tina Harvey	Liberated	362
+		Clare Johnson	ProLife Alliance	196
+
+Northavon	78841	Steve Webb	Liberal Democrats	29217	Bristol Area	West
+		Carrie Ruxton	Conservative	19340
+		Robert Hall	Labour	6450
+		Carmen Carver	UK Independence Party	751
+
+Norwich North	74911	Ian Gibson	Labour	21624	Norfolk	East Anglia
+		Kay Mason	Conservative	15761
+		Moira Toye	Liberal Democrats	6750
+		Robert Tinch	Green	797
+		Guy Cheyney	UK Independence Party	471
+		Michael Betts	Independent	211
+
+Norwich South	65792	Charles Clarke	Labour	19367	Norfolk	East Anglia
+		Andrew French	Conservative	10551
+		Andrew Aalders-Dunthorne	Liberal Democrats	9640
+		Adrian Holmes	Green	1434
+		Alun Buffrey	Legalise Cannabis Alliance	620
+		Edward Manningham	Socialist Alliance	507
+		Tarquin Mills	UK Independence Party	473
+
+Nottingham East	65339	John Heppell	Labour	17530	Nottinghamshire	East Midlands
+		Richard Allan	Conservative	7210
+		Tim S Ball	Liberal Democrats	3874
+		Pete Radcliff	Socialist Alliance	1117
+
+Nottingham North	64281	Graham Allen	Labour	19392	Nottinghamshire	East Midlands
+		Martin Wright	Conservative	7152
+		Rob Lee	Liberal Democrats	3177
+		Andrew Botham	Socialist Labour Party	321
+
+Nottingham South	73049	Alan Simpson	Labour	19949	Nottinghamshire	East Midlands
+		Wendy Manning	Conservative	9960
+		Kevin Mulloy	Liberal Democrats	6064
+		David Bartrop	UK Independence Party	632
+
+Nuneaton	72101	Bill Olner	Labour	22577	Warwickshire	East Midlands
+		Mark Lancaster	Conservative	15042
+		Tony Ferguson	Liberal Democrats	4820
+		Brian James	UK Independence Party	873
+
+Ochil	57554	Martin O'Neill	Labour	16004	Tayside	East Scotland
+		Keith Brown	Scottish National Party	10655
+		Alasdair Campbell	Conservative	4235
+		Paul Edie	Liberal Democrats	3253
+		Pauline Thompson	Scottish Socialist Party	751
+		Flash Gordon Approaching	Monster Raving Loony	405
+
+Ogmore	52185	Ray Powell	Labour	18833	Mid Glamorgan and Gwent	Wales
+		Angela Pulman	Plaid Cymru	4259
+		Ian Lewis	Liberal Democrats	3878
+		Richard Hill	Conservative	3383
+
+Old Bexley and Sidcup	67841	Derek Conway	Conservative	19130	Bexley	South London
+		Jim Dickson	Labour	15785
+		Belinda Ford	Liberal Democrats	5792
+		Janice Cronin	UK Independence Party	1426
+
+Oldham East and Saddleworth	74511	Phil Woolas	Labour	17537	Eastern Manchester	Greater Manchester
+		Howard Sykes	Liberal Democrats	14811
+		Craig Heeley	Conservative	7304
+		Michael Treacy	British National Party	5091
+		Barbara Little	UK Independence Party	677
+
+Oldham West and Royton	69409	Michael Meacher	Labour	20441	Eastern Manchester	Greater Manchester
+		Duncan Reed	Conservative	7076
+		Nick Griffin	British National Party	6552
+		Marc Ramsbottom	Liberal Democrats	4975
+		David Roney	Green	918
+
+Orkney and Shetland	31909	Alistair Carmichael	Liberal Democrats	6919	Orkney and Shetland	East Scotland
+		Robert Mochrie	Labour	3444
+		John Firth	Conservative	3121
+		John Mowat	Scottish National Party	2473
+		Peter Andrews	Scottish Socialist Party	776
+
+Orpington	74423	John Horam	Conservative	22334	Bromley	South London
+		Chris Maines	Liberal Democrats	22065
+		Chris Purnell	Labour	5517
+		John Youles	UK Independence Party	996
+
+Oxford East	74421	Andrew Smith	Labour	19681	Oxfordshire	West
+		Steve Goddard	Liberal Democrats	9337
+		Cheryl Potter	Conservative	7446
+		Pritam Singh	Green	1501
+		John Lister	Socialist Alliance	708
+		Peter Gardner	UK Independence Party	570
+		Fahim Ahmed	Socialist Labour Party	274
+		Linda Hodge	ProLife Alliance	254
+		Pathmanathan Mylvaganan	Independent	77
+
+Oxford West and Abingdon	79915	Evan Harris	Liberal Democrats	24670	Oxfordshire	West
+		Ed Matts	Conservative	15485
+		Gillian Kirk	Labour	9114
+		Mike Woodin	Green	1423
+		Marcus Watney	UK Independence Party	451
+		Sigrid Shreeve	Independent	332
+		Robert Twigger	Extinction Club	93
+
+Paisley North	47994	Irene Adams	Labour	15058	Glasgow area	West Scotland
+		George Adam	Scottish National Party	5737
+		Jane Hook	Liberal Democrats	2709
+		Craig Stevenson	Conservative	2404
+		Jim Halfpenny	Scottish Socialist Party	982
+		Robert Graham	ProLife Alliance	263
+
+Paisley South	53351	Douglas Garven Alexander	Labour	17830	Glasgow area	West Scotland
+		Brian Lawson	Scottish National Party	5920
+		Brian O'Malley	Liberal Democrats	3178
+		Andrew Cossar	Conservative	2301
+		Frances Curran	Scottish Socialist Party	835
+		Patricia Graham	ProLife Alliance	346
+		Terence O'Donnell	Independent	126
+
+Pendle	62870	Gordon Prentice	Labour	17729	Lancashire	Lancashire
+		Rasjid Skinner	Conservative	13454
+		David Whipp	Liberal Democrats	5479
+		Christian Jackson	British National Party	1976
+		Graham Cannon	UK Independence Party	1094
+
+Penrith and The Border	67776	David Maclean	Conservative	24302	Cumbria	North
+		Kenneth Geyve Walker	Liberal Democrats	9625
+		Michael Boaden	Labour	8177
+		Thomas Lowther	UK Independence Party	938
+		Mark Gibson	Legalise Cannabis Alliance	870
+		John Moffat	Independent	337
+
+Perth	61497	Annabelle Ewing	Scottish National Party	11237	Tayside	East Scotland
+		Elizabeth Smith	Conservative	11189
+		Marion Dingwall	Labour	9638
+		Vicki Harris	Liberal Democrats	4853
+		Frank Byrne	Scottish Socialist Party	899
+
+Peterborough	64918	Helen Brinton	Labour	17975	Cambridgeshire	East Anglia
+		Stewart Jackson	Conservative	15121
+		Nick Sandford	Liberal Democrats	5761
+		Julian Fairweather	UK Independence Party	955
+
+Plymouth Devonport	73666	David Jamieson	Labour	24322	Devon	South West
+		John Glen	Conservative	11289
+		Keith Baldry	Liberal Democrats	4513
+		Michael Parker	UK Independence Party	958
+		Tony Staunton	Socialist Alliance	334
+		Rob Hawkins	Socialist Labour Party	303
+
+Plymouth Sutton	68438	Linda Gilroy	Labour	19827	Devon	South West
+		Oliver Colvile	Conservative	12310
+		Alan Connett	Liberal Democrats	5605
+		Alan Whitton	UK Independence Party	970
+		Henry Leary	Socialist Labour Party	361
+
+Pontefract and Castleford	63181	Yvette Cooper	Labour	21890	West Yorkshire	Yorkshire
+		Pamela Singleton	Conservative	5512
+		Wesley Paxton	Liberal Democrats	2315
+		John Burdon	UK Independence Party	739
+		Trevor Bolderson	Socialist Labour Party	605
+		John Gill	Socialist Alliance	330
+
+Pontypridd	66105	Kim Howells	Labour	22963	Mid Glamorgan and Gwent	Wales
+		Bleddyn Hancock	Plaid Cymru	5279
+		Prudence Dailey	Conservative	5096
+		Eric Brooke	Liberal Democrats	4152
+		Sue Warry	UK Independence Party	603
+		Joseph Biddulph	ProLife Alliance	216
+
+Poole	64644	Robert Syms	Conservative	17710	Dorset	South West
+		David Watt	Labour	10544
+		Nick Westbrook	Liberal Democrats	10011
+		John Bass	UK Independence Party	968
+
+Poplar and Canning Town	75173	Jim Fitzpatrick	Labour	20862	Tower Hamlets	North London
+		Robert Marr	Conservative	6758
+		Alexi Sugden	Liberal Democrats	3795
+		Paul Borg	British National Party	1743
+		Kambiz Boomla	Socialist Alliance	950
+
+Portsmouth North	64256	Syd Rapson	Labour	18676	Hampshire	South
+		Chris Day	Conservative	13542
+		Darren Sanders	Liberal Democrats	3795
+		William McCabe	UK Independence Party	559
+		Brian Bundy	Independent	294
+
+Portsmouth South	77095	Mike Hancock	Liberal Democrats	17490	Hampshire	South
+		Philip Warr	Conservative	11396
+		Graham Heaney	Labour	9361
+		John Molyneux	Socialist Alliance	647
+		Michael Tarrant	UK Independence Party	321
+
+Preseli Pembrokeshire	54283	Jackie Lawrence	Labour	15206	Dyfed	Wales
+		Stephen Crabb	Conservative	12260
+		Rhys Sinnet	Plaid Cymru	4658
+		Alexander Dauncey	Liberal Democrats	3882
+		Trish Bowen	Socialist Labour Party	452
+		Hugh Jones	UK Independence Party	319
+
+Preston	72077	Mark Hendrick	Labour	20540	Lancashire	Lancashire
+		Graham O'Hare	Conservative	8272
+		William Chadwick	Liberal Democrats	4746
+		Bilal Patel	Independent	1241
+		Richard Merrick	Green	1019
+		David Braid	Independent	223
+
+Pudsey	71405	Paul Truswell	Labour	21717	West Yorkshire	Yorkshire
+		John Procter	Conservative	16091
+		Stephen Boddy	Liberal Democrats	6423
+		David Sewards	UK Independence Party	944
+
+Putney	60643	Anthony Colman	Labour	15911	Wandsworth	South London
+		Michael Simpson	Conservative	13148
+		Tony Burrett	Liberal Democrats	4671
+		Pat Wild	UK Independence Party	347
+		Yvonne Windsor	ProLife Alliance	185
+
+Rayleigh	70073	Mark Francois	Conservative	21434	Essex	Essex
+		Paul Clark	Labour	13144
+		Geoff Williams	Liberal Democrats	6614
+		Colin Morgan	UK Independence Party	1581
+
+Reading East	74637	Jane Griffiths	Labour	19531	Berkshire	South
+		Barry Tanswell	Conservative	13943
+		Tom Dobrashian	Liberal Democrats	8078
+		Miriam Kennett	Green	1053
+		Amy Thornton	UK Independence Party	525
+		Darren Williams	Socialist Alliance	394
+		Peter Hammerson	Independent	94
+
+Reading West	71688	Martin Salter	Labour	22300	Berkshire	South
+		Stephen Reid	Conservative	13451
+		Polly Martin	Liberal Democrats	5387
+		David Black	UK Independence Party	848
+
+Redcar	66179	Vera Baird	Labour	23026	Cleveland	North
+		Chris Main	Conservative	9583
+		Stan Wilson	Liberal Democrats	4817
+		John Taylor	Socialist Labour Party	772
+
+Redditch	62543	Jacqui Smith	Labour	16899	Hereford and Worcestershire	Severn
+		Karen Lumley	Conservative	14415
+		Michael Ashall	Liberal Democrats	3808
+		George Flynn	UK Independence Party	1259
+		Richard Armstrong	Green	651
+
+Regent's Park and Kensington North	75886	Karen Buck	Labour	20247	City of Westminster	North London
+		Peter Wilson	Conservative	9981
+		David Boyle	Liberal Democrats	4669
+		Paul Miller	Green	1268
+		China Mieville	Socialist Alliance	459
+		Alan Crisp	UK Independence Party	354
+		Charlotte Regan	Independent	74
+
+Reigate	65023	Crispin Blunt	Conservative	18875	Surrey	South
+		Simon Charleton	Labour	10850
+		Jane Kulka	Liberal Democrats	8330
+		Stephen Smith	UK Independence Party	1062
+		Harold Green	Reform UK	357
+
+Renfrewshire West	52889	James Sheridan	Labour	15720	Glasgow area	West Scotland
+		Carol Puthucheary	Scottish National Party	7145
+		David Sharpe	Conservative	5522
+		Clare Hamblen	Liberal Democrats	4185
+		Arlene Nunnery	Scottish Socialist Party	925
+
+Rhondda	56059	Chris Bryant	Labour	23230	Mid Glamorgan and Gwent	Wales
+		Leanne Wood	Plaid Cymru	7183
+		Peter Hobbins	Conservative	1557
+		Gavin Cox	Liberal Democrats	1525
+		Glyndwr Summers	Independent	507
+
+Ribble Valley	74319	Nigel Evans	Conservative	25308	Lancashire	Lancashire
+		Mike Carr	Liberal Democrats	14070
+		Marcus Johnstone	Labour	9793
+
+Richmond	65360	William Hague	Conservative	25951	North Yorkshire	Yorkshire
+		Fay Tinnion	Labour	9632
+		Edward Forth	Liberal Democrats	7890
+		Melodie Staniforth	Monster Raving Loony	561
+
+Richmond Park	72663	Jenny Tonge	Liberal Democrats	23444	Richmond upon Thames	South London
+		Tom Harris	Conservative	18480
+		Barry Langford	Labour	5541
+		James Page	Green	1223
+		Peter St. Johh Howe	UK Independence Party	348
+		Raymond Perrin	Independent	115
+
+Rochdale	69506	Lorna Fitzsimons	Labour	19406	Eastern Manchester	Greater Manchester
+		Paul Rowen	Liberal Democrats	13751
+		Elaina Cohen	Conservative	5274
+		Nick Harvey	Green	728
+		Mohammed Salim	Independent	253
+
+Rochford and Southend East	69991	Teddy Taylor	Conservative	20058	Essex	Essex
+		Chris Dandridge	Labour	13024
+		Stephen Newton	Liberal Democrats	2780
+		Adrian Hedges	Green	990
+		Brian Lynch	Liberal	600
+
+Romford	59893	Andrew Rosindell	Conservative	18931	Havering	North London
+		Eileen Gordon	Labour	12954
+		Nigel Meyer	Liberal Democrats	2869
+		Stephen Ward	UK Independence Party	533
+		Frank McAllister	British National Party	414
+
+Romsey	70584	Sandra Gidley	Liberal Democrats	22756	Hampshire	South
+		Paul Raynes	Conservative	20386
+		Stephen Roberts	Labour	3986
+		Anthony McCabe	UK Independence Party	730
+		Derrick Large	Legalise Cannabis Alliance	601
+
+Ross Skye and Inverness West	56522	Charles Kennedy	Liberal Democrats	18832	Highland	East Scotland
+		Donald Crichton	Labour	5880
+		Jean Urquhart	Scottish National Party	4901
+		Angus Laing	Conservative	3096
+		Eleanor Scott	Green	699
+		Stuart Topp	Scottish Socialist Party	683
+		Philip Anderson	UK Independence Party	456
+		James Crawford	Countryside	265
+
+Rossendale and Darwen	70280	Janet Anderson	Labour	20251	Lancashire	Lancashire
+		George Lee	Conservative	15028
+		Brian Dunning	Liberal Democrats	6079
+
+Rother Valley	69174	Kevin Barron	Labour	22851	South Yorkshire	Humberside
+		James Duddridge	Conservative	7969
+		Win Knight	Liberal Democrats	4603
+		David Cutts	UK Independence Party	1380
+
+Rotherham	57931	Denis MacShane	Labour	18759	South Yorkshire	Humberside
+		Richard Powell	Conservative	5682
+		Charles Hall	Liberal Democrats	3117
+		Peter Griffith	UK Independence Party	730
+		Dick Penycate	Green	577
+		Freda Smith	Socialist Alliance	352
+		Geoffrey Bartholomew	John Lillburne Democratic	137
+
+Roxburgh and Berwickshire	47059	Archy Kirkwood	Liberal Democrats	14044	Borders	East Scotland
+		George Turnbull	Conservative	6533
+		Catherine Maxwell-Stuart	Labour	4498
+		Roderick Campbell	Scottish National Party	2806
+		Amanda Millar	Scottish Socialist Party	463
+		Peter Neilson	UK Independence Party	453
+
+Rugby and Kenilworth	79764	Andy King	Labour	24221	Warwickshire	East Midlands
+		David Martin	Conservative	21344
+		Gwen Fairweather	Liberal Democrats	7444
+		Paul Garratt	UK Independence Party	787
+
+Ruislip-Northwood	60788	John Wilkinson	Conservative	18115	Hillingdon	South London
+		Gillian Travis	Labour	10578
+		Mike Cox	Liberal Democrats	7177
+		Graham Lee	Green	724
+		Ian Edward	British National Party	547
+
+Runnymede and Weybridge	75569	Philip Hammond	Conservative	20646	Surrey	South
+		Jane Briginshaw	Labour	12286
+		Chris Bushill	Liberal Democrats	6924
+		Christopher Browne	UK Independence Party	1332
+		Charles Gilman	Green	1238
+
+Rushcliffe	81839	Kenneth H Clarke	Conservative	25869	Nottinghamshire	East Midlands
+		Paul Fallon	Labour	18512
+		Jeremy Hargreaves	Liberal Democrats	7395
+		Ken Browne	UK Independence Party	1434
+		Ashley Baxter	Green	1236
+
+Rutland and Melton	72448	Alan Duncan	Conservative	22621	Leicestershire	East Midlands
+		Matthew O'Callaghan	Labour	14009
+		Kim Lee	Liberal Democrats	8386
+		Peter Baker	UK Independence Party	1223
+		Christopher Davies	Green	817
+
+Ryedale	66543	John Greenway	Conservative	20711	North Yorkshire	Yorkshire
+		Keith Orrell	Liberal Democrats	15836
+		David Ellis	Labour	6470
+		Stephen Feaster	UK Independence Party	882
+
+Saffron Walden	76724	Alan Haselhurst	Conservative	24485	Essex	Essex
+		Elfreda Tealby-Watson	Liberal Democrats	12481
+		Tania Rogers	Labour	11305
+		Richard Glover	UK Independence Party	1769
+
+Salford	54152	Hazel Blears	Labour	14649	Central Manchester	Greater Manchester
+		Norman Owen	Liberal Democrats	3637
+		Chris King	Conservative	3446
+		Peter Grant	Socialist Alliance	414
+		Hazel Wallace	Independent	216
+		Roy Masterson	Independent	152
+
+Salisbury	80538	Robert Key	Conservative	24527	Wiltshire	West
+		Yvonne Emmerson-Peirce	Liberal Democrats	15824
+		Sue Mallory	Labour	9199
+		Malcolm Wood	UK Independence Party	1958
+		Hamish Soutar	Green	1095
+
+Scarborough and Whitby	75213	Lawrie Quinn	Labour	22426	North Yorkshire	Yorkshire
+		John Sykes	Conservative	18841
+		Tom Pearce	Liberal Democrats	3977
+		Jonathan Dixon	Green	1049
+		John Jacob	UK Independence Party	970
+		Theresa Murray	ProLife Alliance	260
+
+Scunthorpe	59689	Elliot Morley	Labour	20096	Humberside	Humberside
+		Bernard Theobald	Conservative	9724
+		Bob Tress	Liberal Democrats	3156
+		Michael Cliff	UK Independence Party	347
+		David Patterson	Independent	302
+
+Sedgefield	64925	Anthony Blair	Labour	26110	Durham	North
+		Douglas Carswell	Conservative	8397
+		Andrew Duffield	Liberal Democrats	3624
+		Andrew Spence	UK Independence Party	974
+		Brian Gibson	Socialist Labour Party	518
+		Christopher Driver	Rock 'n' Roll Loony Party	375
+		Helen John	Women for Life on Earth	260
+
+Selby	77924	John Grogan	Labour	22652	North Yorkshire	Yorkshire
+		Michael Mitchell	Conservative	20514
+		Jeremy Wilcock	Liberal Democrats	5569
+		Helen Kenwright	Green	902
+		Bob Lewis	UK Independence Party	635
+
+Sevenoaks	66648	Michael Fallon	Conservative	21052	Kent	South East
+		Caroline Humphreys	Labour	10898
+		Clive Gray	Liberal Democrats	9214
+		Lisa Hawkins	UK Independence Party	1155
+		Mark Ellis	UK Pathfinders	295
+
+Sheffield Attercliffe	68386	Clive Betts	Labour	24287	South Yorkshire	Humberside
+		John Perry	Conservative	5443
+		Gail Smith	Liberal Democrats	5092
+		Pauline Arnott	UK Independence Party	1002
+
+Sheffield Brightside	54711	David Blunkett	Labour	19650	South Yorkshire	Humberside
+		Matthew Wilson	Conservative	2601
+		Alison Firth	Liberal Democrats	2238
+		Brian Wilson	Socialist Alliance	361
+		Robert Morris	Socialist Labour Party	354
+		Mark Suter	UK Independence Party	348
+
+Sheffield Central	62018	Richard Caborn	Labour	18477	South Yorkshire	Humberside
+		Ali Qadar	Liberal Democrats	5933
+		Noelle Brelsford	Conservative	3289
+		Bernard Little	Green	1008
+		Nick Riley	Socialist Alliance	754
+		David Hadfield	Socialist Labour Party	289
+		Charlotte Schofield	UK Independence Party	257
+		Michael Driver	Workers Revolutionary Party	62
+
+Sheffield Hallam	60288	Richard Allan	Liberal Democrats	21203	South Yorkshire	Humberside
+		John Harthman	Conservative	11856
+		Gillian Furniss	Labour	4758
+		Leslie Arnott	UK Independence Party	429
+
+Sheffield Heeley	62758	Meg Munn	Labour	19452	South Yorkshire	Humberside
+		David Willis	Liberal Democrats	7748
+		Carolyn Abbott	Conservative	4864
+		Rob Unwin	Green	774
+		Brian Fischer	Socialist Labour Party	667
+		David Dunn	UK Independence Party	634
+
+Sheffield Hillsborough	75097	Helen Jackson	Labour	24170	South Yorkshire	Humberside
+		John Commons	Liberal Democrats	9601
+		Graham King	Conservative	7801
+		Peter Webb	UK Independence Party	964
+
+Sherwood	75670	Paddy Tipping	Labour	24900	Nottinghamshire	East Midlands
+		Brandon Lewis	Conservative	15527
+		Peter Harris	Liberal Democrats	5473
+
+Shipley	69577	Christopher Leslie	Labour	20243	West Yorkshire	Yorkshire
+		David Senior	Conservative	18815
+		Helen Wright	Liberal Democrats	4996
+		Martin Love	Green	1386
+		Walter Whitacker	UK Independence Party	580
+
+Shrewsbury and Atcham	74964	Paul Marsden	Labour	22253	Shropshire	Severn
+		Anthea McIntyre	Conservative	18674
+		Jonathan Rule	Liberal Democrats	6173
+		Henry Curteis	UK Independence Party	1620
+		Emma Bullard	Green	931
+		James Gollins	Independent	258
+
+Shropshire North	73716	Owen Paterson	Conservative	22631	Shropshire	Severn
+		Michael Ion	Labour	16390
+		Ben Jephcott	Liberal Democrats	5945
+		David Trevanion	UK Independence Party	1165
+		Russell Maxfield	Independent	389
+
+Sittingbourne and Sheppey	65825	Derek Wyatt	Labour	17340	Kent	South East
+		Adrian Lee	Conservative	13831
+		Elvie Lowe	Liberal Democrats	5353
+		Michael Young	Rock 'n' Roll Loony Party	673
+		Robert Oakley	UK Independence Party	661
+
+Skipton and Ripon	75201	David Curry	Conservative	25736	North Yorkshire	Yorkshire
+		Bernard Bateman	Liberal Democrats	12806
+		Michael Dugher	Labour	8543
+		Nancy Holdsworth	UK Independence Party	2041
+
+Sleaford and North Hykeham	74561	Douglas Hogg	Conservative	24190	Lincolnshire	Humberside
+		Elizabeth Donnelly	Labour	15568
+		Robert Arbon	Liberal Democrats	7894
+		Michael Ward-Barrow	UK Independence Party	1067
+
+Slough	72429	Fiona Mactaggart	Labour	22718	Berkshire	South
+		Diana Coad	Conservative	10210
+		Keith Kerr	Liberal Democrats	4109
+		Michael Haines	Independent	859
+		John Lane	UK Independence Party	738
+		Choudry Nazir	Independent	364
+
+Solihull	77094	John Taylor	Conservative	21935	West Midlands	West Midlands
+		Jo Byron	Liberal Democrats	12528
+		Brendan O'Brien	Labour	12373
+		Andy Moore	UK Independence Party	1061
+		Stephanie Pyne	ProLife Alliance	374
+
+Somerton and Frome	74991	David Heath	Liberal Democrats	22983	Somerset	South West
+		Jonathan Marland	Conservative	22315
+		Andrew Perkins	Labour	6113
+		Peter Bridgwood	UK Independence Party	919
+		Jean Pollock	Liberal	354
+
+South Holland and The Deepings	73880	John Hayes	Conservative	25611	Lincolnshire	Humberside
+		Graham Walker	Labour	14512
+		Grace Hill	Liberal Democrats	4761
+		Malcolm Charlesworth	UK Independence Party	1318
+
+Ribble South	73794	David Borrow	Labour	21386	Lancashire	Lancashire
+		Adrian Owens	Conservative	17594
+		Mark Alcock	Liberal Democrats	7150
+
+South Shields	61802	David Miliband	Labour	19230	Newcastle area	North
+		Joanna Gardner	Conservative	5140
+		Marshall Grainger	Liberal Democrats	5127
+		Alan Hardy	UK Independence Party	689
+		Roger Nettleship	Independent	262
+
+Southampton Itchen	76603	John Denham	Labour	22553	Hampshire	South
+		Caroline Nokes	Conservative	11330
+		Mark Cooper	Liberal Democrats	6195
+		Kim Rose	UK Independence Party	829
+		Gavin Marsh	Socialist Alliance	241
+		Michael Holmes	Socialist Labour Party	225
+
+Southampton Test	73893	Alan Whitehead	Labour	21824	Hampshire	South
+		Richard Gueterbock	Conservative	10617
+		John Shaw	Liberal Democrats	7522
+		Garry Rankin-Moore	UK Independence Party	792
+		Mark Abel	Socialist Alliance	442
+		Paramjit Bahia	Socialist Labour Party	378
+
+Southend West	64116	David Amess	Conservative	17313	Essex	Essex
+		Paul Fisher	Labour	9372
+		Richard de St Croix	Liberal Democrats	9319
+		Brian Lee	UK Independence Party	1371
+
+Southport	70785	John Pugh	Liberal Democrats	18011	Merseyside	Lancashire
+		Laurence Jones	Conservative	15004
+		Paul Brant	Labour	6816
+		David Green	Liberal	767
+		Gerry Kelley	UK Independence Party	555
+
+Southwark North and Bermondsey	73527	Simon Hughes	Liberal Democrats	20991	Southwark	South London
+		Kingsley Abrams	Labour	11359
+		Ewan Wallace	Conservative	2800
+		Ruth Jenkins	Green	752
+		Lianne Shore	National Front	612
+		Rob McWhirter	UK Independence Party	271
+		John Davies	Independent	77
+
+Birmingham Sparkbrook and Small Heath	74358	Roger Godsiff	Labour	21087	Birmingham	West Midlands
+		Qassim Afzal	Liberal Democrats	4841
+		Shafaq Hussain	People's Justice	4770
+		Iftkhar Hussain	Conservative	3948
+		Gul Mohammed	Independent	662
+		Wayne Vincent	UK Independence Party	634
+		Abdul Aziz	Muslim	401
+		Salman Mirza	Socialist Alliance	304
+
+Spelthorne	68731	David Wilshire	Conservative	18851	Surrey	South
+		Andrew Shaw	Labour	15589
+		Martin Rimmer	Liberal Democrats	6156
+		Richard Squire	UK Independence Party	1198
+
+St Albans	66040	Kerry Pollard	Labour	19889	Hertfordshire	Essex
+		Charles Elphicke	Conservative	15423
+		Nick Rijke	Liberal Democrats	7847
+		Christopher Sherwin	UK Independence Party	602
+
+St Helens North	70545	Dave Watts	Labour	22977	Merseyside	Lancashire
+		Simon Pearce	Conservative	7076
+		John Beirne	Liberal Democrats	6609
+		Stephen Whatham	Socialist Labour Party	939
+
+St Helens South	65122	Shaun Woodward	Labour	16799	Merseyside	Lancashire
+		Brian Spencer	Liberal Democrats	7814
+		Lee Rotherham	Conservative	4675
+		Neil Thompson	Socialist Alliance	2325
+		Mike Perry	Socialist Labour Party	1504
+		Bryan Slater	UK Independence Party	336
+		Michael Murphy	Independent	271
+		David Braid	Independent	80
+
+St Ives	74256	Andrew George	Liberal Democrats	25413	Cornwall	South West
+		Joanna Richardson	Conservative	15360
+		William Morris	Labour	6567
+		Mick Faulkner	UK Independence Party	1926
+
+Stafford	67934	David Kidney	Labour	21285	Staffordshire	Severn
+		Philip Cochrane	Conservative	16253
+		Jeanne Pinkerton	Liberal Democrats	4205
+		A Bradford	UK Independence Party	2315
+		Michael Hames	Rock 'n' Roll Loony Party	308
+
+Staffordshire Moorlands	66760	Charlotte Atkins	Labour	20904	Staffordshire	Severn
+		Marcus Hayes	Conservative	15066
+		John Redfern	Liberal Democrats	5928
+		Paul Gilbert	UK Independence Party	760
+
+Staffordshire South	69925	Patrick Cormack	Conservative	21295	Staffordshire	Severn
+		Paul Kalinauckas	Labour	14414
+		Jo Harrison	Liberal Democrats	4891
+		Mike Lynch	UK Independence Party	1580
+
+Stalybridge and Hyde	66265	James Purnell	Labour	17781	Eastern Manchester	Greater Manchester
+		Andrew Reid	Conservative	8922
+		Brendon Jones	Liberal Democrats	4327
+		Frank Bennett	UK Independence Party	1016
+
+Stevenage	69203	Barbara Follett	Labour	22025	Hertfordshire	Essex
+		Graeme Quar	Conservative	13459
+		Harry Davies	Liberal Democrats	6027
+		Steve Glennon	Socialist Alliance	449
+		Antal Losonczi	Independent	320
+		Sarah Bell	ProLife Alliance	173
+
+Stirling	53097	Anne McGuire	Labour	15175	Central	East Scotland
+		Geoff Mawdsley	Conservative	8901
+		Fiona Macaulay	Scottish National Party	5877
+		Clive Freeman	Liberal Democrats	4208
+		Clarke Mullen	Scottish Socialist Party	1012
+		Mark Ruskell	Green	757
+
+Stockport	66397	Ann Coffey	Labour	20731	Eastern Manchester	Greater Manchester
+		John Allen	Conservative	9162
+		Mark Hunter	Liberal Democrats	5490
+
+Stockton North	65192	Frank Cook	Labour	22470	Cleveland	North
+		Amanda Vigar	Conservative	7823
+		Mary Wallace	Liberal Democrats	4208
+		Bill Wennington	Green	926
+
+Stockton South	71026	Dari Taylor	Labour	23414	Cleveland	North
+		Tim Devlin	Conservative	14328
+		Suzanne Fletcher	Liberal Democrats	6012
+		Lawrie Coombes	Socialist Alliance	455
+
+Stoke-on-Trent Central	59750	Mark Fisher	Labour	17170	Staffordshire	Severn
+		Jill Clark	Conservative	5325
+		Gavin Webb	Liberal Democrats	4148
+		Richard Wise	Independent	1657
+
+Stoke-on-Trent North	57998	Joan Walley	Labour	17460	Staffordshire	Severn
+		Benjamin Browning	Conservative	5676
+		Henry Jebb	Liberal Democrats	3580
+		Lee Wanger	Independent	3399
+
+Stoke-on-Trent South	70032	George Stevenson	Labour	19366	Staffordshire	Severn
+		Philip Bastiman	Conservative	8877
+		Christopher Coleman	Liberal Democrats	4724
+		Adrian Knapper	Independent	1703
+		Steven Batkin	British National Party	1358
+
+Stone	68847	William Cash	Conservative	22395	Staffordshire	Severn
+		John Palfreyman	Labour	16359
+		Brendan McKeown	Liberal Democrats	6888
+
+Stourbridge	64610	Debra Shipley	Labour	18823	West Midlands	West Midlands
+		Stephen Eyre	Conservative	15011
+		Chris Bramall	Liberal Democrats	4833
+		John Knotts	UK Independence Party	763
+		Mick Atherton	Socialist Labour Party	494
+
+Strangford	72192	Iris Robinson	Democratic Unionist Party	18532	Northern Ireland	Northern Ireland
+		David McNarry	Ulster Unionist Party	17422
+		Kieran McCarthy	Alliance Party of Northern Ireland	2902
+		Danny McCarthy	Social Democratic and Labour Party	2646
+		Liam Johnstone	Sinn Fein	930
+		Cedric Wilson	Northern Ireland Unionist	822
+
+Stratford-on-Avon	85241	John Maples	Conservative	27606	Warwickshire	East Midlands
+		Susan Juned	Liberal Democrats	15804
+		Mushtaq Hussain	Labour	9164
+		Ronald Mole	UK Independence Party	1184
+		Mick Davies	Green	1156
+
+Strathkelvin and Bearsden	62729	John Lyons	Labour	19250	Glasgow area	West Scotland
+		Gordon Macdonald	Liberal Democrats	7533
+		Calum Smith	Scottish National Party	6675
+		Murray Roxburgh	Conservative	6635
+		Willie Telfer	Scottish Socialist Party	1393
+
+Streatham	76021	Keith Hill	Labour	21041	Lambeth	South London
+		Roger O'Brien	Liberal Democrats	6771
+		Stephen Hocking	Conservative	6639
+		Mohammed Sajid	Green	1641
+		Greg Tucker	Socialist Alliance	906
+
+Stretford and Urmston	70924	Beverley Hughes	Labour	23804	Central Manchester	Greater Manchester
+		Jonathan Mackie	Conservative	10565
+		John Bridges	Liberal Democrats	3891
+		Katie Price	Independent	713
+
+Stroud	78878	David Drew	Labour	25685	Gloucestershire	West
+		Neil Carmichael	Conservative	20646
+		Janice Beasley	Liberal Democrats	6036
+		Kevin Cranston	Green	1913
+		Adrian Blake	UK Independence Party	895
+
+Suffolk Central and Ipswich North	74200	Michael Lord	Conservative	20924	Suffolk	East Anglia
+		Carole Jones	Labour	17455
+		Ann Elvin	Liberal Democrats	7593
+		Jonathan Wright	UK Independence Party	1132
+
+Suffolk Coastal	75963	John Gummer	Conservative	21847	Suffolk	East Anglia
+		Nigel Gardner	Labour	17521
+		Tony Schur	Liberal Democrats	9192
+		Michael Burn	UK Independence Party	1847
+
+Suffolk South	68408	Timothy Yeo	Conservative	18748	Suffolk	East Anglia
+		Marc Young	Labour	13667
+		Tessa Munt	Liberal Democrats	11296
+		Derek Allen	UK Independence Party	1582
+
+Suffolk West	71220	Richard Spring	Conservative	20201	Suffolk	East Anglia
+		Michael Jeffreys	Labour	15906
+		Robin Martlew	Liberal Democrats	5017
+		Will Burrows	UK Independence Party	1321
+
+Sunderland North	60846	Bill Etherington	Labour	18685	Newcastle area	North
+		Michael Harris	Conservative	5331
+		John Lennox	Liberal Democrats	3599
+		Neil Herron	Independent	1518
+		David Guynan	British National Party	687
+
+Sunderland South	64577	Chris Mullin	Labour	19921	Newcastle area	North
+		Jim Boyd	Conservative	6254
+		Mark Greenfield	Liberal Democrats	3675
+		Joseph Dobbie	British National Party	576
+		Joseph Moore	UK Independence Party	470
+		Rosalyn Warner	Monster Raving Loony	291
+
+Surrey East	75049	Peter Ainsworth	Conservative	24706	Surrey	South
+		Jeremy Pursehouse	Liberal Democrats	11503
+		Jo Tanner	Labour	8994
+		Anthony Stone	UK Independence Party	1846
+
+Surrey Heath	75858	Nicholas Hawkins	Conservative	22401	Surrey	South
+		Mark Lelliott	Liberal Democrats	11582
+		James Norman	Labour	9640
+		Nigel Hunt	UK Independence Party	1479
+
+Surrey South West	74127	Virginia Bottomley	Conservative	22462	Surrey	South
+		Simon Cordon	Liberal Democrats	21601
+		Martin Whelton	Labour	4321
+		Timothy Clark	UK Independence Party	1208
+
+Sussex Mid	70632	Nicholas Soames	Conservative	21150	West Sussex	South East
+		Lesley Wilkins	Liberal Democrats	14252
+		Paul Mitchell	Labour	8693
+		Petrina Holdsworth	UK Independence Party	1126
+		Peter Berry	Monster Raving Loony	601
+
+Sutton and Cheam	63648	Paul Burstow	Liberal Democrats	19382	Sutton	South London
+		Olga Maitland	Conservative	15078
+		Lisa Homan	Labour	5263
+
+Sutton Coldfield	71856	Andrew Mitchell	Conservative	21909	Birmingham	West Midlands
+		Robert Pocock	Labour	11805
+		Martin Turner	Liberal Democrats	8268
+		Mike Nattrass	UK Independence Party	1186
+		Ian Robinson	Independent	284
+
+Swansea East	57273	Donald Anderson	Labour	19612	West Glamorgan	Wales
+		John Ball	Plaid Cymru	3464
+		Robert Speht	Liberal Democrats	3064
+		Paul Morris	Conservative	3026
+		Tony Young	Green	463
+		Tim Jenkins	UK Independence Party	443
+
+Swansea West	57074	Alan Williams	Labour	15644	West Glamorgan	Wales
+		Margaret Harper	Conservative	6094
+		Mike Day	Liberal Democrats	5313
+		Ian Titherington	Plaid Cymru	3404
+		Richard Lewis	UK Independence Party	653
+		Martyn Shrewsbury	Green	626
+		Alec Thraves	Socialist Alliance	366
+
+Swindon North	69335	Michael Wills	Labour	22371	Wiltshire	West
+		Nick Martin	Conservative	14266
+		David Nation	Liberal Democrats	4891
+		Brian Lloyd	UK Independence Party	800
+
+Swindon South	71080	Julia Drown	Labour	22260	Wiltshire	West
+		Simon Coombs	Conservative	14919
+		Geoff Brewer	Liberal Democrats	5165
+		Vicki Sharp	UK Independence Party	713
+		Roly Gillard	Rock 'n' Roll Loony Party	327
+
+Tamworth	69596	Brian Jenkins	Labour	19722	Staffordshire	Severn
+		Luise Gunter	Conservative	15124
+		Jennifer Pinkett	Liberal Democrats	4721
+		Paul Sootheran	UK Independence Party	683
+
+Tatton	64954	George Osborne	Conservative	19860	Cheshire	Severn
+		Steve Conquest	Labour	11249
+		Mike Ash	Liberal Democrats	7685
+		Mark Sheppard	UK Independence Party	769
+		Peter Sharratt	Independent	734
+		Viviane Allinson	Tatton Group Independent	505
+		John Batchelor	Independent	322
+		Jonathan Boy Hunt	Independent	154
+
+Taunton	81651	Adrian Flook	Conservative	23033	Somerset	South West
+		Jackie Ballard	Liberal Democrats	22798
+		Andrew Govier	Labour	8254
+		Michael Canton	UK Independence Party	1140
+
+Tayside North	61645	Peter Wishart	Scottish National Party	15441	Tayside	East Scotland
+		Murdo Fraser	Conservative	12158
+		Thomas Docherty	Labour	5715
+		Julia Robertson	Liberal Democrats	4363
+		Rosie Adams	Scottish Socialist Party	620
+		Tina MacDonald	Independent	220
+
+Teignbridge	85533	Richard Younger-Ross	Liberal Democrats	26343	Devon	South West
+		Patrick Nicholls	Conservative	23332
+		Christopher Bain	Labour	7366
+		Paul Exmouth	UK Independence Party	2269
+
+Telford	59486	David Wright	Labour	16854	Shropshire	Severn
+		Andrew Henderson	Conservative	8471
+		Sally Wiggin	Liberal Democrats	3983
+		Nicola Brookes	UK Independence Party	1098
+		Mike Jeffries	Socialist Alliance	469
+
+Tewkesbury	70276	Laurence Robertson	Conservative	20830	Gloucestershire	West
+		Keir Dhillon	Labour	12167
+		Stephen Martin	Liberal Democrats	11863
+		Charles Vernall	Independent	335
+
+Thanet North	70581	Roger Gale	Conservative	21050	Kent	South East
+		James Stewart Laing	Labour	14400
+		Seth Proctor	Liberal Democrats	4603
+		John Moore	UK Independence Party	980
+		David Shortt	Independent	440
+		Thomas Holmes	National Front	395
+
+Thanet South	61462	Stephen Ladyman	Labour	18002	Kent	South East
+		Mark Macgregor	Conservative	16210
+		Guy Voizey	Liberal Democrats	3706
+		William Baldwin	Independent	770
+		Terry Eccott	UK Independence Party	501
+		Bernard Franklin	National Front	242
+
+Wrekin, The	65837	Peter Bradley	Labour	19532	Shropshire	Severn
+		Jacob Rees-Mogg	Conservative	15945
+		Ian Jenkins	Liberal Democrats	4738
+		Denis Brookes	UK Independence Party	1275
+
+Thurrock	76524	Andrew Mackinlay	Labour	21121	Essex	Essex
+		Mike Penning	Conservative	11124
+		John Lathan	Liberal Democrats	3846
+		Christopher Sheppard	UK Independence Party	1271
+
+Tiverton and Honiton	80646	Angela Browning	Conservative	26258	Devon	South West
+		Jim Barnard	Liberal Democrats	19974
+		Isabel Owen	Labour	6647
+		Alan Langmaid	UK Independence Party	1281
+		Matthew Burgess	Green	1030
+		Jennifer Roach	Liberal	594
+
+Tonbridge and Malling	65939	John Stanley	Conservative	20956	Kent	South East
+		Victoria Hayman	Labour	12706
+		Merilyn Canet	Liberal Democrats	7605
+		Lynn Croucher	UK Independence Party	1169
+
+Tooting	68447	Tom Cox	Labour	20332	Wandsworth	South London
+		Alexander Nicoll	Conservative	9932
+		Simon James	Liberal Democrats	5583
+		Matthew Ledbury	Green	1744
+
+Torbay	72409	Adrian Sanders	Liberal Democrats	24015	Devon	South West
+		Christian Sweeting	Conservative	17307
+		John McKay	Labour	4484
+		Graham H Booth	UK Independence Party	1512
+		Pam Neale	Independent	251
+
+Torfaen	61110	Paul Murphy	Labour	21883	Mid Glamorgan and Gwent	Wales
+		Jason Evans	Conservative	5603
+		Alan Masters	Liberal Democrats	3936
+		Stephen Smith	Plaid Cymru	2720
+		Brenda Vipass	UK Independence Party	657
+		Steve Bell	Socialist Alliance	443
+
+Totnes	72548	Anthony Steen	Conservative	21914	Devon	South West
+		Rachel Oliver	Liberal Democrats	18317
+		Thomas Wildy	Labour	6005
+		Craig Mackinlay	UK Independence Party	3010
+
+Tottenham	65567	David Lammy	Labour	21317	Haringey	North London
+		Uma Fernandes	Conservative	4401
+		Meher Khan	Liberal Democrats	3008
+		Peter Budge	Green	1443
+		Weyman Bennett	Socialist Alliance	1162
+		Unver Shefki	Reform 2000	270
+
+Truro and St Austell	79219	Matthew Taylor	Liberal Democrats	24296	Cornwall	South West
+		Tim Bonner	Conservative	16231
+		David Phillips	Labour	6889
+		James Wonnacott	UK Independence Party	1664
+		Conan Jenkin	Mebyon Kernow	1137
+		John Lee	Independent	78
+
+Tunbridge Wells	64534	Archie Norman	Conservative	19643	Kent	South East
+		Keith Brown	Liberal Democrats	9913
+		Ian Carvell	Labour	9332
+		Victor Webb	UK Independence Party	1313
+
+Tweeddale Ettrick and Lauderdale	51966	Michael Moore	Liberal Democrats	14035	Borders	East Scotland
+		Keith Geddes	Labour	8878
+		Andrew Brocklehurst	Conservative	5118
+		Richard Thomson	Scottish National Party	4108
+		Norman Lockhart	Scottish Socialist Party	695
+		John Hein	Liberal	383
+
+Twickenham	74135	Vincent Cable	Liberal Democrats	24344	Richmond upon Thames	South London
+		Nick Longworth	Conservative	16689
+		Dean Rogers	Labour	6903
+		Judy Maciejowska	Green	1423
+		Ray Hollebone	UK Independence Party	579
+
+Tyne Bridge	58900	David G Clelland	Labour	18345	Newcastle area	North
+		James Cook	Conservative	3456
+		Jonathan Wallace	Liberal Democrats	3213
+		James Fitzpatrick	Socialist Labour Party	533
+		Samuel Robson	Socialist Alliance	485
+
+Tynemouth	65184	Alan Campbell	Labour	23364	Newcastle area	North
+		Karl Poulsen	Conservative	14686
+		Penny Reid	Liberal Democrats	5108
+		Michael Rollings	UK Independence Party	745
+
+Tyneside North	64914	Stephen Byers	Labour	26127	Newcastle area	North
+		Mark Ruffell	Conservative	5459
+		Simon Reed	Liberal Democrats	4649
+		Alan Taylor	UK Independence Party	770
+		Pete Burnett	Socialist Alliance	324
+		Ken Capstick	Socialist Labour Party	240
+
+Tyrone West	60739	Pat Doherty	Sinn Fein	19814	Northern Ireland	Northern Ireland
+		William Thompson	Ulster Unionist Party	14774
+		Brid Rodgers	Social Democratic and Labour Party	13942
+
+Ulster Mid	61390	Martin McGuinness	Sinn Fein	25502	Northern Ireland	Northern Ireland
+		Ian McCrea	Democratic Unionist Party	15549
+		Eilis Haughey	Social Democratic and Labour Party	8376
+		Francie Donnelly	Workers Party of Ireland	509
+
+Upminster	56829	Angela Watkinson	Conservative	15410	Havering	North London
+		Keith Darvill	Labour	14169
+		Peter Truesdale	Liberal Democrats	3183
+		Terry Murray	UK Independence Party	1089
+
+Upper Bann	72574	David Trimble	Ulster Unionist Party	17095	Northern Ireland	Northern Ireland
+		David Simpson	Democratic Unionist Party	15037
+		Dara O'Hagan	Sinn Fein	10770
+		Dolores Kelly	Social Democratic and Labour Party	7607
+		Tom French	Workers Party of Ireland	527
+
+Uxbridge	58066	John Randall	Conservative	15751	Hillingdon	South London
+		David Salisbury-Jones	Labour	13653
+		Catherine Royce	Liberal Democrats	3426
+		Paul Cannons	UK Independence Party	588
+
+Vale of Clwyd	51247	Chris Ruane	Labour	16179	Clwyd	Wales
+		Brendan Murphy	Conservative	10418
+		Graham Rees	Liberal Democrats	3058
+		John Penri Williams	Plaid Cymru	2300
+		William Campbell	UK Independence Party	391
+
+Vale of Glamorgan	67071	John Smith	Labour	20524	South Glamorgan	Wales
+		Susan Inkin	Conservative	15824
+		Dewi Smith	Liberal Democrats	5521
+		Chris Franks	Plaid Cymru	2867
+		Niall Warry	UK Independence Party	448
+
+Vale of York	73335	Anne McIntosh	Conservative	25033	North Yorkshire	Yorkshire
+		Christopher Jukes	Labour	12516
+		Greg Stone	Liberal Democrats	9799
+		Peter Thornber	UK Independence Party	1142
+
+Vauxhall	74474	Kate Hoey	Labour	19738	Lambeth	South London
+		Anthony Bottrall	Liberal Democrats	6720
+		Gareth Compton	Conservative	4489
+		Shane Collins	Green	1485
+		Theresa Bennett	Socialist Alliance	853
+		Martin Boyd	Independent	107
+
+Wakefield	75750	David Hinchliffe	Labour	20592	West Yorkshire	Yorkshire
+		Thelma Karran	Conservative	12638
+		Douglas Dale	Liberal Democrats	5097
+		Sarah Greenwood	Green	1075
+		Janice Cannon	UK Independence Party	677
+		Abdul Aziz	Socialist Labour Party	634
+		Mick Griffiths	Socialist Alliance	541
+
+Wallasey	64889	Angela Eagle	Labour	22718	Merseyside	Lancashire
+		Lesley Rennie	Conservative	10442
+		Peter Reisdorf	Liberal Democrats	4186
+
+Walsall North	66020	David Winnick	Labour	18779	West Midlands	West Midlands
+		Melvin Pitt	Conservative	9388
+		Michael Heap	Liberal Democrats	2923
+		Jenny Mayo	UK Independence Party	812
+		Dave Church	Socialist Alliance	410
+
+Walsall South	62657	Bruce George	Labour	20574	West Midlands	West Midlands
+		Michael Bird	Conservative	10643
+		Bill Tomlinson	Liberal Democrats	2365
+		Derek Bennett	UK Independence Party	974
+		Peter Smith	Socialist Alliance	343
+
+Walthamstow	64403	Neil Gerrard	Labour	21402	Waltham Forest	North London
+		Nick Boy Smith	Conservative	6221
+		Peter Dunphy	Liberal Democrats	5024
+		Simon Donovan	Socialist Alternative Party	806
+		William Phillips	British National Party	389
+		Gerda Mayer	UK Independence Party	298
+		Barbara Duffy	ProLife Alliance	289
+
+Wansbeck	62989	Denis Murphy	Labour	21617	Northumberland	North
+		Alan Thompson	Liberal Democrats	8516
+		Rachael Lake	Conservative	4774
+		Michael Kirkup	Independent	1076
+		Nic F Best	Green	954
+		Gavin Attwell	UK Independence Party	482
+
+Wansdyke	70728	Dan Norris	Labour	22706	Bristol Area	West
+		Chris Watt	Conservative	17593
+		Gail Coleshill	Liberal Democrats	7135
+		Francis Hayden	Green	958
+		Peter Sandell	UK Independence Party	655
+
+Wantage	76129	Robert Jackson	Conservative	19475	Oxfordshire	West
+		Stephen Beer	Labour	13875
+		Neil Fawcett	Liberal Democrats	13776
+		David Brooks-Saxl	Green	1062
+		Nikolai Tolstoy	UK Independence Party	941
+
+Warley	58071	John Spellar	Labour	19007	West Midlands	West Midlands
+		Mark Pritchard	Conservative	7157
+		Ron Cockings	Liberal Democrats	3315
+		Harbhajan Dardi	Socialist Labour Party	1936
+
+Warrington North	72445	Helen Jones	Labour	24026	Cheshire	Severn
+		James Usher	Conservative	8870
+		Roy Smith	Liberal Democrats	5232
+		Jack Kirkham	UK Independence Party	782
+
+Warrington South	74283	Helen Southworth	Labour	22409	Cheshire	Severn
+		Caroline Mosley	Conservative	15022
+		Roger Barlow	Liberal Democrats	7419
+		Joan Kelley	UK Independence Party	637
+
+Warwick and Leamington	81405	James Plaskitt	Labour	26108	Warwickshire	East Midlands
+		David Campbell-Bannerman	Conservative	20155
+		Linda Forbes	Liberal Democrats	5964
+		Clare Kime	Socialist Alliance	664
+		Greville Warwick	UK Independence Party	648
+
+Warwickshire North	73828	Mike O'Brien	Labour	24023	Warwickshire	East Midlands
+		Geoff Parsons	Conservative	14384
+		William Powell	Liberal Democrats	5052
+		John Flynn	UK Independence Party	950
+
+Watford	75724	Claire Ward	Labour	20992	Hertfordshire	Essex
+		Michael McManus	Conservative	15437
+		Duncan Hames	Liberal Democrats	8088
+		Denise Kingsley	Green	900
+		Edmund Stewart-Mole	UK Independence Party	535
+		Jon Berry	Socialist Alliance	420
+
+Waveney	76585	Bob Blizzard	Labour	23914	Suffolk	East Anglia
+		Lee Scott	Conservative	15361
+		David Young	Liberal Democrats	5370
+		Brian Aylett	UK Independence Party	1097
+		Graham Elliot	Green	983
+		Rupert Mallin	Socialist Alliance	442
+
+Liverpool Wavertree	72555	Jane Kennedy	Labour	20155	Merseyside	Lancashire
+		Christopher Newby	Liberal Democrats	7836
+		Geoffrey Allen	Conservative	3091
+		Michael Lane	Socialist Labour Party	359
+		Mark O'Brien	Socialist Alliance	349
+		Neil Miney	UK Independence Party	348
+
+Wealden	83066	Charles Hendry	Conservative	26279	East Sussex	South East
+		Steve Murphy	Liberal Democrats	12507
+		Kathy Fordham	Labour	10705
+		Keith Riddle	UK Independence Party	1539
+		Julian Salmon	Green	1273
+		Cyril Thornton	Pensioner Coalition	453
+
+Weaver Vale	68236	Mike Hall	Labour	20611	Cheshire	Severn
+		Carl Cross	Conservative	10974
+		Nigel Griffiths	Liberal Democrats	5643
+		Michael Cooksley	Independent	1484
+		Jim Bradshaw	UK Independence Party	559
+
+Wellingborough	77389	Paul Stinchcombe	Labour	23867	Northamptonshire	East Anglia
+		Peter Bone	Conservative	21512
+		Peter Gaskell	Liberal Democrats	4763
+		Anthony Ellwood	UK Independence Party	864
+
+Wells	74189	David Heathcoat-Amory	Conservative	22462	Somerset	South West
+		Graham Oakes	Liberal Democrats	19666
+		Andy Merryfield	Labour	7915
+		Steve Reed	UK Independence Party	1104
+		Colin R Bex	Wessex Regionalist	167
+
+Welwyn Hatfield	67004	Miss Melanie Johnson	Labour	18484	Hertfordshire	Essex
+		Grant Shapps	Conservative	17288
+		Daniel Cooke	Liberal Democrats	6021
+		Malcolm Biggs	UK Independence Party	798
+		Fiona Pinto	ProLife Alliance	230
+
+Wentworth	64033	John Healey	Labour	22798	South Yorkshire	Humberside
+		Mike Roberts	Conservative	6349
+		David Wildgoose	Liberal Democrats	3652
+		John Wilkinson	UK Independence Party	979
+
+West Bromwich East	61198	Tom Watson	Labour	18250	West Midlands	West Midlands
+		David MacFarlane	Conservative	8487
+		Ian Garrett	Liberal Democrats	4507
+		Steven Grey	UK Independence Party	835
+		Sheera Johal	Socialist Labour Party	585
+
+West Bromwich West	66777	Adrian Bailey	Labour	19352	West Midlands	West Midlands
+		Karen Bissell	Conservative	7997
+		Sadie Smith	Liberal Democrats	2168
+		John Salvage	British National Party	1428
+		Kevin Walker	UK Independence Party	499
+		Baghwant Singh	Socialist Labour Party	396
+
+West Ham	59828	Anthony Banks	Labour	20449	Newham	North London
+		Syed Kamall	Conservative	4804
+		Paul Fox	Liberal Democrats	2166
+		Jackie Chandle Oatts	Green	1197
+		Gerard Batten	UK Independence Party	657
+
+Westbury	75911	Andrew Murrison	Conservative	21299	Wiltshire	West
+		David Vigar	Liberal Democrats	16005
+		Sarah Cardy	Labour	10847
+		Charles Booth-Jones	UK Independence Party	1261
+		Bob Gledhill	Green	1216
+
+Western Isles	21807	Calum MacDonald	Labour	5924	Western Isles	East Scotland
+		Alasdair Nicholson	Scottish National Party	4850
+		Douglas Taylor	Conservative	1250
+		John Horne	Liberal Democrats	849
+		Joanne Telfer	Scottish Socialist Party	286
+
+Westmorland and Lonsdale	70637	Tim Collins	Conservative	22486	Cumbria	North
+		Tim Farron	Liberal Democrats	19339
+		John Bateson	Labour	5234
+		Robert Gibson	UK Independence Party	552
+		Tim Bell	Independent	292
+
+Weston-Super-Mare	74343	Brian J Cotter	Liberal Democrats	18424	Bristol Area	West
+		John Penrose	Conservative	18086
+		Derek Kraft	Labour	9235
+		Bill Lukins	UK Independence Party	650
+		John Peverelle	Independent	206
+		Richard Sibley	Independent	79
+
+Wigan	64040	Neil Turner	Labour	20739	Western Manchester	Greater Manchester
+		Mark Page	Conservative	6996
+		Trevor Beswick	Liberal Democrats	4970
+		Dave Lowe	Socialist Alliance	886
+
+Wiltshire North	79524	James Gray	Conservative	24090	Wiltshire	West
+		Hugh Pym	Liberal Democrats	20212
+		Jo Garton	Labour	7556
+		Neil Dowdney	UK Independence Party	1090
+
+Wimbledon	63930	Roger Casale	Labour	18806	Merton	South London
+		Stephen Hammond	Conservative	15062
+		Martin Pierce	Liberal Democrats	5341
+		Rajeev Thacker	Green	1007
+		Roger Glencross	Christian Peoples Alliance	479
+		Mariana Bell	UK Independence Party	414
+
+Winchester	81852	Mark Oaten	Liberal Democrats	32282	Hampshire	South
+		Andrew Hayes	Conservative	22648
+		Stephen Wyeth	Labour	3498
+		Joan Martin	UK Independence Party	664
+		Henrietta Rouse	Wessex Regionalist	66
+
+Windsor	69136	Michael Trend	Conservative	19900	Berkshire	South
+		Nick Pinfield	Liberal Democrats	11011
+		Mark Muller	Labour	10137
+		John Fagan	UK Independence Party	1062
+
+Wirral South	60653	Ben Chapman	Labour	18890	Merseyside	Lancashire
+		Anthony Millard	Conservative	13841
+		Phillip Gilchrist	Liberal Democrats	7087
+
+Wirral West	62294	Stephen Hesford	Labour	19105	Merseyside	Lancashire
+		Chris Lynch	Conservative	15070
+		Simon Holbrook	Liberal Democrats	6300
+
+Witney	74624	David Cameron	Conservative	22153	Oxfordshire	West
+		Michael Bartlet	Labour	14180
+		Gareth Epps	Liberal Democrats	10000
+		Mark Stevenson	Green	1100
+		Barry Beadle	Independent	1003
+		Kenneth Dukes	UK Independence Party	767
+
+Woking	71163	Humfrey Malins	Conservative	19747	Surrey	South
+		Alan Hilliar	Liberal Democrats	12988
+		Sabir Hussain	Labour	8714
+		Michael Harvey	UK Independence Party	1461
+
+Wokingham	68430	John Redwood	Conservative	20216	Berkshire	South
+		Royce Longton	Liberal Democrats	14222
+		Matthew Syed	Labour	7633
+		Franklin Carstairs	UK Independence Party	897
+		Peter 'Top Cat' Owen	Monster Raving Loony	880
+
+Wolverhampton North East	60486	Ken Purchase	Labour	18984	West Midlands	West Midlands
+		Maria Miller	Conservative	9019
+		Steven Bourne	Liberal Democrats	2494
+		Thomas McCartney	UK Independence Party	997
+
+Wolverhampton South East	53931	Dennis Turner	Labour	18409	West Midlands	West Midlands
+		Adrian Pepper	Conservative	5945
+		Peter Wild	Liberal Democrats	2389
+		James Barry	National Front	554
+
+Wolverhampton South West	67171	Robert Marris	Labour	19735	West Midlands	West Midlands
+		David Chambers	Conservative	16248
+		Mike Dixon	Liberal Democrats	3425
+		Wendy Walker	Green	805
+		Doug Hope	UK Independence Party	684
+
+Woodspring	71023	Liam Fox	Conservative	21297	Bristol Area	West
+		Chanel Stevens	Labour	12499
+		Colin Eldridge	Liberal Democrats	11816
+		David Shopland	Independent	1412
+		Richard Lawson	Green	1282
+		Fraser Crean	UK Independence Party	452
+
+Worcester	71255	Michael Foster	Labour	21478	Hereford and Worcestershire	Severn
+		Richard Adams	Conservative	15712
+		Paul Chandler	Liberal Democrats	5578
+		Richard Chamings	UK Independence Party	1442
+
+Worcestershire Mid	71985	Peter Luff	Conservative	22937	Hereford and Worcestershire	Severn
+		David Bannister	Labour	12310
+		Robert Woodthorpe-Browne	Liberal Democrats	8420
+		Tony Eaves	UK Independence Party	1230
+
+Worcestershire West	66769	Michael Spicer	Conservative	20597	Hereford and Worcestershire	Severn
+		Mike Hadley	Liberal Democrats	15223
+		Waquar Azmi	Labour	6275
+		Ian Morris	UK Independence Party	1574
+		Malcolm Victory	Green	1138
+
+Workington	65965	Tony Cunningham	Labour	23209	Cumbria	North
+		Tim Stoddart	Conservative	12359
+		Ian Francis	Liberal Democrats	5214
+		John Peacock	Legalise Cannabis Alliance	1040
+
+Worsley	69300	Terry Lewis	Labour	20193	Central Manchester	Greater Manchester
+		Tobias Ellwood	Conservative	8406
+		Robert Bleakley	Liberal Democrats	6188
+		Dorothy Entwistle	Socialist Labour Party	576
+
+Worthing East and Shoreham	71890	Tim Loughton	Conservative	18608	West Sussex	South East
+		Daniel Yates	Labour	12469
+		Paul Elgood	Liberal Democrats	9876
+		Jim McCulloch	UK Independence Party	1195
+		Christopher Baldwin	Legalise Cannabis Alliance	920
+
+Worthing West	72419	Peter Bottomley	Conservative	20508	West Sussex	South East
+		James Walsh	Liberal Democrats	11471
+		Alan Butcher	Labour	9270
+		Tim Cross	UK Independence Party	1960
+
+Wrexham	50465	Ian Lucas	Labour	15934	Clwyd	Wales
+		Felicity Elphick	Conservative	6746
+		Ron Davies	Liberal Democrats	5153
+		Malcolm Evans	Plaid Cymru	1783
+		Jane Brookes	UK Independence Party	432
+
+Wycombe	74647	Paul Goodman	Conservative	19064	Buckinghamshire	Essex
+		Chauhdry Shafique	Labour	15896
+		Dee Tomlin	Liberal Democrats	7658
+		Christopher Cooke	UK Independence Party	1059
+		John Laker	Green	1057
+		David Fitton	Independent	240
+
+Wyre Forest	72152	Richard Taylor	Kidderminster Hospital and Health Concern	28487	Hereford and Worcestershire	Severn
+		David Lock	Labour	10857
+		Mark Simpson	Conservative	9350
+		James Millington	UK Independence Party	368
+
+Wythenshawe and Sale East	72127	Paul Goggins	Labour	21032	Central Manchester	Greater Manchester
+		Susan Fildes	Conservative	8424
+		Vanessa Tucker	Liberal Democrats	4320
+		Lance Crookes	Green	869
+		Fred Shaw	Socialist Labour Party	410
+
+Yeovil	75977	David Laws	Liberal Democrats	21266	Somerset	South West
+		Marco Forgione	Conservative	17338
+		Joe Conway	Labour	7077
+		Neil Boxall	UK Independence Party	1131
+		Alex Begg	Green	786
+		Tony Prior	Liberal	534
+
+Ynys Mon	53117	Albert Owen	Labour	11906	Gwynedd	Wales
+		Eilian Williams	Plaid Cymru	11106
+		Albie Fox	Conservative	7653
+		Nick Bennett	Liberal Democrats	2772
+		Francis Wykes	UK Independence Party	359
+		Nona Donald	Independent	222
+
+York, City Of	80431	Hugh Bayley	Labour	25072	North Yorkshire	Yorkshire
+		Michael McIntyre	Conservative	11293
+		Andrew Waller	Liberal Democrats	8519
+		Bill Shaw	Green	1465
+		Frank Ormston	Socialist Alliance	674
+		Richard Bate	UK Independence Party	576
+		Graham Cambridge	Monster Raving Loony	381
+
+Yorkshire East	72342	Greg Knight	Conservative	19861	Humberside	Humberside
+		Tracey Simpson-Laing	Labour	15179
+		Mary-Rose Hardy	Liberal Democrats	6300
+		Trevor Pearson	UK Independence Party

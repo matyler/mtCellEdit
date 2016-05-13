@@ -1,0 +1,40 @@
+@BIN_UPPER@
+mtCedCLI @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+@BIN_NAME@ - command line spreadsheet program
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [OPTION]...
+
+
+= DESCRIPTION =
+mtCedCLI provides spreadsheet functionality via a Command Line
+Interface (CLI). It offers exactly the same functions as the GUI based
+mtCellEdit, but instead uses text commands. 
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-q**
+	Quiet - Don't show 'about' info on startup.
+**-t**
+	Interpret TAB as text.
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

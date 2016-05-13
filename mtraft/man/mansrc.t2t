@@ -1,0 +1,41 @@
+@BIN_UPPER@
+mtRaft @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+@BIN_NAME@ - file analysis
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ DIRECTORY ]
+
+
+= DESCRIPTION =
+mtRaft analyses a given directory and counts the files, subdirectories, links/other files and bytes contained in it.
+
+Double click an item or press ENTER to examine this subdirectory in a new tab.  The maximum number of tabs you can open at once is 10.  Alternatively you can use the arrow keys to select an item in the list.
+
+If the scan is taking too long you can stop it by pressing the Quit button.  Pressing this button while idle will quit the program.  Ctrl+Q actions this button from the keyboard.  Ctrl+C Copies the current table to the system clipboard.
+
+Directory paths can only have up to 2047 bytes.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

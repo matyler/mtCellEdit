@@ -1,0 +1,47 @@
+CEDSET
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedset - set spreadsheet cell
+
+
+= SYNOPSIS =
+**cedset** [ [ **OPTION** ] [ EXP ] ]...
+
+
+= DESCRIPTION =
+Set cell contents to the given expression.
+Expression "r5c5 'Hello" sets 'Hello as the contents of cell r5c5.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	The following input file is CSV.
+**-i** STRING
+	Load this input file.  "-" loads from stdin.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

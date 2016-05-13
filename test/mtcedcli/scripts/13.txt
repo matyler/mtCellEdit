@@ -1,0 +1,84 @@
+set book 2
+load tmp/base1.12.tsv.zip
+save as tmp/base1.13.tsv.zip
+
+set sheet	"Formulae"
+
+select all
+copy
+
+set book 1
+paste
+
+save as			tmp/base2.13.tsv.zip
+
+export output sheet	output/13.001.tsv		tsv
+export output sheet	output/13.002.tsv		tsv_q
+
+set book 2
+set sheet	"Sheet 1"
+
+select r3c3:r8c3
+copy
+
+select r3c4:r39c11
+paste
+
+select r8c6:r9c6
+insert row
+insert column
+
+select r5c4:r14c6
+set prefs cell color_background 0xFFFF00
+set prefs cellborder -3
+
+select r11c5:r20c8
+set prefs cell color_background 0x646480
+set prefs cell color_foreground 0xFFFFFF
+set prefs cellborder -4
+
+select r3c4
+set prefs cell num_decimal_places 3
+set prefs cell format 2
+
+select r11c5:r14c7
+copy
+
+select r44c4
+paste prefs
+
+select r44c8
+paste content
+
+select r45c5
+set prefs cell locked 1
+
+# Error - cell is locked
+select r44c4
+paste prefs
+
+select r11c4:r11c7
+set width 15
+
+set prefs book author "A new book author"
+set prefs sheet locked 1
+set prefs state page_mm_height 297
+set prefs state page_mm_width 210
+
+# Errors - sheet is locked
+select r11c4:r11c7
+set width 5
+delete sheet
+
+export output sheet	output/13.501.tsv	tsv
+export output sheet	output/13.502.tsv	tsv_q
+
+export output sheet	tmp/13.503.eps		eps
+export output sheet	tmp/13.504.html		html
+export output sheet	tmp/13.505.pdf		pdf
+export output sheet	tmp/13.506.pdf		pdf_paged
+export output sheet	tmp/13.507.png		png
+export output sheet	tmp/13.508.ps		ps
+export output sheet	tmp/13.509.svg		svg
+
+save

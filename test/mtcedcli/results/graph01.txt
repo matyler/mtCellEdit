@@ -1,0 +1,57 @@
+/*
+	mtCellEdit Graph Template
+
+	Created		2012-12-3 12:56:10
+*/
+
+
+{ page		width="640"	height="320"
+			line_color="-1"	fill_color="-1"
+}
+
+{ graph		fill_color="0xffffff"	line_color="0"
+			x_pad="10"	y_pad="5"
+			antialias="0"
+}
+{ plot		fill_color="0xdddddd"
+			x_pad="5"	y_pad="5"	line_color="0"
+			antialias="0"
+}
+
+
+{ x_axis		min="0"		max="20"	}
+{ y_axis		min="5"		max="-5"	}
+
+
+{ plot_x_axis_grid	gap="1"	line_color="rgb(200,200,200)"	antialias="0"	}
+{ plot_y_axis_grid	gap="2"	line_color="rgb(200,200,200)"	antialias="0"	}
+
+{ plot_x_axis_grid	gap="5"	line_color="rgb(150,150,150)"	antialias="0"	}
+{ plot_y_axis_grid	gap="10"	line_color="rgb(150,150,150)"	antialias="0"	}
+
+
+{ plot_x_axis_top	text="Graph Title"	text_size="20"
+				x_justify="0.5"		y_justify="0.5"	y_pad="10"
+}
+
+{ plot_x_axis	size="5"	gap="10"	text_size="10"
+			x_justify="0"		y_pad="5"
+			antialias="0"
+}
+{ plot_y_axis	size="5"	gap="2"	text_size="10"
+			y_justify="0"		x_pad="5"
+			antialias="0"
+}
+
+{ plot_x_axis	text="Input"		text_size="14"
+			y_pad="0"
+}
+{ plot_y_axis	text="Output"		text_size="14"
+			x_pad="0"
+}
+
+{ plot_graph_bar	fill_color="0x9999FF"	gap="1"
+				sheet="Formulae"		data="r2c4:r20c4"
+				antialias="0"
+}
+

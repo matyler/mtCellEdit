@@ -1,0 +1,3212 @@
+=counta( r[2]c:r_c )	=sum( r[2]c:r_c )	=counta( r[2]c:r_c )		=sum( r[2]c:r_c )	= 100 * rc5 / rc2
+Constituency Name	Electorate	Candidate (* = incumbent MP)	Party	Votes	County	Region
+
+Aberavon	64864	J Morris	Labour	31665	West Glamorgan	Wales
+		F McCarthy	Conservative	12692
+		SM Cutts	Liberal	4624
+		G Thomas	Plaid Cymru	1954
+		G Rowden	Communist	406
+
+Aberdare	47500	IL Evans	Labour	26716	Mid Glamorgan and Gwent	Wales
+		D Deere	Conservative	6453
+		P Richards	Plaid Cymru	3652
+		M Winter	Communist	518
+
+Aberdeen North	64747	R Hughes	Labour	26771	Grampian	East Scotland
+		G Adams	Conservative	7657
+		M Watt	Scottish National Party	5796
+		L McMillan	Liberal	4887
+
+Aberdeen South	65090	IM Sproat	Conservative	20820	Grampian	East Scotland
+		NA Goodman	Labour	20048
+		H Pitt-Watson	Liberal	5901
+		A Stronach	Scottish National Party	4361
+
+Aberdeenshire East	54292	A McQuarrie	Conservative	16827	Grampian	East Scotland
+		D Henderson	Scottish National Party	16269
+		NL Bonney	Labour	6201
+
+Aberdeenshire West	67915	R Fairgrieve	Conservative	21086	Grampian	East Scotland
+		M Bruce	Liberal	18320
+		G Grant	Labour	7907
+		J Hulbert	Scottish National Party	4260
+
+Abertillery	35602	J Thomas	Labour	21698	Mid Glamorgan and Gwent	Wales
+		R Tuck	Conservative	4613
+		D Harries	Plaid Cymru	2248
+
+Abingdon	96447	T Benyon	Conservative	41211	Oxfordshire	West
+		AJD Popper	Labour	18920
+		I Blair	Liberal	16164
+		R Pinder	Independent	381
+
+Accrington	50822	A Davidson	Labour	19576	Lancashire	Lancashire
+		A Cheetham	Conservative	16282
+		R Holden	Liberal	3646
+		D Riley	National Front	508
+
+Acton	56875	G Young	Conservative	21056	Ealing	South London
+		GA Barnham	Labour	15258
+		S Rowley	Liberal	3549
+		C Wakley	National Front	501
+		J O'Leary	Irish National Party	243
+
+Aldershot	86516	JMG Critchley	Conservative	38014	Hampshire	South
+		N Westbrook	Liberal	14438
+		D Somerville	Labour	13698
+
+Aldridge-Brownhills	63377	R Shepherd	Conservative	26289	West Midlands	West Midlands
+		G Edge	Labour	20621
+		J Aldridge	Liberal	5398
+
+Altrincham and Sale	74547	WF Montgomery	Conservative	29873	Central Manchester	Greater Manchester
+		G Pratt	Labour	14643
+		J Campbell	Liberal	12603
+		C Marsh	Ecology	796
+
+Anglesey	47726	KL Best	Conservative	15100	Gwynedd	Wales
+		DE Morgan	Labour	12283
+		JL Williams	Plaid Cymru	7863
+		JG Jones	Liberal	3500
+
+Angus North and Mearns	43122	AL Buchanan-Smith	Conservative	18302	Tayside	East Scotland
+		I Murray	Scottish National Party	7387
+		HR McMahon	Labour	6132
+
+Angus South	57513	P Fraser	Conservative	20029	Tayside	East Scotland
+		A Welsh	Scottish National Party	19066
+		IG Philip	Labour	4623
+		H Will	Liberal	2218
+
+Antrim North	102202	IRK Paisley	Democratic Unionist Party	33941	Northern Ireland	Northern Ireland
+		DJ Burchill	Ulster Unionist Party	15398
+		H Wilson	Alliance Party of Northern Ireland	7797
+		SN Farren	Social Democratic and Labour Party	4867
+		JF Turnly	Irish Independence Party	3689
+
+Antrim South	126444	JH Molyneaux	Ulster Unionist Party	50782	Northern Ireland	Northern Ireland
+		CHG Kinahan	Alliance Party of Northern Ireland	11914
+		PJ Rowan	Social Democratic and Labour Party	7432
+		R Kidd	United Labour Party	1895
+		K Smyth	Republican Clubs	1615
+
+Argyll	43527	JJ Mackay	Conservative	12191	Argyll and Bute	West Scotland
+		I MacCormick	Scottish National Party	10545
+		MJN Macgregor	Labour	5283
+		R Michie	Liberal	5113
+
+Armagh	93069	JH McCusker	Ulster Unionist Party	31668	Northern Ireland	Northern Ireland
+		S Mallon	Social Democratic and Labour Party	23545
+		D Calvert	Democratic Unionist Party	5634
+		T Moore	Republican Clubs	2310
+		W Ramsay	Alliance Party of Northern Ireland	2074
+
+Arundel	91638	RM Marshall	Conservative	43968	West Sussex	South East
+		JR Kingsbury	Liberal	13208
+		JN Tizard	Labour	10509
+
+Ashfield	77878	F Haynes	Labour	33116	Nottinghamshire	East Midlands
+		T Smith	Conservative	25319
+		HC Flint	Liberal	3914
+		W Annable	National Front	397
+
+Ashford	61460	K Speed	Conservative	26224	Kent	South East
+		AA Gilbert	Labour	12586
+		A Wainman	Liberal	7631
+		KR McKilliam	National Front	678
+
+Ashton under Lyne	58588	RE Sheldon	Labour	24535	Eastern Manchester	Greater Manchester
+		A Fearn	Conservative	16156
+		G Taylor	Liberal	3699
+		D Jones	National Front	486
+
+Aylesbury	74746	THF Raison	Conservative	33953	Buckinghamshire	Essex
+		JG Power	Labour	14091
+		MJ Cook	Liberal	10248
+
+Ayr	54753	GKH Younger	Conservative	18907	Ayrshire and Lanark	West Scotland
+		K MacDonald	Labour	16139
+		R Mabon	Liberal	4656
+		J McGill	Scottish National Party	3998
+
+Ayrshire Central	67288	D Lambie	Labour	27438	Ayrshire and Lanark	West Scotland
+		R Wilkinson	Conservative	15734
+		I MacDonald	Scottish National Party	5596
+		I Clarkson	Liberal	4896
+
+Ayrshire North and Bute	49931	JA Corrie	Conservative	17317	Ayrshire and Lanark	West Scotland
+		MJ Smith	Labour	13004
+		M Brown	Scottish National Party	5272
+		P Giffney	Liberal	2280
+
+Ayrshire South	50727	G Foulkes	Labour	14271	Ayrshire and Lanark	West Scotland
+		J Sillars	Scottish Labour	12750
+		G Young	Conservative	10287
+		C Cameron	Scottish National Party	3233
+
+Banbury	72711	HN Marten	Conservative	31137	Oxfordshire	West
+		JB Hodgson	Labour	16623
+		M White	Liberal	8658
+		I Cherry	National Front	504
+
+Banffshire	32768	DJ Myles	Conservative	10580	Grampian	East Scotland
+		H Watt	Scottish National Party	9781
+		RE Duncan	Labour	3381
+
+Barking	48289	J Richardson	Labour	18111	Barking and Dagenham	North London
+		M Roe	Conservative	11103
+		MF Taylor	Liberal	3679
+		I Newport	National Front	1021
+		J Barry	Independent Labour	400
+
+Barkston Ash	91890	MJH Alison	Conservative	40381	North Yorkshire	Yorkshire
+		JH Muir	Labour	21670
+		P Pughe-Morgan	Liberal	7909
+		D Corry	Ecology	1829
+
+Barnsley	77699	R Mason	Labour	36276	South Yorkshire	Humberside
+		G England	Conservative	13654
+		W Whitaker	Liberal	5751
+		B Gallagher	Troops Out Of Ireland	638
+		J Davis	Workers Revolutionary Party	348
+
+Barrow-in-Furness	54451	AE Booth	Labour	22687	Cumbria	North
+		P Thompson	Conservative	14946
+		G Thompson	Liberal	4983
+
+Barry	75127	R Gower	Conservative	30720	South Glamorgan	Wales
+		PP Stead	Labour	21928
+		WN Berritt	Liberal	6105
+		AJ Dixon	Plaid Cymru	1281
+		ER Kerton	National Front	312
+
+Basildon	103595	KH Proctor	Conservative	37919	Essex	Essex
+		E Moonman	Labour	32739
+		R Auvray	Liberal	9280
+		GA Sawyer	National Front	880
+
+Basingstoke	99124	DB Mitchell	Conservative	42625	Hampshire	South
+		RW Harris	Labour	20879
+		P Clatworthy	Liberal	14605
+		B Packer	National Front	677
+
+Bassetlaw	73763	JW Ashton	Labour	29426	Nottinghamshire	East Midlands
+		DK Harris	Conservative	22247
+		A Wilkinson	Liberal	6913
+
+Bath	63575	C Patten	Conservative	23025	Bristol Area	West
+		CP Mayhew	Liberal	13913
+		M Baber	Labour	11407
+		D Grimes	Ecology	1082
+		T Mundy	National Front	206
+
+Batley and Morley	62871	KJ Woolmer	Labour	22984	West Yorkshire	Yorkshire
+		GNA Crone	Conservative	17632
+		C Caywood	Liberal	4943
+		D Parkins	Independent	848
+		C Lord	Ecology	460
+
+Battersea North	41435	DPT Jay	Labour	15834	Wandsworth	South London
+		P Phillips	Conservative	9358
+		W Brown	Liberal	2021
+		M Salt	National Front	772
+		A Lavelle	Workers Party	104
+		P Clay	Workers Revolutionary Party	47
+		J Harwell	Community Party	30
+
+Battersea South	43712	A Dubs	Labour	13984	Wandsworth	South London
+		T Wallace	Conservative	13652
+		J Ware	Liberal	2802
+		A Perry	National Front	561
+
+Beaconsfield	67961	RM Bell	Conservative	31938	Buckinghamshire	Essex
+		EL Glasson	Labour	10443
+		P Meyer	Liberal	8853
+		J Noyes	National Front	548
+
+Bebington and Ellesmere Port	91816	B Porter	Conservative	32488	Cheshire	Severn
+		A Bates	Labour	32002
+		P Gilchrist	Liberal	9591
+
+Beckenham	57939	PC Goodhart	Conservative	24607	Bromley	South London
+		JW Mordecai	Labour	10856
+		C Forrest	Liberal	6450
+		W Vernon	Ecology	762
+		N Dickson	National Front	606
+
+Bedford	77315	THH Skeet	Conservative	31140	Bedfordshire	East Anglia
+		NA Hyman	Labour	18727
+		B Gibbons	Liberal	10129
+		R Stearns	National Front	813
+
+Bedfordshire Mid	81564	SLE Hastings	Conservative	37724	Bedfordshire	East Anglia
+		FG Peacock	Labour	17140
+		CAP Smout	Liberal	11467
+
+Bedfordshire South	73247	WD Madel	Conservative	32988	Bedfordshire	East Anglia
+		J Gardner	Labour	16505
+		M Turner	Liberal	8402
+		LA Smith	National Front	626
+
+Bedwellty	50708	NG Kinnock	Labour	28794	Mid Glamorgan and Gwent	Wales
+		R Walter	Conservative	8358
+		T Richards	Plaid Cymru	2648
+		PM Rout	Ecology	556
+
+Beeston	77802	JT Lester	Conservative	33273	Nottinghamshire	East Midlands
+		JM Jacob	Labour	23077
+		T Turner	Liberal	6935
+
+Belfast East	75481	P Robinson	Democratic Unionist Party	15994	Northern Ireland	Northern Ireland
+		W Craig	Ulster Unionist Party	15930
+		O Napier	Alliance Party of Northern Ireland	15066
+		N Agnew	Unionist Party of NI	2017
+		G Chambers	NI Labour	1982
+
+Belfast North	65073	J McQuade	Democratic Unionist Party	11690	Northern Ireland	Northern Ireland
+		AC Walker	Ulster Unionist Party	10695
+		P O'Hare	Social Democratic and Labour Party	7823
+		AL Dickson	Unionist Party of NI	4220
+		J Cushnahan	Alliance Party of Northern Ireland	4120
+		S Lynch	Republican Clubs	1907
+		A Carr	NI Labour	1889
+
+Belfast South	68920	RJ Bradford	Ulster Unionist Party	28875	Northern Ireland	Northern Ireland
+		B Glass	Alliance Party of Northern Ireland	11745
+		A McDonnell	Social Democratic and Labour Party	3694
+		V Brennan	Unionist Party of NI	1784
+		J Dudgeon	Labour Integrationist	692
+
+Belfast West	58884	G Fitt	Social Democratic and Labour Party	16480	Northern Ireland	Northern Ireland
+		T Passmore	Ulster Unionist Party	8245
+		W Dickson	Democratic Unionist Party	3716
+		B Brennan	Republican Clubs	2284
+		J Cousins	Alliance Party of Northern Ireland	2024
+		D Peters	NI Labour	540
+
+Belper	73341	S Faith	Conservative	27193	Derbyshire	East Midlands
+		RL MacFarquhar	Labour	26311
+		M Peel	Liberal	7331
+		J Grand-Scrutton	National Front	460
+
+Bermondsey	51246	RJ Mellish	Labour	19338	Southwark	South London
+		A Duma	Conservative	7582
+		J Taylor	Liberal	2072
+		J Sneath	National Front	1175
+		A Moore	Workers Revolutionary Party	239
+
+Berwick and East Lothian	60919	JDH Robertson	Labour	21977	Edinburgh area	East Scotland
+		M Marshall	Conservative	20304
+		T Glen	Liberal	4948
+		A Macartney	Scottish National Party	3300
+
+Berwick-upon-Tweed	42493	AJ Beith	Liberal	19351	Northumberland	North
+		CAE Baker-Cresswell	Conservative	13663
+		GM Elliott	Labour	2602
+
+Bethnal Green and Bow	51436	I Mikardo	Labour	14227	Tower Hamlets	North London
+		E Flounders	Liberal	6673
+		R Page	Conservative	5567
+		M Webster	National Front	1740
+		W Colvill	Workers Revolutionary Party	183
+		R Varnes	Socialist Unity	153
+
+Bexleyheath	50872	CD Townsend	Conservative	21888	Bexley	South London
+		R Blackwell	Labour	13342
+		J Crowhurst	Liberal	4782
+		A Wilkens	National Front	749
+
+Birkenhead	56421	F Field	Labour	20803	Merseyside	Lancashire
+		P Gill	Conservative	14894
+		R Perkins	Liberal	5708
+		M Fletcher	Workers Revolutionary Party	306
+
+Birmingham Edgbaston	68645	JCJ Knight	Conservative	25192	Birmingham	West Midlands
+		AG Hudson	Labour	15605
+		JI Dugued	Liberal	4377
+		JR Tyler	Ecology	852
+		DC Howlett	Jesus and His Cross	297
+		B Dore	Save Birmingham Education	129
+		LW Marshall	Independent	112
+
+Birmingham Erdington	64341	J Silverman	Labour	20105	Birmingham	West Midlands
+		JEC Alden	Conservative	19425
+		HJ Duffy	Liberal	3487
+		F Hastilow	National Front	687
+
+Birmingham Hall Green	67683	RE Eyre	Conservative	27072	Birmingham	West Midlands
+		TJ Stewart	Labour	17508
+		PM Lockyer	Liberal	4440
+		R Maylin	National Front	615
+
+Birmingham Handsworth	45018	SRR Wright	Labour	16998	Birmingham	West Midlands
+		R Tyler	Conservative	13789
+
+Birmingham Ladywood	33989	EJ Sever	Labour	13450	Birmingham	West Midlands
+		A Newhouse	Conservative	5691
+		KG Hardeman	Liberal	2030
+
+Birmingham Northfield	78873	JBL Cadbury	Conservative	25304	Birmingham	West Midlands
+		RJ Carter	Labour	25100
+		R Lewthwaite	Liberal	4538
+		RA Newman	National Front	614
+		JE Beale	Workers Revolutionary Party	144
+
+Birmingham Perry Barr	51794	JW Rooker	Labour	18674	Birmingham	West Midlands
+		JR Kinsey	Conservative	18183
+		OL Griffiths	Liberal	1811
+		KA Axon	National Front	582
+
+Birmingham Selly Oak	64631	AM Beaumont-Dark	Conservative	23175	Birmingham	West Midlands
+		T Litterick	Labour	18400
+		P Clifford	Liberal	5452
+		G Bassett	National Front	401
+		PJ Crome	Child and Family Protection Group	190
+
+Birmingham Small Heath	46602	DH Howell	Labour	17735	Birmingham	West Midlands
+		DJ Savage	Conservative	6268
+		D Minnis	Liberal	4470
+		M Caffery	National Front	490
+		CC Adamson	Socialist Unity	349
+
+Birmingham Sparkbrook	45910	RSG Hattersley	Labour	18717	Birmingham	West Midlands
+		N Webb	Conservative	10398
+		R Murray	Communist	715
+
+Birmingham Stechford	61115	TAG Davis	Labour	21166	Birmingham	West Midlands
+		A Mackay	Conservative	19517
+		GA Gopsill	Liberal	2349
+		F Russell	National Front	698
+
+Birmingham Yardley	57574	DG Bevan	Conservative	20193	Birmingham	West Midlands
+		S Tierney	Labour	19029
+		SM Anderson	Liberal	2491
+		H Challendar	National Front	749
+
+Bishop Auckland	74696	D Foster	Labour	27200	Durham	North
+		MF Irvine	Conservative	21160
+		JD Frise	Liberal	7439
+
+Blaby	68576	N Lawson	Conservative	33221	Leicestershire	East Midlands
+		TK Hill	Labour	12581
+		D Inman	Liberal	9277
+		P Gegan	National Front	2056
+
+Blackburn	52479	JW Straw	Labour	19683	Lancashire	Lancashire
+		ID McGaw	Conservative	14193
+		FJ Beetham	Liberal	4371
+		E Adamson	National Front	565
+
+Blackpool North	59557	NA Miscampbell	Conservative	23209	Lancashire	Lancashire
+		AW Verdeille	Labour	12980
+		C Hayworth	Liberal	6127
+		A Hanson	National Front	943
+
+Blackpool South	58615	PAR Blaker	Conservative	21762	Lancashire	Lancashire
+		P Carrington	Labour	12914
+		EE Wynne	Liberal	7057
+		A Machin	National Front	524
+
+Blaydon	58463	JD McWilliam	Labour	24687	Newcastle area	North
+		T Middleton	Conservative	16178
+		D Hutton	Liberal	5364
+
+Blyth	79727	J Ryman	Labour	25047	Northumberland	North
+		EJ Milne	Independent Labour	17987
+		E Nicholson	Conservative	14194
+		D Parkin	Liberal	5176
+
+Bodmin	61650	RA Hicks	Conservative	27922	Cornwall	South West
+		PA Tyler	Liberal	17893
+		N Knowles	Labour	3508
+		R Holmes	Mebyon Kernow	865
+		C Retallack	Ecology	465
+		M Carter	National Front	235
+
+Bolsover	52740	DE Skinner	Labour	27495	Derbyshire	East Midlands
+		A Favell	Conservative	10116
+		I Frost	Liberal	3688
+
+Bolton East	58482	DW Young	Labour	21920	Western Manchester	Greater Manchester
+		R Baldwin	Conservative	20068
+		SB Lawrence	Liberal	3603
+		J Hamilton	National Front	457
+
+Bolton West	50221	WA Taylor	Labour	17857	Western Manchester	Greater Manchester
+		BH Watson	Conservative	17257
+		J Fish	Liberal	4392
+		K Bernal	National Front	348
+
+Bootle	62578	A Roberts	Labour	26900	Merseyside	Lancashire
+		R Watson	Conservative	11741
+		D Mahon	Liberal	4531
+		H Fjortoft	Independent Liberal	911
+
+Bosworth	90290	A Butler	Conservative	37030	Leicestershire	East Midlands
+		DJ Fatchett	Labour	28595
+		E Brown	Liberal	10032
+		D Dunn	National Front	682
+
+Bothwell	61309	J Hamilton	Labour	26492	Ayrshire and Lanark	West Scotland
+		J Scott	Conservative	11275
+		TA Grieve	Liberal	5225
+		JF McCool	Scottish National Party	5202
+
+Bournemouth East	56382	D Atkinson	Conservative	25808	Dorset	South West
+		J Goodwin	Labour	7553
+		D Matthew	Liberal	6738
+		J Pratt	New Britain	581
+		J Dempsey	Ecology	523
+
+Bournemouth West	61359	J Eden	Conservative	25873	Dorset	South West
+		PJ Brushett	Labour	9247
+		TDG Richards	Liberal	7677
+		G Hubbard	National Front	438
+
+Bradford North	68530	BT Ford	Labour	25069	West Yorkshire	Yorkshire
+		N Hamilton	Conservative	17548
+		A Bagshawe	Liberal	5819
+		A Brons	National Front	614
+		CE Smith	Workers Revolutionary Party	158
+
+Bradford South	76353	TW Torney	Labour	26323	West Yorkshire	Yorkshire
+		JK Hirst	Conservative	22005
+		R Taylor	Liberal	7127
+		G Wright	National Front	422
+
+Bradford West	65407	E Lyons	Labour	24309	West Yorkshire	Yorkshire
+		T Stow	Conservative	16554
+		N Flood	Liberal	3668
+		G Brown	National Front	633
+
+Braintree	75103	AH Newton	Conservative	31593	Essex	Essex
+		JEB Gyford	Labour	19075
+		J Bryan	Liberal	10115
+
+Brecon and Radnor	56975	T Hooson	Conservative	22660	Powys	Wales
+		CE Roderick	Labour	19633
+		N Lewis	Liberal	4654
+		J Power	Plaid Cymru	1031
+
+Brent East	57034	R Freeson	Labour	20351	Brent	North London
+		J Howes	Conservative	14008
+		C Wilding	Liberal	2799
+		J Davies	National Front	706
+		G Downing	Workers Revolutionary Party	290
+
+Brent North	72158	R Boyson	Conservative	29995	Brent	North London
+		J Lebor	Labour	18612
+		A Ketteringham	Liberal	5872
+		G John	National Front	873
+
+Brent South	59620	LA Pavitt	Labour	24178	Brent	North London
+		D Heathcoat-Amory	Conservative	12572
+		P Hannon	Liberal	2859
+		A Downes	National Front	811
+		R O'Neill	Workers Revolutionary Party	277
+
+Brentford and Isleworth	71337	BJ Hayhoe	Conservative	27527	Hounslow	South London
+		PJ Walker	Labour	22533
+		J Parry	Liberal	4208
+		P Attridge	National Front	738
+		I Coates	Ecology	454
+		R Simmerson	Conservative Against the Common Market	257
+
+Brentwood and Ongar	59759	RA McCrindle	Conservative	29113	Essex	Essex
+		IJC Peddie	Labour	12182
+		C Jones	Liberal	6882
+
+Bridgwater	73040	TJ King	Conservative	31259	Somerset	South West
+		J Beasant	Labour	16809
+		C Baron	Liberal	9793
+
+Bridlington	68849	J Townend	Conservative	27988	Humberside	Humberside
+		PJ Doyle	Labour	12693
+		D Horsley	Liberal	10390
+
+Brigg and Scunthorpe	94822	M Brown	Conservative	31130	Humberside	Humberside
+		J Ellis	Labour	30644
+		M Beard	Liberal	7764
+		C Nottingham	Democratic Labour	2042
+		M Nottingham	Independent	123
+
+Brighouse and Spenborough	65415	GPA Waller	Conservative	23448	West Yorkshire	Yorkshire
+		M McGowan	Labour	21714
+		R Thomas	Liberal	7278
+
+Brighton Kemptown	64170	A Bowden	Conservative	25512	East Sussex	South East
+		Q Barry	Labour	17504
+		S Osbourne	Liberal	4179
+		V Tyndall	National Front	404
+
+Brighton Pavilion	57003	HJ Amery	Conservative	22218	East Sussex	South East
+		DS Hill	Labour	12099
+		D Venables	Liberal	5965
+		J Beale	Ecology	638
+		H Jones	National Front	436
+
+Bristol North East	51053	AMF Palmer	Labour	19337	Bristol Area	West
+		M Mulvany	Conservative	13685
+		N Drinan	Liberal	3693
+		G Dorey	Ecology	469
+		KDC Brown	National Front	320
+
+Bristol North West	65601	MKB Colvin	Conservative	25915	Bristol Area	West
+		RR Thomas	Labour	21238
+		PM Davis	Liberal	5857
+		PM Kingston	National Front	254
+		TL Keen	Campaign for a More Prosperous Britain	73
+
+Bristol South	60149	MFL Cocks	Labour	25038	Bristol Area	West
+		TP Dicks	Conservative	13855
+		CJ Bidwell	Liberal	3815
+		KG Elliot	National Front	392
+		LJ Cheek	Workers Revolutionary Party	135
+
+Bristol South East	69937	AN Wedgwood Benn	Labour	24878	Bristol Area	West
+		J Godwin	Conservative	22988
+		NW Tatam	Liberal	6371
+		KD Dowler	National Front	523
+		TL Keen	Campaign for a More Prosperous Britain	66
+
+Bristol West	59140	WA Waldegrave	Conservative	22257	Bristol Area	West
+		V Bath	Labour	9690
+		B Silver	Liberal	8880
+		JK Ingham	Ecology	1154
+		M Jones	National Front	246
+		RR Redmore	United Democratic Party	93
+
+Bromsgrove and Redditch	104375	HD Miller	Conservative	44621	Hereford and Worcestershire	Severn
+		A Davis	Labour	28736
+		N Phillips	Liberal	8066
+		BA Deakin	National Front	752
+
+Buckingham	103511	WR Benyon	Conservative	41719	Buckinghamshire	Essex
+		JS Fryer	Labour	27752
+		SB Crooks	Liberal	11045
+		M Smith	National Front	803
+
+Burnley	51050	D Jones	Labour	20172	Lancashire	Lancashire
+		A Widdecombe	Conservative	14062
+		M Steed	Liberal	5091
+		F Tyrrall	Democrat	352
+
+Burton	70130	IJ Lawrence	Conservative	29821	Staffordshire	Severn
+		GS Jones	Labour	20020
+		K Stevens	Liberal	5383
+
+Bury and Radcliffe	78021	FR White	Labour	29194	Western Manchester	Greater Manchester
+		PJ Le Bosquet	Conservative	29156
+		S Vickers	Liberal	5711
+		JM Bridge	National Front	414
+
+Bury St Edmunds	95621	EW Griffiths	Conservative	41426	Suffolk	East Anglia
+		A Gibson	Labour	21167
+		G Jones	Liberal	10386
+
+Caernarvon	43041	D Wigley	Plaid Cymru	17420	Gwynedd	Wales
+		TM Hughes	Labour	8696
+		JET Paice	Conservative	6968
+		JT Edwards	Liberal	1999
+
+Caerphilly	58908	EH Davies	Labour	27280	Mid Glamorgan and Gwent	Wales
+		JO Ranelagh	Conservative	8783
+		PJS Williams	Plaid Cymru	6931
+		N Jones	Liberal	3430
+
+Caithness and Sutherland	29564	RAR MacLennan	Labour	9613	Highland	East Scotland
+		RH Wardrop	Conservative	7074
+		R Shaw	Scottish National Party	6487
+
+Cambridge	77666	RVR James	Conservative	25568	Cambridgeshire	East Anglia
+		MH Smith	Labour	20772
+		JD Wakelin	Liberal	9285
+		DW Holland	National Front	311
+
+Cambridgeshire	93179	FL Pym	Conservative	41218	Cambridgeshire	East Anglia
+		R Collins	Labour	17929
+		SR Jakobi	Liberal	13780
+
+Cannock	59511	GE Roberts	Labour	25050	Staffordshire	Severn
+		J Vereker	Conservative	17704
+		PJ Davis	Liberal	4729
+
+Canterbury	89104	DL Crouch	Conservative	38805	Kent	South East
+		RP Spencer	Labour	16168
+		J Purchese	Liberal	10665
+		J White	National Front	941
+
+Cardiff North	47973	I Grist	Conservative	17181	South Glamorgan	Wales
+		MD Petrou	Labour	13133
+		MJ German	Liberal	4921
+		OJ Thomas	Plaid Cymru	1081
+
+Cardiff North West	43639	MH Roberts	Conservative	17925	South Glamorgan	Wales
+		PH Owen	Labour	11663
+		JT Roberts	Liberal	4832
+		CF Palfrey	Plaid Cymru	743
+
+Cardiff South East	54556	LJ Callaghan	Labour	23871	South Glamorgan	Wales
+		IAS Jones	Conservative	15170
+		ER Roberts	Plaid Cymru	628
+		RW Aldridge	Severnside Libertarian	375
+		P Arrowsmith	Independent Socialist	132
+		RH Spencer	Communist	112
+
+Cardiff West	51982	G Thomas	Speaker	27035	South Glamorgan	Wales
+		A Ogwen	Plaid Cymru	3272
+		C Gibbon	National Front	1287
+
+Cardigan	45555	GW Howells	Liberal	13227	Dyfed	Wales
+		E Thomas	Conservative	11033
+		LJ Powell	Labour	7488
+		D Hughes	Plaid Cymru	5382
+
+Carlisle	53703	RH Lewis	Labour	21343	Cumbria	North
+		D Bloomer	Conservative	16777
+		T Potts	Liberal	4829
+
+Carlton	76593	PJ Holland	Conservative	31762	Nottinghamshire	East Midlands
+		A Palmer	Labour	18989
+		J West	Liberal	9077
+		MJ Watts	National Front	606
+
+Carmarthen	61714	RG Thomas	Labour	18667	Dyfed	Wales
+		G Evans	Plaid Cymru	16689
+		NM Thomas	Conservative	12272
+		RCC Thomas	Liberal	4186
+		CG Grice	National Front	149
+		EJ Clarke	Keep Britain United Party	126
+
+Carshalton	67255	N Forman	Conservative	26492	Sutton	South London
+		MG Ormerod	Labour	16121
+		J Hatherley	Liberal	8112
+		T Denville-Faulkner	National Front	919
+
+Cheadle	67362	T Normanton	Conservative	32407	Eastern Manchester	Greater Manchester
+		D Austrick	Liberal	15268
+		FW Done	Labour	7415
+
+Chelmsford	84155	NAF St John-Stevas	Conservative	33808	Essex	Essex
+		SG Mole	Liberal	28337
+		SA Reeves	Labour	6041
+
+Chelsea	57515	NP Scott	Conservative	21782	Kensington and Chelsea	North London
+		R Pandy	Labour	6092
+		P Driver	Liberal	4544
+		A Reeve	National Front	342
+		B Fellowes	Christian Social Democrat	146
+		A Fielding	Independent	49
+
+Cheltenham	64726	C Irving	Conservative	25618	Gloucestershire	West
+		N Jones	Liberal	15080
+		M Reilley	Labour	9185
+		R Jacklin	National Front	342
+
+Chertsey and Walton	68749	GE Pattie	Conservative	25810	Surrey	South
+		A Sturgis	Liberal	13786
+		SP O'Byrne	Labour	12211
+		M Gillibrand	National Front	819
+
+Chesham and Amersham	67224	I Gilmour	Conservative	32924	Buckinghamshire	Essex
+		R Bradnock	Liberal	12328
+		EM Barratt	Labour	7645
+		S Clinch	National Front	697
+
+Chester, City Of	72027	PH Morrison	Conservative	28764	Cheshire	Severn
+		RD Blair	Labour	19450
+		A Stunnell	Liberal	7711
+
+Chesterfield	73738	EG Varley	Labour	31049	Derbyshire	East Midlands
+		S Hill	Conservative	17445
+		M Payne	Liberal	5617
+
+Chester-le-Street	83415	GH Radice	Labour	38672	Durham	North
+		JR Couchman	Conservative	16112
+		D McCourt	Liberal	9247
+
+Chichester	73720	RA Nelson	Conservative	34696	West Sussex	South East
+		J Rix	Liberal	10920
+		GN Cooke	Labour	8569
+		E Iremonger	United Country Party	863
+		N Bagnall	Ecology	656
+
+Chingford	56061	NB Tebbit	Conservative	24640	Waltham Forest	North London
+		NF Gerrard	Labour	12257
+		DA Nicholson	Liberal	5225
+		D South	National Front	1157
+		S Lambert	Ecology	649
+
+Chippenham	74519	R Needham	Conservative	29308	Wiltshire	West
+		REJ Banks	Liberal	24611
+		CLB Inchley	Labour	5146
+		B Pettit	Ecology	521
+
+Chipping Barnet	58254	S Chapman	Conservative	25154	Barnet	North London
+		PJ Dawe	Labour	11147
+		D Ive	Liberal	6867
+		R Cole	National Front	865
+
+Chislehurst	54024	RE Sims	Conservative	23259	Bromley	South London
+		C Howes	Labour	13494
+		B Taylor	Liberal	5335
+		R Hoy	National Front	564
+
+Chorley	81016	D Dover	Conservative	31125	Lancashire	Lancashire
+		G Rogers	Labour	28546
+		N Orrell	Liberal	6388
+		M Dean	National Front	379
+
+Christchurch and Lymington	58182	RJ Adley	Conservative	29817	Dorset	South West
+		F Harrison	Liberal	7654
+		LK Hatts	Labour	6722
+		J Keeling	Ecology	975
+
+Cirencester and Tewkesbury	85444	N Ridley	Conservative	37651	Gloucestershire	West
+		P Beckerlegge	Liberal	18057
+		RS Trafford	Labour	11575
+
+City of London and Westminster South	50357	P Brooke	Conservative	16851	City of Westminster	North London
+		R Profitt	Labour	7067
+		H Ball-Wilson	Liberal	3375
+		K Mathews	National Front	478
+
+Cleveland and Whitby	65488	L Brittan	Conservative	26735	Cleveland	North
+		BJ Pimlott	Labour	19818
+		M Pitts	Liberal	5870
+
+Clitheroe	54468	D Waddington	Conservative	25081	Lancashire	Lancashire
+		LR Sutton	Labour	13502
+		F Wilson	Liberal	5362
+
+Coatbridge and Airdrie	60133	J Dempsey	Labour	27598	Glasgow area	West Scotland
+		J Love	Conservative	12442
+		M Johnstone	Scottish National Party	5260
+
+Colchester	90589	A Buck	Conservative	36740	Essex	Essex
+		RE Russell	Labour	22877
+		M Gage	Liberal	9794
+
+Colne Valley	64139	RS Wainwright	Liberal	20151	West Yorkshire	Yorkshire
+		PJ Hildrew	Labour	17799
+		SG Kaye	Conservative	14450
+		TL Keen	Campaign for a More Prosperous Britain	101
+
+Consett	57547	DJ Watkins	Labour	26708	Durham	North
+		M Lycett	Conservative	10841
+		R Kennedy	Liberal	6048
+
+Conway	51350	JWP Roberts	Conservative	18142	Clwyd	Wales
+		GW Davies	Labour	12069
+		JR Roberts	Liberal	6867
+		E Price	Plaid Cymru	3497
+
+Cornwall North	55076	GA Neale	Conservative	24489	Cornwall	South West
+		JW Pardoe	Liberal	20742
+		RB Tremlett	Labour	1514
+		J Faull	Ecology	442
+		R Bridgwater	National Front	224
+
+Coventry North East	64806	GM Park	Labour	27010	West Midlands	West Midlands
+		E of Shelburne	Conservative	16487
+		Raj-Mal Singh	Liberal	2291
+		H Robbins	National Front	546
+		P Corrigan	Communist	390
+		S Perkin	Workers Revolutionary Party	378
+
+Coventry North West	49008	G Robinson	Labour	19460	West Midlands	West Midlands
+		D Miles	Conservative	15489
+		C Poole	Liberal	3413
+		A Stewart	National Front	359
+		T Keen	Campaign for a More Prosperous Britain	98
+
+Coventry South East	50961	W Wilson	Labour	19583	West Midlands	West Midlands
+		T Sawdon	Conservative	12097
+		M Brazier	Liberal	2984
+		R Clarke	National Front	513
+		A Wilkins	Workers Revolutionary Party	426
+
+Coventry South West	69552	JP Butcher	Conservative	27928	West Midlands	West Midlands
+		A Wise	Labour	22274
+		NB Chapple	Liberal	5921
+		M Williamson	National Front	482
+		T Keen	Campaign for a More Prosperous Britain	79
+
+Crewe	59530	GP Dunwoody	Labour	22288	Cheshire	Severn
+		JV Butcher	Conservative	18051
+		C Bithell	Liberal	5430
+		W Tonks	National Front	352
+
+Crosby	81208	RG Page	Conservative	34768	Merseyside	Lancashire
+		A Mulhearn	Labour	15496
+		A Hill	Liberal	9302
+		P Hussey	Ecology	1489
+
+Croydon Central	66629	JEM Moore	Conservative	26457	Croydon	South London
+		DF White	Labour	18499
+		JP Johnson	Liberal	5112
+		MJ Soper	Independent Conservative	238
+		P Gibson	Workers Revolutionary Party	116
+
+Croydon North East	57022	BB Wetherill	Conservative	21560	Croydon	South London
+		DH Simpson	Labour	14784
+		PT Streeter	Liberal	5459
+		PW Moss	National Front	464
+
+Croydon North West	55608	RG Taylor	Conservative	19928	Croydon	South London
+		SJ Boden	Labour	16159
+		WH Pitt	Liberal	4239
+
+Croydon South	62022	WG Clark	Conservative	30874	Croydon	South London
+		P Billenness	Liberal	10006
+		JM Bloom	Labour	6249
+		R Dummer	National Front	469
+
+Dagenham	67990	J Parker	Labour	24707	Barking and Dagenham	North London
+		G Hyams	Conservative	14600
+		M Long	Liberal	5583
+		J Roberts	National Front	1553
+		D Connor	Communist	553
+
+Darlington	63218	EJ Fletcher	Labour	22565	Cleveland	North
+		T Kirkhope	Conservative	21513
+		K Walker	Liberal	5054
+		H Outhwaite	National Front	444
+
+Dartford	57507	R Dunn	Conservative	21195	Kent	South East
+		S Irving	Labour	19803
+		I Josephs	Liberal	4407
+		I Nobbs	National Front	476
+		J Beddowes	Fancy Dress Party	328
+
+Darwen	75008	C Fletcher-Cooke	Conservative	30789	Lancashire	Lancashire
+		L Ellman	Labour	17763
+		A Cooper	Liberal	9928
+
+Daventry	90892	R Prentice	Conservative	41422	Northamptonshire	East Anglia
+		JL Rawlings	Labour	19939
+		R Woodside	Liberal	11286
+		G Younger	National Front	522
+
+Dearne Valley	64183	E Wainwright	Labour	31783	South Yorkshire	Humberside
+		JR Pattman	Conservative	9048
+		P Hargreaves	Liberal	5352
+
+Denbigh	65902	WGO Morgan	Conservative	23683	Clwyd	Wales
+		DL Williams	Liberal	14833
+		HR Thomas	Labour	9276
+		IW Jones	Plaid Cymru	4915
+
+Deptford	56096	JE Silkin	Labour	19391	Lewisham	South London
+		D Grant	Conservative	11638
+		N Rowden	Liberal	2774
+		R Mitchell	National Front	1490
+		J Maguire	Socialist Unity	274
+		G Dacres	Workers Revolutionary Party	198
+
+Derby North	83580	P Whitehead	Labour	28797	Derbyshire	East Midlands
+		RN Kemm	Conservative	28583
+		RF Whitehouse	Liberal	6093
+		C Bayliss	National Front	592
+		SP Gibson	English Nationalist	116
+
+Derby South	75422	WH Johnson	Labour	26945	Derbyshire	East Midlands
+		MC Stern	Conservative	20853
+		JD Somerset Sullivan	Liberal	5196
+		LA Verity	National Front	587
+		WA Biggs	Workers Revolutionary Party	146
+		J Short	English Nationalist	122
+
+Derbyshire North East	70767	RJ Ellis	Labour	27218	Derbyshire	East Midlands
+		E Oliver	Conservative	21889
+		P Hall	Liberal	7436
+
+Derbyshire South East	57516	P Rost	Conservative	24004	Derbyshire	East Midlands
+		GE Bermingham	Labour	16617
+		R Lustig	Liberal	5518
+		C Neil	National Front	498
+
+Derbyshire West	50655	M Parris	Conservative	21478	Derbyshire	East Midlands
+		PM Warboys	Liberal	11261
+		W Moore	Labour	8134
+
+Devizes	80028	CA Morrison	Conservative	32439	Wiltshire	West
+		VE Finlayson	Labour	16351
+		J Ainslie	Liberal	14059
+		R Burcham	Ecology	713
+		AB Mockler	Wessex Regionalist	142
+
+Devon North	77715	A Speller	Conservative	31811	Devon	South West
+		JJ Thorpe	Liberal	23338
+		AJ Saltern	Labour	7108
+		AM Whittaker	Ecology	729
+		JP Price	National Front	237
+		FH Hansford-Miller	English National Party	142
+		A Waugh	Dog Lovers Party	79
+		H Rous	Wessex Regionalist	50
+		WG Boaks	Democratic Monarchist Public Safety White Resident	20
+
+Devon West	61408	PM Mills	Conservative	29428	Devon	South West
+		V Howell	Liberal	12256
+		RD Maddern	Labour	6174
+		R Bearsford-Walker	National Front	393
+
+Dewsbury	63379	D Ginsburg	Labour	22829	West Yorkshire	Yorkshire
+		R Galley	Conservative	18448
+		N Derbyshire	Liberal	7580
+
+Doncaster	60487	H Walker	Labour	22184	South Yorkshire	Humberside
+		P Beard	Conservative	19208
+		G Broadhead	Liberal	3646
+		M Day	National Front	300
+
+Don Valley	95287	MC Welsh	Labour	39603	South Yorkshire	Humberside
+		R Freeman	Conservative	22243
+		E Simpson	Liberal	8238
+		I Connelly	Workers Party	720
+		T McCabe	Workers Revolutionary Party	398
+
+Dorking	60630	K Wickenden	Conservative	29003	Surrey	South
+		R Hope	Liberal	9240
+		JAS Weir	Labour	8970
+
+Dorset North	80732	N Baker	Conservative	40046	Dorset	South West
+		G Court	Liberal	16750
+		MC Rowlands	Labour	7543
+
+Dorset South	74239	Visc Cranbourne	Conservative	32372	Dorset	South West
+		A Chedzoy	Labour	17133
+		P St J Howe	Liberal	8649
+
+Dorset West	56658	JW Spicer	Conservative	26281	Dorset	South West
+		T Jones	Liberal	9776
+		HJ Skevington	Labour	7999
+		J Tillotson	National Front	514
+		G McEwan	Wessex Regionalist	192
+
+Dover and Deal	75883	PWI Rees	Conservative	30606	Kent	South East
+		JL Chapman	Labour	22664
+		J Cohen	Liberal	6906
+		J Fox	Silly Party	642
+		P Johnson	National Front	378
+
+Down North	99861	JA Kilfedder	Independent Ulster Unionist	36989	Northern Ireland	Northern Ireland
+		K Jones	Alliance Party of Northern Ireland	13364
+		C Smyth	Ulster Unionist Party	11728
+
+Down South	89562	JE Powell	Ulster Unionist Party	32254	Northern Ireland	Northern Ireland
+		EK McGrady	Social Democratic and Labour Party	24033
+		PM Forde	Alliance Party of Northern Ireland	4407
+		JE Markey	Irish Independence Party	1853
+		D O'Hagan	Republican Clubs	1682
+		SG Rice	Inter-Dependence Party	216
+		PB Courtney	Reform Party	31
+
+Dudley East	59661	JW Gilbert	Labour	22521	West Midlands	West Midlands
+		WD Williams	Conservative	14834
+		GPT Lewis	Liberal	3639
+		AJ Baker	National Front	844
+
+Dudley West	77525	JG Blackburn	Conservative	30158	West Midlands	West Midlands
+		MJ Hartley-Brewer	Labour	29109
+
+Dulwich	61259	SC Silkin	Labour	18557	Lambeth	South London
+		E Morley	Conservative	18435
+		WH Pearson	Liberal	4759
+		D Thompson	National Front	920
+		D Smart	Ecology	468
+
+Dumfries	64311	HSP Monro	Conservative	22704	Dumfries and Galloway	West Scotland
+		A Wood	Labour	13700
+		J Wallace	Liberal	7169
+		E Gibson	Scottish National Party	6647
+
+Dunbartonshire Central	49381	H McCartney	Labour	20515	Glasgow area	West Scotland
+		N Soames	Conservative	8512
+		W Lindsay	Scottish National Party	6055
+		L McCreadie	Liberal	3099
+		D McCafferty	Communist	1017
+		R Darroch	Christian Democrat	312
+
+Dunbartonshire East	73261	N Hogg	Labour	23268	Glasgow area	West Scotland
+		MW Hirst	Conservative	20944
+		MA Bain	Scottish National Party	12654
+		R Waddell	Liberal	4600
+
+Dunbartonshire West	54507	I Campbell	Labour	21166	Glasgow area	West Scotland
+		JC Munro	Conservative	14709
+		S Stratton	Scottish National Party	7835
+
+Dundee East	64330	RG Wilson	Scottish National Party	20497	Tayside	East Scotland
+		J Reid	Labour	17978
+		BJT Townsend	Conservative	9072
+		C Brodie	Liberal	2317
+		R Battersby	Workers Revolutionary Party	95
+
+Dundee West	63883	E Ross	Labour	23654	Tayside	East Scotland
+		J Fairlie	Scottish National Party	13197
+		I Stevenson	Conservative	12892
+		R Mennie	Communist	316
+
+Dunfermline	64868	RG Douglas	Labour	22803	Fife	East Scotland
+		A Lester	Conservative	15490
+		A Cameron	Scottish National Party	7351
+		G Whitelaw	Liberal	5803
+
+Durham	77463	WM Hughes	Labour	30903	Durham	North
+		M Lavis	Conservative	19666
+		C Wood	Liberal	8572
+
+Durham North West	63387	E Armstrong	Labour	29525	Durham	North
+		T Fenwick	Conservative	14245
+		J Hannibell	Liberal	4394
+
+Ealing North	76805	H Greenway	Conservative	27524	Ealing	South London
+		WJ Molloy	Labour	26044
+		J Taylor	Liberal	5162
+		J Shaw	National Front	1047
+
+Easington	65242	JD Dormand	Labour	29537	Durham	North
+		JS Smailes	Conservative	11981
+		V Morley	Liberal	6979
+
+Eastbourne	76880	IRE Gow	Conservative	37168	East Sussex	South East
+		D Bellotti	Liberal	11084
+		LJ Caine	Labour	10166
+		C Mitchell	National Front	533
+
+East Grinstead	59124	G Johnson Smith	Conservative	28279	East Sussex	South East
+		J Nieboer	Liberal	11102
+		RJ Taylor	Labour	6196
+
+East Kilbride	73094	MS Miller	Labour	31401	Ayrshire and Lanark	West Scotland
+		WG Hodgson	Conservative	17128
+		G Murray	Scottish National Party	9090
+		D McDowell	Communist	658
+
+Eastleigh	85400	DEC Price	Conservative	38516	Hampshire	South
+		CE Roberts	Labour	18222
+		GD Johnson	Liberal	12143
+
+Ebbw Vale	36207	MM Foot	Labour	20028	Mid Glamorgan and Gwent	Wales
+		G Inkin	Conservative	3937
+		AT Pope	Liberal	3082
+		G ap Roberts	Plaid Cymru	1884
+
+Eccles	58496	L Carter-Jones	Labour	24280	Central Manchester	Greater Manchester
+		J Reid	Conservative	16221
+		G Knight	Liberal	4448
+		T Keenan	Communist	368
+
+Edinburgh Central	37740	RF Cook	Labour	12191	Edinburgh area	East Scotland
+		DW McLetchie	Conservative	7530
+		S Donaldson	Liberal	3096
+		G Kennedy	Scottish National Party	2486
+		CD Boyd	Scottish Labour	176
+
+Edinburgh East	57473	GS Strang	Labour	23477	Edinburgh area	East Scotland
+		G Campbell	Conservative	14660
+		GC MacDougall	Scottish National Party	5296
+		C Downes	Communist	173
+		T Brotherstone	Workers Revolutionary Party	124
+
+Edinburgh Leith	37204	R Brown	Labour	12961	Edinburgh area	East Scotland
+		AJ McLernan	Conservative	8944
+		K Aitken	Liberal	3382
+		WR Platt	Scottish National Party	2706
+
+Edinburgh North	45303	AM Fletcher	Conservative	14170	Edinburgh area	East Scotland
+		N Lindsay	Labour	9773
+		R Guild	Liberal	5045
+		N MacCormick	Scottish National Party	3521
+
+Edinburgh Pentlands	58652	ML Rifkind	Conservative	17684	Edinburgh area	East Scotland
+		AJ Johnstone	Labour	16486
+		C Luckhurst	Liberal	5919
+		S Maxwell	Scottish National Party	4934
+
+Edinburgh South	58556	MA Ancram	Conservative	17986	Edinburgh area	East Scotland
+		JG Brown	Labour	15526
+		JPB Lovell	Liberal	7400
+		R Shirley	Scottish National Party	3800
+		SM Biggar	Ecology	552
+
+Edinburgh West	54727	Ld J Douglas-Hamilton	Conservative	19360	Edinburgh area	East Scotland
+		MCB McGregor	Labour	12009
+		R Callender	Liberal	7330
+		C Bell	Scottish National Party	3904
+
+Edmonton	58860	TE Graham	Labour	20713	Enfield	North London
+		J Attwood	Conservative	18733
+		W Wintle	Liberal	3276
+		DJ Bruce	National Front	1213
+
+Enfield North	66427	T Eggar	Conservative	24927	Enfield	North London
+		B Davies	Labour	21444
+		K Crawford	Liberal	4681
+		J Wotherspoon	National Front	816
+
+Epping Forest	66723	JA Biggs-Davison	Conservative	29447	Essex	Essex
+		WD Shepherd	Labour	13994
+		D Kitching	Liberal	6528
+		B Wilkins	National Front	1110
+
+Epsom and Ewell	82126	A Hamilton	Conservative	39104	Surrey	South
+		M Anderson	Liberal	12746
+		CR Smith	Labour	11315
+
+Erith and Crayford	61350	AJ Wellbeloved	Labour	22450	Bexley	South London
+		S Blunt	Conservative	19717
+		M Jamieson	Liberal	4512
+		O Hawke	National Front	838
+
+Esher	47860	DCM Mather	Conservative	24152	Surrey	South
+		C Welchman	Liberal	7311
+		JT Pickles	Labour	5634
+
+Essex South East	82350	B Braine	Conservative	40497	Essex	Essex
+		NJM Smith	Labour	15965
+		F Alexander	Liberal	6858
+
+Eton and Slough	64916	J Lestor	Labour	20710	Berkshire	South
+		C Ward	Conservative	19370
+		P Goldenberg	Liberal	5254
+		G Brooker	Independent Conservative	2359
+		D Jones	National Front	943
+
+Exeter	68825	JG Hannam	Conservative	27173	Devon	South West
+		GW Hobbs	Labour	19146
+		H Marsh	Liberal	8756
+		P Frings	Ecology	1053
+
+Eye	69843	JS Gummer	Conservative	28707	Suffolk	East Anglia
+		PE Koppel	Labour	13686
+		P Kemsley	Liberal	12259
+		JJ Flint	Independent	324
+		NH Rogers	Anti-Common Market Conservative	268
+
+Falmouth and Camborne	69705	WD Mudd	Conservative	30523	Cornwall	South West
+		PM Tebbutt	Labour	13923
+		J Hall-Say	Liberal	7489
+		L Truran	Mebyon Kernow	1637
+		M Swingler	National Front	280
+
+Fareham	61612	R Lloyd	Conservative	28730	Hampshire	South
+		P Boulden	Liberal	11685
+		BR Townsend	Labour	8041
+		DC Vine	National Front	252
+
+Farnham	64607	M Macmillan	Conservative	30127	Surrey	South
+		P Raynes	Liberal	13658
+		PW Davis	Labour	7497
+		SL Bradford	Citizens Protest Vote	204
+		R Peel	United Country Party	170
+
+Farnworth	71844	JFH Roper	Labour	27965	Western Manchester	Greater Manchester
+		S Windle	Conservative	19858
+		MP Rothwell	Liberal	8043
+
+Faversham	78509	RD Moate	Conservative	33513	Kent	South East
+		T Sherwen	Labour	21351
+		A Aldous	Liberal	6349
+		A Webb	National Front	439
+
+Feltham and Heston	79873	RW Kerr	Labour	28675	Hounslow	South London
+		RP Ground	Conservative	24570
+		B Norcott	Liberal	5051
+		JM Reid	National Front	898
+		R Lugg	Workers Revolutionary Party	168
+
+Fermanagh and South Tyrone	71481	MF Maguire	Independent	22398	Northern Ireland	Northern Ireland
+		R Ferguson	Ulster Unionist Party	17411
+		A Currie	Social Democratic and Labour Party	10785
+		E Baird	United Ulster Unionist	10607
+		P Acheson	Alliance Party of Northern Ireland	1070
+
+Fife Central	61476	WW Hamilton	Labour	27619	Fife	East Scotland
+		IA McCrone	Conservative	9597
+		J Lynch	Scottish National Party	9208
+		A Maxwell	Communist	1172
+
+Fife East	59297	B Henderson	Conservative	20117	Fife	East Scotland
+		WM Campbell	Liberal	10762
+		HB McLeish	Labour	9339
+		J Marshall	Scottish National Party	6612
+
+Finchley	55468	MH Thatcher	Conservative	20918	Barnet	North London
+		RG May	Labour	13040
+		A Paterson	Liberal	5254
+		W Verity	National Front	534
+		E Lloyd	Independent Democrat	86
+
+Flint East	74262	SB Jones	Labour	29339	Clwyd	Wales
+		P Warburton-Jones	Conservative	23116
+		A Carlile	Liberal	6736
+		J Rogers	Plaid Cymru	1198
+		G Davies	Communist	307
+
+Flint West	68418	A Meyer	Conservative	26364	Clwyd	Wales
+		RM Hughes	Labour	16678
+		JH Parry	Liberal	9009
+		BM Edwards	Plaid Cymru	1720
+
+Folkestone and Hythe	66297	AP Costain	Conservative	26837	Kent	South East
+		B Budd	Liberal	10817
+		GJ Priestman	Labour	10015
+		M Lavine	National Front	478
+
+Fulham	57018	M Stevens	Conservative	20249	Hammersmith and Fulham	North London
+		BJ Stead	Labour	18750
+		DD Rendel	Liberal	3882
+		DK Roberts	National Front	499
+
+Fylde North	78130	W Clegg	Conservative	35366	Lancashire	Lancashire
+		R Fox	Labour	14376
+		P Herbert	Liberal	8630
+		K Warbarton	National Front	481
+
+Fylde South	94335	EL Gardner	Conservative	45883	Lancashire	Lancashire
+		G Chadwick	Labour	13636
+		J Stevens	Liberal	11938
+		M Roberts	National Front	941
+
+Gainsborough	65654	MR Kimball	Conservative	24040	Lincolnshire	Humberside
+		RB Blackmore	Liberal	16885
+		WSG Bach	Labour	10335
+		RE August	Independent Conservative	570
+
+Galloway	41110	I Lang	Conservative	15306	Dumfries and Galloway	West Scotland
+		GH Thompson	Scottish National Party	12384
+		DR Hannay	Liberal	2852
+		DD Johnston	Labour	2841
+
+Gateshead East	62475	B Conlan	Labour	28776	Newcastle area	North
+		F Rogers	Conservative	14078
+		C Batey	Liberal	4201
+
+Gateshead West	29037	JR Horam	Labour	13533	Newcastle area	North
+		DR Kelly	Conservative	5221
+		FE Patterson	Liberal	1185
+		H Beadle	National Front	186
+
+Gillingham	63951	FFA Burden	Conservative	26791	Kent	South East
+		S Love	Labour	16292
+		D Sidebottom	Liberal	6219
+		S Campbell	National Front	528
+		S Fry	Ecology	501
+		T Beckwith	Workers Revolutionary Party	92
+
+Glasgow Cathcart	48574	JA Maxton	Labour	17550	Glasgow area	West Scotland
+		EM Taylor	Conservative	15950
+		A Ewing	Scottish National Party	2653
+		H Wills	Liberal	2042
+
+Glasgow Central	19826	TM McMillan	Labour	8542	Glasgow area	West Scotland
+		F Saleem	Conservative	1937
+		S Bird	Scottish National Party	1308
+
+Glasgow Craigton	44326	B Millan	Labour	19952	Glasgow area	West Scotland
+		J Mair	Conservative	9480
+		R Silver	Scottish National Party	3881
+
+Glasgow Garscadden	52440	D Dewar	Labour	23591	Glasgow area	West Scotland
+		IM Lawson	Conservative	8393
+		J Bain	Scottish National Party	6012
+		S Barr	Communist	374
+
+Glasgow Govan	24894	A McMahon	Labour	11676	Glasgow area	West Scotland
+		J Walker	Conservative	3188
+		T Wilson	Scottish National Party	2340
+
+Glasgow Hillhead	39793	TGD Galbraith	Conservative	12368	Glasgow area	West Scotland
+		RA Mowbray	Labour	10366
+		M Harris	Liberal	4349
+		G Borthwick	Scottish National Party	3050
+
+Glasgow Kelvingrove	33701	NG Carmichael	Labour	11133	Glasgow area	West Scotland
+		ACS MacDougall	Conservative	6374
+		E Bennett	Liberal	2412
+		IO Bayne	Scottish National Party	2199
+
+Glasgow Maryhill	50434	JM Craigen	Labour	22602	Glasgow area	West Scotland
+		M White	Conservative	5106
+		D McGlashan	Scottish National Party	3812
+		E Attwooll	Liberal	2332
+		P Smith	Communist	287
+
+Glasgow Pollok	59032	J White	Labour	21420	Glasgow area	West Scotland
+		DA Roser	Conservative	12928
+		A McIntosh	Scottish National Party	4187
+		G McKell	Liberal	3946
+		NG Armstrong	Independent Labour	869
+		I Skinner	National Front	104
+		RB Hilton	Independent Democrat	41
+
+Glasgow Provan	52482	HD Brown	Labour	24083	Glasgow area	West Scotland
+		SM Langdon	Conservative	5239
+		R Cunning	Scottish National Party	4767
+		J Jackson	Communist	377
+		M Campbell	Workers Revolutionary Party	193
+
+Glasgow Queen's Park	34332	FP McElhone	Labour	15120	Glasgow area	West Scotland
+		J Collins	Conservative	5642
+		P Greene	Scottish National Party	2276
+		JR Kaye	Communist	263
+		J Kerrigan	Workers Revolutionary Party	99
+		W MacLellan	Socialist Unity	92
+
+Glasgow Shettleston	31910	D Marshall	Labour	13955	Glasgow area	West Scotland
+		M McClure	Conservative	4794
+		M MacDonald	Scottish National Party	3022
+
+Glasgow Springburn	42116	MJ Martin	Labour	18871	Glasgow area	West Scotland
+		GR McKay	Conservative	6100
+		WJ Morton	Scottish National Party	3587
+
+Gloucester	64958	S Oppenheim	Conservative	25163	Gloucestershire	West
+		MD Golder	Labour	18747
+		DG Halford	Liberal	7213
+		R Morgan	National Front	527
+
+Gloucestershire South	84867	J Cope	Conservative	35627	Gloucestershire	West
+		MK Mullins	Labour	20465
+		G Conrad	Liberal	12850
+		D Kerridge	Ecology	695
+
+Gloucestershire West	70104	P Marland	Conservative	28183	Gloucestershire	West
+		JT Watkinson	Labour	24009
+		M Joachim	Liberal	6370
+		G Storkey	National Front	270
+
+Goole	66042	EI Marshall	Labour	27690	Humberside	Humberside
+		F Higgins	Conservative	16439
+		A Davidson	Liberal	3976
+
+Gosport	51318	PJ Viggers	Conservative	24553	Hampshire	South
+		JA Slater	Labour	10460
+		C Lewis	Liberal	4741
+
+Gower	58023	I Davies	Labour	24963	West Glamorgan	Wales
+		T Llewellyn	Conservative	14322
+		R Blakeborough-Pownal	Liberal	4245
+		E Thomas	Plaid Cymru	3357
+
+Grantham	84479	D Hogg	Conservative	36697	Lincolnshire	Humberside
+		V Bell	Labour	18547
+		WT Bailey	Liberal	10852
+
+Gravesend	88895	TD Brinton	Conservative	37592	Kent	South East
+		JF Ovenden	Labour	28246
+		IJA Goodwin	Liberal	5917
+		GD Willden	National Front	603
+
+Greenock and Port Glasgow	61610	JD Mabon	Labour	24071	Glasgow area	West Scotland
+		J Boyd	Liberal	12789
+		R Glasgow	Conservative	4926
+		JK Wright	Scottish National Party	3435
+		I Mathieson	Workers Revolutionary Party	176
+
+Greenwich	51519	NG Barnett	Labour	18975	Greenwich	South London
+		N Saroop	Conservative	12133
+		G Knight	Liberal	3870
+		H Steven	National Front	951
+		R Mallone	Fellowship Party	460
+
+Grimsby	66644	AV Mitchell	Labour	26282	Humberside	Humberside
+		R Blair	Conservative	20041
+		DM Rigby	Liberal	3837
+		J Lennard	Moderate Labour	214
+		J Hayes	National Front	137
+
+Guildford	73251	DA Howell	Conservative	31595	Surrey	South
+		PH Blagbrough	Labour	11689
+		H Donnelly	Liberal	11673
+		P Scott	Rhodesian Front	232
+
+Hackney Central	46464	SC Davis	Labour	16506	Hackney	North London
+		N Bennett	Conservative	7718
+		E Georghiades	Liberal	1835
+		R May	National Front	1418
+		M Johnson	Workers Revolutionary Party	340
+
+Hackney North and Stoke Newington	46776	EAC Roberts	Labour	14688	Hackney	North London
+		T Miller	Conservative	9467
+		T Gates	Liberal	3033
+		S May	National Front	860
+		M Goldman	Communist	440
+
+Hackney South and Shoreditch	43090	RW Brown	Labour	14016	Hackney	North London
+		D Evennett	Conservative	7312
+		J Roberts	Liberal	2387
+		J Tyndall	National Front	1958
+		P Curtis	Workers Revolutionary Party	215
+
+Halesowen and Stourbridge	84534	JHR Stokes	Conservative	33247	West Midlands	West Midlands
+		RA Etheridge	Labour	24282
+		C Harvey	Liberal	8597
+		S Goodwin	National Front	921
+
+Halifax	63768	S Summerskill	Labour	21416	West Yorkshire	Yorkshire
+		J Ford	Conservative	20182
+		A Clegg	Liberal	6853
+		B Wadsworth	National Front	455
+
+Haltemprice	80058	PHS Wall	Conservative	34525	Humberside	Humberside
+		R Walker	Liberal	14637
+		HJ Elcock	Labour	12743
+
+Hamilton	51802	G Robertson	Labour	24593	Ayrshire and Lanark	West Scotland
+		PS Davidson	Conservative	9794
+		C Stoddart	Scottish National Party	6842
+
+Hammersmith North	50821	CS Soley	Labour	17241	Hammersmith and Fulham	North London
+		J Cripps	Conservative	13735
+		SHJA Knott	Liberal	4147
+		R Pearse	National Front	462
+		C Stewart	Workers Revolutionary Party	193
+
+Hampstead	64004	G Finsberg	Conservative	20410	Camden	North London
+		KR Livingstone	Labour	16729
+		D Radford	Liberal	5753
+		J White	National Front	255
+
+Harborough	68989	JA Farr	Conservative	33328	Leicestershire	East Midlands
+		PA Soulsby	Labour	11350
+		P Weatherall	Liberal	9529
+		A Ashby	National Front	1002
+
+Harlow	67494	AS Newens	Labour	22698	Essex	Essex
+		J Powley	Conservative	21306
+		R Browne	Liberal	8289
+		J Childs	National Front	840
+
+Harrogate	69182	RG Banks	Conservative	30551	North Yorkshire	Yorkshire
+		R Kent	Liberal	12021
+		A Fleming	Labour	8221
+		D Waite	National Front	585
+
+Harrow Central	44747	JA Grant	Conservative	16267	Harrow	North London
+		AC Quicke	Labour	12124
+		R Bancroft	Liberal	4785
+		H Marshall	National Front	427
+
+Harrow East	49354	HJ Dykes	Conservative	20871	Harrow	North London
+		D Miles	Labour	12993
+		M Savitt	Liberal	3984
+		L le Croissette	National Front	572
+
+Harrow West	56907	JA Page	Conservative	26007	Harrow	North London
+		MT Catterson	Labour	10794
+		R Dick	Liberal	7350
+		T Bennett	National Front	646
+
+Hartlepool	65732	EL Leadbitter	Labour	27039	Cleveland	North
+		K Miller	Conservative	18877
+		C Abbott	Liberal	3193
+
+Harwich	92908	JE Ridsdale	Conservative	37685	Essex	Essex
+		CW Brooks	Labour	16998
+		R Goodenough	Liberal	14094
+		A Pearson	National Front	597
+
+Hastings	57699	KR Warren	Conservative	21311	East Sussex	South East
+		MJ Foster	Labour	12392
+		AE Leggett	Liberal	6474
+		GL McNally	Independent	839
+		HJ Anderson	National Front	344
+
+Havant and Waterloo	82116	IS Lloyd	Conservative	35580	Hampshire	South
+		DB Hoodless	Labour	15240
+		D Amies	Liberal	11274
+
+Hayes and Harlington	56165	ND Sandelson	Labour	20350	Hillingdon	South London
+		A Tyrell	Conservative	17048
+		H Smallbone	Liberal	3900
+		GT Callow	National Front	582
+		J Mansfield	Communist	249
+
+Hazel Grove	70005	TR Arnold	Conservative	32420	Eastern Manchester	Greater Manchester
+		V Bingham	Liberal	17148
+		JG Lowe	Labour	8846
+
+Hemel Hempstead	91843	N Lyell	Conservative	37953	Hertfordshire	Essex
+		R Corbett	Labour	32964
+		D Penwarden	Liberal	6314
+		T Walters	National Front	649
+
+Hemsworth	71581	A Woodall	Labour	36509	West Yorkshire	Yorkshire
+		J Whitfield	Conservative	10466
+		T Fussey	Liberal	5474
+
+Hendon North	54036	JM Gorst	Conservative	20766	Barnet	North London
+		FA Cooper	Labour	14374
+		C Perkin	Liberal	4113
+		B Franklyn	National Front	638
+
+Hendon South	53954	PJM Thomas	Conservative	19981	Barnet	North London
+		WP Mantle	Labour	11231
+		M Palmer	Liberal	5799
+		G Syer	Ecology	563
+		A Elder	National Front	290
+
+Henley	65933	MRD Heseltine	Conservative	29982	Oxfordshire	West
+		S Atack	Liberal	11693
+		DJ Whiting	Labour	9435
+
+Hereford	61447	CR Shepherd	Conservative	23012	Hereford and Worcestershire	Severn
+		CF Green	Liberal	18042
+		IR Adshead	Labour	7150
+
+Hertford and Stevenage	87623	P Wells	Conservative	31739	Hertfordshire	Essex
+		S Williams	Labour	30443
+		B Rigby	Liberal	7660
+		J Pell	National Front	581
+
+Hertfordshire East	96327	D Walker-Smith	Conservative	41599	Hertfordshire	Essex
+		IJ Evans	Labour	20139
+		L Abdela	Liberal	11393
+		J Smith	National Front	1819
+
+Hertfordshire South	65198	CE Parkinson	Conservative	27857	Hertfordshire	Essex
+		NG Male	Labour	16059
+		G Sattin	Liberal	7001
+		S Fenn	National Front	605
+
+Hertfordshire South West	75930	GH Dodsworth	Conservative	33112	Hertfordshire	Essex
+		AJ Colman	Labour	16784
+		G Cass	Liberal	9808
+		P Graves	National Front	839
+
+Hexham	66798	G Rippon	Conservative	25483	Northumberland	North
+		S Bell	Labour	16935
+		J Shipley	Liberal	10697
+
+Heywood and Royton	82199	J Barnett	Labour	28489	Eastern Manchester	Greater Manchester
+		P Morgan	Conservative	26202
+		M Hewitt	Liberal	7644
+		R Marsh	National Front	641
+
+High Peak	59323	S Le Marchant	Conservative	22532	Derbyshire	East Midlands
+		D Bookbinder	Labour	17777
+		D Brown	Liberal	8200
+
+Hitchin	76807	BHIH Stewart	Conservative	33169	Hertfordshire	Essex
+		DR O'Flynn	Labour	19940
+		E Dix	Liberal	8224
+		B Goodale	Ecology	911
+		V Logan	National Front	881
+
+Holborn and St Pancras South	40376	FG Dobson	Labour	12026	Camden	North London
+		R Key	Conservative	9703
+		T Hibbert	Liberal	2190
+		F Theobald	National Front	334
+		P Farrell	Workers Revolutionary Party	134
+
+Holland with Boston	85578	RBFS Body	Conservative	35440	Lincolnshire	Humberside
+		M Fox	Labour	17908
+		J Wright	Liberal	10480
+
+Honiton	78303	PFH Emery	Conservative	37832	Devon	South West
+		R Ruffle	Liberal	12601
+		T Luesby	Labour	8756
+		MH Bacon	Ecology	1423
+
+Horncastle	51531	PHB Tapsell	Conservative	21362	Lincolnshire	Humberside
+		MJC Starky	Liberal	10833
+		DP Collins	Labour	6240
+		M Hook	National Front	319
+
+Hornchurch	60865	RC Squire	Conservative	21340	Havering	North London
+		AL Williams	Labour	20571
+		C Lewcock	Liberal	4657
+		A Harris	National Front	994
+
+Hornsey	58409	HAL Rossi	Conservative	20225	Haringey	North London
+		ER Knight	Labour	16188
+		PW O'Brien	Liberal	4058
+		P Pell	National Front	337
+		DW Berry	Independent Conservative	156
+
+Horsham and Crawley	100059	PM Hordern	Conservative	42529	West Sussex	South East
+		PW Newman	Labour	27508
+		MH Foley	Liberal	10920
+		A Murch	National Front	493
+
+Houghton-le-Spring	60491	TW Urwin	Labour	30181	Newcastle area	North
+		P Straw	Conservative	9105
+		J Ellis	Liberal	4479
+		D Temple	Workers Revolutionary Party	326
+
+Hove	70318	TAD Sainsbury	Conservative	30256	East Sussex	South East
+		BR Fitch	Labour	10807
+		JMM Walsh	Liberal	8771
+		F Sheridan	National Front	508
+
+Howden	63708	P Bryan	Conservative	26550	Humberside	Humberside
+		E Shields	Liberal	12006
+		AB Davenport	Labour	8827
+
+Huddersfield East	53983	BJ Sheerman	Labour	19040	West Yorkshire	Yorkshire
+		M Bendelow	Conservative	15945
+		G MacPherson	Liberal	4890
+		H Hirst	Independent	243
+
+Huddersfield West	55066	G Dickens	Conservative	18504	West Yorkshire	Yorkshire
+		RO Faulkner	Labour	16996
+		KJL Hasler	Liberal	6225
+		T Keen	Campaign for a More Prosperous Britain	101
+
+Hull Central	60801	JK McNamara	Labour	22318	Humberside	Humberside
+		J Tillett	Conservative	14725
+		J Bryant	Liberal	5069
+		A Braithwaite	National Front	422
+		PM Stanton	Socialist Unity	274
+
+Hull East	89023	J Prescott	Labour	39411	Humberside	Humberside
+		MMB Bean	Conservative	15719
+		MJ Horne	Liberal	7543
+		DJ Matson	National Front	374
+
+Hull West	52489	J Johnson	Labour	19750	Humberside	Humberside
+		RE Smith	Conservative	11592
+		SJ Foston	Liberal	3656
+		MD Fox	National Front	411
+
+Huntingdonshire	93862	J Major	Conservative	40193	Cambridgeshire	East Anglia
+		J Fulbrook	Labour	18630
+		DG Rowe	Liberal	12812
+		K Robinson	National Front	983
+
+Huyton	73006	JH Wilson	Labour	27449	Merseyside	Lancashire
+		G Harrison	Conservative	19939
+		P Cottier	Liberal	5476
+
+Ilford North	65052	VWH Bendall	Conservative	26381	Redbridge	North London
+		T Jowell	Labour	19186
+		J Freeman	Liberal	4568
+		JR Hughes	National Front	804
+		TL Iremonger	Independent Conservative	452
+
+Ilford South	54295	NG Thorne	Conservative	19290	Redbridge	North London
+		AJ Shaw	Labour	17602
+		RJR Scott	Liberal	3664
+		TC Fitzgerald	National Front	636
+
+Ilkeston	75305	LR Fletcher	Labour	29760	Derbyshire	East Midlands
+		M Clark	Conservative	21160
+		D Blackburn	Liberal	7879
+
+Ince	83019	MT McGuire	Labour	34599	Western Manchester	Greater Manchester
+		P Brown	Conservative	20263
+		JK Gibb	Liberal	6294
+		J Simons	Workers Revolutionary Party	442
+
+Inverness	62571	R Johnston	Liberal	15716	Highland	East Scotland
+		R Hunter-Gordon	Conservative	11559
+		D Barr	Scottish National Party	9603
+		BDH Wilson	Labour	9586
+		U Bell	Fine Gael	112
+
+Ipswich	88470	KT Weetch	Labour	34444	Suffolk	East Anglia
+		R Erith	Conservative	30703
+		P Keeling	Liberal	5772
+		P Robinson	National Front	449
+		R Hodge	Workers Revolutionary Party	115
+
+Isle of Ely	69954	CR Freud	Liberal	26397	Cambridgeshire	East Anglia
+		IT Stuttaford	Conservative	23067
+		CH Saunders	Labour	7067
+
+Isle of Wight	90961	SS Ross	Liberal	35889	Hampshire	South
+		JD Fishburn	Conservative	35537
+		C Wilson	Labour	3014
+
+Islington Central	40884	JD Grant	Labour	13415	Islington	North London
+		C Goodson-Wickes	Conservative	9276
+		M Dunn	Liberal	2242
+		S Chaney	National Front	797
+		A Williams	Ecology	310
+
+Islington North	38253	MJ O'Halloran	Labour	12317	Islington	North London
+		N Kerr	Conservative	7861
+		K Clarke	Liberal	2079
+		S Hook	National Front	501
+		M Simpson	Socialist Unity	438
+		R McCullough	Workers Revolutionary Party	217
+
+Islington South and Finsbury	38427	G Cunningham	Labour	12581	Islington	North London
+		N Waterson	Conservative	8237
+		A Dean	Liberal	1991
+		P Kavanagh	National Front	824
+		M Betteridge	Communist	330
+		D Delderfield	New Britain	136
+		R Critchfield	Socialist Party of Great Britain	78
+
+Jarrow	55619	D Dixon	Labour	24057	Newcastle area	North
+		D Auld	Conservative	12529
+		A McDonnell	Liberal	3907
+		H Downey	Independent Labour	2247
+		N Brown	Workers Revolutionary Party	374
+
+Keighley	54428	GR Cryer	Labour	19698	West Yorkshire	Yorkshire
+		J Dawson	Conservative	19620
+		M Holmstedt	Liberal	4062
+		RL Fairey	National Front	234
+		J Wade	Ecology	208
+
+Kensington	52396	B Rhys Williams	Conservative	17361	Kensington and Chelsea	North London
+		P Holmes	Labour	11898
+		B Vincent-Emery	Liberal	3537
+		N Albery	Ecology	698
+		C Hopewell	National Front	356
+
+Kettering	88396	WD Homewood	Labour	31579	Northamptonshire	East Anglia
+		R Allason	Conservative	30101
+		G Raven	Liberal	8424
+
+Kidderminster	80434	JE Bulmer	Conservative	33523	Hereford and Worcestershire	Severn
+		AW Wright	Labour	17871
+		G Adams	Liberal	9939
+		A Luckman	National Front	1052
+
+Kilmarnock	60351	W McKelvey	Labour	25718	Ayrshire and Lanark	West Scotland
+		J Corbett	Conservative	14251
+		A MacInnes	Scottish National Party	8963
+
+Kingston upon Thames	57572	NHS Lamont	Conservative	24944	Kingston upon Thames	South London
+		JA Torode	Labour	11400
+		D Terry	Liberal	6771
+
+Kingswood	60229	JH Aspinwall	Conservative	23553	Bristol Area	West
+		TW Walker	Labour	23250
+		A Wilson	Liberal	4852
+		R Bale	National Front	258
+
+Kinross and West Perthshire	38591	NH Fairbairn	Conservative	15523	Tayside	East Scotland
+		I Smith	Scottish National Party	9045
+		J Chapman	Liberal	3572
+		DR Macleod	Labour	2593
+
+Kirkcaldy	61057	HPH Gourlay	Labour	25449	Fife	East Scotland
+		J Stewart	Conservative	12386
+		A Currie	Scottish National Party	9416
+
+Knutsford	57671	J Bruce-Gardyne	Conservative	26795	Cheshire	Severn
+		AG Barton	Labour	8992
+		R Ingham	Liberal	8499
+		J Brown	Independent Conservative	690
+
+Lambeth Central	43678	J Tilley	Labour	15101	Lambeth	South London
+		J Hanley	Conservative	9125
+		D Blunt	Liberal	2339
+		V Lillington	National Front	830
+		C Redgrave	Workers Revolutionary Party	152
+		A Whereat	Independent	50
+
+Lanark	51320	J Hart	Labour	18118	Ayrshire and Lanark	West Scotland
+		A Bell	Conservative	12979
+		T McAlpine	Scottish National Party	7902
+		F McDermid	Liberal	2967
+
+Lanarkshire North	56565	J Smith	Labour	25015	Ayrshire and Lanark	West Scotland
+		GJ Robertson	Conservative	14195
+		J Ralston	Scottish National Party	5887
+
+Lancaster	51252	ME Kellett-Bowman	Conservative	19400	Lancashire	Lancashire
+		RB Henig	Labour	15174
+		MJ Mumford	Liberal	5949
+		DF White	National Front	196
+
+Leeds East	67048	DW Healey	Labour	26346	West Yorkshire	Yorkshire
+		A Carter	Conservative	15810
+		ML Ellis	Liberal	4622
+		SJ Rigby	National Front	445
+		AC Hill	Ecology	206
+		B Slaughter	Workers Revolutionary Party	103
+
+Leeds North East	59113	K Joseph	Conservative	20297	West Yorkshire	Yorkshire
+		RH Sedler	Labour	14913
+		R Hollingworth	Liberal	5329
+		S Parkin	Ecology	813
+		EL Tibbitts	Anti-Corruption	103
+
+Leeds North West	68702	D Kaberry	Conservative	23837	West Yorkshire	Yorkshire
+		PA O'Grady	Labour	17623
+		C Keates	Liberal	7899
+		K Rushworth	Ecology	847
+
+Leeds South	50119	M Rees	Labour	22388	West Yorkshire	Yorkshire
+		R Ratcliffe	Conservative	8058
+		F Hurst	Liberal	3568
+		B Spink	National Front	416
+
+Leeds South East	43472	S Cohen	Labour	15921	West Yorkshire	Yorkshire
+		M Sexton	Conservative	6549
+		MG Clay	Liberal	5430
+		JM Rodgers	Communist	190
+		P Flint	National Front	168
+
+Leeds West	58798	J Dean	Labour	21290	West Yorkshire	Yorkshire
+		H Simmonds	Conservative	11626
+		C Greenfield	Liberal	9734
+		J Duckenfield	National Front	466
+
+Leek	87502	DL Knox	Conservative	36508	Staffordshire	Severn
+		M Fisher	Labour	25937
+		M Conway	Liberal	6474
+		CI Bailey	Ratepayer	1451
+
+Leicester East	67269	TG Bradley	Labour	23844	Leicestershire	East Midlands
+		M Waterhouse	Conservative	20988
+		B Andrews	Liberal	4623
+		BJ Calver	National Front	1385
+
+Leicester South	70714	J Marshall	Labour	24548	Leicestershire	East Midlands
+		R Godsall	Conservative	22550
+		J Pick	Liberal	4856
+		AR Cartwright	National Front	940
+
+Leicester West	67209	GE Janner	Labour	26032	Leicestershire	East Midlands
+		AR Goobey	Conservative	17194
+		A Lycett	Liberal	4032
+		P Ash	National Front	1308
+
+Leigh	66603	L Cunliffe	Labour	27736	Western Manchester	Greater Manchester
+		D Shaw	Conservative	18713
+		M Godwin	Liberal	4796
+
+Leominster	48211	P Temple-Morris	Conservative	21126	Hereford and Worcestershire	Severn
+		RJ Pincham	Liberal	16261
+		PJ Dobbs	Labour	2099
+
+Lewes	76290	JR Rathbone	Conservative	33992	East Sussex	South East
+		G Hook	Liberal	12279
+		T Forrester	Labour	11152
+		B Webb	National Front	764
+
+Lewisham East	67066	RD Moyle	Labour	22916	Lewisham	South London
+		H Malins	Conservative	21323
+		J Forrest	Liberal	4265
+		M Ellis	National Front	1168
+		H Harewood	Workers Revolutionary Party	190
+
+Lewisham West	59292	C Price	Labour	20932	Lewisham	South London
+		NP Kemp	Conservative	19882
+		GA Payne	Liberal	3350
+		P Williams	National Front	901
+
+Leyton	59176	B Magee	Labour	21095	Waltham Forest	North London
+		A Cordle	Conservative	15361
+		C Kitson	Liberal	3425
+		P Pomery-Rudd	National Front	1179
+
+Lichfield and Tamworth	101343	J Heddle	Conservative	41454	Staffordshire	Severn
+		BJ Grocott	Labour	33006
+		P Rule	Liberal	7408
+		P Wallace	National Front	475
+
+Lincoln	55194	K Carlisle	Conservative	17777	Lincolnshire	Humberside
+		MM Jackson	Labour	17175
+		K Melton	Liberal	5638
+		F Stockdale	Democratic Labour	1743
+		J Noble	National Front	107
+		T Kyle	Revolutionary Reform	77
+
+Liverpool Edge Hill	35350	D Alton	Liberal	12701	Merseyside	Lancashire
+		R Wareing	Labour	8453
+		N Ward	Conservative	3098
+		H Hawksley	National Front	152
+
+Liverpool Garston	79248	GM Thornton	Conservative	28105	Merseyside	Lancashire
+		E Loyden	Labour	25318
+		WJ Davison	Liberal	4890
+		T Kelly	Workers Revolutionary Party	142
+
+Liverpool Kirkdale	43304	JA Dunn	Labour	17043	Merseyside	Lancashire
+		M Fitzsimmons	Conservative	9334
+		P Mahon	Liberal	3819
+		W Williams	National Front	198
+
+Liverpool Scotland Exchange	32303	R Parry	Labour	13920	Merseyside	Lancashire
+		JM Bligh	Conservative	2264
+		C Davies	Liberal	1939
+		R O'Hara	Communist	421
+
+Liverpool Toxteth	41859	R Crawshaw	Labour	14833	Merseyside	Lancashire
+		AW Shone	Conservative	8690
+		R Addison	Liberal	3206
+		P Adams	Socialist Unity	238
+		D Elliott	Workers Revolutionary Party	148
+
+Liverpool Walton	50303	ES Heffer	Labour	20231	Merseyside	Lancashire
+		R Gould	Conservative	12673
+		N Cardwell	Liberal	3479
+		WF Haire	National Front	254
+
+Liverpool Wavertree	59040	AD Steen	Conservative	21770	Merseyside	Lancashire
+		R Morris	Labour	14828
+		CW Roberts	Liberal	6705
+
+Liverpool West Derby	57973	E Ogden	Labour	22576	Merseyside	Lancashire
+		DPM Hudson	Conservative	14356
+		A Humphreys	Liberal	3765
+
+Llanelli	64429	DJD Davies	Labour	30416	Dyfed	Wales
+		GDJ Richards	Conservative	10471
+		KD Rees	Liberal	5856
+		H Roberts	Plaid Cymru	3793
+		RE Hitchon	Communist	617
+
+Londonderry	94770	W Ross	Ulster Unionist Party	31592	Northern Ireland	Northern Ireland
+		H Logue	Social Democratic and Labour Party	19185
+		A Barr	Alliance Party of Northern Ireland	5830
+		F McAteer	Irish Independence Party	5489
+		E Melough	Republican Clubs	888
+		B Webster	Derry Labour	639
+
+Loughborough	76455	S Dorrell	Conservative	29788	Leicestershire	East Midlands
+		JD Cronin	Labour	24589
+		R Palmer	Liberal	6650
+		D Whitebread	Ecology	595
+		J Peacock	National Front	484
+
+Louth	73264	ML Brotherton	Conservative	25701	Lincolnshire	Humberside
+		JCL Sellick	Liberal	19026
+		CJC Betts	Labour	12316
+		CDB Stokes	National Front	261
+
+Lowestoft	82733	JML Prior	Conservative	33376	Suffolk	East Anglia
+		A Lark	Labour	25555
+		B Skelcher	Liberal	6783
+		T Pye	Ecology	435
+
+Ludlow	50413	E Cockeram	Conservative	20906	Shropshire	Severn
+		E Robinson	Liberal	12524
+		IK Wymer	Labour	5717
+		RJ Adshead	National Front	354
+		F Turner	Independent	106
+
+Luton East	52427	GFJ Bright	Conservative	17809	Bedfordshire	East Anglia
+		IM Clemitson	Labour	16962
+		D Franks	Liberal	5285
+		MG Kerry	National Front	461
+		CT Mitchell	Communist	107
+		JN Bardwaj	Committee for the Prevention of a Police State	61
+		A Lynn	Workers Revolutionary Party	45
+
+Luton West	61186	J Carlisle	Conservative	21230	Bedfordshire	East Anglia
+		BCJ Sedgemore	Labour	20984
+		MJ Dolling	Liberal	5233
+		D How	National Front	701
+
+Macclesfield	87864	NR Winterton	Conservative	40116	Cheshire	Severn
+		RA Foster	Labour	16779
+		AJ Berry	Liberal	11726
+
+Maidstone	93125	JJ Wells	Conservative	37727	Kent	South East
+		J Burnett	Liberal	16676
+		R Evans	Labour	16632
+		D Whiting	National Front	703
+
+Maldon	65659	J Wakeman	Conservative	29585	Essex	Essex
+		R Oliver	Labour	12848
+		M Wright	Liberal	8730
+
+Manchester Ardwick	44497	GB Kaufman	Labour	17235	Central Manchester	Greater Manchester
+		WR Swan	Conservative	9963
+		P Thomson	Liberal	2934
+		JS West	Socialist Unity	287
+
+Manchester Blackley	52878	K Easton	Labour	20346	Central Manchester	Greater Manchester
+		A Green	Conservative	15842
+		J Ashley	Liberal	3868
+		N Wallace	National Front	326
+
+Manchester Central	31312	NH Lever	Labour	14117	Central Manchester	Greater Manchester
+		HP Cummins	Conservative	4413
+		GMR Wilmott	Liberal	1052
+		DS Benthall	National Front	365
+
+Manchester Gorton	53943	K Marks	Labour	22293	Central Manchester	Greater Manchester
+		MN Lord	Conservative	16009
+		G Shaw	Liberal	2867
+		R Chadfield	National Front	469
+
+Manchester Moss Side	47811	GM Morton	Labour	17765	Central Manchester	Greater Manchester
+		TE Murphy	Conservative	13234
+		GPB Commons	Liberal	2981
+		V Redgrave	Workers Revolutionary Party	225
+
+Manchester Openshaw	37816	CR Morris	Labour	17099	Central Manchester	Greater Manchester
+		P Hilton	Conservative	9955
+		A Coles	National Front	296
+		P Widdall	Communist	174
+
+Manchester Withington	53408	FJ Silvester	Conservative	18862	Central Manchester	Greater Manchester
+		GM Hodgson	Labour	15510
+		JT Mitchell	Liberal	5387
+		MG Gibson	Feudal Party	157
+
+Manchester Wythenshawe	60602	A Morris	Labour	26860	Central Manchester	Greater Manchester
+		D Sumberg	Conservative	14747
+		L Griffiths	Liberal	3853
+
+Mansfield	71851	JD Concannon	Labour	29051	Nottinghamshire	East Midlands
+		K Daly	Conservative	17720
+		DJ Chambers	Liberal	8536
+		P Donovan	National Front	259
+
+Melton	87319	MA Latham	Conservative	40242	Leicestershire	East Midlands
+		IM Read	Labour	15882
+		D Farrer	Liberal	12596
+
+Meriden	98914	I Mills	Conservative	37151	West Midlands	West Midlands
+		JE Tomlinson	Labour	33024
+		D Spurling	Liberal	4976
+		A Parkes	National Front	1032
+
+Merioneth	27250	DE Thomas	Plaid Cymru	9275	Gwynedd	Wales
+		R Harvey	Conservative	5365
+		RH Jones	Labour	5332
+		JH Parsons	Liberal	2752
+
+Merthyr Tydfil	39680	E Rowlands	Labour	22386	Mid Glamorgan and Gwent	Wales
+		AR de Wilde	Conservative	4426
+		E ap Gwilym	Plaid Cymru	2962
+		RD Oliver	Liberal	1275
+		CC Dennett	Communist	223
+		GT Gould	Workers Revolutionary Party	114
+
+Middlesbrough	65175	AG Bottomley	Labour	24872	Cleveland	North
+		C Fenwick	Conservative	13463
+		P Freitag	Liberal	4023
+		M Simpson	Workers Revolutionary Party	1018
+		J Wilcox	Independent Labour	861
+
+Middleton and Prestwich	77291	J Callaghan	Labour	27918	Eastern Manchester	Greater Manchester
+		J Park	Conservative	26820
+		D Whatmough	Liberal	5888
+		S Andrews	National Front	350
+
+Midlothian	101482	A Eadie	Labour	37733	Edinburgh area	East Scotland
+		HW Mann	Conservative	20797
+		GAF Spiers	Scottish National Party	13260
+		AP Brodie	Liberal	7129
+
+Mitcham and Morden	62365	BLH Douglas-Mann	Labour	21668	Merton	South London
+		D Samuel	Conservative	21050
+		R Locke	Liberal	4258
+		J Perryman	National Front	966
+
+Monmouth	80085	JS Thomas	Conservative	33547	Mid Glamorgan and Gwent	Wales
+		TM Steel	Labour	23785
+		D Hando	Liberal	8494
+		G Williams	Plaid Cymru	641
+
+Montgomery	35786	DJD Williams	Conservative	11751	Powys	Wales
+		HE Hooson	Liberal	10158
+		J Price	Labour	4751
+		C Clowes	Plaid Cymru	2474
+
+Moray and Nairn	45802	A Pollack	Conservative	14220	Grampian	East Scotland
+		W Ewing	Scottish National Party	13800
+		S Rodan	Liberal	4361
+		GEW Scobie	Labour	3104
+
+Morecambe and Lonsdale	68625	MA Lennox-Boyd	Conservative	29068	Lancashire	Lancashire
+		G Collier	Labour	13253
+		HR Tinker	Liberal	10150
+
+Morpeth	49881	G Grant	Labour	21744	Northumberland	North
+		S Edwards	Conservative	9913
+		A Thompson	Liberal	6972
+
+Motherwell and Wishaw	50317	JW Bray	Labour	22263	Glasgow area	West Scotland
+		J Thomson	Conservative	11326
+		J Mackay	Scottish National Party	4817
+		J Sneddon	Communist	740
+
+Nantwich	64211	N Bonsor	Conservative	25624	Cheshire	Severn
+		D Shaw	Labour	17919
+		C Walsh	Liberal	6571
+		J Green	National Front	814
+
+Neath	51659	DR Coleman	Labour	27071	West Glamorgan	Wales
+		C Sandy	Conservative	8455
+		A Gwyn	Plaid Cymru	6430
+
+Nelson and Colne	47739	J Lee	Conservative	17522	Lancashire	Lancashire
+		EDH Hoyle	Labour	17086
+		D Hewitt	Liberal	4322
+
+Newark	75612	R Alexander	Conservative	27711	Nottinghamshire	East Midlands
+		ES Bishop	Labour	25960
+		J Baker	Liberal	6773
+
+Newbury	80355	M McNair-Wilson	Conservative	33677	Berkshire	South
+		A Richards	Liberal	23388
+		J Ruddock	Labour	6676
+
+Newcastle-under-Lyme	72442	J Golding	Labour	28649	Staffordshire	Severn
+		E Ashley	Conservative	24421
+		G Evans	Liberal	5878
+		S Rowe	British Socialist Empire Party	156
+
+Newcastle upon Tyne Central	23678	HL Cowans	Labour	10395	Newcastle area	North
+		P Merchant	Conservative	2982
+		A Ellis	Liberal	2073
+
+Newcastle upon Tyne East	44484	MS Thomas	Labour	18257	Newcastle area	North
+		D Conway	Conservative	12087
+		J Nelson	Liberal	2818
+
+Newcastle upon Tyne North	39307	W Elliott	Conservative	12721	Newcastle area	North
+		S Ward	Labour	11010
+		C Marlowe	Liberal	2983
+
+Newcastle upon Tyne West	83156	RC Brown	Labour	32827	Newcastle area	North
+		D Gilbert	Conservative	21591
+		J Dickinson	Liberal	5801
+
+New Forest	85137	PMED McNair-Wilson	Conservative	39124	Hampshire	South
+		M Kyrle	Liberal	13674
+		APV Whitehead	Labour	12950
+
+Newham North East	66371	R Leighton	Labour	22818	Newham	North London
+		K Wood	Conservative	12778
+		DJ Corney	Liberal	4027
+		WHH Northcott	National Front	1769
+		J Regan	Independent	208
+		MA Van Der Poorten	Workers Revolutionary Party	154
+		W Boaks	Democratic Monarchist Public Safety White Resident	118
+
+Newham North West	54030	AWJ Lewis	Labour	18392	Newham	North London
+		D Amess	Conservative	7937
+		B McCarthy	Liberal	2377
+		M Maloney	National Front	1217
+
+Newham South	53431	NJ Spearing	Labour	19636	Newham	North London
+		MJ Elphicke	Conservative	6863
+		J Ozimek	Liberal	2085
+		T Anderson	National Front	1899
+
+Newport	75121	RJ Hughes	Labour	30919	Mid Glamorgan and Gwent	Wales
+		GG Davies	Conservative	21742
+		A Lambert	Liberal	6270
+		AR Vickery	Plaid Cymru	473
+		GR Woodward	National Front	454
+
+Newton	102885	J Evans	Labour	41466	Western Manchester	Greater Manchester
+		T Huntley	Conservative	30125
+		R Smith	Liberal	8471
+		A Fishwick	National Front	641
+
+Norfolk North	98135	RF Howell	Conservative	43952	Norfolk	East Anglia
+		RS Dimmick	Labour	22126
+		GR Collings	Liberal	10643
+		ACR Sizeland	National Front	548
+
+Norfolk North West	83702	C Brocklebank-Fowler	Conservative	33796	Norfolk	East Anglia
+		RL Williams	Labour	25868
+		M Mynott	Liberal	6588
+
+Norfolk South	100243	JRR MacGregor	Conservative	42792	Norfolk	East Anglia
+		PJ Davies	Labour	23755
+		J Bristol	Liberal	11990
+
+Norfolk South West	57901	PL Hawkins	Conservative	24767	Norfolk	East Anglia
+		A Rosenberg	Labour	14063
+		B Baxter	Liberal	6363
+
+Normanton	61390	A Roberts	Labour	26591	West Yorkshire	Yorkshire
+		MH Cavendish	Conservative	14398
+		ARC Paton	Liberal	6134
+
+Northampton North	50739	A Marlow	Conservative	18597	Northamptonshire	East Anglia
+		MM Colquhoun	Labour	13934
+		A Rounthwaite	Liberal	5659
+		RGW Rickord	National Front	373
+
+Northampton South	51151	MWL Morris	Conservative	19125	Northamptonshire	East Anglia
+		G Mason	Labour	15491
+		D Amey	Liberal	3478
+		M James	National Front	407
+
+Northwich	54362	AR Goodlad	Conservative	23201	Cheshire	Severn
+		BH Silverman	Labour	14455
+		G Little	Liberal	6311
+
+Norwich North	46687	DH Ennals	Labour	17927	Norfolk	East Anglia
+		PH Rippon	Conservative	12336
+		P Moore	Liberal	4253
+		G Hannah	Ecology	334
+		L Goold	National Front	250
+		A Panes	Communist	106
+		S Colling	Workers Revolutionary Party	92
+
+Norwich South	45073	JL Garrett	Labour	16240	Norfolk	East Anglia
+		I Coutts	Conservative	15042
+		P Mackintosh	Liberal	4618
+		A Fountaine	National Front	264
+
+Norwood	48857	JD Fraser	Labour	16282	Lambeth	South London
+		J Pritchard	Conservative	14342
+		D Charlesworth	Liberal	3051
+		C Williams	National Front	707
+
+Nottingham East	47838	JJ Dunnett	Labour	15433	Nottinghamshire	East Midlands
+		M Brandon-Bravo	Conservative	12199
+		JD Hiley	Liberal	2270
+		M Coles	National Front	426
+		IB Juniper	Socialist Unity	252
+
+Nottingham North	78996	WC Whitlock	Labour	25028	Nottinghamshire	East Midlands
+		P Waine	Conservative	21956
+		J Stockley	Liberal	4900
+		JH Peck	Communist	1071
+		R Pratt	National Front	454
+
+Nottingham West	77155	M English	Labour	26301	Nottinghamshire	East Midlands
+		M Stoneman	Conservative	23801
+		M Willis	Liberal	5497
+		TJ Wilkinson	National Front	718
+		A James	Workers Revolutionary Party	192
+
+Nuneaton	80225	LJ Huckfield	Labour	31403	Warwickshire	East Midlands
+		L Stevens	Conservative	23715
+		CEG Williams	Liberal	6184
+		RP Matthews	National Front	1028
+		GE Davis	Independent Labour	629
+
+Ogmore	70156	R Powell	Labour	29867	Mid Glamorgan and Gwent	Wales
+		L Walters	Conservative	13780
+		JT Gibbs	Liberal	9812
+		DI Jones	Plaid Cymru	2450
+
+Oldham East	52420	JA Lamond	Labour	18248	Eastern Manchester	Greater Manchester
+		R Walker	Conservative	13616
+		CG Hilyer	Liberal	4149
+
+Oldham West	46763	MH Meacher	Labour	17802	Eastern Manchester	Greater Manchester
+		J Smith	Conservative	12025
+		K Stocks	Liberal	3604
+		G Halliwell	National Front	515
+
+Orkney and Shetland	28884	J Grimond	Liberal	10950	Orkney and Shetland	East Scotland
+		C Donaldson	Conservative	4140
+		R Goodlad	Labour	3385
+		M Spens	Scottish National Party	935
+
+Ormskirk	97764	R Kilroy-Silk	Labour	37222	Lancashire	Lancashire
+		B Keefe	Conservative	36364
+		S Pirani	Workers Revolutionary Party	820
+
+Orpington	67917	IR Stanbrook	Conservative	32150	Bromley	South London
+		J Cook	Liberal	16074
+		AJ Weyman	Labour	6581
+		F Hitches	National Front	516
+		I MacKillican	Homeland	146
+
+Oswestry	58334	WJ Biffen	Conservative	23551	Shropshire	Severn
+		PE Sandland-Nielsen	Labour	10150
+		DJ Evans	Liberal	9405
+
+Oxford	81708	J Patten	Conservative	27459	Oxfordshire	West
+		DET Luard	Labour	25962
+		D Roaf	Liberal	6234
+		A Cheeke	Oxford Ecology Movement	887
+		B Smith	Independent	72
+
+Oxfordshire Mid	63212	DR Hurd	Conservative	28465	Oxfordshire	West
+		J Hedge	Labour	13004
+		M Burton	Liberal	8367
+		P Madden	Independent	174
+
+Paddington	56234	J Wheeler	Conservative	16189	City of Westminster	North London
+		AC Latham	Labour	16083
+		A Brett	Liberal	2815
+		J Cameron	National Front	402
+		OT Banjo	Workers Revolutionary Party	117
+
+Paisley	63765	A Adams	Labour	25894	Glasgow area	West Scotland
+		G Willis	Conservative	12139
+		DR Rollo	Scottish National Party	7305
+		B Monaghan	Scottish Labour	811
+		J Tait	Communist	145
+		T White	Workers Revolutionary Party	122
+
+Peckham	59015	HG Lamborn	Labour	20364	Southwark	South London
+		A Dalton	Conservative	9553
+		T Minahan	Liberal	2607
+		M Roberts	National Front	1503
+
+Pembroke	76268	RN Edwards	Conservative	30483	Dyfed	Wales
+		A Evans	Labour	23015
+		R Livesey	Liberal	6249
+		R Dawe	Plaid Cymru	1573
+		B Kingzett	Ecology	694
+
+Penistone	72370	A McKay	Labour	28010	South Yorkshire	Humberside
+		I Dobkin	Conservative	18309
+		D Chadwick	Liberal	10772
+
+Penrith and The Border	57210	WSI Whitelaw	Conservative	26940	Cumbria	North
+		LR West	Labour	9844
+		B Wates	Liberal	7257
+
+Perth and East Perthshire	62142	WC Walker	Conservative	20153	Tayside	East Scotland
+		GD Crawford	Scottish National Party	17050
+		WF McKenzie	Labour	6432
+		B Goudie	Liberal	4410
+
+Peterborough	72912	B Mawhinney	Conservative	27734	Cambridgeshire	East Anglia
+		MJ Ward	Labour	22632
+		D Green	Liberal	5685
+		J Wilhelmy	National Front	672
+		M Bishop	Workers Revolutionary Party	106
+
+Petersfield	81887	MJ Mates	Conservative	39200	Hampshire	South
+		J Madeley	Liberal	16825
+		BW Clough	Labour	8082
+
+Plymouth Devonport	48236	DAL Owen	Labour	16545	Devon	South West
+		K Hughes	Conservative	15544
+		M James	Liberal	2360
+		L Bearsford-Walker	National Front	243
+		R Stoner	Independent	203
+
+Plymouth Drake	55711	JE Fookes	Conservative	21759	Devon	South West
+		BW Fletcher	Labour	17515
+		A Puttick	Liberal	3452
+		C Bradbury	National Front	279
+
+Plymouth Sutton	68516	AKM Clark	Conservative	28892	Devon	South West
+		JG Priestley	Labour	17605
+		J Scannell	Liberal	6226
+
+Pontefract and Castleford	60697	G Lofthouse	Labour	30566	West Yorkshire	Yorkshire
+		H Page	Conservative	10665
+		L Marsh	Liberal	3616
+
+Pontypool	57187	L Abse	Labour	27751	Mid Glamorgan and Gwent	Wales
+		T Sackville	Conservative	10383
+		EAR Mathias	Liberal	5508
+		W Hyde	Plaid Cymru	1169
+
+Pontypridd	75050	BT John	Labour	32801	Mid Glamorgan and Gwent	Wales
+		MJ Clay	Conservative	17114
+		H Penri-Williams	Liberal	6228
+		EA Roberts	Plaid Cymru	2200
+		RG Davies	National Front	263
+
+Poole	87208	J Ward	Conservative	38846	Dorset	South West
+		DA Bell	Labour	15291
+		B Sutton	Liberal	14001
+
+Portsmouth North	68870	P Griffiths	Conservative	26356	Hampshire	South
+		FA Judd	Labour	24045
+		S Brewin	Liberal	3354
+		R Hadlow	National Front	298
+		W Ferrett	Workers Revolutionary Party	122
+
+Portsmouth South	67346	RB Pink	Conservative	26835	Hampshire	South
+		S Thomas	Labour	15306
+		J Wallis	Liberal	6487
+		W Donkin	National Front	457
+
+Preston North	51756	RJ Atkins	Conservative	18632	Lancashire	Lancashire
+		RH Atkins	Labour	18603
+		MP Braham	Liberal	2715
+		JF Hetherington	National Front	329
+
+Preston South	51820	SG Thorne	Labour	17810	Lancashire	Lancashire
+		B Tetlow	Conservative	17189
+		RP Marshall	Liberal	4625
+		M Gibson	National Front	258
+		VA Stephens	Workers Revolutionary Party	116
+
+Pudsey	67853	JGD Shaw	Conservative	24591	West Yorkshire	Yorkshire
+		SJ Cooksey	Liberal	15852
+		PD McBride	Labour	13727
+		P Lewenz	Ecology	340
+
+Putney	64648	D Mellor	Conservative	23040	Wandsworth	South London
+		HG Jenkins	Labour	20410
+		N Couldrey	Liberal	5061
+		J Webster	National Front	685
+
+Ravensbourne	47601	JL Hunt	Conservative	22501	Bromley	South London
+		W Shipley	Liberal	7111
+		JR Holbrook	Labour	6848
+		S Greene	National Front	478
+
+Reading North	65369	RAB Durant	Conservative	25085	Berkshire	South
+		DM Mason	Labour	17662
+		P Minton	Liberal	6170
+		P Baker	National Front	554
+		LW Edwards	Independent	126
+
+Reading South	73001	GF Vaughan	Conservative	30067	Berkshire	South
+		B Gale	Labour	14422
+		K Watts	Liberal	10642
+		P Dunn	Ecology	700
+
+Redcar	62511	J Tinn	Labour	25470	Cleveland	North
+		E Cottrell	Conservative	17417
+		A Elliott	Liberal	4225
+		E Lloyd	Independent	333
+
+Reigate	72248	GA Gardiner	Conservative	33767	Surrey	South
+		N Grant	Labour	12454
+		J Speyer	Liberal	10257
+
+Renfrewshire East	64456	JA Stewart	Conservative	25910	Glasgow area	West Scotland
+		E Sullivan	Labour	12672
+		WGA Craig	Liberal	9366
+		J Pow	Scottish National Party	3989
+
+Renfrewshire West	78218	NF Buchan	Labour	28236	Glasgow area	West Scotland
+		W Boyle	Conservative	19664
+		CD Cameron	Scottish National Party	8333
+		JR Finnie	Liberal	7256
+
+Rhondda	63412	TA Jones	Labour	38007	Mid Glamorgan and Gwent	Wales
+		P Leyshon	Conservative	6526
+		G James	Plaid Cymru	4226
+		A True	Communist	1819
+
+Richmond upon Thames	50811	A Royle	Conservative	19294	Richmond upon Thames	South London
+		AJ Watson	Liberal	16764
+		J Filochowski	Labour	4692
+		KJ King	Independent	315
+		P Murphy	National Front	244
+		DD Wedgwood	English National Party	34
+
+Richmond (Yorks)	65319	T Kitson	Conservative	28958	North Yorkshire	Yorkshire
+		G Hodgson	Liberal	9964
+		KR Bratton	Labour	8173
+
+Ripon	53180	K Hampson	Conservative	25292	North Yorkshire	Yorkshire
+		R Tennant	Liberal	9089
+		WN Davies	Labour	6749
+		A Laurence	Ecology	781
+
+Rochdale	66841	C Smith	Liberal	22172	Eastern Manchester	Greater Manchester
+		J Connell	Labour	16878
+		I Picton	Conservative	9494
+		J Merrick	National Front	690
+
+Rochester and Chatham	79872	PE Fenner	Conservative	27574	Kent	South East
+		RE Bean	Labour	24886
+		M Black	Liberal	5219
+		J King	National Front	417
+
+Romford	55154	MJ Neubert	Conservative	22714	Havering	North London
+		SM Bartlett	Labour	13902
+		J Bates	Liberal	4818
+		M Caine	National Front	820
+
+Ross and Cromarty	32892	JHN Gray	Conservative	10650	Highland	East Scotland
+		W McRae	Scottish National Party	5915
+		K Bloomer	Labour	5055
+		H Morrison	Liberal	3496
+
+Rossendale	50623	DA Trippier	Conservative	20370	Lancashire	Lancashire
+		MA Noble	Labour	18497
+		P Arnold	Liberal	3534
+
+Rotherham	60871	JS Crowther	Labour	26580	South Yorkshire	Humberside
+		D Hinckley	Conservative	13145
+		I House	Liberal	3686
+		K Davies	National Front	490
+
+Rother Valley	99029	P Hardy	Labour	45986	South Yorkshire	Humberside
+		R Barber	Conservative	19984
+		C Sykes	Liberal	7937
+
+Roxburgh, Selkirk and Peebles	59691	DMS Steel	Liberal	25993	Borders	East Scotland
+		GP Malone	Conservative	15303
+		D Heald	Labour	4150
+		A Stewart	Scottish National Party	3502
+
+Rugby	61506	J Pawsey	Conservative	24417	Warwickshire	East Midlands
+		WG Price	Labour	21688
+		B Lomax	Liberal	4945
+		A Gresham	National Front	551
+
+Ruislip-Northwood	55505	J Wilkinson	Conservative	26748	Hillingdon	South London
+		ME Lloyd	Labour	9541
+		R Stephenson	Liberal	6867
+		A Martin	National Front	477
+
+Runcorn	82126	M Carlisle	Conservative	32907	Cheshire	Severn
+		GJ Maudsley	Labour	22226
+		R Kemp	Liberal	8783
+
+Rushcliffe	67286	KH Clarke	Conservative	34196	Nottinghamshire	East Midlands
+		CIE Atkins	Labour	11712
+		JE Hamilton	Liberal	9060
+
+Rutherglen	49379	JG Mackenzie	Labour	18546	Glasgow area	West Scotland
+		P Burns	Conservative	10523
+		R Brown	Liberal	7315
+		M Grieve	Scottish National Party	3325
+
+Rutland and Stamford	59404	K Lewis	Conservative	26198	Lincolnshire	Humberside
+		MRC Withers	Labour	11383
+		P Blaine	Liberal	8801
+
+Rye	73416	BG Irvine	Conservative	35516	East Sussex	South East
+		DRS Moore	Liberal	12438
+		D Smyth	Labour	6852
+		A Rix	Ecology	1267
+		T Duesbury	National Front	552
+
+Saffron Walden	65034	A Haselhurst	Conservative	28563	Essex	Essex
+		A Phillips	Liberal	13200
+		BRM Stoneham	Labour	10547
+		O Smedley	Independent	425
+		R Bailey	National Front	342
+
+St Albans	73339	VH Goodhew	Conservative	31301	Hertfordshire	Essex
+		D Picton	Liberal	14057
+		RJ Greaves	Labour	13638
+
+St Helens	74830	L Spriggs	Labour	32489	Merseyside	Lancashire
+		J Brown	Conservative	16934
+		I Smith	Liberal	4587
+		J Boylan	Workers Revolutionary Party	471
+
+St Ives	53715	JWF Nott	Conservative	22352	Cornwall	South West
+		RD Evans	Labour	8636
+		J Cotton	Liberal	8299
+		D Murley	Mebyon Kernow	1662
+		H Hoptrough	Ecology	427
+
+St Marylebone	40885	KW Baker	Conservative	14899	City of Westminster	North London
+		J Hegarty	Labour	6586
+		E Mann	Liberal	2459
+		J Porritt	Ecology	691
+		C Elrick	National Front	239
+
+St Pancras North	42106	AW Stallard	Labour	14556	Camden	North London
+		P Kirwan	Conservative	9110
+		M Valentine	Liberal	2654
+		S Andrews	National Front	360
+		G Jones	Workers Revolutionary Party	159
+
+Salford East	32718	FJ Allaun	Labour	13453	Central Manchester	Greater Manchester
+		S Latimer	Conservative	7597
+
+Salford West	43587	S Orme	Labour	18411	Central Manchester	Greater Manchester
+		J Markwick	Conservative	11157
+		S Carter	Workers Revolutionary Party	383
+
+Salisbury	64615	MA Hamilton	Conservative	24962	Wiltshire	West
+		JF Lakeman	Liberal	18718
+		CR Boney	Labour	6321
+
+Scarborough	60896	MN Shaw	Conservative	23669	North Yorkshire	Yorkshire
+		EJ Lahteela	Labour	11344
+		S Galloway	Liberal	9025
+		T Yelin	Independent	487
+
+Sevenoaks	80960	M Wolfson	Conservative	36697	Kent	South East
+		RH Redden	Labour	14583
+		G Phillips	Liberal	11839
+		M Easter	National Front	821
+
+Sheffield Attercliffe	62984	AEP Duffy	Labour	29702	South Yorkshire	Humberside
+		D French	Conservative	11599
+		D Boothroyd	Liberal	4017
+		J Mason	National Front	457
+
+Sheffield Brightside	54459	VJ Maynard	Labour	25672	South Yorkshire	Humberside
+		B Knightly	Conservative	7979
+		MS Johnson	Liberal	3482
+		KT Brack	National Front	354
+
+Sheffield Hallam	78901	JH Osborn	Conservative	31436	South Yorkshire	Humberside
+		MJ Bower	Labour	16502
+		KA Salt	Liberal	8982
+		GF Smith	National Front	300
+
+Sheffield Heeley	63996	FO Hooley	Labour	24618	South Yorkshire	Humberside
+		D George	Conservative	19845
+		R Webb	Liberal	4708
+		PK Thorpe	National Front	274
+
+Sheffield Hillsborough	51088	MH Flannery	Labour	20556	South Yorkshire	Humberside
+		CI Patnick	Conservative	12206
+		PA Neale	Liberal	3088
+		S Williams	National Front	326
+
+Sheffield Park	62174	FW Mulley	Labour	27483	South Yorkshire	Humberside
+		C Cole	Conservative	7159
+		FR Butler	Liberal	4737
+		I Pierson	National Front	302
+		G Ashberry	Communist	279
+		P Littlehales	Workers Revolutionary Party	111
+
+Shipley	53516	JM Fox	Conservative	22641	West Yorkshire	Yorkshire
+		PR Ward	Labour	14281
+		GG Roberts	Liberal	5673
+		D Pedley	Ecology	486
+
+Shoreham	72288	RN Luce	Conservative	34339	West Sussex	South East
+		C Robinson	Liberal	12754
+		GD Shamash	Labour	8867
+		J Benjafield	National Front	406
+
+Shrewsbury	63236	J Langford-Holt	Conservative	23548	Shropshire	Severn
+		A Laurie	Liberal	13364
+		J Bishton	Labour	11558
+
+Sidcup	49976	ERG Heath	Conservative	23692	Bexley	South London
+		F Keohane	Labour	10236
+		P Vickers	Liberal	4908
+		A Webb	National Front	774
+
+Skipton	53881	J Watson	Conservative	23177	North Yorkshire	Yorkshire
+		KC Brooks	Liberal	17484
+		BM Selby	Labour	4632
+
+Solihull	84272	WP Grieve	Conservative	43027	West Midlands	West Midlands
+		DGA Hallam	Labour	10820
+		I Gillett	Liberal	10214
+		D Stevenson	National Front	978
+
+Somerset North	96606	AP Dean	Conservative	43173	Somerset	South West
+		AJ Smith	Labour	22122
+		D Sanders	Liberal	12898
+		R Carder	Ecology	1254
+
+Southall	73146	SJ Bidwell	Labour	28498	Ealing	South London
+		RC Patten	Conservative	17220
+		R Hains	Liberal	3920
+		J Fairhurst	National Front	1545
+		S Gupta	Independent	637
+		T Ali	Socialist Unity	477
+		SS Paul	Independent Businessman	115
+
+Southampton Itchen	81151	RC Mitchell	Labour	28036	Hampshire	South
+		A Hunter	Conservative	26434
+		J Pinder	Liberal	6132
+
+Southampton Test	76890	SJA Hill	Conservative	27198	Hampshire	South
+		BC Gould	Labour	25075
+		D Hughes	Liberal	6393
+
+Southend East	57037	S McAdden	Conservative	22413	Essex	Essex
+		TN Wright	Labour	11639
+		J Hugill	Liberal	5244
+		P Twomey	National Front	676
+
+Southend West	66958	HPG Channon	Conservative	29449	Essex	Essex
+		D Evans	Liberal	12585
+		J Nisbet	Labour	8341
+		LJ McKeon	National Front	680
+
+Southgate	67355	AG Berry	Conservative	31663	Enfield	North London
+		IS Wilson	Labour	11584
+		A Baker	Liberal	7223
+		R Pert	National Front	895
+
+Southport	68385	WI Percival	Conservative	25953	Merseyside	Lancashire
+		RC Fearn	Liberal	19426
+		IG James	Labour	5725
+
+South Shields	70566	D Clark	Labour	28675	Newcastle area	North
+		R Booth	Conservative	15551
+		L Monger	Liberal	6003
+
+Sowerby	49275	D Thompson	Conservative	16797	West Yorkshire	Yorkshire
+		MF Madden	Labour	15617
+		DT Shutt	Liberal	7369
+
+Spelthorne	70898	HE Atkins	Conservative	31290	Surrey	South
+		CH Dodwell	Labour	15137
+		PE Winner	Liberal	7565
+		J Sawyer	National Front	518
+
+Stafford and Stone	83300	HCPJ Fraser	Conservative	34387	Staffordshire	Severn
+		MJD Poulter	Labour	21210
+		R Burman	Liberal	10049
+
+Staffordshire South West	67383	PT Cormack	Conservative	32153	Staffordshire	Severn
+		GJ Lane	Labour	14720
+		R Fox	Liberal	5460
+		J Thomas	National Front	912
+
+Stalybridge and Hyde	67772	T Pendry	Labour	27082	Eastern Manchester	Greater Manchester
+		J Kershaw	Conservative	20502
+		J Pickup	Liberal	4642
+
+Stepney and Poplar	58637	PD Shore	Labour	19576	Tower Hamlets	North London
+		R Hughes	Conservative	6561
+		R Winfield	Liberal	2234
+		V Clarke	National Front	1571
+		E Johns	Independent Labour	672
+		K Halpin	Communist	413
+		P Chappell	Workers Revolutionary Party	235
+
+Stirling, Falkirk and Grangemouth	66164	H Ewing	Labour	29499	Central	East Scotland
+		W Boyles	Conservative	13881
+		J Donarchy	Scottish National Party	8856
+
+Stirlingshire East and Clackmannan	66535	MJ O'Neil	Labour	22780	Central	East Scotland
+		GN Reid	Scottish National Party	21796
+		TNA Begg	Conservative	9778
+
+Stirlingshire West	57602	DA Canavan	Labour	22516	Central	East Scotland
+		A McCurley	Conservative	12160
+		JT Jones	Scottish National Party	8627
+		D Cant	Liberal	3905
+
+Stockport North	53533	AF Bennett	Labour	18789	Eastern Manchester	Greater Manchester
+		JW Last	Conservative	18456
+		J Hartley	Liberal	5096
+		K Walker	National Front	244
+
+Stockport South	48513	T McNally	Labour	16910	Eastern Manchester	Greater Manchester
+		D Skidmore	Conservative	15785
+		M Quayle	Liberal	4458
+		R Murphy	National Front	374
+
+Stockton	89206	WT Rodgers	Labour	34917	Cleveland	North
+		RB Jones	Conservative	23790
+		SE Dunleavy	Liberal	6074
+		A Bruce	National Front	384
+		V Fletcher	Independent	343
+		J Smith	Communist	243
+
+Stoke-on-Trent Central	59493	RB Cant	Labour	24707	Staffordshire	Severn
+		W Williams	Conservative	12104
+		A Thomas	Liberal	4260
+
+Stoke-on-Trent North	59402	John Forrester	Labour	25652	Staffordshire	Severn
+		R Ibbs	Conservative	13228
+		CV Smedley	Liberal	3994
+		C Baugh	National Front	341
+
+Stoke-on-Trent South	74193	J Ashley	Labour	31610	Staffordshire	Severn
+		R Rayner	Conservative	17364
+		D Chantrey	Liberal	4829
+
+Stratford-on-Avon	76588	AEU Maude	Conservative	35470	Warwickshire	East Midlands
+		J Taylor	Liberal	12916
+		CA Purnell	Labour	10334
+
+Streatham	53347	WJM Shelton	Conservative	19630	Lambeth	South London
+		TPC Daniel	Labour	14130
+		JS Pincham	Liberal	3779
+		GW Bryant	National Front	523
+		AJ Hollander	Providers Through Care	102
+
+Stretford	69258	WS Churchill	Conservative	25972	Central Manchester	Greater Manchester
+		PN Scott	Labour	21466
+		DI Wrigley	Liberal	6369
+
+Stroud	76137	JA Kershaw	Conservative	32534	Gloucestershire	West
+		BJ Marshall	Labour	17037
+		J Heppell	Liberal	12314
+
+Sudbury and Woodbridge	91441	KM Stainton	Conservative	39544	Suffolk	East Anglia
+		JB Hills	Labour	18972
+		R Beale	Liberal	13435
+
+Sunderland North	72994	FT Willey	Labour	29213	Newcastle area	North
+		L Keith	Conservative	16311
+		JA Lennox	Liberal	5238
+
+Sunderland South	79130	GAT Bagier	Labour	29403	Newcastle area	North
+		J Harris	Conservative	21002
+		P Barker	Liberal	4984
+
+Surbiton	46922	N Fisher	Conservative	20063	Kingston upon Thames	South London
+		CP Moore	Labour	9261
+		CJ Tilley	Liberal	6093
+
+Surrey East	57364	G Howe	Conservative	28266	Surrey	South
+		S Liddell	Liberal	8866
+		WG Harries	Labour	7398
+		D Smith	National Front	452
+
+Surrey North West	75197	WMJ Grylls	Conservative	36219	Surrey	South
+		R Sharpe	Labour	10763
+		D Simpson	Liberal	9037
+		R Heath	National Front	796
+
+Sussex Mid	68232	RT Renton	Conservative	32548	West Sussex	South East
+		J Campbell	Liberal	11705
+		DS Turner	Labour	8260
+		SHM Haslett	Independent Conservative	697
+
+Sutton and Cheam	63038	DN Macfarlane	Conservative	28842	Sutton	South London
+		C Caswill	Liberal	13136
+		N Irwin	Labour	7126
+		J Hunt	National Front	465
+		J Smoker	Independent	128
+
+Sutton Coldfield	64093	PN Fowler	Conservative	34096	Birmingham	West Midlands
+		CEA Hooper	Liberal	7989
+		JF Partridge	Labour	6511
+		R Wallace	National Front	466
+		GC Hammond	Independent Conservative	459
+
+Swansea East	60350	D Anderson	Labour	31909	West Glamorgan	Wales
+		S Edwards	Conservative	10689
+		JG Ball	Plaid Cymru	2732
+		W Jones	Communist	308
+
+Swansea West	65872	AJ Williams	Labour	24175	West Glamorgan	Wales
+		D Mercer	Conservative	23774
+		MJ Ball	Liberal	3484
+		G ap Gwent	Plaid Cymru	1012
+
+Swindon	65761	DL Stoddart	Labour	25218	Wiltshire	West
+		N Hammond	Conservative	19319
+		G Collis	Liberal	5709
+
+Taunton	66349	ED Du Cann	Conservative	28483	Somerset	South West
+		S Horne	Labour	15759
+		M Lee	Liberal	7928
+		G Garbett	Ecology	1403
+
+Thanet East	48989	JWP Aitken	Conservative	20367	Kent	South East
+		ID Kilberry	Labour	10128
+		BCJ Hesketh	Liberal	4755
+		B Dobing	National Front	376
+
+Thanet West	45694	WR Rees-Davies	Conservative	18122	Kent	South East
+		JF Little	Labour	8576
+		D Payne	Liberal	6017
+
+Thirsk and Malton	71905	JD Spence	Conservative	32520	North Yorkshire	Yorkshire
+		EJ Roberts	Labour	11924
+		R North	Liberal	10533
+
+Thornaby	61783	IW Wrigglesworth	Labour	23597	Cleveland	North
+		J Jeffreys	Conservative	18073
+		N Patmore	Liberal	4255
+		M Evans	National Front	251
+
+Thurrock	91712	OA McDonald	Labour	33449	Essex	Essex
+		A Baldry	Conservative	27030
+		M Crowson	Liberal	6445
+		E Burdett	National Front	1358
+		B Chattaway	Independent	365
+		M Daly	Workers Revolutionary Party	242
+
+Tiverton	74370	RJ Maxwell-Hyslop	Conservative	33444	Devon	South West
+		D Morrish	Liberal	17215
+		AWF Cook	Labour	8281
+
+Tonbridge and Malling	68122	JP Stanley	Conservative	29534	Kent	South East
+		RC Ackerley	Labour	13282
+		GJ Knopp	Liberal	10904
+		GL Burnett	National Front	429
+
+Tooting	50962	TM Cox	Labour	18642	Wandsworth	South London
+		R Ritchie	Conservative	13442
+		R Fife	Liberal	2917
+		P Berbridge	National Front	682
+		L Lewis	Communist	233
+
+Torbay	87987	F Bennett	Conservative	36099	Devon	South West
+		MN Mitchell	Liberal	15231
+		EV Fear	Labour	12919
+		D Abrahams	Ecology	1161
+		JG Spry	National Front	647
+
+Totnes	83960	RL Mawby	Conservative	35010	Devon	South West
+		AH Rogers	Liberal	24445
+		J Duffin	Labour	7668
+
+Tottenham	46821	N Atkinson	Labour	16299	Haringey	North London
+		MHM Carrington	Conservative	9166
+		K Alexander	Liberal	2177
+		CS Mates	National Front	833
+		EDJ Gutteridge	Workers Revolutionary Party	94
+		GA Rolph	Fellowship Party	71
+
+Truro	76597	DC Penhaligon	Liberal	33571	Cornwall	South West
+		R Brown	Conservative	24863
+		BM Tidy	Labour	4689
+		JCA Whetter	Cornish Nationalist	227
+		NF Hedger	National Front	182
+
+Tunbridge Wells	71825	PBB Mayhew	Conservative	31928	Kent	South East
+		AAJ Bartlett	Labour	11392
+		R Baker	Liberal	9797
+		W Standen	National Front	509
+
+Twickenham	71535	TFH Jessel	Conservative	30017	Richmond upon Thames	South London
+		J Waller	Liberal	17169
+		D Wetzel	Labour	9591
+		M Braithwaite	National Front	686
+
+Tynemouth	74722	NG Trotter	Conservative	29941	Newcastle area	North
+		PJ Cosgrove	Labour	22377
+		R Pinkney	Liberal	5736
+
+Ulster Mid	81457	J Dunlop	United Ulster Unionist	29249	Northern Ireland	Northern Ireland
+		PA Duffy	Social Democratic and Labour Party	19266
+		P Fahy	Irish Independence Party	12055
+		A Lagan	Alliance Party of Northern Ireland	3481
+		F Donnelly	Republican Clubs	1414
+
+Upminster	65966	JW Loveridge	Conservative	27960	Havering	North London
+		JK Stephenson	Labour	18895
+		D Harvey	Liberal	5216
+		W Neary	National Front	965
+
+Uxbridge	60313	JM Shersby	Conservative	24967	Hillingdon	South London
+		GE Pringle	Labour	16972
+		J Hunt	Liberal	5031
+		P Budgen	National Front	595
+
+Vauxhall	39870	S Holland	Labour	13058	Lambeth	South London
+		P Heslop	Conservative	8358
+		F Harrison	Liberal	1842
+		V Atkinson	National Front	879
+		D Elliot	Labour Alliance Party	565
+		S Hannigan	Workers Revolutionary Party	153
+		W Boaks	Democratic Monarchist Public Safety White Resident	44
+
+Wakefield	70509	W Harrison	Labour	27124	West Yorkshire	Yorkshire
+		J Sheard	Conservative	19571
+		N Collins-Tooth	Liberal	6059
+		A Cooper	National Front	530
+
+Wallasey	69211	L Chalker	Conservative	26548	Merseyside	Lancashire
+		HC Hodge	Labour	21167
+		NRL Thomas	Liberal	5269
+		J Fishwick	National Front	491
+
+Wallsend	91312	WE Garrett	Labour	38214	Newcastle area	North
+		L Johnstone	Conservative	21695
+		P Ryan	Liberal	8514
+		I Hunter	National Front	472
+		K Flynn	Workers Revolutionary Party	412
+
+Walsall North	73102	D Winnick	Labour	26913	West Midlands	West Midlands
+		RG Hodgson	Conservative	21047
+		A Bentley	Liberal	3778
+		C Parker	National Front	1098
+
+Walsall South	57709	BT George	Labour	22539	West Midlands	West Midlands
+		A Hill	Conservative	20951
+		V Parker	National Front	795
+
+Walthamstow	49315	EP Deakins	Labour	17651	Waltham Forest	North London
+		S Eyres	Conservative	13248
+		MP O'Flanagan	Liberal	3117
+		G Flaxton	National Front	1119
+
+Wanstead and Woodford	57218	CPF Jenkin	Conservative	26214	Waltham Forest	North London
+		MG Macnulty	Labour	8464
+		A Cornish	Liberal	6535
+		C Bond	National Front	957
+
+Warley East	55026	AWM Faulds	Labour	21333	West Midlands	West Midlands
+		RK Jones	Conservative	16236
+		J Worrall	National Front	1204
+
+Warley West	60935	PK Archer	Labour	25175	West Midlands	West Midlands
+		RK Evans	Conservative	15074
+		FM Fisher	Liberal	2864
+
+Warrington	43921	T Williams	Labour	19306	Cheshire	Severn
+		G Povey	Conservative	9032
+		IB Browne	Liberal	2833
+		C Campbell	Social Democrat	144
+
+Warwick and Leamington	85074	DG Smith	Conservative	35925	Warwickshire	East Midlands
+		CJ Gray	Labour	19367
+		D Woodcock	Liberal	9905
+		P Sizer	Ecology	905
+
+Watford	55079	T Garel-Jones	Conservative	21320	Hertfordshire	Essex
+		A Banks	Labour	18030
+		B Bodle	Liberal	5019
+		B Cheetham	National Front	388
+
+Wellingborough	89022	PD Fry	Conservative	37812	Northamptonshire	East Anglia
+		DA Forwood	Labour	25278
+		LE Stringer	Liberal	8506
+		SF Wright	National Front	529
+		DMP Garnett	Independent	209
+
+Wells	74717	RT Boscawen	Conservative	30400	Somerset	South West
+		AAS Butt Philip	Liberal	18204
+		PP Murphy	Labour	10025
+		G Livings	Independent	421
+		A Thynn	Wessex Regionalist	155
+
+Welwyn and Hatfield	69957	CPY Murphy	Conservative	28892	Hertfordshire	Essex
+		HV Hayman	Labour	25418
+		J Hurd	Liberal	4688
+		P Ruddock	National Front	459
+
+West Bromwich East	57660	PC Snape	Labour	19279	West Midlands	West Midlands
+		J Wright	Conservative	17308
+		M Smith	Liberal	3228
+		C Allsopp	National Front	1175
+
+West Bromwich West	58803	B Boothroyd	Labour	23791	West Midlands	West Midlands
+		D Harrison	Conservative	14323
+		R Churms	National Front	1351
+
+Westbury	79538	DM Walters	Conservative	29929	Wiltshire	West
+		P Jackson	Liberal	15950
+		PR Atkins	Labour	12532
+		S Alexander	Independent	2547
+		T Thatcher	Wessex Regionalist	1905
+		S Rodwell	Ecology	554
+
+Western Isles	22393	DJ Stewart	Scottish National Party	7941	Western Isles	East Scotland
+		A Matheson	Labour	4878
+		M Morrison	Conservative	1600
+		N MacLeod	Liberal	700
+
+Westhoughton	76922	R Stott	Labour	29685	Lancashire	Lancashire
+		C Johnson	Conservative	24398
+		J Pigott	Liberal	7544
+
+West Lothian	85645	T Dalyell	Labour	36713	Edinburgh area	East Scotland
+		WC Wolfe	Scottish National Party	16631
+		JR Whyte	Conservative	13162
+		W Sneddon	Communist	404
+
+Westmorland	59956	JM Jopling	Conservative	25274	Cumbria	North
+		K Hulls	Liberal	12867
+		A Potts	Labour	6497
+
+Weston-Super-Mare	92096	AW Wiggin	Conservative	40618	Bristol Area	West
+		R Morgan	Liberal	16305
+		AH Taylor	Labour	14420
+
+Whitehaven	52787	JA Cunningham	Labour	22626	Cumbria	North
+		J Somers	Conservative	17171
+		E Akister	Liberal	2559
+		W Dixon	Independent	790
+
+Widnes	78228	GJ Oakes	Labour	32033	Cheshire	Severn
+		BG Holder	Conservative	21752
+		LA Self	Liberal	4290
+
+Wigan	59024	EA Fitch	Labour	26144	Western Manchester	Greater Manchester
+		T Peet	Conservative	13149
+		K Bruce	Liberal	4102
+		A Smith	Workers Revolutionary Party	348
+
+Wimbledon	65471	M Havers	Conservative	27567	Merton	South London
+		RB Tansey	Labour	14252
+		D Twigg	Liberal	7604
+		A Bailey	National Front	612
+
+Winchester	87412	J Browne	Conservative	38198	Hampshire	South
+		WH Allchin	Labour	15378
+		J Morgan	Liberal	14228
+		M Mahoney	Wessex Regionalist	395
+
+Windsor and Maidenhead	85441	A Glyn	Conservative	38451	Berkshire	South
+		VI Price	Labour	13321
+		J Farrand	Liberal	11496
+		P Crowley	National Front	930
+		C Bex	Wessex Regionalist	251
+
+Wirral	97033	D Hunt	Conservative	44519	Merseyside	Lancashire
+		C Ryder	Labour	21188
+		R Barnett	Liberal	9769
+
+Woking	72670	CGD Onslow	Conservative	31719	Surrey	South
+		CN Beard	Labour	13327
+		GH Dunk	Liberal	9991
+		PA Gleave	National Front	564
+
+Wokingham	85001	WR van Straubenzee	Conservative	36194	Berkshire	South
+		AE Furley	Labour	17448
+		P Mullarky	Liberal	12120
+		G Sanders	National Front	722
+
+Wolverhampton North East	67994	R Short	Labour	24046	West Midlands	West Midlands
+		J Evans	Conservative	17986
+		L McLean	Liberal	4760
+		G Cooper	National Front	1283
+
+Wolverhampton South East	53764	R Edwards	Labour	20708	West Midlands	West Midlands
+		P Chalkley	Conservative	12807
+		M Parley	Liberal	2499
+		G Jones	National Front	1139
+
+Wolverhampton South West	66180	NW Budgen	Conservative	26587	West Midlands	West Midlands
+		IE Geffen	Labour	15827
+		J Wernick	Liberal	6939
+		J Lees	National Front	912
+		J Deary	Anti Common Market Free Enterprise	401
+
+Wood Green	52039	R Race	Labour	16465	Haringey	North London
+		J Riley	Conservative	13950
+		G Davies	Liberal	3665
+		R Frost	National Front	998
+
+Woolwich East	52523	JC Cartwright	Labour	21700	Greenwich	South London
+		P Rock	Conservative	11240
+		DJ Woodhead	Liberal	2998
+		I Steven	National Front	884
+
+Woolwich West	56327	PJ Bottomley	Conservative	21222	Greenwich	South London
+		D Page	Labour	18613
+		J Churchill	Liberal	4363
+		M Skeggs	National Front	630
+
+Worcester	78026	PE Walker	Conservative	30194	Hereford and Worcestershire	Severn
+		D Sparks	Labour	18605
+		D Elliott	Liberal	8886
+		J Davenport	Ecology	707
+		K Stevens	National Front	450
+
+Worcestershire South	79036	WHM Spicer	Conservative	34926	Hereford and Worcestershire	Severn
+		D Phillips	Liberal	14272
+		G Daniel	Labour	10206
+		G Woodford	Ecology	1722
+
+Workington	55030	D Campbell-Savours	Labour	24523	Cumbria	North
+		RL Page	Conservative	18767
+		N Blackshaw	Liberal	2819
+
+Worthing	74961	TL Higgins	Conservative	33624	West Sussex	South East
+		B Sudbury	Liberal	13244
+		K Underwood	Labour	7163
+		A Hough	National Front	893
+
+Wrekin, The	92592	W Hawksley	Conservative	32672	Shropshire	Severn
+		GT Fowler	Labour	31707
+		R Yarnell	Liberal	7331
+
+Wrexham	78771	RT Ellis	Labour	30405	Clwyd	Wales
+		R Graham-Palmer	Conservative	18256
+		M Thomas	Liberal	11389
+		HW Roberts	Plaid Cymru	1740
+
+Wycombe	85843	R Whitney	Conservative	38171	Buckinghamshire	Essex
+		TJ Fowler	Labour	18000
+		A Lawson	Liberal	9615
+		S Jones	National Front	833
+
+Yarmouth	72154	A Fell	Conservative	28066	Norfolk	East Anglia
+		P Hollis	Labour	20838
+		E Minett	Liberal	6112
+		T Holmes	National Front	640
+
+Yeovil	80646	JWW Peyton	Conservative	31321	Somerset	South West
+		JJD Ashdown	Liberal	19939
+		ID Luder	Labour	14098
+
+York	76832	AW Lyon	Labour	26703	North Yorkshire	Yorkshire
+		EDM Tod	Conservative	25453
+		M Pemberton	Liberal	6752
+		FCJ Radcliffe	Christian Stop Abortion	569
+		PA Spink	National Front	221

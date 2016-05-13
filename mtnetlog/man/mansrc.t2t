@@ -1,0 +1,37 @@
+@BIN_UPPER@
+mtNetLog @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+@BIN_NAME@ - network activity logger
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+mtNetLog is a very basic network activity logger for GNU/Linux systems.
+
+When no filename or options are specified, mtnetlog.tsv is used as the
+log file with a delay of 5 seconds on the ppp0 network.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-delay** NUM
+	Poll the network every NUM seconds.
+**-network** STRING
+	Log activity for this network.
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

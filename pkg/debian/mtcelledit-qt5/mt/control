@@ -1,0 +1,13 @@
+Source: mtcelledit-qt5
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, qtbase5-dev, libmtkit, libmtcelledit, libmtcedui, libmtqex5
+Standards-Version: 3.9.3
+Homepage: http://mtcelledit.sourceforge.net/
+
+Package: mtcelledit-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt5 Spreadsheet GUI
+ .

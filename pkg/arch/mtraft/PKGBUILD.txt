@@ -1,0 +1,24 @@
+# Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+pkgname=mtraft
+pkgver
+pkgrel=@MT_RELVER@
+pkgdesc="GTK+2 Directory Analysis Tool"
+arch=('i686' 'x86_64' 'arm')
+license=('GPL3')
+depends=('libmtkit' 'libmtcelledit' 'gtk2')
+install=mtraft_desktop.install
+source=($pkgname-$pkgver.tar.gz)
+md5sums
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  @MT_CONF@ --enable-gtk2
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+}

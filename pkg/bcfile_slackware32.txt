@@ -1,0 +1,10 @@
+libmtkit	 ./configure
+libmtcelledit	 ./configure
+libmtcedui	 ./configure
+mtcedcli	 ./configure.slackware12.0
+mtcedutils	 ./configure
+mtnetlog	 ./configure
+mtrdc	 ./configure
+libmtgex	 ./configure
+mtcelledit	 ./configure --enable-gtk2
+mtraft	 ./configure --enable-gtk2

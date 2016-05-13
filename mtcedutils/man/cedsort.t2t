@@ -1,0 +1,58 @@
+CEDSORT
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedsort - sort a spreadsheet
+
+
+= SYNOPSIS =
+**cedsort** [ [ **OPTION** ] [ EXP ] ]...
+
+
+= DESCRIPTION =
+Sort a sheet according to the given expression.
+Expression 1,ac,2,d sorts by row 1 (ascending, case sensitive), then row 2 (descending).
+Up to 10 rows or columns may be specified in the expression.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-col**
+	Sort columns.
+**-csv**
+	The following input file is CSV.
+**-i** STRING
+	Load this input file.  "-" loads from stdin.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-row**
+	Sort rows (default)
+**-start** INTEGER
+	First row/column to sort from (default = 1).
+**-total** INTEGER
+	Total rows/colums to sort (default = 1 = all).
+**-tsv**
+	The following input file is TSV (default).
+**-v**
+	Verbose.
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

@@ -1,0 +1,50 @@
+CEDFIND
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedfind - find a spreadsheet cell
+
+
+= SYNOPSIS =
+**cedfind** [ [ **OPTION** ] [ EXP ] ]...
+
+
+= DESCRIPTION =
+Find all cells that match the given expression.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-case**
+	Case sensitive search.
+**-csv**
+	The following input file is CSV.
+**-i** STRING
+	Load this input file.  "-" loads from stdin.
+**-num**
+	Find numerical value.
+**-range** STRING
+	Search in this range (default = r1c1:r_c_ ).
+**-tsv**
+	The following input file is TSV (default).
+**-v**
+	Verbose.  Output the cell content as well as the address.
+**-wildcard**
+	* and ? characters are wildcards.
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

@@ -1,0 +1,72 @@
+load			tmp/base1.31.tsv.zip
+
+select r5c1:r15c2
+copy
+clip save		tmp/51.clip.01.zip
+
+select r27c7:r32c10
+copy
+clip save		tmp/51.clip.02.zip
+
+new
+
+clip load		tmp/51.clip.01.zip
+select r2c2
+paste
+
+clip load		tmp/51.clip.02.zip
+select r20c2
+paste
+
+select all
+print
+
+
+new
+rename sheet "The original NEW Sheet"
+
+import book		tmp/base1.31.tsv.zip
+
+import graph		Graph_01	output/12.001.tsv
+import graph		Graph_02	output/12.002.tsv
+import graph		Graph_03	output/12.005.tsv
+import graph		Graph_04	output/12.008.csv
+import graph		Graph_05	input/graph01.txt
+import graph		Graph_06	input/graph02.txt
+
+list graphs
+
+set graph		Graph_05
+export graph		output/graph01.txt
+set graph		Graph_06
+export graph		output/graph02.txt
+
+save as			tmp/base1.51.tsv.zip
+
+new
+rename sheet "The original 2nd NEW Sheet"
+
+import book		tmp/base1.51.tsv.zip
+
+list graphs
+list sheets
+
+set graph		Graph_01
+delete graph
+set graph		Graph_02
+delete graph
+
+set graph		Graph_03
+rename graph		"Graph 03 03 03"
+
+list graphs
+
+set graph		Graph_05
+
+export output graph	tmp/51.graph.eps	eps
+export output graph	tmp/51.graph.pdf	pdf
+export output graph	tmp/51.graph.png	png
+export output graph	tmp/51.graph.ps		ps
+export output graph	tmp/51.graph.svg	svg
+
+save as			tmp/base1.51.02.tsv.zip

@@ -1,0 +1,115 @@
+load tmp/base1.21.tsv.zip
+save as tmp/base1.31.tsv.zip
+
+set sheet "Z Sheet"
+
+select r5c4:r19c8
+copy
+
+new sheet
+rename sheet clip_00
+paste
+
+clip flip_h
+
+new sheet
+rename sheet clip_01
+paste
+
+clip flip_v
+
+new sheet
+rename sheet clip_02
+paste
+
+clip rotate_a
+
+new sheet
+rename sheet clip_03
+paste
+
+clip rotate_c
+
+new sheet
+rename sheet clip_04
+paste
+
+clip transpose
+
+new sheet
+rename sheet clip_05
+paste
+
+#----------------------
+
+set sheet clip_03
+select all
+copy output
+
+select r11c1
+paste
+
+set sheet Formulae
+select all
+copy values
+
+new sheet
+rename sheet "Formulae text"
+paste
+
+set sheet clip_03
+select r12c10:r15c11
+cut
+
+select r16c10
+paste
+
+export sheet		output/31.001.tsv		tsv
+
+new sheet
+set cell 21/11/05
+copy
+
+select r1c1:r10c1
+paste
+
+select r2c1
+set 2dyear
+
+select r3c1
+set 2dyear 1800
+
+select r4c1
+set 2dyear 500
+
+select r5c1
+set 2dyear 1805
+
+select r6c1
+set 2dyear 1806
+
+select r7c1
+set 2dyear 1804
+
+select r8c1
+set 2dyear 1803
+
+export sheet		output/31.002.tsv		tsv
+
+set sheet "Formulae text"
+duplicate sheet
+rename sheet "Formulae text sorted Column"
+duplicate sheet
+rename sheet "Formulae text sorted Row"
+
+set sheet "Formulae text sorted Column"
+select all
+sort column 1,a,2,d,3,a
+export sheet		output/31.003.tsv		tsv
+
+set sheet "Formulae text sorted Row"
+select all
+sort row 1,d,2,a,3,d
+export sheet		output/31.004.tsv		tsv
+
+save

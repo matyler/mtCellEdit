@@ -1,0 +1,13 @@
+libmtkit	 ./configure
+libmtcelledit	 ./configure
+libmtcedui	 ./configure
+mtcedcli	 ./configure
+mtcedutils	 ./configure
+mtrdc	 ./configure
+libmtqex4	 ./configure --enable-qt4
+mtcelledit-qt4	 ./configure --enable-qt4
+mtraft-qt4	 ./configure --enable-qt4
+mteleana-qt4	 ./configure --enable-qt4
+libmtgex	 ./configure
+mtcelledit	 ./configure --enable-gtk2
+mtraft	 ./configure --enable-gtk2

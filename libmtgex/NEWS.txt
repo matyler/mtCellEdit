@@ -1,0 +1,46 @@
+2.7	2016-5-14
+
+	* Cruft removed.
+
+2.6	2015-9-6
+
+2.5	2015-5-24
+
+	* BUGFIX: memory leak and other errors cleared up (clang analyzer)
+
+2.4	2014-8-10
+
+	* Hardening: sprintf -> snprintf.
+	* mtGEX renamed to libmtGEX.
+
+2.3	2014-2-22
+
+	* BUGFIX - mtgex_gtkuncpy() now works with non-ASCII strings properly.
+	* Hardening: sprintf -> snprintf.
+
+2.2	2013-8-25
+
+	* Simplifications, cruft removal, and other housekeeping.
+
+2.1	2013-3-24
+
+	* mtgex_gtkuncpy() now always returns a UTF-8 string.
+
+2.0	2012-3-25
+
+1.6.0	2012-1-25
+
+1.4.1	2011-8-14
+
+	* mtgex_prefs_window_mirror_prefs() added
+
+1.2.0	2010-12-25
+
+1.0.0	2010-6-25
+
+0.10.0	2010-1-5
+
+0.9.0	2009-1-27
+
+	* Project started
+

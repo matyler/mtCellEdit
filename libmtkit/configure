@@ -1,0 +1,19 @@
+#!/bin/sh
+
+
+. ./mtConf.txt
+
+
+APP_NAME="libmtKit"
+LIB_NAME="libmtkit.so"
+
+MTCF_INIT
+MTCF_PARSE_ARGS "$@"
+MTCF_PRINT_HELP
+
+MTCF_PRE_CONF
+MTCF_CHECK_LIBS z
+MTCF_PKGCONFIG "cairo"
+
+MTCF_POST_CONF
+MTCF_PRINT_CONF

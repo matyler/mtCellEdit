@@ -1,0 +1,14 @@
+libmtkit	 ./configure --libdir=/usr/lib/powerpc-linux-gnu
+libmtcelledit	 ./configure --libdir=/usr/lib/powerpc-linux-gnu
+libmtcedui	 ./configure --libdir=/usr/lib/powerpc-linux-gnu
+mtcedcli	 ./configure
+mtcedutils	 ./configure
+mtnetlog	 ./configure
+mtrdc	 ./configure
+libmtqex4	 ./configure --enable-qt4 --libdir=/usr/lib/powerpc-linux-gnu
+mtcelledit-qt4	 ./configure --enable-qt4
+mtraft-qt4	 ./configure --enable-qt4
+mteleana-qt4	 ./configure --enable-qt4
+libmtgex	 ./configure --libdir=/usr/lib/powerpc-linux-gnu
+mtcelledit	 ./configure --enable-gtk2
+mtraft	 ./configure --enable-gtk2

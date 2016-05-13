@@ -1,0 +1,11 @@
+[Desktop Entry]
+# Desktop Entry Specification: http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec
+Name=@APP_NAME@@BIN_SUFFIX@
+Comment=UK General Election Results 1945-2010
+Exec=@BIN_INSTALL@/@BIN_NAME@
+Terminal=false
+NoDisplay=false
+Type=Application
+Icon=@BIN_NAME@
+Categories=Education;History;
+StartupNotify=false

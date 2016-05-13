@@ -1,0 +1,27 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Appendix B - The History of this Document</TITLE>\1'
+
+
+[Previous chap_A.html] | [Contents chap_00.html]
+-------------------------------------------------
+
+=Appendix B - The History of this Document=
+
+
+| **Date**         | **Edition** | **Notes** |
+| 25 June 2010     | 1.0.0       | First Edition
+| 25 December 2010 | 1.2.0       | Minor additions
+| 25 April 2011    | 1.4.0       | Multiple updates and additions
+| 25 March 2012    | 2.0         | Multiple updates and additions. Documentation now built using txt2tags as inspired by mtPaint documentation changes by Dmitry Groshev.
+| 24 March 2013    | 2.1         | Multiple updates and additions
+| 25 August 2013   | 2.2         | Multiple updates and additions
+| 22 February 2014 | 2.3         | Multiple updates and additions
+| 10 August 2014   | 2.4         | Multiple updates and additions
+| 24 May 2015      | 2.5         | Multiple updates and additions
+| 6 September 2015 | 2.6         | Minor updates
+| 14 May 2016      | 2.7         | Multiple updates and additions
+
+
+
+-------------------------------------------------
+[Previous chap_A.html] | [Contents chap_00.html]

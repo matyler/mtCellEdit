@@ -1,0 +1,40 @@
+2.7	2016-5-14
+
+	* Default toolkit is now Qt5.
+	* GTK+3 version removed.
+
+2.6	2015-9-6
+
+2.5	2015-5-24
+
+	* Desktop files added.
+	* Default location for program preferences is ~/.config/mtraft/prefs.txt
+	* man page added.
+	* scan_recurse() now more tolerant of failures.
+	* Fixed string buffers replaced with dynamic ones with upper limit.
+	* GTK+3 version moved to C++ structure akin to Qt version.
+	* BUGFIX (GTK+2/3) - get_tree_row() memory leak.
+	* BUGFIX - scan_recurse() now counts broken symlinks.
+
+2.4	2014-8-10
+
+	* unsigned int types cleaned up.
+	* Unsafe strncat cleaned up.
+
+2.3	2014-2-22
+
+	* Qt4/5 port added.
+	* UI simplified.
+	* BUGFIX - Memory leak in scan_recurse() fixed.
+	* BUGFIX - Non ASCII directory names can now be explored.
+
+2013-8-25	2.2	GTK+3 port added
+2013-4-27	2.1.5	Pushed into mtCellEdit suite as mtRaft
+2013-4-18	0.30	Reworked to use libmtcelledit
+2011-10-3	0.27	Tweaks
+2011-6-23	0.20	Major cleanup finished
+2011-6-21	0.16	Major cleanup started
+2009-5-12	0.14	Reads from CD/DVD devices properly
+2005-7-23	0.13	Bug in Re-analyse button fixed
+2004-6-24	0.10	all widget & analysis functionality complete
+2004-6-7	0.00	Project started

@@ -1,0 +1,131 @@
+2.7	2016-5-14
+
+	* Default toolkit is now Qt5.
+	* Options->Text Style menu options now allow Italic, Underline (Single, Double, Wavy), Strikethrough.
+
+2.6	2015-9-6
+
+	* configure script uses fc-list more efficiently for older systems.
+
+2.5	2015-5-24
+
+	* If you have Fontconfig on your system, it is used at compile time to set the default font.
+	* Default location for program preferences is ~/.config/mtcelledit/prefs.txt
+	* Qt versions now have option "Edit->Use System Clipboard"
+	* Handbook & desktop files now in this package by default (can be disabled using configure script).
+	* -csv & -tsv command line options added: see man page.
+	* man page added.
+	* BUGFIX (Qt) - CedView :: reconfigure now sets *scrollLast properly.
+	* BUGFIX (Qt) - Copying text from inside a text entry box and then pasting onto a sheet cell behaves as expected.
+
+2.4	2014-8-10
+
+	* unsigned int types cleaned up.
+	* Hardening: sprintf -> snprintf.
+	* BUGFIX - Updating book prefs now sets modified in title bar.
+	* BUGFIX (Qt) - CedView :: setScrollbars keeps track of last scroll position (needed when setting frozen pane).
+	* BUGFIX - border_type can now be edited properly in cell prefs window.
+
+2.3	2014-2-22
+
+	* Qt4/5 port added.
+	* BUGFIX - Inserting column (paste width) now updates frozen panes.
+
+2.2	2013-8-25
+
+	* Simplifications, cruft removal, and other housekeeping.
+	* Ctrl + 1..9, 0 recalls recently used files.
+	* Program preference added: sheet_prefs_persist
+	* Cell preferences: fixed decimal places can now go to 99.
+
+2.1	2013-3-24
+
+	* Graph area and find area are now decoupled and have their own size in the prefs.
+	* "Edit->Fix 2-digit Years" added. Prefs in date.2digit_year_start
+	* Leading ' quote only appears in cell entry box if explicitly instructed by user/file.
+	* F1 now opens HTML docs in a browser (prefs help_*).
+	* Clipboard and other code factored into mtCedUI.
+	* Non UTF-8 books and sheetnames now converted to UTF-8 during loading.
+	* Program preference "main_recent_filename_len" added to limit the size recently used filenames.
+
+2.0	2012-3-25
+
+	* Cleanups & re-factoring.
+	* Clicking a scrollbar trough moves view by visible page as expected by convention.
+	* Redraw algorithm when the cursor moves optimized.
+	* Graphs can be scaled using program preference "graph_scale".
+
+1.6.0	2012-1-25
+
+	* Rendering & Undo split off into libmtcedui.  Cairo dependency now removed from mtCellEdit GUI.
+	* Cell rows can now have padding to help with cramped fonts like 8x8.  Program preferences option is main_row_pad
+	* Limits on TSV and CSV file size expanded: 1,000,000 rows/cols 1,000,000,000 cells
+	* GUI updates now optimized
+
+1.4.1	2011-8-14
+
+	* "Edit->Transform Clipboard" options added.
+	* Up/Down/Right arrow, Tab[+ctrl] keys now work better when focus is in text input area.
+	* Second prefs config file ".mtcelledit_prefs" now not used.
+	* Quicksum function added "Max - Min"
+	* BUGFIX - symlink files now loaded and saved properly.
+
+1.4.0	2011-4-25
+
+	* Cell borders added to cell preferences and Options menu.
+	* "Options->Graph" now shows and hides the graph area, and the graph menu/selector.
+	* "Sheet->Export Output" can now export HTML files.
+	* New command line switch to load a different preferences file: -prefs FILE
+	* BUGFIX - segfault during rendering of huge sheets under certain conditions.
+
+1.2.0	2010-12-25
+
+	* "Sheet->Export Output" function added to export data to TSV, and TSV Quoted files.
+	* "Sheet->Export Output" function added to export data to EPS, PDF, PDF Paged, PNG, PS, SVG files if Cairo 1.6 or later is installed.
+	* "Column->Set Width Automatically" function added to set column width for each selected column to maximum text length.
+
+1.0.0	2010-6-25
+
+	* Feature complete & beta tested
+	* Text can now spill over empty cells to the left and right
+
+0.11.0	2010-4-28
+
+	* System clipboard functions added
+	* Freeze panes facility added
+	* Books can now hold multiple sheets (new/deuplicate/remove/rename/save as facilities)
+	* Shortcuts added to change bold text, foreground/background colours
+	* Column widths can be set
+	* Rendering now allows column widths, fore/background colours, etc.
+	* Find, sort row/column, bold, background/foreground colour selection facilities added
+	* Freeze panes, import file features added
+	* Undo system added - 100 steps set as maximum
+	* Row/Column insert/delete functions added
+	* Copy/pasting from one sheet to another
+
+0.10.0	2010-1-5
+
+	* Core library put into new package libmtcelledit
+	* TSV & CED files can now use gzip compression via 'Save as' option
+	* CSV files can now be exported
+	* mtKit and mtGEX libraries now used
+
+0.4.0	2008-12-27
+
+	* First public release
+
+0.3.0	2008-12-25
+
+	* Undo, redo, cut and paste added
+
+0.2.0	2008-12-24
+
+	* Core GUI functionality completed and tested
+
+0.1.0	2008-12-19
+
+	* Core API functionality completed and tested
+
+0.0.0	2008-12-9
+
+	* Project started

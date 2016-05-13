@@ -1,0 +1,108 @@
+2.6	2015-9-6
+
+2.5	2015-5-24
+
+	* Hex and binary output now works for up to 8 bytes using uint64_t.  See section A.6.4 of the handbook for details.
+	* BUGFIX: loading an empty ledger file now works as expected.
+	* BUGFIX: memory leak and other errors cleared up (clang analyzer).
+	* BUGFIX: cells with text "inf" or "nan" are now interpreted as text rather than floating point states.
+
+2.4	2014-8-10
+
+	* unsigned int types cleaned up.
+	* Hardening: sprintf -> snprintf.
+
+2.3	2014-2-22
+
+2.2	2013-8-25
+
+	* Simplifications, cruft removal, and other housekeeping.
+	* CED_PRINTF_NUM precision changed to 15 to be more portable.
+
+2.1	2013-3-24
+
+	* CED_CELL_TYPE_TEXT_EXPLICIT added. CED_CELL_TYPE_TEXT now doesn't use ' quote in files.
+	* ced_file_type_detect() added.
+	* ced_sheet_cursor_max_min() added.
+	* ced_cell_set_2dyear() added.
+	* BUGFIX - Setting column width to 0 now deletes whole row 0 cell (i.e. doesn't leave a zombie cell any more)
+	* BUGFIX - Zombie cell prefs are now killed when loading a book
+
+2.0	2012-3-25
+
+	* CedCell->prefs is now dynamically created when required.
+	* 64 bit systems now supported
+
+1.6.0	2012-1-25
+
+	* ced_sheet_column_width_max() added.
+	* ced_sheet_load_csv*() functions added.
+	* Saving a book now uses memory as a buffer (i.e. no temp files on disk).
+	* ced_sheet_save_mem() added.
+	* CSV saved files now only quote text cells.
+	* TSV/CSV *_NOQ file types added to avoid ' quotation marks on text cells when saving.
+	* BUGFIX - loading a TSV file which isn't UTF-8 now always works properly.
+
+1.4.1	2011-8-14
+
+	* Functions added: trunc, round
+	* Sheet transformations added: transpose, flip horizontal/vertertical, rotate clockwise/anti
+	* BUGFIX - frac & int functions now work on very large numbers (+ or -)
+	* BUGFIX - direct references to a cell with an error now generates an error (indirect references by functions like sum still quietly ignore error cells)
+
+1.4.0	2011-4-25
+
+	* Loading, saving, and merging books now respects archive files unused by libmtcelledit.  See ced_book_*_file API functions in ced_book.h for more details.
+	* Column width maximum now set at 100, minimum now 0 - enforced on load or ced_sheet_set_column_width()
+	* When saving CED files in a ZIP container, current timestamps are used for sheets and prefs
+	* ced_strtocellrange() added.
+	* ced_book_new() now adds a comment with the date/time of creation, and the user's real name.
+	* BUGFIX - stat_sheet_set_cell_real() now works when text=NULL
+	* BUGFIX - Numerical precision increased when saving values
+
+1.2.0	2010-12-25
+
+	* Grammar for function arguments now cleaner and simpler.  Extensions now only require an extra table entry in ced_token.c.  On the downside recalculations are about 10-30% slower.
+
+1.0.1	2010-9-1
+
+	* BUGFIX - ced_file.c : ledger_save_cb() - Text character now inserted in Ledger file cells when required
+
+1.0.0	2010-6-25
+
+	* Cell/Sheet preferences added
+	* Ledger file format added for large sparse sheets
+	* Sheet Functions added: vlookup, strvlookup, sumif
+
+0.10.0	2010-1-5
+
+	* Core library put into new package libmtcelledit
+	* TSV & CED files can now use gzip compression
+	* CSV files can now be exported
+	* mtKit library now used
+	* API Features added: sheet duplication, row/column sorting, area copying, area scanning, row/column insert/remove, text searching, row/column filtering, parsing, indexing, books
+	* Sheet Functions added: median, large, small, percentile, percentrank, rgb, now, today, date, time, weekday, day, month, year, hour, minute, second, offset
+	* Undo/Redo removed from core
+	* BUGFIX - yylex() now parses numbers properly
+	* BUGFIX - counta now works properly
+
+0.4.0	2008-12-27
+
+	* First public release
+
+0.3.0	2008-12-25
+
+	* Undo, redo, cut and paste added
+
+0.2.0	2008-12-24
+
+	* Core GUI functionality completed and tested
+
+0.1.0	2008-12-19
+
+	* Core API functionality completed and tested
+
+0.0.0	2008-12-9
+
+	* Project started
+

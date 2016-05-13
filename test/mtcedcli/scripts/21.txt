@@ -1,0 +1,49 @@
+load tmp/base1.13.tsv.zip
+set sheet "Sheet 1"
+save as tmp/base1.21.tsv.zip
+
+duplicate sheet
+
+# Errors here all due to locked sheet
+
+select r15c4:r15c9
+clear content
+
+select r16c4:r16c9
+clear prefs
+
+select r17c4:r17c9
+clear
+
+select r6c10:r6c11
+delete row
+delete column
+
+#-------------------------
+
+set prefs sheet locked 0
+
+select r15c4:r15c9
+clear content
+
+select r16c4:r16c9
+clear prefs
+
+select r17c4:r17c9
+clear
+
+select r6c10:r6c11
+delete row
+delete column
+
+rename sheet "X Sheet"
+duplicate sheet
+
+rename sheet "Z Sheet"
+set sheet "X Sheet"
+delete sheet
+
+set sheet "Z Sheet"
+export sheet		output/21.001.tsv		tsv
+
+save

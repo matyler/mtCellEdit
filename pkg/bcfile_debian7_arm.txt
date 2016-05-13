@@ -1,0 +1,14 @@
+libmtkit	 ./configure --libdir=/usr/lib/arm-linux-gnueabihf
+libmtcelledit	 ./configure --libdir=/usr/lib/arm-linux-gnueabihf
+libmtcedui	 ./configure --libdir=/usr/lib/arm-linux-gnueabihf
+mtcedcli	 ./configure
+mtcedutils	 ./configure
+mtnetlog	 ./configure
+mtrdc	 ./configure
+libmtqex4	 ./configure --enable-qt4 --libdir=/usr/lib/arm-linux-gnueabihf
+mtcelledit-qt4	 ./configure --enable-qt4
+mtraft-qt4	 ./configure --enable-qt4
+mteleana-qt4	 ./configure --enable-qt4
+libmtgex	 ./configure --libdir=/usr/lib/arm-linux-gnueabihf
+mtcelledit	 ./configure --enable-gtk2
+mtraft	 ./configure --enable-gtk2

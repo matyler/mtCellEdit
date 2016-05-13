@@ -1,0 +1,40 @@
+CEDLS
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedls - list spreadsheet file information
+
+
+= SYNOPSIS =
+**cedls** [ [ **OPTION** ] [ FILE ] ]...
+
+
+= DESCRIPTION =
+List spreadsheet file information.  If FILE=="" then use the current sheet in memory.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	The following input file is CSV.
+**-tsv**
+	The following input file is TSV (default).
+**-v**
+	Verbose.
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

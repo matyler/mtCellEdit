@@ -1,0 +1,53 @@
+CEDINSERT
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedinsert - insert rows or columns into spreadsheet
+
+
+= SYNOPSIS =
+**cedinsert** [ [ **OPTION** ] [ FILE ] ]...
+
+
+= DESCRIPTION =
+Insert rows or columns into a spreadsheet.
+If FILE=="" then use the current sheet in memory.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-col**
+	Insert column(s).
+**-csv**
+	The following input file is CSV.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=TSV content).
+**-recalc** INTEGER
+	Recalculate the sheet this many times (top-bottom, bottom-top).
+**-row**
+	Insert row(s) (default).
+**-start** INTEGER
+	Start inserting at this row or column (default = 1).
+**-total** INTEGER
+	Total number of rows or columns to insert (default = 1).
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

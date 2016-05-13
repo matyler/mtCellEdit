@@ -1,0 +1,76 @@
+#!/bin/sh
+
+
+. ./mtConf.txt
+
+
+APP_NAME="libmtQEX"
+
+MTCF_INIT
+
+TK=qt4
+
+for A in "$@"
+do
+	case "$A" in
+	--enable-qt4 )	TK=qt4;;
+	--enable-qt5 )	TK=qt5;;
+
+	* )		MTCF_PARSE_ARG1 "$A"
+			;;
+	esac
+done
+
+
+MYHELP()
+{
+cat << EOF
+--enable-qt4 .... Compile Qt4 version (default)
+--enable-qt5 .... Compile Qt5 version
+
+EOF
+}
+
+
+MTCF_PRINT_HELP MYHELP
+MTCF_PRE_CONF
+MTCF_CHECK_LIBS mtkit
+
+
+case "$TK" in
+qt4 )
+	MTCF_PKGCONFIG "QtGui"
+	TK_OBJ="moc_mtqex4.o"
+	I_EX="$I_EX -DU_TK_QT4"
+	LIB_NAME="libmtqex4.so"
+	HEADER_NAME="mtqex4.h"
+	MT_GET_MOC_4
+	;;
+qt5 )
+	MTCF_PKGCONFIG "Qt5Widgets"
+	TK_OBJ="moc_mtqex5.o"
+	I_EX="$I_EX -DU_TK_QT5"
+	LIB_NAME="libmtqex5.so"
+	HEADER_NAME="mtqex5.h"
+	MT_GET_MOC_5
+	;;
+esac
+
+
+L_EX="$L_EX -lstdc++"
+
+
+
+MTCF_POST_CONF
+
+# Stops noisy compilation when debugging
+mv $CONF_FILE $CONF_FILE.tmp
+cat $CONF_FILE.tmp |
+	awk '!/DEBUG/ { print } /DEBUG/ { gsub("-I","-isystem"); print }' > $CONF_FILE
+rm $CONF_FILE.tmp
+
+echo "TK_OBJ        = $TK_OBJ"		>> $CONF_FILE
+echo "HEADER_NAME   = $HEADER_NAME"	>> $CONF_FILE
+
+MTCF_PRINT_CONF
+

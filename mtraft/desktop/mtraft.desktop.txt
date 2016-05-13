@@ -1,0 +1,12 @@
+[Desktop Entry]
+# Desktop Entry Specification: http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec
+Name=@APP_NAME@@BIN_SUFFIX@
+Comment=Directory Analysis Tool
+Exec=@BIN_INSTALL@/@BIN_NAME@
+Terminal=false
+NoDisplay=true
+Type=Application
+Icon=@BIN_NAME@
+Categories=Utility;FileTools;
+MimeType=inode/directory;
+StartupNotify=false

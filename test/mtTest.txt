@@ -1,0 +1,102 @@
+#!/bin/bash
+# Test script helper functions
+# M.Tyler 2015-10-24
+
+
+
+OUT=tmp
+VALG_LOGFILE=valg_log.txt
+
+echo
+
+
+
+case "$VALG" in
+"Y" )	PROGPREFIX="valgrind --leak-check=full --show-possibly-lost=no"
+	;;
+"T" )	PROGPREFIX="/usr/bin/time"
+	;;
+*)	unset PROGPREFIX
+	;;
+esac
+
+
+export LANG=C
+
+# On error exit
+set -e
+
+> $VALG_LOGFILE
+
+
+
+run_sh()
+{
+	if [ "$1" != "" ]
+	then
+		echo $1
+	fi
+
+	shift
+
+	$PROGPREFIX "$@" 2>>$VALG_LOGFILE
+}
+
+txt_pass()
+{
+	printf "\e[94m%-25s PASS\e[0m\n" "$1"
+}
+
+txt_fail()
+{
+	printf "\e[41m\e[97m%-25s FAIL\e[0m\n" "$1"
+}
+
+cmp_arg()
+{
+	if [ "$2" = "$3" ]
+	then
+		txt_pass "$1"
+	else
+		txt_fail "$1"
+	fi
+}
+
+cmp_diff()
+{
+	echo
+	echo Comparing with checked results ...
+	echo
+
+	unset DIFF
+
+	diff -Nurp "$2" "$3" && DIFF=1
+
+	cmp_arg "$1" "$DIFF" "1"
+
+	unset DIFF
+}
+
+valg_results()
+{
+	case "$VALG" in
+	"Y" )
+		# Valgrind summary
+		# Using Valgrind creates numerical differences in formula results
+		# on my system which renders a 'diff' test useless.
+
+		echo
+		grep "definitely lost" $VALG_LOGFILE
+
+		echo
+		grep "ERROR SUMMARY" $VALG_LOGFILE
+		;;
+	"T" )
+		# Memory usage
+
+		echo
+		grep "maxresident" $VALG_LOGFILE
+		;;
+	esac
+}
+

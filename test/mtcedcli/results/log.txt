@@ -1,0 +1,787 @@
+----------- scripts/11.txt -----------
+
+mtcedcli > set cell rubbish
+mtcedcli > new
+mtcedcli > 
+mtcedcli > set cell "more rubbish"
+mtcedcli > new book
+mtcedcli > 
+mtcedcli > # ERROR - nothing to undo or redo
+mtcedcli > undo
+No undo available.
+
+mtcedcli > undo
+No undo available.
+
+mtcedcli > redo
+No redo available.
+
+mtcedcli > redo
+No redo available.
+
+mtcedcli > 
+mtcedcli > set cell "default cell position"
+mtcedcli > 
+mtcedcli > select r3c3
+mtcedcli > set cell -0.01234567
+mtcedcli > 
+mtcedcli > select r4c3:r5c4
+mtcedcli > set cell "= 2.14 + 3.0 + 17 - 2.2"
+mtcedcli > 
+mtcedcli > select r5c3
+mtcedcli > set cell "25/11/1912"
+mtcedcli > 
+mtcedcli > select r6c3
+mtcedcli > set cell "25/11/12"
+mtcedcli > 
+mtcedcli > select r7c3
+mtcedcli > set cell "double quotes \" test"
+mtcedcli > 
+mtcedcli > select r8c3
+mtcedcli > set cell "'single quotes ' test"
+mtcedcli > 
+mtcedcli > undo
+mtcedcli > undo
+mtcedcli > undo
+mtcedcli > undo
+mtcedcli > undo
+mtcedcli > undo
+mtcedcli > 
+mtcedcli > save as tmp/base_undo0.tsv.zip
+mtcedcli > save as tmp/base_undo1.tsv.zip
+mtcedcli > 
+mtcedcli > redo
+mtcedcli > redo
+mtcedcli > redo
+mtcedcli > redo
+mtcedcli > redo
+mtcedcli > redo
+mtcedcli > 
+mtcedcli > save
+mtcedcli > 
+mtcedcli > duplicate sheet
+mtcedcli > new sheet
+mtcedcli > rename sheet "A new empty sheet"
+mtcedcli > 
+mtcedcli > set cell "=sum( 'Sheet 1'r1c1:r_c_ )"
+mtcedcli > 
+mtcedcli > save as              tmp/base0.tsv.zip
+mtcedcli > save as              tmp/base1.tsv.zip       tsv_book
+mtcedcli > save as              tmp/base2.tsv.zip       tsv_value_book
+mtcedcli > save as              tmp/base3.ledger.zip    ledger_book
+mtcedcli > save as              tmp/base4.ledger.zip    ledger_value_book
+mtcedcli > 
+mtcedcli > # ERROR - bad file type
+mtcedcli > save as tmp/base5.tsv.zip "strange file type"
+Unknown file type: 'strange file type'
+
+mtcedcli > 
+mtcedcli > quit
+
+
+----------- scripts/12.txt -----------
+
+mtcedcli > load         tmp/base1.tsv.zip
+mtcedcli > save as              tmp/base1.12.tsv.zip
+mtcedcli > 
+mtcedcli > import book  input/Formulae.tsv.zip
+No graph available.
+
+1 sheets imported.
+0 sheets not imported due to identical names.
+0 graphs/files imported.
+0 graphs/files not imported due to identical names.
+
+mtcedcli > 
+mtcedcli > set sheet    "Formulae"
+mtcedcli > 
+mtcedcli > export output sheet  output/12.001.tsv               tsv
+mtcedcli > export output sheet  output/12.002.tsv               tsv_q
+mtcedcli > 
+mtcedcli > export sheet         output/12.003.tsv               tsv
+mtcedcli > export sheet         tmp/12.004.tsv.gz               tsv_gz
+mtcedcli > export sheet         output/12.005.tsv               tsv_noq
+mtcedcli > export sheet         output/12.006.tsv               tsv_val
+mtcedcli > export sheet         tmp/12.007.tsv.gz               tsv_val_gz
+mtcedcli > export sheet         output/12.008.csv               csv
+mtcedcli > export sheet         output/12.009.csv               csv_noq
+mtcedcli > export sheet         output/12.010.csv               csv_val
+mtcedcli > export sheet         output/12.011.csv               csv_val_noq
+mtcedcli > export sheet         output/12.012.ledger            ledger
+mtcedcli > export sheet         tmp/12.013.ledger.gz            ledger_gz
+mtcedcli > export sheet         output/12.014.ledger            ledger_val
+mtcedcli > export sheet         tmp/12.015.ledger.gz            ledger_val_gz
+mtcedcli > 
+mtcedcli > save
+mtcedcli > 
+
+----------- scripts/13.txt -----------
+
+mtcedcli > set book 2
+mtcedcli > load tmp/base1.12.tsv.zip
+mtcedcli > save as tmp/base1.13.tsv.zip
+mtcedcli > 
+mtcedcli > set sheet    "Formulae"
+mtcedcli > 
+mtcedcli > select all
+mtcedcli > copy
+mtcedcli > 
+mtcedcli > set book 1
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > save as                      tmp/base2.13.tsv.zip
+mtcedcli > 
+mtcedcli > export output sheet  output/13.001.tsv               tsv
+mtcedcli > export output sheet  output/13.002.tsv               tsv_q
+mtcedcli > 
+mtcedcli > set book 2
+mtcedcli > set sheet    "Sheet 1"
+mtcedcli > 
+mtcedcli > select r3c3:r8c3
+mtcedcli > copy
+mtcedcli > 
+mtcedcli > select r3c4:r39c11
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > select r8c6:r9c6
+mtcedcli > insert row
+mtcedcli > insert column
+mtcedcli > 
+mtcedcli > select r5c4:r14c6
+mtcedcli > set prefs cell color_background 0xFFFF00
+mtcedcli > set prefs cellborder -3
+mtcedcli > 
+mtcedcli > select r11c5:r20c8
+mtcedcli > set prefs cell color_background 0x646480
+mtcedcli > set prefs cell color_foreground 0xFFFFFF
+mtcedcli > set prefs cellborder -4
+mtcedcli > 
+mtcedcli > select r3c4
+mtcedcli > set prefs cell num_decimal_places 3
+mtcedcli > set prefs cell format 2
+mtcedcli > 
+mtcedcli > select r11c5:r14c7
+mtcedcli > copy
+mtcedcli > 
+mtcedcli > select r44c4
+mtcedcli > paste prefs
+mtcedcli > 
+mtcedcli > select r44c8
+mtcedcli > paste content
+mtcedcli > 
+mtcedcli > select r45c5
+mtcedcli > set prefs cell locked 1
+mtcedcli > 
+mtcedcli > # Error - cell is locked
+mtcedcli > select r44c4
+mtcedcli > paste prefs
+Undo Error: r45c5 cell locked.  Operation aborted.
+
+paste_clipboard_at_cursor: Unable to paste.
+
+mtcedcli > 
+mtcedcli > select r11c4:r11c7
+mtcedcli > set width 15
+mtcedcli > 
+mtcedcli > set prefs book author "A new book author"
+mtcedcli > set prefs sheet locked 1
+mtcedcli > set prefs state page_mm_height 297
+mtcedcli > set prefs state page_mm_width 210
+mtcedcli > 
+mtcedcli > # Errors - sheet is locked
+mtcedcli > select r11c4:r11c7
+mtcedcli > set width 5
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > delete sheet
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > 
+mtcedcli > export output sheet  output/13.501.tsv       tsv
+mtcedcli > export output sheet  output/13.502.tsv       tsv_q
+mtcedcli > 
+mtcedcli > export output sheet  tmp/13.503.eps          eps
+mtcedcli > export output sheet  tmp/13.504.html         html
+mtcedcli > export output sheet  tmp/13.505.pdf          pdf
+mtcedcli > export output sheet  tmp/13.506.pdf          pdf_paged
+mtcedcli > export output sheet  tmp/13.507.png          png
+mtcedcli > export output sheet  tmp/13.508.ps           ps
+mtcedcli > export output sheet  tmp/13.509.svg          svg
+mtcedcli > 
+mtcedcli > save
+mtcedcli > 
+
+----------- scripts/21.txt -----------
+
+mtcedcli > load tmp/base1.13.tsv.zip
+mtcedcli > set sheet "Sheet 1"
+mtcedcli > save as tmp/base1.21.tsv.zip
+mtcedcli > 
+mtcedcli > duplicate sheet
+mtcedcli > 
+mtcedcli > # Errors here all due to locked sheet
+mtcedcli > 
+mtcedcli > select r15c4:r15c9
+mtcedcli > clear content
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > 
+mtcedcli > select r16c4:r16c9
+mtcedcli > clear prefs
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > 
+mtcedcli > select r17c4:r17c9
+mtcedcli > clear
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > 
+mtcedcli > select r6c10:r6c11
+mtcedcli > delete row
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > delete column
+Undo Error: Sheet locked.  Operation aborted.
+
+mtcedcli > 
+mtcedcli > #-------------------------
+mtcedcli > 
+mtcedcli > set prefs sheet locked 0
+mtcedcli > 
+mtcedcli > select r15c4:r15c9
+mtcedcli > clear content
+mtcedcli > 
+mtcedcli > select r16c4:r16c9
+mtcedcli > clear prefs
+mtcedcli > 
+mtcedcli > select r17c4:r17c9
+mtcedcli > clear
+mtcedcli > 
+mtcedcli > select r6c10:r6c11
+mtcedcli > delete row
+mtcedcli > delete column
+mtcedcli > 
+mtcedcli > rename sheet "X Sheet"
+mtcedcli > duplicate sheet
+mtcedcli > 
+mtcedcli > rename sheet "Z Sheet"
+mtcedcli > set sheet "X Sheet"
+mtcedcli > delete sheet
+mtcedcli > 
+mtcedcli > set sheet "Z Sheet"
+mtcedcli > export sheet         output/21.001.tsv               tsv
+mtcedcli > 
+mtcedcli > save
+mtcedcli > 
+
+----------- scripts/31.txt -----------
+
+mtcedcli > load tmp/base1.21.tsv.zip
+mtcedcli > save as tmp/base1.31.tsv.zip
+mtcedcli > 
+mtcedcli > set sheet "Z Sheet"
+mtcedcli > 
+mtcedcli > select r5c4:r19c8
+mtcedcli > copy
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet clip_00
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > clip flip_h
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet clip_01
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > clip flip_v
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet clip_02
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > clip rotate_a
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet clip_03
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > clip rotate_c
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet clip_04
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > clip transpose
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet clip_05
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > #----------------------
+mtcedcli > 
+mtcedcli > set sheet clip_03
+mtcedcli > select all
+mtcedcli > copy output
+mtcedcli > 
+mtcedcli > select r11c1
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > set sheet Formulae
+mtcedcli > select all
+mtcedcli > copy values
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > rename sheet "Formulae text"
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > set sheet clip_03
+mtcedcli > select r12c10:r15c11
+mtcedcli > cut
+mtcedcli > 
+mtcedcli > select r16c10
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > export sheet         output/31.001.tsv               tsv
+mtcedcli > 
+mtcedcli > new sheet
+mtcedcli > set cell 21/11/05
+mtcedcli > copy
+mtcedcli > 
+mtcedcli > select r1c1:r10c1
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > select r2c1
+mtcedcli > set 2dyear
+mtcedcli > 
+mtcedcli > select r3c1
+mtcedcli > set 2dyear 1800
+mtcedcli > 
+mtcedcli > select r4c1
+mtcedcli > set 2dyear 500
+mtcedcli > 
+mtcedcli > select r5c1
+mtcedcli > set 2dyear 1805
+mtcedcli > 
+mtcedcli > select r6c1
+mtcedcli > set 2dyear 1806
+mtcedcli > 
+mtcedcli > select r7c1
+mtcedcli > set 2dyear 1804
+mtcedcli > 
+mtcedcli > select r8c1
+mtcedcli > set 2dyear 1803
+mtcedcli > 
+mtcedcli > export sheet         output/31.002.tsv               tsv
+mtcedcli > 
+mtcedcli > set sheet "Formulae text"
+mtcedcli > duplicate sheet
+mtcedcli > rename sheet "Formulae text sorted Column"
+mtcedcli > duplicate sheet
+mtcedcli > rename sheet "Formulae text sorted Row"
+mtcedcli > 
+mtcedcli > set sheet "Formulae text sorted Column"
+mtcedcli > select all
+mtcedcli > sort column 1,a,2,d,3,a
+mtcedcli > export sheet         output/31.003.tsv               tsv
+mtcedcli > 
+mtcedcli > set sheet "Formulae text sorted Row"
+mtcedcli > select all
+mtcedcli > sort row 1,d,2,a,3,d
+mtcedcli > export sheet         output/31.004.tsv               tsv
+mtcedcli > 
+mtcedcli > save
+mtcedcli > 
+
+----------- scripts/41.txt -----------
+
+mtcedcli > load tmp/base1.31.tsv.zip
+mtcedcli > 
+mtcedcli > info
+Book #=0 Sheet Name='Formulae text sorted Row' Graph Name='' Cursor=r1c1:r52c20
+
+mtcedcli > find 1 value all
+    1 Formulae r6c8 = '=ceil(R[-5]C)'
+    2 Formulae r6c9 = '=ceil(R[-5]C)'
+    3 Formulae r6c10 = '=ceil(R[-5]C)'
+    4 Formulae r7c7 = '=cos(R[-6]C)'
+    5 Formulae r8c7 = '=cosh(R[-7]C)'
+    6 Formulae r9c14 = '1'
+    7 Formulae r9c18 = '1'
+    8 Formulae r10c7 = '=exp(R[-9]C)'
+    9 Formulae r11c11 = '=floor(R[-10]C)'
+   10 Formulae r11c12 = '=floor(R[-10]C)'
+   11 Formulae r13c11 = '=int(R[-12]C)'
+   12 Formulae r13c12 = '=int(R[-12]C)'
+   13 Formulae r17c14 = '1'
+   14 Formulae r17c18 = '1'
+   15 Formulae r30c6 = '=min ( 1, 2, 3, 2, 1 )'
+   16 Formulae r32c5 = '=mod( 15, 2 )'
+   17 Formulae r38c7 = '=percentile( R2C2:R20C12, 0.75 )'
+   18 Formulae text r6c8 = '1'
+   19 Formulae text r6c9 = '1'
+   20 Formulae text r6c10 = '1'
+   21 Formulae text r7c7 = '1'
+   22 Formulae text r8c7 = '1'
+   23 Formulae text r9c14 = '1'
+   24 Formulae text r9c18 = '1'
+   25 Formulae text r10c7 = '1'
+   26 Formulae text r11c11 = '1'
+   27 Formulae text r11c12 = '1'
+   28 Formulae text r13c11 = '1'
+   29 Formulae text r13c12 = '1'
+   30 Formulae text r17c14 = '1'
+   31 Formulae text r17c18 = '1'
+   32 Formulae text r30c6 = '1'
+   33 Formulae text r32c5 = '1'
+   34 Formulae text r38c7 = '1'
+   35 Formulae text sorted Column r6c7 = '1'
+   36 Formulae text sorted Column r6c8 = '1'
+   37 Formulae text sorted Column r6c9 = '1'
+   38 Formulae text sorted Column r7c6 = '1'
+   39 Formulae text sorted Column r8c6 = '1'
+   40 Formulae text sorted Column r9c14 = '1'
+   41 Formulae text sorted Column r9c18 = '1'
+   42 Formulae text sorted Column r10c6 = '1'
+   43 Formulae text sorted Column r11c10 = '1'
+   44 Formulae text sorted Column r11c11 = '1'
+   45 Formulae text sorted Column r13c10 = '1'
+   46 Formulae text sorted Column r13c11 = '1'
+   47 Formulae text sorted Column r17c14 = '1'
+   48 Formulae text sorted Column r17c18 = '1'
+   49 Formulae text sorted Column r30c5 = '1'
+   50 Formulae text sorted Column r32c4 = '1'
+   51 Formulae text sorted Column r38c6 = '1'
+   52 Formulae text sorted Row r3c5 = '1'
+   53 Formulae text sorted Row r8c14 = '1'
+   54 Formulae text sorted Row r8c18 = '1'
+   55 Formulae text sorted Row r13c7 = '1'
+   56 Formulae text sorted Row r19c11 = '1'
+   57 Formulae text sorted Row r19c12 = '1'
+   58 Formulae text sorted Row r22c11 = '1'
+   59 Formulae text sorted Row r22c12 = '1'
+   60 Formulae text sorted Row r23c7 = '1'
+   61 Formulae text sorted Row r24c14 = '1'
+   62 Formulae text sorted Row r24c18 = '1'
+   63 Formulae text sorted Row r27c7 = '1'
+   64 Formulae text sorted Row r28c7 = '1'
+   65 Formulae text sorted Row r29c8 = '1'
+   66 Formulae text sorted Row r29c9 = '1'
+   67 Formulae text sorted Row r29c10 = '1'
+   68 Formulae text sorted Row r38c6 = '1'
+mtcedcli > list sheets
+A new empty sheet
+Formulae
+Formulae text
+Formulae text sorted Column
+Formulae text sorted Row
+Sheet 1
+Sheet 1 (2)
+Sheet 2
+Z Sheet
+clip_00
+clip_01
+clip_02
+clip_03
+clip_04
+clip_05
+
+mtcedcli > 
+mtcedcli > print prefs sheet
+cursor_r1 = 1
+cursor_c1 = 1
+cursor_r2 = 52
+cursor_c2 = 20
+split_r1 = 0
+split_r2 = 0
+split_c1 = 0
+split_c2 = 0
+start_row = 1
+start_col = 1
+locked = 0
+mtcedcli > print prefs state
+page_font_size = '12'
+page_footer_centre = '0'
+page_footer_left = '6'
+page_footer_right = '4'
+page_header_centre = '0'
+page_header_left = '2'
+page_header_right = '3'
+page_margin_x = '10'
+page_margin_y = '10'
+page_mm_height = '210'
+page_mm_width = '297'
+mtcedcli > 
+mtcedcli > set sheet "Sheet 1"
+mtcedcli > select r4c3:r14c5
+mtcedcli > 
+mtcedcli > print cell num
+19.94	19.94	19.94
+698672	698672	698672
+4712	4712	4712
+0	0	0
+	0	0
+	0	0
+0	0	0
+	-0.01234567	-0.01234567
+	19.94	19.94
+	698672	698672
+	4712	4712
+mtcedcli > print cell text
+= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+25/11/1912	25/11/1912	25/11/1912
+25/11/12	25/11/12	25/11/12
+double quotes " test	double quotes " test	double quotes " test
+
+
+single quotes ' test	single quotes ' test	single quotes ' test
+	-0.01234567	-0.01234567
+	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+	25/11/1912	25/11/1912
+	25/11/12	25/11/12
+mtcedcli > print cell type
+3	3	3
+6	6	6
+6	6	6
+1	1	1
+	0	0
+	0	0
+7	7	7
+	2	2
+	3	3
+	6	6
+	6	6
+mtcedcli > print prefs cell
+r5c4
+	color_background = 16776960
+	border_type = 131074
+r5c5
+	color_background = 16776960
+	border_type = 2
+r6c4
+	color_background = 16776960
+	border_type = 131072
+r6c5
+	color_background = 16776960
+r7c4
+	color_background = 16776960
+	border_type = 131072
+r7c5
+	color_background = 16776960
+r8c4
+	color_background = 16776960
+	border_type = 131072
+r8c5
+	color_background = 16776960
+r9c4
+	color_background = 16776960
+	border_type = 131072
+r9c5
+	color_background = 16776960
+r10c4
+	color_background = 16776960
+	border_type = 131072
+r10c5
+	color_background = 16776960
+r11c4
+	color_background = 16776960
+	border_type = 131072
+r11c5
+	color_background = 6579328
+	color_foreground = 16777215
+	border_type = 196611
+r12c4
+	color_background = 16776960
+	border_type = 131072
+r12c5
+	color_background = 6579328
+	color_foreground = 16777215
+	border_type = 196608
+r13c4
+	color_background = 16776960
+	border_type = 131072
+r13c5
+	color_background = 6579328
+	color_foreground = 16777215
+	border_type = 196608
+r14c4
+	color_background = 16776960
+	border_type = 131584
+r14c5
+	color_background = 6579328
+	color_foreground = 16777215
+	border_type = 197120
+
+mtcedcli > print
+19.94	19.94	19.94
+1912-11-25	1912-11-25	1912-11-25
+12-11-25	12-11-25	12-11-25
+double quotes " test	double quotes " test	double quotes " test
+
+
+single quotes ' test	single quotes ' test	single quotes ' test
+	-0.01234567	-0.01234567
+	19.94	19.94
+	1912-11-25	1912-11-25
+	12-11-25	12-11-25
+mtcedcli > 
+mtcedcli > recalc book
+mtcedcli > recalc sheet
+mtcedcli > recalc
+mtcedcli > 
+mtcedcli > = 2 + 3.1 + 4.3 - 1.35
+8.05
+mtcedcli > = sin( 1.2 ) + cos( 0.5 )
+1.8096216478576
+mtcedcli > 
+
+----------- scripts/51.txt -----------
+
+mtcedcli > load                 tmp/base1.31.tsv.zip
+mtcedcli > 
+mtcedcli > select r5c1:r15c2
+mtcedcli > copy
+mtcedcli > clip save            tmp/51.clip.01.zip
+mtcedcli > 
+mtcedcli > select r27c7:r32c10
+mtcedcli > copy
+mtcedcli > clip save            tmp/51.clip.02.zip
+mtcedcli > 
+mtcedcli > new
+mtcedcli > 
+mtcedcli > clip load            tmp/51.clip.01.zip
+mtcedcli > select r2c2
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > clip load            tmp/51.clip.02.zip
+mtcedcli > select r20c2
+mtcedcli > paste
+mtcedcli > 
+mtcedcli > select all
+mtcedcli > print
+
+	tan	-14.101
+	strvlookup	2012
+	sqrt	Err:10,14
+	sinh	-2.129
+	sin	-0.997
+	second	9
+	rgb	686330
+	rank lo	35
+	rank hi	156
+	radians	-0.026
+	pi	3.1415926536
+
+
+
+
+
+
+
+	1.000	1.045	1.185	1.433
+	1.000	0.955	0.825	0.622
+	0.000	1.000	1.000	1.000
+	0.000	0.291	0.540	0.733
+	0.000	0.305	0.644	1.120
+	1.571	1.266	0.927	0.451
+mtcedcli > 
+mtcedcli > 
+mtcedcli > new
+mtcedcli > rename sheet "The original NEW Sheet"
+mtcedcli > 
+mtcedcli > import book          tmp/base1.31.tsv.zip
+No graph available.
+
+15 sheets imported.
+0 sheets not imported due to identical names.
+0 graphs/files imported.
+0 graphs/files not imported due to identical names.
+
+mtcedcli > 
+mtcedcli > import graph         Graph_01        output/12.001.tsv
+mtcedcli > import graph         Graph_02        output/12.002.tsv
+mtcedcli > import graph         Graph_03        output/12.005.tsv
+mtcedcli > import graph         Graph_04        output/12.008.csv
+mtcedcli > import graph         Graph_05        input/graph01.txt
+mtcedcli > import graph         Graph_06        input/graph02.txt
+mtcedcli > 
+mtcedcli > list graphs
+Graph_01
+Graph_02
+Graph_03
+Graph_04
+Graph_05
+Graph_06
+
+mtcedcli > 
+mtcedcli > set graph            Graph_05
+mtcedcli > export graph         output/graph01.txt
+mtcedcli > set graph            Graph_06
+mtcedcli > export graph         output/graph02.txt
+mtcedcli > 
+mtcedcli > save as                      tmp/base1.51.tsv.zip
+mtcedcli > 
+mtcedcli > new
+mtcedcli > rename sheet "The original 2nd NEW Sheet"
+mtcedcli > 
+mtcedcli > import book          tmp/base1.51.tsv.zip
+16 sheets imported.
+0 sheets not imported due to identical names.
+6 graphs/files imported.
+0 graphs/files not imported due to identical names.
+
+mtcedcli > 
+mtcedcli > list graphs
+Graph_01
+Graph_02
+Graph_03
+Graph_04
+Graph_05
+Graph_06
+
+mtcedcli > list sheets
+A new empty sheet
+Formulae
+Formulae text
+Formulae text sorted Column
+Formulae text sorted Row
+Sheet 1
+Sheet 1 (2)
+Sheet 2
+The original 2nd NEW Sheet
+The original NEW Sheet
+Z Sheet
+clip_00
+clip_01
+clip_02
+clip_03
+clip_04
+clip_05
+
+mtcedcli > 
+mtcedcli > set graph            Graph_01
+mtcedcli > delete graph
+mtcedcli > set graph            Graph_02
+mtcedcli > delete graph
+mtcedcli > 
+mtcedcli > set graph            Graph_03
+mtcedcli > rename graph         "Graph 03 03 03"
+mtcedcli > 
+mtcedcli > list graphs
+Graph 03 03 03
+Graph_04
+Graph_05
+Graph_06
+
+mtcedcli > 
+mtcedcli > set graph            Graph_05
+mtcedcli > 
+mtcedcli > export output graph  tmp/51.graph.eps        eps
+mtcedcli > export output graph  tmp/51.graph.pdf        pdf
+mtcedcli > export output graph  tmp/51.graph.png        png
+mtcedcli > export output graph  tmp/51.graph.ps         ps
+mtcedcli > export output graph  tmp/51.graph.svg        svg
+mtcedcli > 
+mtcedcli > save as                      tmp/base1.51.02.tsv.zip
+mtcedcli > 
+

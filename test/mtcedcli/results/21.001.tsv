@@ -1,0 +1,46 @@
+default cell position
+
+		-0.01234567	-0.01234567	-0.01234567		-0.01234567	-0.01234567	-0.01234567	-0.01234567
+		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+		25/11/1912	25/11/1912	25/11/1912		25/11/1912	25/11/1912	25/11/1912	25/11/1912
+		double quotes " test	double quotes " test	double quotes " test		double quotes " test	double quotes " test	double quotes " test	double quotes " test
+
+
+		'single quotes ' test	'single quotes ' test	'single quotes ' test		'single quotes ' test	'single quotes ' test	'single quotes ' test	'single quotes ' test
+			-0.01234567	-0.01234567		-0.01234567	-0.01234567	-0.01234567	-0.01234567
+			= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+			25/11/1912	25/11/1912		25/11/1912	25/11/1912	25/11/1912	25/11/1912
+			25/11/12	25/11/12		25/11/12	25/11/12	25/11/12	25/11/12
+									double quotes " test
+			'single quotes ' test	'single quotes ' test		'single quotes ' test	'single quotes ' test	'single quotes ' test	'single quotes ' test
+									-0.01234567
+			= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+			25/11/1912	25/11/1912		25/11/1912	25/11/1912	25/11/1912	25/11/1912
+			25/11/12	25/11/12		25/11/12	25/11/12	25/11/12	25/11/12
+			double quotes " test	double quotes " test		double quotes " test	double quotes " test	double quotes " test	double quotes " test
+			'single quotes ' test	'single quotes ' test		'single quotes ' test	'single quotes ' test	'single quotes ' test	'single quotes ' test
+			-0.01234567	-0.01234567		-0.01234567	-0.01234567	-0.01234567	-0.01234567
+			= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+			25/11/1912	25/11/1912		25/11/1912	25/11/1912	25/11/1912	25/11/1912
+			25/11/12	25/11/12		25/11/12	25/11/12	25/11/12	25/11/12
+			double quotes " test	double quotes " test		double quotes " test	double quotes " test	double quotes " test	double quotes " test
+			'single quotes ' test	'single quotes ' test		'single quotes ' test	'single quotes ' test	'single quotes ' test	'single quotes ' test
+			-0.01234567	-0.01234567		-0.01234567	-0.01234567	-0.01234567	-0.01234567
+			= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+			25/11/1912	25/11/1912		25/11/1912	25/11/1912	25/11/1912	25/11/1912
+			25/11/12	25/11/12		25/11/12	25/11/12	25/11/12	25/11/12
+			double quotes " test	double quotes " test		double quotes " test	double quotes " test	double quotes " test	double quotes " test
+			'single quotes ' test	'single quotes ' test		'single quotes ' test	'single quotes ' test	'single quotes ' test	'single quotes ' test
+			-0.01234567	-0.01234567		-0.01234567	-0.01234567	-0.01234567	-0.01234567
+			= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2		= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2	= 2.14 + 3.0 + 17 - 2.2
+			25/11/1912	25/11/1912		25/11/1912	25/11/1912	25/11/1912	25/11/1912
+			25/11/12	25/11/12		25/11/12	25/11/12	25/11/12	25/11/12
+			double quotes " test	double quotes " test		double quotes " test	double quotes " test	double quotes " test	double quotes " test
+			'single quotes ' test	'single quotes ' test		'single quotes ' test	'single quotes ' test	'single quotes ' test	'single quotes ' test
+			-0.01234567	-0.01234567		-0.01234567	-0.01234567	-0.01234567	-0.01234567
+
+
+							-0.01234567
+							= 2.14 + 3.0 + 17 - 2.2
+							25/11/1912
+							25/11/12

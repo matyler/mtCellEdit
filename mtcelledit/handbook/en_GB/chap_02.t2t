@@ -1,0 +1,72 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Chapter 2 - Introduction</TITLE>\1'
+
+
+[Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]
+-------------------------------------------------
+
+=2. Introduction=
+
+mtCellEdit is a lightweight spreadsheet program that I created from scratch. It is a small, no frills program which is designed to handle simple day to day spreadsheet tasks. I have put the most important facilities I want into a small customized program which means I can avoid the problems of larger programs such as slow operating speeds and overcomplicated user interfaces.
+
+The program has 100 undo steps, and allows a file to contain any number of sheets. All cell referencing is done via the R1C1 notation which I find more efficient and less error prone than the more commonly used A1 notation.
+
+The core of the program is a shared C library which can be used by any C program to read, write and manipulate spreadsheets.
+
+The default file format mtCellEdit uses is portable and transparent as it is a ZIP file containing TSV text files.  I deliberately designed it this way so that data can be extracted and read by any modern spreadsheet program on any operating system without requiring mtCellEdit. Over the years I have been frustrated by binary and XML formats that make data only accessible via a single program (or by me wasting time manually converting each file, or by me writing a file format conversion program).  This format ensures that my data never becomes stranded, and can be manipulated by whichever tool I choose for a particular job (i.e. spreadsheet programs, text editors, command line tools, etc).
+
+mtCellEdit is designed to work on GNU/Linux operating systems, and has been tested using x86_64, ARM, and PowerPC hardware platforms.
+
+
+
+==2.1 Life Before mtCellEdit==[SEC1]
+
+I first became interested in spreadsheet programs in the mid 1980's.  Ever since those early days software makers have enriched their spreadsheet programs with ever more complex features. (e.g. wordprocessing, databases, forms, software development and publishing). For some tasks this is quite useful as it can be more productive. However there is the drawback that spreadsheet programs became larger, demanding ever more memory, disk space and CPU power.  With more and more features, the user interface became ever more complex with even the most basic tasks becoming more cumbersome.  I've also noticed in recent years that I am having to retrain myself just to do the same jobs that I have been doing for over 20 years, as certain software companies have felt the need to totally rework their user interface model to manage this complexity.
+
+When the job I want to complete is fairly simple, the use of a heavyweight tool doesn't feel quite right.  As a comparison, when I want to edit a text file I use a text editor, I don't use a wordprocessor because the text editor is exactly tailored to the job in hand so it's GUI doesn't become a hindrance.
+
+Sadly I couldn't find a free lightweight spreadsheet program that I was completely happy with, which is why I started thinking about creating a spreadsheet program of my own.
+
+
+
+==2.2 Project Genesis==[SEC2]
+
+During the year of 2008 I had been experimenting with GNU Bison in order to create an infix notation parser.  I then decided to lash this together with some other code I had written, and in December 2008 I created a functional spreadsheet program.
+
+During 2009 I realised that the project would be best split into 2 parts:
+
+- A back end to do low level file I/O, and the number crunching. This would be a shared C library.
+- A front end in the form of a GTK+2 application.
+
+
+This approach allowed me to create several other applications because they could link against the shared C library instead of wasting time and effort copying chunks of code around between different codebases.
+
+
+
+==2.3 General Philosophy==[SEC3]
+
+I have always wanted mtCellEdit to be small, light and reliable as I think these are the qualities which will give me the best tool for my needs.  I want a simple tool that will tackle about 90% of my numerical and list based tasks. For the remaining 10% of jobs I can either write a separate C/C++ program, or use a larger spreadsheet program such as Gnumeric or LibreOffice Calc.
+
+An important decision I have taken is to release it as free software using the GNU General Public License, which gives users various freedoms.  If you are not aware of these freedoms and the work of the GNU project, I would strongly encourage you to read about them here:  http://www.gnu.org/
+
+
+
+==2.4 Development Timeline==[SEC4]
+
+| **Date**   | **Version** | **Description** |
+| 2008-12-9  | 0.0.0       | Project started. |
+| 2008-12-27 | 0.4.0       | First public release of the working prototype. |
+| 2010-6-25  | 1.0.0       | First feature complete version. |
+| 2010-12-25 | 1.2.0       | Sheet export output to: EPS, PDF, PDF Paged, PNG, PS, SVG, TSV, TSV Quoted. |
+| 2011-4-25  | 1.4.0       | Graphing facilities incorporated into GUI, and exports to: EPS, PDF, PNG, PS, SVG. Sheet export output to HTML.  Cell borders. |
+| 2012-3-25  | 2.0         | Rendering and graphing now done by external library. CSV load/save completed. Major re-factoring, cleanups, and optimizations. 64 bit systems now supported. |
+| 2013-3-24  | 2.1         | mtCedCLI command line spreadsheet program added. |
+| 2013-8-25  | 2.2         | mtRaft example program added. |
+| 2014-2-22  | 2.3         | Qt 4 & Qt 5 ports added for mtCellEdit, mtRaft, mtEleana. |
+| 2014-8-10  | 2.4         | Code correctness review.  API tightening with const.  Many warnings now switched on when debugging.  Major cruft removal.  mtPixel becomes mtIMG.  All lib directories now have lib prefix. |
+| 2015-5-24  | 2.5         | FreeBSD Port added. System integration (man pages added for each app, default font set at mtCellEdit compile time) |
+| 2015-9-6   | 2.6         | 2015 Election data added to mtEleana. |
+| 2016-5-14  | 2.7         | Qt5 is now the default GUI toolkit.  GTK+2 version of mtEleana removed. libmtIMG dispersed into libmtKit & libmtCedUI. mtEleana reworked. Pango now renders GUI and output file text (enables font substitution, kerning, etc).  |
+
+-------------------------------------------------
+[Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

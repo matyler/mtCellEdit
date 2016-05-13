@@ -1,0 +1,13 @@
+[Desktop Entry]
+# Desktop Entry Specification: http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec
+Name=@APP_NAME@@BIN_SUFFIX@
+Comment=Lightweight spreadsheet program
+GenericName=Spreadsheet
+Exec=@BIN_INSTALL@/@BIN_NAME@ %f
+Terminal=false
+NoDisplay=false
+Type=Application
+MimeType=text/tab-separated-values;text/csv;application/x-mtcelledit-ced;application/x-mtcelledit-ledger;application/x-compressed-mtcelledit-ledger;application/x-compressed-tab-separated-values;text/plain;
+Icon=@BIN_NAME@
+Categories=Office;Spreadsheet;
+StartupNotify=false

@@ -1,0 +1,25 @@
+load		tmp/base1.tsv.zip
+save as		tmp/base1.12.tsv.zip
+
+import book	input/Formulae.tsv.zip
+
+set sheet	"Formulae"
+
+export output sheet	output/12.001.tsv		tsv
+export output sheet	output/12.002.tsv		tsv_q
+
+export sheet		output/12.003.tsv		tsv
+export sheet		tmp/12.004.tsv.gz		tsv_gz
+export sheet		output/12.005.tsv		tsv_noq
+export sheet		output/12.006.tsv		tsv_val
+export sheet		tmp/12.007.tsv.gz		tsv_val_gz
+export sheet		output/12.008.csv		csv
+export sheet		output/12.009.csv		csv_noq
+export sheet		output/12.010.csv		csv_val
+export sheet		output/12.011.csv		csv_val_noq
+export sheet		output/12.012.ledger		ledger
+export sheet		tmp/12.013.ledger.gz		ledger_gz
+export sheet		output/12.014.ledger		ledger_val
+export sheet		tmp/12.015.ledger.gz		ledger_val_gz
+
+save
