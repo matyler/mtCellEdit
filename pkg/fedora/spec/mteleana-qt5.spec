@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt5 General Election Results Analysis Program
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit libmtqex5 qt5-qtbase-devel
-Requires:		libmtkit libmtcelledit libmtqex5 qt5-qtbase
+BuildRequires:		libmtkit libmtcelledit libmtqex5 libmtpixy qt5-qtbase-devel
+Requires:		libmtkit libmtcelledit libmtqex5 libmtpixy qt5-qtbase
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt
@@ -16,7 +16,7 @@ Requires:		libmtkit libmtcelledit libmtqex5 qt5-qtbase
 %setup -q
 
 %build
-@MT_CONF@ --enable-qt5
+@MT_CONF@ --use-qt5
 make
 
 %install

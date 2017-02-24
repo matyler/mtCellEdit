@@ -18,7 +18,10 @@
 #ifndef MTCEDUI_H_
 #define MTCEDUI_H_
 
+
+
 #include <mtcelledit.h>
+#include <mtpixy.h>
 
 
 
@@ -29,8 +32,6 @@ typedef struct CuiFile		CuiFile;
 typedef struct CuiBook		CuiBook;
 typedef struct CuiUndo		CuiUndo;
 typedef struct CuiUndoStep	CuiUndoStep;
-
-typedef struct mtFont		mtFont;
 
 
 
@@ -148,7 +149,7 @@ enum
 
 
 #define CUI_DEFAULT_CELLWIDTH_CHARS	10
-#define CUI_ROWHEIGHT( REN )		(cui_font_get_height(REN->font) + 2 * REN->row_pad)
+#define CUI_ROWHEIGHT( REN )		(REN->font->get_height() + 2 * REN->row_pad)
 #define CUI_DEFAULT_CELLWIDTH( REN )	(CUI_DEFAULT_CELLWIDTH_CHARS * REN->font_width)
 
 #define CUI_INIFILE_PAGE_MARGIN_X	"page_margin_x"
@@ -162,7 +163,7 @@ enum
 #define CUI_INIFILE_PAGE_WIDTH		"page_mm_width"
 #define CUI_INIFILE_PAGE_HEIGHT		"page_mm_height"
 
-#define CUI_HEADER_OPTIONS		_("None	Filename (long)	Filename (short)	Sheet Name	Page #	Date	Date and Time")
+#define CUI_HEADER_OPTIONS		"None	Filename (long)	Filename (short)	Sheet Name	Page #	Date	Date and Time"
 
 // Default number of max undo/redo steps
 #define CUI_DEFAULT_MAX_STEPS		100
@@ -197,7 +198,7 @@ struct CuiRender
 {
 	CedSheet	* sheet;	// Sheet currently being edited
 
-	mtFont		* font;
+	mtPixy::Font	* font;
 	int		font_width;	// Average width of font for numbers,
 					// i.e. "01234567890"
 	int		row_header_width; // Used to cetralize the
@@ -698,7 +699,7 @@ int cui_graph_scan (			// Scan a book and use callback for each
 	// 1 = error
 	// 2 = user termination
 
-mtImage * cui_graph_render_mtimage (
+mtPixy::Image * cui_graph_render_image (
 	CedBook		* book,
 	char	const	* graph_name,
 	int		* breakpoint,
@@ -770,25 +771,6 @@ int cui_cellprefs_border (		// Adds a border type to selected cells.
 	CuiFile		* uifile,
 	int		border_type	// CUI_CELLBORD_*
 	);
-
-mtFont * cui_font_new_pango (		// Create new Pango font structure
-	char	const	* name,		// "Sans" usually
-	int		size		// 12 usually, >0
-	);
-
-int cui_font_destroy (		// Destroy and free a font
-	mtFont		* font
-	);
-
-int cui_font_get_height (		// Get font height
-	mtFont		* font
-	);
-	// 0 = Error else height
-
-int cui_font_get_width (		// Get font width estimate
-	mtFont		* font
-	);
-	// 0 = Error else width
 
 
 

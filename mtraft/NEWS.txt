@@ -1,3 +1,7 @@
+3.0	2017-2-24
+
+	* GTK+2 code removed
+
 2.7	2016-5-14
 
 	* Default toolkit is now Qt5.

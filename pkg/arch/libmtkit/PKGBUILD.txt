@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="MT Low level C routines"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('zlib' 'cairo')
+depends=('zlib')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

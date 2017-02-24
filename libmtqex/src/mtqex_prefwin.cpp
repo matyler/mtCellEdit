@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ enum
 
 
 
-qexPrefsWindow :: qexPrefsWindow (
+mtQEX::PrefsWindow::PrefsWindow (
 	mtPrefs		* const	prefsMem,
 	QString		const	title
 	)
@@ -64,12 +64,12 @@ qexPrefsWindow :: qexPrefsWindow (
 	setGeometry ( wx, wy, ww, wh );
 
 	vlayout = new QVBoxLayout;
-	this->setLayout ( vlayout );
+	setLayout ( vlayout );
 
 	hRow = new QHBoxLayout ();
 	vlayout->addLayout ( hRow );
 
-	button = new QPushButton ( tr ( "&Filter" ) );
+	button = new QPushButton ( "&Filter" );
 	button->setAutoDefault ( false );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressButtonFilter () ) );
@@ -97,25 +97,12 @@ qexPrefsWindow :: qexPrefsWindow (
 	tableWidget->horizontalHeader ()->setStretchLastSection ( true );
 
 	columnLabels
-		<< tr ( "Key" )
-		<< tr ( "Status" )
-		<< tr ( "Type" )
-		<< tr ( "Value" )
+		<< "Key"
+		<< "Status"
+		<< "Type"
+		<< "Value"
 		;
 	tableWidget->setHorizontalHeaderLabels ( columnLabels );
-
-	// Set column widths
-	for ( i = 0; i < COLUMN_TOTAL - 1; i++ )
-	{
-		snprintf ( txt, sizeof ( txt ), "prefs.col%i", i + 1 );
-
-		if ( mtkit_prefs_get_int ( prefs, txt, &cw ) )
-		{
-			continue;
-		}
-
-		tableWidget->horizontalHeader ()-> resizeSection ( i, cw );
-	}
 
 	connect ( tableWidget, SIGNAL ( cellActivated ( int, int ) ),
 		this, SLOT ( tableCellActivated ( int, int ) ) );
@@ -130,24 +117,24 @@ qexPrefsWindow :: qexPrefsWindow (
 	hRow->addWidget ( infoEdit );
 	infoEdit->setReadOnly ( true );
 
-	button = new QPushButton ( QIcon :: fromTheme ( "edit-clear" ),
-		tr ( "&Reset" ) );
+	button = new QPushButton ( QIcon::fromTheme ( "edit-clear" ),
+		"&Reset" );
 	button->setAutoDefault ( false );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressButtonReset () ) );
 	hRow->addWidget ( button );
 	buttonReset = button;
 
-	button = new QPushButton ( QIcon :: fromTheme ( "document-properties" ),
-		tr ( "&Edit" ) );
+	button = new QPushButton ( QIcon::fromTheme ( "document-properties" ),
+		"&Edit" );
 	button->setAutoDefault ( false );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressButtonEdit () ) );
 	hRow->addWidget ( button );
 	buttonEdit = button;
 
-	button = new QPushButton ( QIcon :: fromTheme ( "window-close" ),
-		tr ( "&Close" ) );
+	button = new QPushButton ( QIcon::fromTheme ( "window-close" ),
+		"&Close" );
 	button->setAutoDefault ( false );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressButtonClose () ) );
@@ -157,10 +144,31 @@ qexPrefsWindow :: qexPrefsWindow (
 	show ();
 	populateTable ();
 
+	// Set column widths
+	for ( i = 0; i < COLUMN_TOTAL - 1; i++ )
+	{
+		snprintf ( txt, sizeof ( txt ), "prefs.col%i", i + 1 );
+
+		if ( mtkit_prefs_get_int ( prefs, txt, &cw ) )
+		{
+			continue;
+		}
+
+		if ( cw > 0 )
+		{
+			tableWidget->horizontalHeader ()->
+				resizeSection ( i, cw );
+		}
+		else
+		{
+			tableWidget->resizeColumnToContents ( i );
+		}
+	}
+
 	exec ();
 }
 
-qexPrefsWindow :: ~qexPrefsWindow ()
+mtQEX::PrefsWindow::~PrefsWindow ()
 {
 	int		i,
 			cw;
@@ -182,7 +190,7 @@ qexPrefsWindow :: ~qexPrefsWindow ()
 	}
 }
 
-void qexPrefsWindow :: pressButtonFilter ()
+void mtQEX::PrefsWindow::pressButtonFilter ()
 {
 	populateTable ();
 }
@@ -241,7 +249,7 @@ static void update_table_status_value (
 	}
 
 	twItem = new QTableWidgetItem;
-	twItem->setText ( mtQEX :: qstringFromC ( st ) );
+	twItem->setText ( mtQEX::qstringFromC ( st ) );
 	tableWidget->setItem ( row, COLUMN_STATUS, twItem );
 
 	mtkit_prefs_get_str_val ( piv, piv->value, buf, sizeof ( buf ) );
@@ -253,11 +261,11 @@ static void update_table_status_value (
 	}
 
 	twItem = new QTableWidgetItem;
-	twItem->setText ( mtQEX :: qstringFromC ( buf ) );
+	twItem->setText ( mtQEX::qstringFromC ( buf ) );
 	tableWidget->setItem ( row, COLUMN_VALUE, twItem );
 }
 
-void qexPrefsWindow :: pressButtonReset ()
+void mtQEX::PrefsWindow::pressButtonReset ()
 {
 	int		row;
 	mtPrefValue	* piv;
@@ -276,18 +284,14 @@ void qexPrefsWindow :: pressButtonReset ()
 }
 
 static int winget_int (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
 {
 	bool		ok;
-	int		num,
-			val = 0
-			;
-	double		min = -1000000,
-			max = 1000000
-			;
+	int		num, val = 0;
+	double		min = -1000000, max = 1000000;
 
 
 	if ( piv->opt )
@@ -298,7 +302,7 @@ static int winget_int (
 
 	mtkit_prefs_get_int ( prefs, piv->key, &val );
 
-	num = QInputDialog :: getInt ( win, "Edit Integer",
+	num = QInputDialog::getInt ( win, "Edit Integer",
 		piv->key, val, (int)min, (int)max, 1, &ok );
 
 	if ( ok )
@@ -312,7 +316,7 @@ static int winget_int (
 }
 
 static int winget_bool (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
@@ -327,7 +331,7 @@ static int winget_bool (
 
 	items << "False" << "True";
 
-	res = QInputDialog :: getItem ( win, "Edit Boolean",
+	res = QInputDialog::getItem ( win, "Edit Boolean",
 		piv->key, items, val, false, &ok );
 
 	if ( ok && ! res.isEmpty () )
@@ -345,14 +349,13 @@ static int winget_bool (
 }
 
 static int winget_option (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
 {
 	bool		ok;
-	int		val = 0,
-			i;
+	int		val = 0, i;
 	char		* txt;
 	QString		res;
 	QStringList	items;
@@ -378,7 +381,7 @@ static int winget_option (
 		free ( txt );
 	}
 
-	res = QInputDialog :: getItem ( win, "Edit Option", piv->key, items,
+	res = QInputDialog::getItem ( win, "Edit Option", piv->key, items,
 		val, false, &ok );
 
 	if ( ok && ! res.isEmpty () )
@@ -397,25 +400,19 @@ static int winget_option (
 }
 
 static int winget_double (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
 {
 	bool		ok;
-	double		min = -1000000,
-			max = 1000000,
-			val = 0,
-			dp = 3,
-			num
-			;
+	double		min = -1000000, max = 1000000, val = 0, dp = 3, num;
 
 
 	if ( piv->opt )
 	{
-		double		a = 0,
-				b = 0,
-				c = 0;
+		double		a = 0, b = 0, c = 0;
+
 
 		mtkit_strtok_num ( piv->opt, "\t", 0, &a );
 		mtkit_strtok_num ( piv->opt, "\t", 1, &b );
@@ -429,7 +426,7 @@ static int winget_double (
 
 			if ( c > 0 && c < 15 )
 			{
-				// Use is setting decimal places in 3rd arg
+				// User is setting decimal places in 3rd arg
 				dp = c;
 			}
 		}
@@ -437,16 +434,15 @@ static int winget_double (
 		{
 			if ( a > 0 && a < 15 )
 			{
-				// Use is setting decimal places in 1st arg
+				// User is setting decimal places in 1st arg
 				dp = a;
 			}
 		}
-// FIXME - when mtGEX dies, leave a note in mtkit.h regarding 1st/3rd arg for doubles
 	}
 
 	mtkit_prefs_get_double ( prefs, piv->key, &val );
 
-	num = QInputDialog :: getDouble ( win, "Edit Decimal", piv->key, val,
+	num = QInputDialog::getDouble ( win, "Edit Decimal", piv->key, val,
 		min, max, (int)dp, &ok );
 
 	if ( ok )
@@ -460,7 +456,7 @@ static int winget_double (
 }
 
 static int winget_string (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
@@ -473,7 +469,7 @@ static int winget_string (
 		mtkit_strtok_num ( piv->opt, "\t", 0, &maxLen );
 	}
 
-	QString text = mtQEX :: dialogTextLine ( win, "Edit Text", piv->key,
+	QString text = mtQEX::dialogTextLine ( win, "Edit Text", piv->key,
 		piv->value, (int)maxLen );
 
 	if ( ! text.isEmpty () )
@@ -487,12 +483,12 @@ static int winget_string (
 }
 
 static int winget_string_multi (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
 {
-	QString text = mtQEX :: dialogText ( win, "Edit Text", piv->key,
+	QString text = mtQEX::dialogText ( win, "Edit Text", piv->key,
 		piv->value );
 
 
@@ -507,7 +503,7 @@ static int winget_string_multi (
 }
 
 static int winget_rgb (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
@@ -518,14 +514,15 @@ static int winget_rgb (
 
 	mtkit_prefs_get_int ( prefs, piv->key, &colRGB );
 
-	color = QColorDialog :: getColor ( QColor ( MTKIT_INT_2_R ( colRGB ),
-			MTKIT_INT_2_G ( colRGB ),
-			MTKIT_INT_2_B ( colRGB )  ),
-		win, piv->key, QColorDialog :: DontUseNativeDialog );
+	color = QColorDialog::getColor ( QColor (
+			mtPixy::int_2_red ( colRGB ),
+			mtPixy::int_2_green ( colRGB ),
+			mtPixy::int_2_blue ( colRGB )  ),
+		win, piv->key, QColorDialog::DontUseNativeDialog );
 
 	if ( color.isValid () )
 	{
-		colRGB = MTKIT_RGB_2_INT ( color.red (), color.green (),
+		colRGB = mtPixy::rgb_2_int ( color.red (), color.green (),
 			color.blue () );
 
 		mtkit_prefs_set_int ( prefs, piv->key, colRGB );
@@ -537,12 +534,12 @@ static int winget_rgb (
 }
 
 static int winget_directory (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
 {
-	QString filename = QFileDialog :: getExistingDirectory ( win,
+	QString filename = QFileDialog::getExistingDirectory ( win,
 		piv->key, piv->value,
 		QFileDialog::DontUseNativeDialog | QFileDialog::ShowDirsOnly );
 
@@ -559,13 +556,13 @@ static int winget_directory (
 }
 
 static int winget_file (
-	qexPrefsWindow	* const	win,
+	mtQEX::PrefsWindow * const win,
 	mtPrefs		* const	prefs,
 	mtPrefValue	* const	piv
 	)
 {
-	QString filename = QFileDialog :: getOpenFileName ( win, piv->key,
-		piv->value, NULL, NULL, QFileDialog :: DontUseNativeDialog );
+	QString filename = QFileDialog::getOpenFileName ( win, piv->key,
+		piv->value, NULL, NULL, QFileDialog::DontUseNativeDialog );
 
 
 	if ( ! filename.isEmpty () )
@@ -579,10 +576,9 @@ static int winget_file (
 	return 0;			// No change
 }
 
-void qexPrefsWindow :: pressButtonEdit ()
+void mtQEX::PrefsWindow::pressButtonEdit ()
 {
-	int		row,
-			change = 0;
+	int		row, change = 0;
 	mtPrefValue	* piv;
 
 
@@ -642,7 +638,7 @@ void qexPrefsWindow :: pressButtonEdit ()
 	}
 }
 
-void qexPrefsWindow :: pressButtonClose ()
+void mtQEX::PrefsWindow::pressButtonClose ()
 {
 	close ();
 }
@@ -678,14 +674,14 @@ static void populate_recurse (
 		tableWidget->setRowCount ( row + 1 );
 
 		twItem = new QTableWidgetItem;
-		twItem->setText ( mtQEX :: qstringFromC (piv->key ));
+		twItem->setText ( mtQEX::qstringFromC (piv->key ));
 		tableWidget->setItem ( row, COLUMN_KEY, twItem );
 		twItem->setData ( Qt::UserRole,
 			QVariant::fromValue ( (void *)piv ) );
 		twItem->setToolTip ( qs );
 
 		twItem = new QTableWidgetItem;
-		twItem->setText ( mtQEX :: qstringFromC (
+		twItem->setText ( mtQEX::qstringFromC (
 			mtkit_prefs_type_text ( piv->type ) ) );
 		tableWidget->setItem ( row, COLUMN_TYPE, twItem );
 
@@ -695,7 +691,7 @@ static void populate_recurse (
 	populate_recurse ( tableWidget, node->right, filter );
 }
 
-void qexPrefsWindow :: populateTable ()
+void mtQEX::PrefsWindow::populateTable ()
 {
 	mtTree		* tree;
 
@@ -725,7 +721,7 @@ void qexPrefsWindow :: populateTable ()
 	}
 }
 
-void qexPrefsWindow :: tableCellActivated (
+void mtQEX::PrefsWindow::tableCellActivated (
 	int	const	ARG_UNUSED ( row ),
 	int	const	ARG_UNUSED ( column )
 	)
@@ -733,7 +729,7 @@ void qexPrefsWindow :: tableCellActivated (
 	pressButtonEdit ();
 }
 
-void qexPrefsWindow :: tableCellChanged (
+void mtQEX::PrefsWindow::tableCellChanged (
 	int	const	currentRow,
 	int	const	ARG_UNUSED ( currentColumn ),
 	int	const	ARG_UNUSED ( previousRow ),

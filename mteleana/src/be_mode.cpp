@@ -96,7 +96,7 @@ static int get_rgb_from_sheet (
 		}
 	}
 
-	rgb[0] = MTKIT_RGB_2_INT (
+	rgb[0] = mtPixy::rgb_2_int (
 		(int)(rgb_hi[0] * p + rgb_lo[0] * (1-p)),
 		(int)(rgb_hi[1] * p + rgb_lo[1] * (1-p)),
 		(int)(rgb_hi[2] * p + rgb_lo[2] * (1-p)) );
@@ -104,7 +104,7 @@ static int get_rgb_from_sheet (
 	return 0;		// Success
 }
 
-int eleanaElection :: getSeatRGB (
+int eleanaElection::getSeatRGB (
 	int		const	seat_id,
 	int		* const	rgb,
 	int		const	mode,
@@ -144,7 +144,7 @@ int eleanaElection :: getSeatRGB (
 
 	default:
 		fprintf ( stderr, "Invalid map mode - %i\n", mode );
-		rgb[0] = MTKIT_RGB_2_INT ( 255, 255, 255 );
+		rgb[0] = mtPixy::rgb_2_int ( 255, 255, 255 );
 		break;
 	}
 

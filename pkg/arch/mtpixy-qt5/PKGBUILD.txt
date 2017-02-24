@@ -1,0 +1,24 @@
+# Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+pkgname=mtpixy-qt5
+pkgver
+pkgrel=@MT_RELVER@
+pkgdesc="Qt5 Pixel GUI"
+arch=('i686' 'x86_64' 'arm')
+license=('GPL3')
+depends=('qt5-base' 'libmtkit' 'libmtpixy' 'libmtpixyui' 'libmtqex5')
+install=mtpixy_desktop.install
+source=($pkgname-$pkgver.tar.gz)
+md5sums
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  @MT_CONF@ --use-qt5
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+}

@@ -1,0 +1,39 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Chapter 2 - Introduction</TITLE>\1'
+
+
+[Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]
+-------------------------------------------------
+
+=2. Introduction=
+
+mtPixy is a lightweight image editing program that I created from scratch. It is a small, no frills program which is designed to handle simple day to day tasks. I have put the most important facilities I want into a small customized program which means I can avoid the problems of larger programs such as slow operating speeds and overcomplicated user interfaces.
+
+mtPixy is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, ARM_32, and PowerPC_32 hardware platforms.
+
+
+
+==2.1 Project Genesis==[SEC1]
+
+In the summer of 2016 I was playing around with rgbPaint (which I had created nearly 10 years before in 2007) and I thought it might be nice to revisit the idea of a very basic image editing program.
+
+I wanted to update the ideas from 2007 and put them into the context of 2016 so I decided to use Qt 5 and my collection of libraries that did not exist in 2007.  I also wanted to try some new ideas for a more flexible interface that would work equally well on small low resolution monitors with old PC's as well as more modern high resolution monitors with new PC's.
+
+
+
+==2.2 General Philosophy==[SEC2]
+
+I have always wanted mtPixy to be small, light and reliable as I think these are the qualities which will give me the best tool for my needs.  I want a simple tool that will tackle about 90% of my image editing tasks. For the remaining 10% of jobs I can use a more sophisticated tool like mtPaint or Gimp.
+
+An important decision I have taken is to release it as free software using the GNU General Public License, which gives users various freedoms.  If you are not aware of these freedoms and the work of the GNU project, I would strongly encourage you to read about them here:  http://www.gnu.org/
+
+
+
+==2.3 Development Timeline==[SEC3]
+
+| **Date**   | **Version** | **Description** |
+| 2016-7-12  | 0.0         | Project started. |
+| 2017-2-24  | 3.0         | First feature complete version. |
+
+-------------------------------------------------
+[Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

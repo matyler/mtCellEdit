@@ -5,14 +5,14 @@ pkgrel=@MT_RELVER@
 pkgdesc="Qt4 Dialogs and Utility Functions"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('qt4' 'libmtkit')
+depends=('qt4' 'libmtkit' 'libmtpixy')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  @MT_CONF@ --enable-qt4
+  @MT_CONF@ --use-qt4
   make
 }
 

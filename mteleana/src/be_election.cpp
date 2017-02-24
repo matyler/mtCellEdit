@@ -19,7 +19,7 @@
 
 
 
-eleanaElection :: eleanaElection ()
+eleanaElection::eleanaElection ()
 	:
 	sheetResults	(),
 	treePolymap	(),
@@ -31,7 +31,7 @@ eleanaElection :: eleanaElection ()
 {
 }
 
-eleanaElection :: ~eleanaElection ()
+eleanaElection::~eleanaElection ()
 {
 	clear ();
 }
@@ -69,8 +69,6 @@ static int scrape_seat_cb (
 	double		turnout, electorate, v, v1, v2, p1, p2;
 
 
-//printf("seat = %s\n", cell->text);
-
 	state->election->setTableValue ( state->row, EL_TAB_SHEET_ROW, row );
 
 	// County
@@ -107,7 +105,7 @@ static int scrape_seat_cb (
 	}
 	else
 	{
-		rgb = MTKIT_RGB_2_INT ( 180, 180, 180 );
+		rgb = mtPixy::rgb_2_int ( 180, 180, 180 );
 	}
 
 	state->election->setTableValue ( state->row, EL_TAB_WINNER_RGB, rgb );
@@ -153,7 +151,7 @@ static int scrape_seat_cb (
 	}
 
 	state->election->setTableValue ( state->row, EL_TAB_TURNOUT,
-		MTKIT_RGB_2_INT ( rgb, rgb, 100-100*rgb/255 ) );
+		mtPixy::rgb_2_int ( rgb, rgb, 100-100*rgb/255 ) );
 
 	state->election->setTableValue ( state->row, EL_TAB_VOTES,
 		(int)turnout );
@@ -177,7 +175,7 @@ static int scrape_seat_cb (
 	}
 
 	state->election->setTableValue ( state->row, EL_TAB_MARGINALITY,
-		MTKIT_RGB_2_INT ( 255-rgb, 255-rgb, 100*rgb/255 ) );
+		mtPixy::rgb_2_int ( 255-rgb, 255-rgb, 100*rgb/255 ) );
 
 	state->row ++;
 
@@ -296,7 +294,7 @@ static int get_cxy (
 {
 	do
 	{
-		if ( mem[ 3 * idx[c] ] == c )
+		if ( mem[ idx[c] ] == c )
 		{
 			idx[c] += 1;
 
@@ -315,8 +313,8 @@ static int get_cxy (
 	return 1;
 }
 
-void eleanaElection :: createMapData (
-	mtImage		* const	image
+void eleanaElection::createMapData (
+	mtPixy::Image	* const	image
 	)
 {
 	int		i, w, h, a,
@@ -327,11 +325,11 @@ void eleanaElection :: createMapData (
 			* mem;		// PNG Map
 
 
-	w = mtkit_image_get_width ( image );
-	h = mtkit_image_get_height ( image );
+	w = image->get_width ();
+	h = image->get_height ();
 
 	idxmax = w * h - 1;
-	mem = mtkit_image_get_rgb ( image );
+	mem = image->get_canvas ();
 
 	for ( i = 0; i < iSeats; i++ )
 	{
@@ -368,7 +366,7 @@ void eleanaElection :: createMapData (
 
 	for ( i = 0; i < idxmax; i += 1 )
 	{
-		c = mem[ 3 * i ];
+		c = mem[ i ];
 		idx[c] ++;
 
 		if ( c >= 1 && c <= 150 )
@@ -394,7 +392,7 @@ void eleanaElection :: createMapData (
 	}
 }
 
-int eleanaElection :: load (
+int eleanaElection::load (
 	eleanaIndex	* const	eindex,
 	int		const	election
 	)
@@ -409,7 +407,7 @@ int eleanaElection :: load (
 	clear ();
 
 
-	mtImage		* cartogram;
+	mtPixy::Image	* cartogram;
 	char	const	* filename;
 
 
@@ -434,12 +432,13 @@ int eleanaElection :: load (
 
 	if ( filename )
 	{
-		cartogram = mtkit_image_load_png ( filename );
+		cartogram = mtPixy::image_load ( filename );
 		if ( cartogram )
 		{
 			createMapData ( cartogram );
 
-			mtkit_image_destroy ( cartogram );
+			delete cartogram;
+			cartogram = NULL;
 		}
 		else
 		{
@@ -461,7 +460,7 @@ fail:
 	return 1;
 }
 
-void eleanaElection :: clear ()
+void eleanaElection::clear ()
 {
 	ced_sheet_destroy ( sheetResults );
 	sheetResults = NULL;
@@ -479,17 +478,17 @@ void eleanaElection :: clear ()
 	sheetSummary = NULL;
 }
 
-CedSheet * eleanaElection :: getResults ()
+CedSheet * eleanaElection::getResults ()
 {
 	return sheetResults;
 }
 
-int eleanaElection :: getSeats () const
+int eleanaElection::getSeats () const
 {
 	return iSeats;
 }
 
-int eleanaElection :: getCartogramXY (
+int eleanaElection::getCartogramXY (
 	int	const	seat_id,
 	int	* const	x,
 	int	* const y
@@ -509,7 +508,7 @@ int eleanaElection :: getCartogramXY (
 	return 0;
 }
 
-int eleanaElection :: getTableValue (
+int eleanaElection::getTableValue (
 	int	const	seat_id,
 	int	const	col,
 	int	* const	val
@@ -531,7 +530,7 @@ int eleanaElection :: getTableValue (
 	return 0;
 }
 
-int eleanaElection :: setTableValue (
+int eleanaElection::setTableValue (
 	int	const	seat_id,
 	int	const	col,
 	int	const	val

@@ -1,30 +1,28 @@
 include		../_conf.txt
 
-CFLAGS		= $(LIB_CFLAGS) $(CFLAG)
-LDFLAGS 	= $(LDFLAG)
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtcedui.h
 OBJS		=		\
 		u_clip.o	\
 		u_dup.o		\
 		u_file.o	\
-		u_font.o	\
 		u_graph.o	\
 		u_prefs.o	\
 		u_render.o	\
 		u_undo.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(LIB_SONAME)
 
 $(LIB_SONAME):	$(OBJS)
-		$(CC) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
 
 $(OBJS):	*.h
 
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)

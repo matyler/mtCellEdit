@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,9 +19,13 @@
 
 
 
-void MainWindow :: clipboardFlushInternal ()
+#define MTCELLEDIT_CLIP_NAME	"application/x-mtcelledit-clipboard"
+
+
+
+void MainWindow::clipboardFlushInternal ()
 {
-	if ( 0 != prefs_get_int ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
+	if ( 0 != pprfs->getInt ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
 	{
 		QClipboard	* c = QApplication::clipboard ();
 
@@ -39,9 +43,9 @@ void MainWindow :: clipboardFlushInternal ()
 	cui_clip_flush ( cedClipboard );
 }
 
-void MainWindow :: clipboardSetOwner ()
+void MainWindow::clipboardSetOwner ()
 {
-	if ( 0 == prefs_get_int ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
+	if ( 0 == pprfs->getInt ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
 	{
 		return;
 	}
@@ -53,24 +57,24 @@ void MainWindow :: clipboardSetOwner ()
 
 	if ( cui_clip_save_temp ( cedClipboard ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unable to create temp file." ) );
+		QMessageBox::critical ( this, "Error",
+			"Unable to create temp file." );
 	}
 	else
 	{
-		QByteArray	data ( cedClipboard->timestamp,
+		QByteArray	dat ( cedClipboard->timestamp,
 					CUI_CLIPBOARD_TIMESTAMP_SIZE );
 
 
 		mime->setData ( mtQEX::qstringFromC ( MTCELLEDIT_CLIP_NAME ),
-			data );
+			dat );
 	}
 
 	if (	cui_clip_export_text ( cedClipboard ) ||
 		! cedClipboard->tsv )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unable to create TSV data." ) );
+		QMessageBox::critical ( this, "Error",
+			"Unable to create TSV data." );
 	}
 	else
 	{
@@ -80,7 +84,7 @@ void MainWindow :: clipboardSetOwner ()
 	c->setMimeData ( mime );
 }
 
-int MainWindow :: clipboardCopySelection (
+int MainWindow::clipboardCopySelection (
 	int	const	mode
 	)
 {
@@ -91,8 +95,8 @@ int MainWindow :: clipboardCopySelection (
 
 	if ( cui_clip_copy ( cedFile, cedClipboard ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unable to copy selection to clipboard." ) );
+		QMessageBox::critical ( this, "Error",
+			"Unable to copy selection to clipboard." );
 
 		return 1;
 	}
@@ -107,8 +111,8 @@ int MainWindow :: clipboardCopySelection (
 
 	if ( res )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Problem adjusting clipboard." ) );
+		QMessageBox::critical ( this, "Error",
+			"Problem adjusting clipboard." );
 	}
 
 	clipboardSetOwner ();
@@ -116,7 +120,7 @@ int MainWindow :: clipboardCopySelection (
 	return 0;
 }
 
-int MainWindow :: clipboardClearSelection (
+int MainWindow::clipboardClearSelection (
 	int	const	mode
 	)
 {
@@ -144,7 +148,7 @@ int MainWindow :: clipboardClearSelection (
 	return 0;			// Success
 }
 
-void MainWindow :: pressEditCut ()
+void MainWindow::pressEditCut ()
 {
 	if ( clipboardCopySelection ( 0 ) )
 	{
@@ -157,7 +161,7 @@ void MainWindow :: pressEditCut ()
 	}
 }
 
-void MainWindow :: clipboardCopyRouter (
+void MainWindow::clipboardCopyRouter (
 	int		mode
 	)
 {
@@ -169,22 +173,22 @@ void MainWindow :: clipboardCopyRouter (
 	viewMain->setBell ();
 }
 
-void MainWindow :: pressEditCopy ()
+void MainWindow::pressEditCopy ()
 {
 	clipboardCopyRouter ( 0 );
 }
 
-void MainWindow :: pressEditCopyVal ()
+void MainWindow::pressEditCopyVal ()
 {
 	clipboardCopyRouter ( 1 );
 }
 
-void MainWindow :: pressEditCopyOutput ()
+void MainWindow::pressEditCopyOutput ()
 {
 	clipboardCopyRouter ( 2 );
 }
 
-void MainWindow :: clipboardTransform (
+void MainWindow::clipboardTransform (
 	int	const	mode
 	)
 {
@@ -214,36 +218,36 @@ void MainWindow :: clipboardTransform (
 	return;				// Success
 
 error:
-	QMessageBox :: critical ( this, tr ( "Error" ),
-		tr ( "Unable to transform clipboard." ) );
+	QMessageBox::critical ( this, "Error",
+		"Unable to transform clipboard." );
 }
 
-void MainWindow :: pressEditTransformTrans ()
+void MainWindow::pressEditTransformTrans ()
 {
 	clipboardTransform ( 0 );
 }
 
-void MainWindow :: pressEditTransformFlipH ()
+void MainWindow::pressEditTransformFlipH ()
 {
 	clipboardTransform ( 1 );
 }
 
-void MainWindow :: pressEditTransformFlipV ()
+void MainWindow::pressEditTransformFlipV ()
 {
 	clipboardTransform ( 2 );
 }
 
-void MainWindow :: pressEditTransformRotClock ()
+void MainWindow::pressEditTransformRotClock ()
 {
 	clipboardTransform ( 3 );
 }
 
-void MainWindow :: pressEditTransformRotAnti ()
+void MainWindow::pressEditTransformRotAnti ()
 {
 	clipboardTransform ( 4 );
 }
 
-int MainWindow :: clipboardGetMtcelledit (
+int MainWindow::clipboardGetMtcelledit (
 	QClipboard	* const	clipboard
 	)
 {
@@ -255,10 +259,10 @@ int MainWindow :: clipboardGetMtcelledit (
 		return 0;		// Not sent by mtCellEdit
 	}
 
-	QByteArray	data = mime->data ( mtQEX::qstringFromC (
+	QByteArray	dat = mime->data ( mtQEX::qstringFromC (
 				MTCELLEDIT_CLIP_NAME ) );
 
-	if ( data.size () != CUI_CLIPBOARD_TIMESTAMP_SIZE )
+	if ( dat.size () != CUI_CLIPBOARD_TIMESTAMP_SIZE )
 	{
 		return 0;		// Not sent by mtCellEdit
 	}
@@ -272,7 +276,7 @@ int MainWindow :: clipboardGetMtcelledit (
 	}
 
 	if (	! cedClipboard->sheet ||
-		memcmp( cedClipboard->timestamp, data.data (),
+		memcmp( cedClipboard->timestamp, dat.data (),
 			CUI_CLIPBOARD_TIMESTAMP_SIZE ) )
 	{
 		if ( cui_clip_load_temp ( cedClipboard ) )
@@ -281,15 +285,15 @@ int MainWindow :: clipboardGetMtcelledit (
 		}
 
 		// Set the new timestamp
-		cui_clip_set_timestamp ( cedClipboard, (char *)data.data () );
+		cui_clip_set_timestamp ( cedClipboard, (char *)dat.data () );
 	}
 
 	return 1;			// mtCellEdit clipboard is available
 }
 
-int MainWindow :: clipboardReadSystem ()
+int MainWindow::clipboardReadSystem ()
 {
-	if ( 0 == prefs_get_int ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
+	if ( 0 == pprfs->getInt ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
 	{
 		return 0;
 	}
@@ -319,7 +323,7 @@ int MainWindow :: clipboardReadSystem ()
 	return 0;			// Success
 }
 
-int MainWindow :: clipboardObtainPaste ()
+int MainWindow::clipboardObtainPaste ()
 {
 	if ( ! projectGetSheet () )
 	{
@@ -339,7 +343,7 @@ int MainWindow :: clipboardObtainPaste ()
 	return 1;	// Successfully transferred something to clipboard
 }
 
-int MainWindow :: clipboardPasteAtCursor (
+int MainWindow::clipboardPasteAtCursor (
 	int	const	mode
 	)
 {
@@ -372,22 +376,22 @@ int MainWindow :: clipboardPasteAtCursor (
 	return 0;			// Paste committed
 }
 
-void MainWindow :: pressEditPaste ()
+void MainWindow::pressEditPaste ()
 {
 	clipboardPasteAtCursor ( 0 );
 }
 
-void MainWindow :: pressEditPasteContent ()
+void MainWindow::pressEditPasteContent ()
 {
 	clipboardPasteAtCursor ( CED_PASTE_CONTENT );
 }
 
-void MainWindow :: pressEditPastePrefs ()
+void MainWindow::pressEditPastePrefs ()
 {
 	clipboardPasteAtCursor ( CED_PASTE_PREFS );
 }
 
-void MainWindow :: pressEditClear ()
+void MainWindow::pressEditClear ()
 {
 	if ( clipboardClearSelection ( 0 ) )
 	{
@@ -395,7 +399,7 @@ void MainWindow :: pressEditClear ()
 	}
 }
 
-void MainWindow :: pressEditClearContent ()
+void MainWindow::pressEditClearContent ()
 {
 	if ( clipboardClearSelection ( CED_PASTE_CONTENT ) )
 	{
@@ -403,7 +407,7 @@ void MainWindow :: pressEditClearContent ()
 	}
 }
 
-void MainWindow :: pressEditClearPrefs ()
+void MainWindow::pressEditClearPrefs ()
 {
 	if ( clipboardClearSelection ( CED_PASTE_PREFS ) )
 	{
@@ -411,15 +415,15 @@ void MainWindow :: pressEditClearPrefs ()
 	}
 }
 
-void MainWindow :: pressEditUseSystemClipboard ()
+void MainWindow::pressEditUseSystemClipboard ()
 {
 	if ( actEditUseSystemClipboard->isChecked () )
 	{
-		prefs_set_int ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM, 1 );
+		pprfs->set ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM, 1 );
 	}
 	else
 	{
-		prefs_set_int ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM, 0 );
+		pprfs->set ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM, 0 );
 	}
 }
 

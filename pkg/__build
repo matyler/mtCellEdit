@@ -75,7 +75,7 @@ done
 NEW_MAN_PAGE()
 {
 	cd $CWD/$1
-	./configure --enable-$2
+	./configure --use-$2
 	cd man
 	make
 	cd ..
@@ -83,10 +83,9 @@ NEW_MAN_PAGE()
 }
 
 NEW_MAN_PAGE "mtcelledit"	"qt4"
-NEW_MAN_PAGE "mtcelledit"	"gtk2"
 NEW_MAN_PAGE "mteleana"		"qt4"
 NEW_MAN_PAGE "mtraft"		"qt4"
-NEW_MAN_PAGE "mtraft"		"gtk2"
+NEW_MAN_PAGE "mtpixy"		"qt4"
 
 cd $CWD/test
 ./configure flush

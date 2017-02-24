@@ -1,28 +1,27 @@
 include		../_conf.txt
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG)
-LDFLAGS 	= $(LDFLAG)
 OBJS		=		\
 		rdc_analysis.o	\
 		rdc_main.o	\
 		rdc_matrix.o	\
-		rdc_password.o	\
 		rdc_pad.o	\
+		rdc_password.o	\
 		rdc_prng.o	\
 		rdc_shuffle.o	\
 		rdc_xor.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(BIN_NAME)
 
 $(BIN_NAME):	$(OBJS)
-		$(CC) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
+		$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
 
 $(OBJS):	*.h
 
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 		install -d $(DESTDIR)$(BIN_INSTALL)

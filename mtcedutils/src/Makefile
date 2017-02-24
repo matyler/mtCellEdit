@@ -1,8 +1,5 @@
 include		../_conf.txt
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG)
-LDFLAGS 	= $(LDFLAG)
-
 APPS		=		\
 		cedappend	\
 		cedclear	\
@@ -26,16 +23,17 @@ OBJS		=		\
 		main.o		\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(BIN_NAME)
 
 $(BIN_NAME):	$(OBJS)
-		$(CC) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
+		$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
 
 $(OBJS):	*.h
 
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 		install -d $(DESTDIR)$(BIN_INSTALL)

@@ -1,8 +1,5 @@
 include		../_conf.txt
 
-CFLAGS		= $(LIB_CFLAGS) $(CFLAG)
-CXXFLAGS	= $(LIB_CFLAGS) $(CXXFLAG)
-LDFLAGS 	= $(LDFLAG)
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= $(HEADER_NAME)
 OBJS		=		\
@@ -13,11 +10,10 @@ OBJS		=		\
 		mtqex_file.o	\
 		mtqex_image.o	\
 		mtqex_misc.o	\
-		mtqex_prefs.o	\
 		mtqex_prefwin.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(LIB_SONAME)
 

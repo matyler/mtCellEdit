@@ -80,7 +80,7 @@ run_sh_cli 91
 
 # Soak tests
 SOAK_INPUT=tmp/soak
-./mtgentex mtgentex.c > $SOAK_INPUT.txt
+./mtgentex mtgentex.txt > $SOAK_INPUT.txt
 run_sh_cli ../$SOAK_INPUT
 
 # Difference tests

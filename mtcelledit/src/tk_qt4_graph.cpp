@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-void MainWindow :: pressOptionsGraph ()
+void MainWindow::pressOptionsGraph ()
 {
 	if ( graphTextEdit->hasFocus () )
 	{
@@ -34,7 +34,7 @@ void MainWindow :: pressOptionsGraph ()
 	}
 }
 
-void MainWindow :: projectGraphStoreChanges ()
+void MainWindow::projectGraphStoreChanges ()
 {
 	// Checks for changes, if so save them to the current graph
 	// (active_graph).
@@ -93,7 +93,7 @@ void MainWindow :: projectGraphStoreChanges ()
 	projectGraphRedraw ();		// Draw the new graph
 }
 
-void MainWindow :: graphChanged (
+void MainWindow::graphChanged (
 	int	const	ARG_UNUSED ( i )
 	)
 {
@@ -134,7 +134,7 @@ void MainWindow :: graphChanged (
 	projectGraphRedraw ();		// Draw the new graph
 }
 
-void MainWindow :: pressGraphNew ()
+void MainWindow::pressGraphNew ()
 {
 	char	const	* newname;
 
@@ -149,14 +149,14 @@ void MainWindow :: pressGraphNew ()
 	}
 	else
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to create a new graph.") );
+		QMessageBox::critical ( this, "Error",
+			"Unable to create a new graph." );
 	}
 
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow :: pressGraphDuplicate ()
+void MainWindow::pressGraphDuplicate ()
 {
 	char		* newname = NULL;
 
@@ -172,14 +172,14 @@ void MainWindow :: pressGraphDuplicate ()
 	}
 	else
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to duplicate the current graph.") );
+		QMessageBox::critical ( this, "Error",
+			"Unable to duplicate the current graph." );
 	}
 
 	updateChangesChores ( 0, 1 );
 }
 
-int MainWindow :: projectRenameGraph (
+int MainWindow::projectRenameGraph (
 	QString		const	newName
 	)
 {
@@ -194,15 +194,14 @@ int MainWindow :: projectRenameGraph (
 
 	if ( ! new_name || new_name[0] == 0 )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Bad graph name.") );
+		QMessageBox::critical ( this, "Error", "Bad graph name." );
 
 		return 1;
 	}
 	else if ( cui_graph_get ( book, new_name ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Graph name already exists.") );
+		QMessageBox::critical ( this, "Error",
+			"Graph name already exists." );
 
 		return 1;
 	}
@@ -214,8 +213,8 @@ int MainWindow :: projectRenameGraph (
 		! cui_graph_new ( book, old->mem, old->size, new_name )
 		)
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to rename graph.") );
+		QMessageBox::critical ( this, "Error",
+			"Unable to rename graph." );
 
 		return 1;
 	}
@@ -231,7 +230,7 @@ int MainWindow :: projectRenameGraph (
 	return 0;			// Success
 }
 
-void MainWindow :: pressGraphRename ()
+void MainWindow::pressGraphRename ()
 {
 	char	const	* old_name;
 
@@ -249,8 +248,8 @@ void MainWindow :: pressGraphRename ()
 	{
 		bool	ok;
 		QString new_name = QInputDialog::getText ( this,
-			tr ( "Rename Graph" ),
-			tr ( "New Graph Name:" ),
+			"Rename Graph",
+			"New Graph Name:",
 			QLineEdit::Normal,
 			mtQEX::qstringFromC ( old_name ),
 			&ok );
@@ -267,15 +266,15 @@ void MainWindow :: pressGraphRename ()
 	}
 }
 
-void MainWindow :: pressGraphDelete ()
+void MainWindow::pressGraphDelete ()
 {
 	int		res,
 			gnum;
 	CedBook		* book;
 
 
-	res = QMessageBox :: question ( this, tr ( "Question" ),
-		tr ("Do you really want to delete this graph?"),
+	res = QMessageBox::question ( this, "Question",
+		"Do you really want to delete this graph?",
 		QMessageBox::Yes | QMessageBox::No,
 		QMessageBox::No );
 
@@ -289,8 +288,8 @@ void MainWindow :: pressGraphDelete ()
 	book = cedFile->cubook->book;
 	if ( cui_graph_destroy ( book, book->prefs.active_graph ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to delete this graph.") );
+		QMessageBox::critical ( this, "Error",
+			"Unable to delete this graph." );
 
 		return;
 	}
@@ -307,17 +306,17 @@ void MainWindow :: pressGraphDelete ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow :: projectGraphRedraw ()
+void MainWindow::projectGraphRedraw ()
 {
-	int		err	= -1;
-	mtImage		* im;
+	int		err = -1;
+	mtPixy::Image	* im;
 	double		scale;
 	CedBook		* book;
 
 
-	scale = prefs_get_double ( GUI_INIFILE_GRAPH_SCALE );
+	scale = pprfs->getDouble ( GUI_INIFILE_GRAPH_SCALE );
 	book = cedFile->cubook->book;
-	im = cui_graph_render_mtimage ( book, book->prefs.active_graph, &err,
+	im = cui_graph_render_image ( book, book->prefs.active_graph, &err,
 		scale );
 
 	graphWidget->setImage ( im );
@@ -334,13 +333,13 @@ void MainWindow :: projectGraphRedraw ()
 	}
 }
 
-void MainWindow :: pressGraphRedraw ()
+void MainWindow::pressGraphRedraw ()
 {
 	projectGraphStoreChanges ();
 	projectGraphRedraw ();
 }
 
-void MainWindow :: pressGraphExport ()
+void MainWindow::pressGraphExport ()
 {
 	char	const	* graphname;
 
@@ -355,7 +354,7 @@ void MainWindow :: pressGraphExport ()
 	projectGraphStoreChanges ();
 
 	QStringList	list;
-	QString		last = mtQEX::qstringFromC ( prefs_get_string (
+	QString		last = mtQEX::qstringFromC ( pprfs->getString (
 				GUI_INIFILE_LAST_DIR ) ) +
 				MTKIT_DIR_SEP + "export";
 
@@ -370,7 +369,7 @@ void MainWindow :: pressGraphExport ()
 
 	while ( 1 )
 	{
-		qexSaveFileDialog dialog ( this, tr ( "Export Graph" ),
+		mtQEX::SaveFileDialog dialog ( this, "Export Graph",
 			list, lastExportGraphType, last.toUtf8 ().data () );
 
 		if ( ! dialog.exec () )
@@ -389,23 +388,23 @@ void MainWindow :: pressGraphExport ()
 			if ( cui_graph_render_file ( cedFile->cubook->book,
 				graphname, filename.toUtf8 ().data (),
 				lastExportGraphType, NULL,
-				prefs_get_double ( GUI_INIFILE_GRAPH_SCALE ) )
+				pprfs->getDouble ( GUI_INIFILE_GRAPH_SCALE ) )
 				)
 			{
-				QMessageBox :: critical ( this, tr ( "Error" ),
-					tr ("Unable to export graph.") );
+				QMessageBox::critical ( this, "Error",
+					"Unable to export graph." );
 
 				continue;
 			}
 
-			be_remember_last_dir ( filename.toUtf8 ().data () );
+			backend->remember_last_dir( filename.toUtf8 ().data() );
 		}
 
 		break;
 	}
 }
 
-void MainWindow :: pressGraphSClipboard ()
+void MainWindow::pressGraphSClipboard ()
 {
 	char		txt [ 2000 ] = { 0 };
 
@@ -413,7 +412,7 @@ void MainWindow :: pressGraphSClipboard ()
 	if ( be_graph_selection_clip ( projectGetSheet (), txt, sizeof ( txt ) )
 		)
 	{
-		mtkit_strnncpy ( txt, _("No sheet available"), sizeof ( txt ) );
+		mtkit_strnncpy ( txt, "No sheet available", sizeof ( txt ) );
 	}
 
 	QClipboard	* c = QApplication::clipboard ();

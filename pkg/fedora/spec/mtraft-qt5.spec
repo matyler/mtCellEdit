@@ -16,7 +16,7 @@ Requires:		libmtkit libmtcelledit libmtqex5 qt5-qtbase
 %setup -q
 
 %build
-@MT_CONF@ --enable-qt5
+@MT_CONF@ --use-qt5
 make
 
 %install

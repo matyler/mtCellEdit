@@ -1,0 +1,41 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Appendix A - Miscellaneous</TITLE>\1'
+
+
+[Previous chap_04.html] | [Contents chap_00.html] | [Next chap_B.html]
+-------------------------------------------------
+
+=Appendix A - Miscellaneous=
+
+
+
+==A.1 Limitations==[SEC1]
+
+As with all software, mtPixy has some limitations.  In some cases any attempt to overcome these limitations would invalidate the purpose and philosophy of the project.  Therefore I am documenting these limitations in order to explain the policy decisions I have taken.  However, mtPixy is free software so if anyone disagrees then they are free to fork the code and implement their own ideas.
+
+I regard mtPixy as feature complete so I do not plan to add any new features.  However I am always happy to tweak things here and there to make the tool more useful.  If you think there are some areas of the project that need improvement please contact me.
+
+
+
+===A.1.1 Localization===[SEC11]
+
+mtPixy is entirely written in English.  It should be possible to translate to any other language, but I do not have those skills so somebody else will have to do that work.
+
+
+
+==A.2 Supported File Types==[SEC2]
+
+
+| BMP    | Load/Save uncompressed RGB/Indexed | Palettes are only saved with indexed images. |
+| GIF    | Load/Save Indexed | Palettes are always saved with the image. |
+| GPL    | Load/Save Palettes |  |
+| JPEG   | Load/Save RGB | Palettes are not saved. |
+| PNG    | Load/Save RGB/Indexed | Palettes are always saved with the image. Alpha channels can be loaded, saved, removed, but not edited. |
+
+
+
+
+
+
+-------------------------------------------------
+[Previous chap_04.html] | [Contents chap_00.html] | [Next chap_B.html]

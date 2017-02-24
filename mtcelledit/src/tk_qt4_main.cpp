@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,11 +24,13 @@ MainWindow	* mainwindow;
 
 
 
-MainWindow :: MainWindow (
-	char	const	* const	prefs_filename,
-	char	const	* const arg_filename
+MainWindow::MainWindow (
+	Backend		* const be,
+	QApplication	&app
 	)
 	:
+	backend		( be ),
+	pprfs		( &be->preferences ),
 	cedFile		(),
 	cedClipboard	(),
 	sheetRows	( 0 ),
@@ -37,29 +39,19 @@ MainWindow :: MainWindow (
 	lastExportSheetType ( CUI_SHEET_EXPORT_TSV_QUOTED ),
 	lastExportGraphType ( CUI_GRAPH_TYPE_PDF )
 {
-	QWidget		* widget,
-			* tabFind,
-			* tabGraph
-			;
-	QVBoxLayout	* layout;
+	QWidget		* widget, * tabFind, * tabGraph;
+	QVBoxLayout	* layv;
 	QHBoxLayout	* row;
-	QSplitter	* split,
-			* graphSplit;
+	QSplitter	* split, * graphSplit;
 
 
 	mainwindow = this;
 
 	// Preparation
 
-	memset ( &render, 0, sizeof ( render ) );
+	memset ( &crendr, 0, sizeof ( crendr ) );
 
 	ced_init ();
-
-	prefs_init ( prefs_filename );
-
-	mtQEX :: prefsInitPrefs ( prefs_file () );
-
-	prefs_load ();
 
 	cedFile = cui_file_new ();
 	cedClipboard = cui_clip_new ();
@@ -69,8 +61,8 @@ MainWindow :: MainWindow (
 		cui_file_book_new ( cedFile )
 		)
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unable to initialize program." ) );
+		QMessageBox::critical ( this, "Error",
+			"Unable to initialize program." );
 
 		exit ( 0 );
 	}
@@ -79,27 +71,27 @@ MainWindow :: MainWindow (
 	// Widgets
 
 	setWindowTitle ( VERSION );
-	this->setWindowIcon ( QPixmap ( icon_xpm ) );
+	setWindowIcon ( QPixmap ( icon_xpm ) );
 
-	layout = new QVBoxLayout ( this );
-	layout->setMargin ( 0 );
+	layv = new QVBoxLayout ( this );
+	layv->setMargin ( 0 );
 
 	split = new QSplitter ( Qt::Horizontal );
-	layout->addWidget ( split );
+	layv->addWidget ( split );
 
 	// Left split area
 
 	widget = new QWidget;
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	widget->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	widget->setLayout ( layv );
 	split->addWidget ( widget );
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
 	row->setSpacing ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	menuBar = new QMenuBar;
 	row->addWidget ( menuBar );
@@ -110,7 +102,7 @@ MainWindow :: MainWindow (
 	widget = new QWidget;
 	row->addWidget ( widget );
 
-	buttonSheet = new qexButtonMenu;
+	buttonSheet = new mtQEX::ButtonMenu;
 	row->addWidget ( buttonSheet );
 	connect ( buttonSheet, SIGNAL ( currentIndexChanged ( int ) ),
 		this, SLOT ( sheetChanged ( int ) ) );
@@ -119,12 +111,12 @@ MainWindow :: MainWindow (
 	widget = new QWidget;
 	row->addWidget ( widget );
 
-	buttonQuicksum = new qexButtonMenu;
+	buttonQuicksum = new mtQEX::ButtonMenu;
 	row->addWidget ( buttonQuicksum );
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	editCellref = new MyLineEdit;
 	editCellref->setSizePolicy (
@@ -158,7 +150,7 @@ MainWindow :: MainWindow (
 	row->addWidget ( labelQuicksum );
 
 	viewMain = new CedView;
-	layout->addWidget ( viewMain );
+	layv->addWidget ( viewMain );
 
 	// Right split area
 
@@ -166,26 +158,26 @@ MainWindow :: MainWindow (
 	split->addWidget ( tabWidget );
 
 	tabFind = new QWidget;
-	tabWidget->addTab ( tabFind, tr ( "Find" ) );
+	tabWidget->addTab ( tabFind, "Find" );
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	tabFind->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	tabFind->setLayout ( layv );
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	editFindText = new QLineEdit ( mtQEX::qstringFromC (
-		prefs_get_string ( GUI_INIFILE_FIND_TEXT ) ) );
+		pprfs->getString ( GUI_INIFILE_FIND_TEXT ) ) );
 	row->addWidget ( editFindText );
 	editFindText->setSizePolicy ( QSizePolicy ( QSizePolicy::Expanding,
 		QSizePolicy::Preferred ) );
 	connect ( editFindText, SIGNAL ( returnPressed () ), this,
 		SLOT ( pressFind () ) );
 
-	QPushButton * button = new QPushButton ( tr ( "Find" ) );
+	QPushButton * button = new QPushButton ( "Find" );
 	row->addWidget ( button );
 	connect ( button, SIGNAL ( clicked () ), this, SLOT ( pressFind () ) );
 
@@ -195,7 +187,7 @@ MainWindow :: MainWindow (
 		QSizePolicy::Preferred ) );
 
 	findTable = new QTableWidget;
-	layout->addWidget ( findTable );
+	layv->addWidget ( findTable );
 
 	findTable->setSelectionMode ( QAbstractItemView::SingleSelection );
 	findTable->setSelectionBehavior ( QAbstractItemView::SelectRows );
@@ -215,78 +207,78 @@ MainWindow :: MainWindow (
 	QStringList columnLabels;
 
 	columnLabels
-		<< tr ( "Sheet" )
-		<< tr ( "Row" )
-		<< tr ( "Column" )
-		<< tr ( "Content" )
+		<< "Sheet"
+		<< "Row"
+		<< "Column"
+		<< "Content"
 		;
 	findTable->setHorizontalHeaderLabels ( columnLabels );
 	findTable->horizontalHeader ()->resizeSections (
 		QHeaderView::ResizeToContents );
 
 	tabGraph = new QWidget;
-	tabWidget->addTab ( tabGraph, tr ( "Graph" ) );
+	tabWidget->addTab ( tabGraph, "Graph" );
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	tabGraph->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	tabGraph->setLayout ( layv );
 
 	graphSplit = new QSplitter ( Qt::Vertical );
-	layout->addWidget ( graphSplit );
+	layv->addWidget ( graphSplit );
 
 
 	widget = new QWidget;
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	widget->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	widget->setLayout ( layv );
 	graphSplit->addWidget ( widget );
 
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
 	row->setSpacing ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	graphMenuBar = new QMenuBar;
 	row->addWidget ( graphMenuBar );
 
-	buttonGraph = new qexButtonMenu;
+	buttonGraph = new mtQEX::ButtonMenu;
 	row->addWidget ( buttonGraph );
 	connect ( buttonGraph, SIGNAL ( currentIndexChanged ( int ) ),
 		this, SLOT ( graphChanged ( int ) ) );
 
-	graphWidget = new qexImage;
-	layout->addWidget ( graphWidget );
+	graphWidget = new mtQEX::Image;
+	layv->addWidget ( graphWidget );
 
 	widget = new QWidget;
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	widget->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	widget->setLayout ( layv );
 	graphSplit->addWidget ( widget );
 
 	graphTextEdit = new QTextEdit;
-	layout->addWidget ( graphTextEdit );
+	layv->addWidget ( graphTextEdit );
 
 	viewTab = new CedView;
-	tabWidget->addTab ( viewTab, tr ( "View" ) );
+	tabWidget->addTab ( viewTab, "View" );
 
 	createMenus ();
 	createQuicksum ();
 
-	pref_change_font ( NULL, 0, this );
+	pref_change_font ( NULL, 0, pprfs );
 	updateRecentFiles ();
 
 	setMinimumSize ( 160, 160 );
-	setGeometry ( prefs_get_int ( PREFS_WINDOW_X ),
-		prefs_get_int ( PREFS_WINDOW_Y ),
-		prefs_get_int ( PREFS_WINDOW_W ),
-		prefs_get_int ( PREFS_WINDOW_H ) );
+	setGeometry ( pprfs->getInt ( PREFS_WINDOW_X ),
+		pprfs->getInt ( PREFS_WINDOW_Y ),
+		pprfs->getInt ( PREFS_WINDOW_W ),
+		pprfs->getInt ( PREFS_WINDOW_H ) );
 
 
-	if ( 0 == prefs_get_int ( GUI_INIFILE_MAIN_WINDOW"_state" ) )
+	if ( 0 == pprfs->getInt ( GUI_INIFILE_MAIN_WINDOW"_state" ) )
 	{
 		showMaximized ();
 	}
@@ -306,50 +298,50 @@ MainWindow :: MainWindow (
 
 	viewMain->setFocus ();
 
+	app.processEvents ();	// Create and show UI before loading a file
+
 	// This is needed to stop visual corruption of the graph area widgets
 	tabWidget->setCurrentIndex ( TAB_VIEW );
 
-	if (	! arg_filename ||
-		projectLoad ( arg_filename )
+	if (	! backend->get_cline_filename () ||
+		projectLoad ( backend->get_cline_filename () )
 		)
 	{
 		projectClearAll ();
 	}
 }
 
-MainWindow :: ~MainWindow ()
+MainWindow::~MainWindow ()
 {
 	if ( isMaximized () )
 	{
-		prefs_set_int ( GUI_INIFILE_MAIN_WINDOW"_state", 0 );
+		pprfs->set ( GUI_INIFILE_MAIN_WINDOW"_state", 0 );
 	}
 	else
 	{
-		prefs_set_int ( GUI_INIFILE_MAIN_WINDOW"_state", 1 );
+		pprfs->set ( GUI_INIFILE_MAIN_WINDOW"_state", 1 );
 
-		prefs_set_int ( PREFS_WINDOW_X, geometry().x () );
-		prefs_set_int ( PREFS_WINDOW_Y, geometry().y () );
-		prefs_set_int ( PREFS_WINDOW_W, geometry().width () );
-		prefs_set_int ( PREFS_WINDOW_H, geometry().height () );
+		pprfs->set ( PREFS_WINDOW_X, geometry().x () );
+		pprfs->set ( PREFS_WINDOW_Y, geometry().y () );
+		pprfs->set ( PREFS_WINDOW_W, geometry().width () );
+		pprfs->set ( PREFS_WINDOW_H, geometry().height () );
 	}
 
-	prefs_save ();
-	prefs_close ();
-
-	cui_font_destroy ( render.font );
+	delete crendr.font;
+	crendr.font = NULL;
 
 	cui_clip_free ( cedClipboard );
 	cui_file_free ( cedFile );
 }
 
-void MainWindow :: closeEvent (
-	QCloseEvent	* const	event
+void MainWindow::closeEvent (
+	QCloseEvent	* const	ev
 	)
 {
 	if ( isEnabled () == false )
 	{
 		// Main window is currently disabled so ignore all requests
-		event->ignore ();
+		ev->ignore ();
 
 		return;
 	}
@@ -357,12 +349,12 @@ void MainWindow :: closeEvent (
 	if ( okToLoseChanges () )
 	{
 		// No changes, or user happy to lose them
-		event->accept ();
+		ev->accept ();
 	}
 	else
 	{
 		// Changes have occured, user not consenting to lose them
-		event->ignore ();
+		ev->ignore ();
 	}
 }
 
@@ -371,11 +363,14 @@ int main (
 	char	const * const * const	argv
 	)
 {
-	char	const *	prefs_filename = NULL;
-	char	const *	input_filename = NULL;
+	Backend		backend;
 
 
-	be_cline ( argc, argv, &prefs_filename, &input_filename );
+	// Parse command line and initialize prefs as required
+	if ( backend.command_line ( argc, argv ) )
+	{
+		return 0;
+	}
 
 	// I don't want Qt snooping or changing my command line.
 	int		dummy_argc	= 1;
@@ -384,8 +379,7 @@ int main (
 
 
 	QApplication	app ( dummy_argc, &dummy_argv );
-	MainWindow	window ( prefs_filename, input_filename );
-
+	MainWindow	window ( &backend, app );
 
 	return app.exec ();
 }

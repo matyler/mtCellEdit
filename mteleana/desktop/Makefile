@@ -4,7 +4,7 @@ ICONDIR		= $(DESTDIR)$(DATA_INSTALL)/icons/hicolor
 MTDESK		= $(BIN_NAME).desktop
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(MTDESK)
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,36 +19,36 @@
 
 
 
-void MainWindow :: zoomCartogramChanged (
+void MainWindow::zoomCartogramChanged (
 	int	const	zoom
 	)
 {
 	cartogramWidget->setZoom ( zoom );
 }
 
-void MainWindow :: zoomDiagramChanged (
+void MainWindow::zoomDiagramChanged (
 	int	const	zoom
 	)
 {
 	diagramWidget->setZoom ( zoom );
 }
 
-void MainWindow :: zoomMapChanged (
+void MainWindow::zoomMapChanged (
 	int	const	zoom
 	)
 {
 	int		nv_h, nv_v, w, h;
-	double		cx, cy, aw, ah, x, y;
+	double		cx, cy, aw, ah, xx, yy;
 
 
 	aw = polymapScrollArea->viewport ()->width ();
 	ah = polymapScrollArea->viewport ()->height ();
 
-	x = polymapScrollArea->horizontalScrollBar ()->value ();
-	y = polymapScrollArea->verticalScrollBar ()->value ();
+	xx = polymapScrollArea->horizontalScrollBar ()->value ();
+	yy = polymapScrollArea->verticalScrollBar ()->value ();
 
-	cx = x - aw + aw / 2;
-	cy = y - ah + ah / 2;
+	cx = xx - aw + aw / 2;
+	cy = yy - ah + ah / 2;
 	cx /= (mapCanvas->width () - 2 * aw);
 	cy /= (mapCanvas->height () - 2 * ah);
 
@@ -71,7 +71,7 @@ void MainWindow :: zoomMapChanged (
 	polymapScrollArea->verticalScrollBar ()->setValue ( (int)( nv_v + ah ));
 }
 
-void MainWindow :: yearChanged (
+void MainWindow::yearChanged (
 	int	const	val
 	)
 {
@@ -88,8 +88,8 @@ void MainWindow :: yearChanged (
 	{
 		delete new_election;
 
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unable to change year" ) );
+		QMessageBox::critical ( this, "Error",
+			"Unable to change year" );
 
 		return;
 	}
@@ -123,11 +123,11 @@ void MainWindow :: yearChanged (
 	tableSummary->setColumnCount ( ctot );
 	tableSummary->setMinimumHeight ( 0 );
 	columnLabels
-		<< tr ( "Party" )
-		<< tr ( "Votes" )
-		<< tr ( "%" )
-		<< tr ( "Seats" )
-		<< tr ( "Candidates" )
+		<< "Party"
+		<< "Votes"
+		<< "%"
+		<< "Seats"
+		<< "Candidates"
 		;
 	tableSummary->setHorizontalHeaderLabels ( columnLabels );
 
@@ -150,7 +150,7 @@ void MainWindow :: yearChanged (
 			}
 
 			twItem = new QTableWidgetItem;
-			twItem->setText ( mtQEX :: qstringFromC ( csp ) );
+			twItem->setText ( mtQEX::qstringFromC ( csp ) );
 			free ( csp );
 
 			if ( c > 1 )
@@ -165,7 +165,7 @@ void MainWindow :: yearChanged (
 
 	tableSummary->setCurrentCell ( 1, 1 );
 
-	mtEleana :: tableSetupDetails ( tableSummary );
+	mtEleana::tableSetupDetails ( tableSummary );
 
 	comboDiagramLeft->blockSignals ( true );
 	comboDiagramRight->blockSignals ( true );
@@ -213,7 +213,7 @@ void MainWindow :: yearChanged (
 	diagramRedraw ();
 }
 
-void MainWindow :: diagramLeftChanged (
+void MainWindow::diagramLeftChanged (
 	int	const	ARG_UNUSED ( i )
 	)
 {
@@ -229,14 +229,14 @@ void MainWindow :: diagramLeftChanged (
 	}
 }
 
-void MainWindow :: diagramRightChanged (
+void MainWindow::diagramRightChanged (
 	int	const	ARG_UNUSED ( i )
 	)
 {
 	diagramRedraw ();
 }
 
-void MainWindow :: diagramRedraw ()
+void MainWindow::diagramRedraw ()
 {
 	diagramWidget->setImage ( election->createDiagram ( index,
 		comboDiagramLeft->currentText().toUtf8 ().data (),

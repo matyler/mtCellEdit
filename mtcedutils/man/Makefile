@@ -18,7 +18,7 @@ OBJ		=			\
 		cedutils.1.gz		\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 
 all:		$(OBJ)

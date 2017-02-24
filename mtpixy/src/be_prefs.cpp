@@ -1,0 +1,81 @@
+/*
+	Copyright (C) 2016 Mark Tyler
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program in the file COPYING.
+*/
+
+#include "be.h"
+
+
+
+void Backend::prefs_init ()
+{
+	mtPrefTable	const	prefs_table[] = {
+{ PREFS_WINDOW_X, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_Y, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_W, MTKIT_PREF_TYPE_INT, "500", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_H, MTKIT_PREF_TYPE_INT, "500", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_MAXIMIZED, MTKIT_PREF_TYPE_INT, "1", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_STATE, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+
+{ PREFS_CURSOR_NUDGE_PIXELS, MTKIT_PREF_TYPE_INT, "16", NULL, NULL, 0, "1	4096", NULL },
+{ PREFS_CURSOR_BRUSH_OPACITY, MTKIT_PREF_TYPE_DOUBLE, "0.4", NULL, NULL, 0, "0.0	1.0", NULL },
+
+{ PREFS_CANVAS_EASEL_RGB, MTKIT_PREF_TYPE_RGB, "11842740", NULL, NULL, 0, NULL, NULL },
+{ PREFS_CANVAS_ZOOM_GRID_GREY, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, "0	255", NULL },
+
+{ PREFS_FILE_RECENT_MAXLEN, MTKIT_PREF_TYPE_INT, "80", NULL, NULL, 0, NULL, NULL },
+{ PREFS_FILE_NEW_WIDTH, MTKIT_PREF_TYPE_INT, "256", NULL, NULL, 0, NULL, NULL },
+{ PREFS_FILE_NEW_HEIGHT, MTKIT_PREF_TYPE_INT, "192", NULL, NULL, 0, NULL, NULL },
+{ PREFS_FILE_NEW_TYPE, MTKIT_PREF_TYPE_INT, "2", NULL, NULL, 0, NULL, NULL },
+{ PREFS_FILE_COMPRESSION_JPEG, MTKIT_PREF_TYPE_INT, "85", NULL, NULL, 0, "1	100", NULL },
+{ PREFS_FILE_COMPRESSION_PNG, MTKIT_PREF_TYPE_INT, "5", NULL, NULL, 0, "1	9", NULL },
+
+{ PREFS_HELP_FILE, MTKIT_PREF_TYPE_FILE, "/usr/share/doc/" BIN_NAME "/en_GB/chap_00.html", NULL, NULL, 0, NULL, NULL },
+{ PREFS_HELP_BROWSER, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+
+{ PREFS_FILE_NEW_PALETTE_NUM, MTKIT_PREF_TYPE_INT, "3", NULL, NULL, 0, "2	6", NULL },
+{ PREFS_FILE_NEW_PALETTE_TYPE, MTKIT_PREF_TYPE_OPTION, "1", NULL, NULL, 0, "Uniform	Balanced", NULL },
+
+{ PREFS_PALETTE_NUMBER_OPACITY, MTKIT_PREF_TYPE_DOUBLE, "0.4", NULL, NULL, 0, "0.0	1.0", NULL },
+
+{ PREFS_UI_SCALE, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, "0	10", NULL },
+{ PREFS_UI_SCALE_PALETTE, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, "0	10", NULL },
+
+{ PREFS_TEXT_FONT_NAME, MTKIT_PREF_TYPE_STR, "Sans", NULL, NULL, 0, NULL, NULL },
+{ PREFS_TEXT_FONT_SIZE, MTKIT_PREF_TYPE_INT, "12", NULL, NULL, 0, NULL, NULL },
+{ PREFS_TEXT_FONT_BOLD, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
+{ PREFS_TEXT_FONT_ITALIC, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
+{ PREFS_TEXT_FONT_UNDERLINE, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
+{ PREFS_TEXT_FONT_STRIKETHROUGH, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
+{ PREFS_TEXT_ENTRY, MTKIT_PREF_TYPE_STR, "Enter Text Here", NULL, NULL, 0, NULL, NULL },
+
+{ PREFS_UNDO_MB_MAX, MTKIT_PREF_TYPE_INT, "1024", NULL, NULL, 0, "1	10000", NULL },
+{ PREFS_UNDO_STEPS_MAX, MTKIT_PREF_TYPE_INT, "100", NULL, NULL, 0, "1	1000", NULL },
+
+{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
+		};
+
+
+	prefs.addTable ( prefs_table );
+	prefs.initWindowPrefs ();
+
+	recent_image.init_prefs ( &prefs );
+
+	prefs.load ( m_prefs_filename, BIN_NAME );
+
+	file.set_undo_mb_max ( prefs.getInt ( PREFS_UNDO_MB_MAX ) );
+	file.set_undo_steps_max ( prefs.getInt ( PREFS_UNDO_STEPS_MAX ) );
+}
+

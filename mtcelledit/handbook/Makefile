@@ -4,7 +4,7 @@ INSTALL_DIR	= $(DESTDIR)$(DATA_INSTALL)/doc/$(BIN_NAME)/
 MAKE_DIRS	= en_GB
 
 
-.PHONY: 	$(MAKE_DIRS) all install uninstall clean
+.PHONY:		$(MAKE_DIRS) all install uninstall clean
 
 all clean:
 		set -e; for dir in $(MAKE_DIRS); do $(MAKE) -C $$dir $@; done

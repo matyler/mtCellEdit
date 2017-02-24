@@ -1,4 +1,4 @@
-.PHONY: 	all valg time install uninstall clean
+.PHONY:		all valg time install uninstall clean
 
 CLEAN		= rm -f tmp/* valg_log.txt
 

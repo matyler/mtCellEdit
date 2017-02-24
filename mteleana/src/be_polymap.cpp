@@ -279,9 +279,9 @@ static int default_render_cb (
 	state->election->getSeatRGB ( seat, &rgb, state->map_mode,
 		state->map_party_name );
 
-	state->rgba_party[0][0] = MTKIT_INT_2_R ( rgb );
-	state->rgba_party[0][1] = MTKIT_INT_2_G ( rgb );
-	state->rgba_party[0][2] = MTKIT_INT_2_B ( rgb );
+	state->rgba_party[0][0] = mtPixy::int_2_red ( rgb );
+	state->rgba_party[0][1] = mtPixy::int_2_green ( rgb );
+	state->rgba_party[0][2] = mtPixy::int_2_blue ( rgb );
 
 	rgba_fill[0] = state->rgba_party[0];
 	rgba_outline[0] = state->rgba_party[4];
@@ -479,7 +479,7 @@ error:
 	return NULL;
 }
 
-int eleanaElection :: loadPolymap (
+int eleanaElection::loadPolymap (
 	char	const	* const	filename
 	)
 {
@@ -673,7 +673,7 @@ static mtTreeNode * poly_match (
 	return state.node;
 }
 
-int eleanaElection :: getPolyMinXY (
+int eleanaElection::getPolyMinXY (
 	int		const	row,
 	double		* const	x,
 	double		* const	y
@@ -782,7 +782,7 @@ static int uptab_cb (
 	return 0;			// Render & continue
 }
 
-int eleanaElection :: getSeatFromMap (
+int eleanaElection::getSeatFromMap (
 	int		const	x,
 	int		const	y,
 	double		const	map_zoom
@@ -944,7 +944,7 @@ error:
 	return res;
 }
 
-int eleanaElection :: renderPolymap (
+int eleanaElection::renderPolymap (
 	cairo_t	**	const	cr,
 	int		const	x,
 	int		const	y,
@@ -978,7 +978,7 @@ int eleanaElection :: renderPolymap (
 	return renderKr ( &state, POLYMAP_FILETYPE_NONE );
 }
 
-int eleanaElection :: savePolymap (
+int eleanaElection::savePolymap (
 	char	const * const	filename,
 	double		const	zoom,
 	int		const	filetype,

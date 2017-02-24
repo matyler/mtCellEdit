@@ -1,0 +1,14 @@
+new		100 100 indexedd
+new		100 100 rgbb
+new		-1 100 indexedd
+new		100 32768 rgbb
+
+palette size	256
+palette size	1
+
+palette color	-1 1 2 3
+palette color	1 11 12 1333
+set color a	256
+
+
+q

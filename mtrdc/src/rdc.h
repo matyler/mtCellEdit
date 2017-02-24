@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,15 +15,16 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+extern "C" {
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <errno.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <math.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <unistd.h>
+	#include <errno.h>
+}
 
 #include <mtcelledit.h>
 

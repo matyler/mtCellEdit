@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,27 +25,7 @@
 
 
 
-#ifdef __cplusplus
-	extern "C" {
-#endif	//  __cplusplus
-
-// C API
-
 #include "be.h"
-
-#ifdef __cplusplus
-	}
-#endif	//  __cplusplus
-
-
-
-// C++ API
-
-#include "becpp.h"
-
-
-
-#define MAX_TABS		10
 
 
 
@@ -59,6 +39,11 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
+	enum Limits
+	{
+		MAX_TABS = 10
+	};
+
 	MainWindow	( char const * scan_directory );
 	~MainWindow	();
 
@@ -69,7 +54,7 @@ public:
 	busyState	busy;
 
 protected:
-	void		closeEvent ( QCloseEvent * event );
+	void		closeEvent ( QCloseEvent * ev );
 
 private slots:
 	void		pressButtonQuit ();
@@ -78,7 +63,7 @@ private slots:
 	void		pressTabPrevious ();
 
 private:
-	qexPrefs	prefs;
+	mtKit::Prefs	prefs;
 
 	QProgressBar	* progressBar;
 	QTabWidget	* tabWidget;

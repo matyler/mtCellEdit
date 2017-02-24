@@ -1,11 +1,9 @@
 include		../_conf.txt
 
 
-.PHONY: 	all valg time build install uninstall clean
+.PHONY:		all valg time build install uninstall clean
 
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG)
-LDFLAGS 	= $(LDFLAG)
 BIN_ALL		= mtgentex
 
 
@@ -23,9 +21,10 @@ time:		$(BIN_ALL)
 build:		$(BIN_ALL)
 
 mtgentex:	mtgentex_main.o mtgentex_func.o
-		$(CC) mtgentex_main.o mtgentex_func.o -o mtgentex $(LDFLAGS)
+		$(CXX) mtgentex_main.o mtgentex_func.o -o mtgentex $(LDFLAGS)
 
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 

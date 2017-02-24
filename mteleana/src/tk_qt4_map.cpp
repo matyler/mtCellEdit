@@ -19,7 +19,7 @@
 
 
 
-cairo_t * MainWindow :: prepRender (
+cairo_t * MainWindow::prepRender (
 	int	const	px,
 	int	const	py,
 	int	const	pw,
@@ -43,9 +43,9 @@ cairo_t * MainWindow :: prepRender (
 	return cr;
 }
 
-void MainWindow :: clickMap (
-	int		x,
-	int		y
+void MainWindow::clickMap (
+	int		xx,
+	int		yy
 	)
 {
 	int		seatnum, i;
@@ -58,10 +58,10 @@ void MainWindow :: clickMap (
 		return;
 	}
 
-	x -= polymapScrollArea->viewport ()->width ();
-	y -= polymapScrollArea->viewport ()->height ();
+	xx -= polymapScrollArea->viewport ()->width ();
+	yy -= polymapScrollArea->viewport ()->height ();
 
-	seatnum = election->getSeatFromMap ( x, y, zoomMap );
+	seatnum = election->getSeatFromMap ( xx, yy, zoomMap );
 
 	if ( seatnum < 0 )
 	{
@@ -76,9 +76,9 @@ void MainWindow :: clickMap (
 	}
 }
 
-void MainWindow :: wheelZoom (
-	int	const	x,
-	int	const	y,
+void MainWindow::wheelZoom (
+	int	const	xx,
+	int	const	yy,
 	int	const	delta
 	)
 {
@@ -94,8 +94,8 @@ void MainWindow :: wheelZoom (
 	aw = polymapScrollArea->viewport ()->width ();
 	ah = polymapScrollArea->viewport ()->height ();
 
-	cx = ( (double)(x - aw) ) / (mapCanvas->width () - 2 * aw );
-	cy = ( (double)(y - ah) ) / (mapCanvas->height () - 2 * ah );
+	cx = ( (double)(xx - aw) ) / (mapCanvas->width () - 2 * aw );
+	cy = ( (double)(yy - ah) ) / (mapCanvas->height () - 2 * ah );
 
 	if ( cx < 0 )
 	{
@@ -151,8 +151,8 @@ void MainWindow :: wheelZoom (
 	w = (int)lrint ( POLYMAP_WIDTH * newzoom );
 	h = (int)lrint ( POLYMAP_HEIGHT * newzoom );
 
-	ox = x - polymapScrollArea->horizontalScrollBar ()->value ();
-	oy = y - polymapScrollArea->verticalScrollBar ()->value ();
+	ox = xx - polymapScrollArea->horizontalScrollBar ()->value ();
+	oy = yy - polymapScrollArea->verticalScrollBar ()->value ();
 
 	zoomMap = newzoom;
 
@@ -169,7 +169,7 @@ void MainWindow :: wheelZoom (
 	polymapScrollArea->verticalScrollBar ()->setValue ( nv_v );
 }
 
-void MainWindow :: moveMapFocus (
+void MainWindow::moveMapFocus (
 	int	const	row
 	)
 {
@@ -179,25 +179,25 @@ void MainWindow :: moveMapFocus (
 	}
 
 
-	double		x, y;
+	double		xx, yy;
 
 
-	if ( ! election || election->getPolyMinXY ( row, &x, &y ) )
+	if ( ! election || election->getPolyMinXY ( row, &xx, &yy ) )
 	{
 		return;
 	}
 
-	x *= zoomMap;
-	y *= zoomMap;
+	xx *= zoomMap;
+	yy *= zoomMap;
 
-	x += polymapScrollArea->viewport ()->width ();
-	y += polymapScrollArea->viewport ()->height ();
+	xx += polymapScrollArea->viewport ()->width ();
+	yy += polymapScrollArea->viewport ()->height ();
 
-	polymapScrollArea->horizontalScrollBar ()->setValue ( (int)x );
-	polymapScrollArea->verticalScrollBar ()->setValue ( (int)y );
+	polymapScrollArea->horizontalScrollBar ()->setValue ( (int)xx );
+	polymapScrollArea->verticalScrollBar ()->setValue ( (int)yy );
 }
 
-void MainWindow :: resetMapSize ()
+void MainWindow::resetMapSize ()
 {
 	if ( ! polymapScrollArea || ! mapCanvas )
 	{
@@ -218,7 +218,7 @@ void MainWindow :: resetMapSize ()
 	mapCanvas->update ();
 }
 
-void MainWindow :: resetMapZoomPos ()
+void MainWindow::resetMapZoomPos ()
 {
 	if ( ! polymapScrollArea )
 	{
@@ -239,7 +239,7 @@ void MainWindow :: resetMapZoomPos ()
 	polymapScrollArea->verticalScrollBar ()->setValue ( h / 2 );
 }
 
-void MainWindow :: polymapScroll (
+void MainWindow::polymapScroll (
 	int	const	dx,
 	int	const	dy
 	)
@@ -247,8 +247,6 @@ void MainWindow :: polymapScroll (
 	QScrollBar * const hscroll = polymapScrollArea->horizontalScrollBar ();
 	QScrollBar * const vscroll = polymapScrollArea->verticalScrollBar ();
 
-
-//printf("dx=%i dy=%i\n", dx, dy);
 
 	if ( dx )
 	{
@@ -261,16 +259,17 @@ void MainWindow :: polymapScroll (
 	}
 }
 
-void MainWindow :: mapRedraw ()
+void MainWindow::mapRedraw ()
 {
 	if ( ! election )
 	{
 		return;
 	}
 
+
 	unsigned char	* dest;
 	unsigned char	* d1;
-	int		r, x, y, rgb;
+	int		r, xx, yy, rgb;
 
 
 	if ( mapCanvas )
@@ -278,7 +277,7 @@ void MainWindow :: mapRedraw ()
 		mapCanvas->update ();
 	}
 
-	d1 = mtkit_image_get_rgb ( cartogramWidget->getImage () );
+	d1 = cartogramWidget->getImage ()->get_canvas ();
 	if ( ! d1 )
 	{
 		return;
@@ -289,7 +288,7 @@ void MainWindow :: mapRedraw ()
 
 	for ( r = 0; r < election->getSeats (); r++ )
 	{
-		if (	election->getCartogramXY ( r, &x, &y )	||
+		if (	election->getCartogramXY ( r, &xx, &yy )	||
 			election->getSeatRGB ( r, &rgb,
 				comboMapMode->currentIndex (),
 				comboDiagramLeft->currentText().toUtf8().data())
@@ -298,26 +297,26 @@ void MainWindow :: mapRedraw ()
 			continue;
 		}
 
-		if ( x < 0 || x >= CARTOGRAM_WIDTH )
+		if ( xx < 0 || xx >= CARTOGRAM_WIDTH )
 		{
 			continue;
 		}
 
-		if ( y < 0 || y >= CARTOGRAM_HEIGHT )
+		if ( yy < 0 || yy >= CARTOGRAM_HEIGHT )
 		{
 			continue;
 		}
 
-		dest = d1 + 3 * (x + y * CARTOGRAM_WIDTH);
-		*dest++ = (unsigned char)MTKIT_INT_2_R ( rgb );
-		*dest++ = (unsigned char)MTKIT_INT_2_G ( rgb );
-		*dest++ = (unsigned char)MTKIT_INT_2_B ( rgb );
+		dest = d1 + 3 * (xx + yy * CARTOGRAM_WIDTH);
+		*dest++ = (unsigned char)mtPixy::int_2_red ( rgb );
+		*dest++ = (unsigned char)mtPixy::int_2_green ( rgb );
+		*dest++ = (unsigned char)mtPixy::int_2_blue ( rgb );
 	}
 
 	cartogramWidget->update ();
 }
 
-void MainWindow :: mapModeChanged (
+void MainWindow::mapModeChanged (
 	int	const	ARG_UNUSED ( i )
 	)
 {

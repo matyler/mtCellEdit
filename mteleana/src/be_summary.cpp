@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2015 Mark Tyler
+	Copyright (C) 2009-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@ static int treep_scan (
 	return 0;		// Continue
 }
 
-CedSheet * eleanaElection :: createSummary ()
+CedSheet * eleanaElection::createSummary ()
 {
 	summarySTATE state = { sheetResults, NULL, NULL, 0, 0, 0, NULL, NULL };
 

@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt4 Dialogs and Utility Functions
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit qt-devel
-Requires:		libmtkit qt
+BuildRequires:		libmtkit libmtpixy qt-devel
+Requires:		libmtkit libmtpixy qt
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt
@@ -16,7 +16,7 @@ Requires:		libmtkit qt
 %setup -q
 
 %build
-@MT_CONF@ --enable-qt4
+@MT_CONF@ --use-qt4
 make
 
 %install

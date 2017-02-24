@@ -1,0 +1,52 @@
+PIXYRESIZE
+mtPixyUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+pixyresize - resize an image
+
+
+= SYNOPSIS =
+**pixyresize** [OPTION]...
+
+
+= DESCRIPTION =
+Create a resized image according to given geometry.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-compression** INTEGER
+	Set compression level for PNG/JPEG files. Default=5
+**-height** INTEGER
+	Set new image width.
+**-i** STRING
+	Load this input file.
+**-o** STRING
+	Save current image to this file (immediately).
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=none).
+**-v**
+	Verbose.
+**-width** INTEGER
+	Set new image height.
+**-x** INTEGER
+	Set image X.
+**-y** INTEGER
+	Set image Y.
+
+
+= SEE ALSO =
+pixyutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

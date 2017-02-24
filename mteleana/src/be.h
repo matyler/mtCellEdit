@@ -15,40 +15,37 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {	// C API
+extern "C" {
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <math.h>
+	#include <ctype.h>
+	#include <unistd.h>
+	#include <sys/stat.h>
+	#include <sys/types.h>
+
+	#include <cairo.h>
+
+	#ifdef CAIRO_HAS_PDF_SURFACE
+	#include <cairo-pdf.h>
+	#if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
+		#define USE_CAIRO_EPS
+	#endif
+	#endif
+
+	#ifdef CAIRO_HAS_PS_SURFACE
+	#include <cairo-ps.h>
+	#endif
+
+	#ifdef CAIRO_HAS_SVG_SURFACE
+	#include <cairo-svg.h>
+	#endif
+}
 
 #include <mtkit.h>
 #include <mtcelledit.h>
-
-#include <cairo.h>
-
-#ifdef CAIRO_HAS_PDF_SURFACE
-#include <cairo-pdf.h>
-#if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
-	#define USE_CAIRO_EPS
-#endif
-#endif
-
-#ifdef CAIRO_HAS_PS_SURFACE
-#include <cairo-ps.h>
-#endif
-
-#ifdef CAIRO_HAS_SVG_SURFACE
-#include <cairo-svg.h>
-#endif
-
-
-}	// C API
+#include <mtpixy.h>
 
 
 
@@ -232,7 +229,7 @@ public:
 	CedSheet	* getResults ();
 
 	CedSheet	* createSummary ();
-	mtImage		* createDiagram (
+	mtPixy::Image	* createDiagram (
 				eleanaIndex * eindex,
 				char const * party_a,
 				char const * party_b
@@ -300,7 +297,7 @@ public:
 private:
 	void		clear ();
 	int		loadPolymap ( char const * filename );
-	void		createMapData ( mtImage * const	image );
+	void		createMapData ( mtPixy::Image * const image );
 
 // -----------------------------------------------------------------------------
 

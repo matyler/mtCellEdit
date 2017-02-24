@@ -1,0 +1,16 @@
+libmtkit	 ./configure --libdir=/usr/lib/i386-linux-gnu
+libmtcelledit	 ./configure --libdir=/usr/lib/i386-linux-gnu
+libmtpixy	 ./configure --libdir=/usr/lib/i386-linux-gnu
+libmtcedui	 ./configure --libdir=/usr/lib/i386-linux-gnu
+libmtpixyui	 ./configure --libdir=/usr/lib/i386-linux-gnu
+mtcedutils	 ./configure
+mtcedcli	 ./configure
+mtpixyutils	 ./configure
+mtpixycli	 ./configure
+mtnetlog	 ./configure
+mtrdc	 ./configure
+libmtqex4	 ./configure --use-qt4 --libdir=/usr/lib/i386-linux-gnu
+mtcelledit-qt4	 ./configure --use-qt4
+mtraft-qt4	 ./configure --use-qt4
+mteleana-qt4	 ./configure --use-qt4
+mtpixy-qt4	 ./configure --use-qt4

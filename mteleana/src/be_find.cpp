@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014-2015 Mark Tyler
+	Copyright (C) 2014-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ static int efind_cb (
 	return 0;		// Always continue
 }
 
-void eleanaElection :: findText (
+void eleanaElection::findText (
 	char	const	* const	text,
 	elFindCB	const	callback,
 	void		* const	user

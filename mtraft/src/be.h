@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2015 Mark Tyler
+	Copyright (C) 2004-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,16 +15,22 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+extern "C" {
 
-#include <dirent.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <dirent.h>
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <unistd.h>
+}
 
+#include <mtkit.h>
 #include <mtcelledit.h>
+
+
+
+class busyState;
 
 
 
@@ -95,4 +101,28 @@ char * raft_get_clipboard (		// Create UTF8 text for clipboard
 	CedSheet	* sheet		// from this sheet
 	);
 	// Caller must free any result after use.
+
+
+class busyState
+{
+public:
+	enum Status
+	{
+		IDLE,
+		WORKING,
+		STOPPED
+	};
+
+
+	busyState	();
+	~busyState	();
+
+	void		setWorking ();
+	void		setStopped ();
+	void		setIdle ();
+	Status		getStatus () const;
+
+private:
+	Status		status;
+};
 

@@ -1,0 +1,48 @@
+@BIN_UPPER@
+mtPixyCLI @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+@BIN_NAME@ - command line graphics program
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [OPTION]...
+
+
+= DESCRIPTION =
+mtPixyCLI provides graphics functionality via a Command Line
+Interface (CLI). It offers exactly the same functions as the GUI based
+mtPixy, but instead uses text commands. 
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-patterns** STRING
+	Load this image file to create the brush patterns.
+
+**-q**
+	Quiet - Don't show 'about' info on startup.
+
+**-shapes** STRING
+	Load this image file to create the brush shapes.
+
+**-t**
+	Interpret TAB as text.
+
+
+= SEE ALSO =
+mtpixyutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

@@ -1,0 +1,13 @@
+Source: libmtpixy
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libcairo2-dev, libpango1.0-dev, libpng12-dev, libgif-dev, libjpeg-dev
+Standards-Version: 3.9.3
+Homepage: http://mtcelledit.sourceforge.net/
+
+Package: libmtpixy
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: MT Pixel Engine
+ .

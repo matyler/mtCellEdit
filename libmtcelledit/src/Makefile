@@ -1,9 +1,9 @@
 include		../_conf.txt
 
-CFLAGS		= $(LIB_CFLAGS) $(CFLAG)
-LDFLAGS 	= $(LDFLAG)
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtcelledit.h
+PARSER		= ced_parser.cpp
+PARSER_REPORT	= ced_parser_report.txt
 OBJS		=		\
 		ced_book.o	\
 		ced_cell.o	\
@@ -20,17 +20,20 @@ OBJS		=		\
 		ced_utils.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(LIB_SONAME)
 
 $(LIB_SONAME):	$(OBJS)
-		$(CC) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
 
 $(OBJS):	*.h
 
-# .y.o Implicit rule
+$(PARSER):	ced_parser.yy ced_parser_def.cpp
+		bison ced_parser.yy -W --report=all --report-file=$(PARSER_REPORT) -o $(PARSER)
+
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)
@@ -45,4 +48,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f *.o $(LIB_SONAME)
+		rm -f *.o $(LIB_SONAME) $(PARSER) $(PARSER_REPORT)

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+
+. ./mtConf.txt
+
+
+APP_NAME="mtPixyCLI"
+BIN_NAME="mtpixycli"
+
+MTCF_INIT
+MTCF_PARSE_ARGS "$@"
+MTCF_PRINT_HELP
+
+MTCF_PRE_CONF
+MTCF_CHECK_LIBS mtkit mtpixy mtpixyui history
+MTCF_VERSION_BIN_NAME
+MTCF_MAN_PAGE
+
+L_EX="$L_EX -lreadline -lncurses"
+
+MTCF_POST_CONF
+MTCF_PRINT_CONF

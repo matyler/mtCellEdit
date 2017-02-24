@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Mark Tyler
+	Copyright (C) 2015-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,10 +15,13 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <float.h>
+extern "C" {
+
+	#include <stdlib.h>
+	#include <string.h>
+	#include <time.h>
+	#include <float.h>
+}
 
 #include <mtkit.h>
 

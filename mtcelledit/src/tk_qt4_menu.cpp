@@ -19,7 +19,7 @@
 
 
 
-void MainWindow :: menuInit (
+void MainWindow::menuInit (
 	QAction		** const action,
 	char	const	* const	text,
 	char	const	* const	shortcut,
@@ -28,22 +28,22 @@ void MainWindow :: menuInit (
 {
 	if ( icon )
 	{
-		action[0] = new QAction ( QIcon :: fromTheme ( icon ),
-			tr ( text ), this );
+		action[0] = new QAction ( QIcon::fromTheme ( icon ), text,
+			this );
 		action[0]->setIconVisibleInMenu ( true );
 	}
 	else
 	{
-		action[0] = new QAction ( tr ( text ), this );
+		action[0] = new QAction ( text, this );
 	}
 
 	if ( shortcut )
 	{
-		action[0]->setShortcut ( tr ( shortcut ) );
+		action[0]->setShortcut ( QString ( shortcut ) );
 	}
 }
 
-void MainWindow :: createMenus ()
+void MainWindow::createMenus ()
 {
 	QAction
 			* actFileNew,
@@ -136,7 +136,7 @@ MENFU ( FileSaveAs,		"Save As ...",		"Shift+Ctrl+S",	"document-save-as" )
 MENFU ( FileQuit,		"Quit",			"Ctrl+Q",	"application-exit" )
 
 MENFU ( EditUndo,		"Undo",			"Ctrl+Z",	"edit-undo" )
-MENFU ( EditRedo,		"Redo",			"Ctrl+R",	"edit-redo" )
+MENFU ( EditRedo,		"Redo",			"Ctrl+Y",	"edit-redo" )
 MENFU ( EditCut,		"Cut",			"Ctrl+X",	"edit-cut" )
 MENFU ( EditCopy,		"Copy",			"Ctrl+C",	"edit-copy" )
 MENFU ( EditCopyVal,		"Copy As Values",	"Shift+Ctrl+C",	NULL )
@@ -154,7 +154,7 @@ MENFU ( EditClear,		"Clear",		"Delete",	"edit-clear" )
 MENFU ( EditClearContent,	"Clear Content",	"Backspace",	NULL )
 MENFU ( EditClearPrefs,		"Clear Preferences",	"Ctrl+Backspace", NULL )
 MENFU ( EditFixYears,		"Fix 2-digit Years",	NULL,		NULL )
-MENFU ( EditSelectAll,		"Select All",		"Ctrl+A",	NULL )
+MENFU ( EditSelectAll,		"Select All",		"Ctrl+A",	"edit-select-all" )
 
 MENFU ( SheetNew,		"New",			"Ctrl+T",	"document-new" )
 MENFU ( SheetDuplicate,		"Duplicate",		"Shift+Ctrl+T",	NULL )
@@ -231,7 +231,7 @@ MENFU ( GraphSClipboard,	"Sheet Selection to Clipboard",	NULL,		NULL )
 	}
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-	     this, SLOT ( pressFileRecent ( int ) ) );
+		this, SLOT ( pressFileRecent ( int ) ) );
 
 
 typedef struct
@@ -290,7 +290,7 @@ typedef struct
 	}
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-	     this, SLOT ( pressOptionsBorder ( int ) ) );
+		this, SLOT ( pressOptionsBorder ( int ) ) );
 
 
 
@@ -313,29 +313,29 @@ MENTS ( underline_wavy, "Underline Wavy",	NULL,		NULL,		CED_TEXT_STYLE_UNDERLINE
 MENTS ( strikethrough,	"Strikethrough",	NULL,		NULL,		CED_TEXT_STYLE_STRIKETHROUGH )
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-	     this, SLOT ( pressOptionsTextStyle ( int ) ) );
+		this, SLOT ( pressOptionsTextStyle ( int ) ) );
 
 
 
 
 	actEditUseSystemClipboard->setCheckable ( true );
-	actEditUseSystemClipboard->setChecked ( prefs_get_int (
+	actEditUseSystemClipboard->setChecked ( pprfs->getInt (
 		GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) == 0 ? false : true );
 
 	actFindWildcards->setCheckable ( true );
-	actFindWildcards->setChecked ( prefs_get_int (
+	actFindWildcards->setChecked ( pprfs->getInt (
 		GUI_INIFILE_FIND_WILDCARDS ) == 0 ? false : true );
 
 	actFindCase->setCheckable ( true );
-	actFindCase->setChecked ( prefs_get_int (
+	actFindCase->setChecked ( pprfs->getInt (
 		GUI_INIFILE_FIND_CASE_SENSITIVE ) == 0 ? false : true );
 
 	actFindValue->setCheckable ( true );
-	actFindValue->setChecked ( prefs_get_int (
+	actFindValue->setChecked ( pprfs->getInt (
 		GUI_INIFILE_FIND_VALUE ) == 0 ? false : true );
 
 	actFindSheets->setCheckable ( true );
-	actFindSheets->setChecked ( prefs_get_int (
+	actFindSheets->setChecked ( pprfs->getInt (
 		GUI_INIFILE_FIND_ALL_SHEETS ) == 0 ? false : true );
 
 
@@ -350,7 +350,7 @@ MENTS ( strikethrough,	"Strikethrough",	NULL,		NULL,		CED_TEXT_STYLE_STRIKETHROU
 	menuFile->addAction ( actFileSaveAs );
 	actFileRecentSeparator = menuFile->addSeparator ();
 
-	for ( int i = 0; i < RECENT_MENU_TOTAL; i++ )
+	for ( i = 0; i < RECENT_MENU_TOTAL; i++ )
 	{
 		menuFile->addAction ( actFileRecent[i] );
 	}
@@ -511,10 +511,11 @@ MENTS ( strikethrough,	"Strikethrough",	NULL,		NULL,		CED_TEXT_STYLE_STRIKETHROU
 	menuBorderTypeV->addAction ( actOptionsBorder [ 29 ] );
 	menuBorderTypeV->addAction ( actOptionsBorder [ 30 ] );
 
-	menuOptions->addSeparator ();
-	menuOptions->addAction ( actOptionsHelp );
-	menuOptions->addAction ( actOptionsAboutQt );
-	menuOptions->addAction ( actOptionsAbout );
+	QMenu * menuHelp = menuBar->addMenu ( "&Help" );
+	menuHelp->setTearOffEnabled ( true );
+	menuHelp->addAction ( actOptionsHelp );
+	menuHelp->addAction ( actOptionsAboutQt );
+	menuHelp->addAction ( actOptionsAbout );
 
 	QMenu * menuFind = findMenuBar->addMenu ( "Options" );
 	menuFind->addAction ( actFindWildcards );

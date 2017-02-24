@@ -4,7 +4,7 @@ SRC		= mansrc.t2t
 OBJ		= $(BIN_NAME).1.gz
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 
 all:		$(OBJ)

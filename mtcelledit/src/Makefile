@@ -1,8 +1,5 @@
 include		../_conf.txt
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG)
-CXXFLAGS	= $(BIN_CFLAGS) $(CXXFLAG)
-LDFLAGS 	= $(LDFLAG)
 OBJS		=		\
 		$(TK_OBJ)	\
 		be_cellprefs.o	\
@@ -14,7 +11,7 @@ OBJS		=		\
 		be_prefs.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(BIN_NAME)
 

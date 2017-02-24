@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2015 Mark Tyler
+	Copyright (C) 2011-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,9 +15,11 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+extern "C" {
+
+	#include <stdlib.h>
+	#include <string.h>
+}
 
 #include <mtkit.h>
 #include <mtcelledit.h>
@@ -54,6 +56,15 @@ typedef struct
 
 
 
+// Note: must match ff_errtab in main.c
+enum
+{
+	ERROR_LOAD_FILE		= 1,
+	ERROR_LIBMTCELLEDIT	= 2
+};
+
+
+
 extern GLOBAL		global;
 
 
@@ -66,7 +77,7 @@ int ut_load_file ( void );		// Loads sheet file (name in
 
 /*	Command functions
 
-	Return 0 = success. -1 = Error message printed by function.
+	Return 0 = success.
 	Return > 0 = Generic error to be reported by caller (main.c ff_errtab).
 */
 

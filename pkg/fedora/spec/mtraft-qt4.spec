@@ -16,7 +16,7 @@ Requires:		libmtkit libmtcelledit libmtqex4 qt
 %setup -q
 
 %build
-@MT_CONF@ --enable-qt4
+@MT_CONF@ --use-qt4
 make
 
 %install

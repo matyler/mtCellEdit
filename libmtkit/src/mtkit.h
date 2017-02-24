@@ -18,10 +18,17 @@
 #ifndef MTKIT_H_
 #define MTKIT_H_
 
-#include <stdio.h>
-#include <stdint.h>
-#include <limits.h>
-#include <inttypes.h>
+extern "C" {
+
+// gcc 4.8 needs these in a C++ context
+#define __STDC_LIMIT_MACROS
+#define __STDC_FORMAT_MACROS
+
+	#include <stdio.h>
+	#include <stdint.h>
+	#include <limits.h>
+	#include <inttypes.h>
+}
 
 
 
@@ -30,7 +37,6 @@ typedef struct mtBulkDouble	mtBulkDouble;
 typedef struct mtBulkInt	mtBulkInt;
 typedef struct mtBulkStr	mtBulkStr;
 typedef struct mtFile		mtFile;
-typedef struct mtImage		mtImage;
 typedef struct mtPrefTable	mtPrefTable;
 typedef struct mtPrefValue	mtPrefValue;
 typedef struct mtPrefTrans	mtPrefTrans;
@@ -48,11 +54,6 @@ typedef struct mtZip		mtZip;
 
 #undef  MIN
 #define MIN(a,b)	( ( (a) < (b) ) ? (a) : (b) )
-
-#define MTKIT_INT_2_R(A)	(((A) >> 16) & 0xFF)
-#define MTKIT_INT_2_G(A)	(((A) >> 8) & 0xFF)
-#define MTKIT_INT_2_B(A)	((A) & 0xFF)
-#define MTKIT_RGB_2_INT(R,G,B)	(((R) << 16) + ((G) << 8) + (B))
 
 #define MTKIT_DIR_SEP			'/'
 #define MTKIT_FILESIZE_MAX		1234567890
@@ -92,7 +93,7 @@ enum
 {
 	MTKIT_UTREE_OUTPUT_INDENTS	= 1 << 0,
 	MTKIT_UTREE_OUTPUT_NEWLINES	= 1 << 1,
-	MTKIT_UTREE_OUTPUT_TEXT_NEWLINES = 1 << 2,
+	MTKIT_UTREE_OUTPUT_TEXT_NEWLINES = 1 << 2
 };
 
 #define MTKIT_UTREE_OUTPUT_DEFAULT \
@@ -318,6 +319,13 @@ struct mtPrefTable
 	void		* callback_ptr;	// Callback pointer
 };
 
+/*
+	opt is also used by double in the prefs GUI for:
+	double: decimal places || min, max, decimal places
+	By default: min = -1000000, max = 1000000, dp = 3
+	Checking is *NOT* done on loading prefs from a file.
+*/
+
 struct mtPrefValue			// Each data pointer in an mtPrefs tree
 {					// node points to this
 	char		* value;	// Allocated string for current value
@@ -490,10 +498,10 @@ int mtkit_string_append (
 	);
 
 char * mtkit_string_join (
-	char	const * const	sta,
-	char	const * const	stb,
-	char	const * const	stc,
-	char	const * const	std
+	char	const	* sta,
+	char	const	* stb,
+	char	const	* stc,
+	char	const	* std
 	);
 
 int mtkit_strnncpy (			// dest = src
@@ -709,11 +717,11 @@ int mtkit_ddt_weekday (
 int mtkit_string_encoding_conversion (	// Convert a string from one encoding to
 					// another, allocating a new string for
 					// the result
-	char	const 	* text_in,	// NUL terminated string to convert
-	char	const 	* text_in_encoding,
+	char	const	* text_in,	// NUL terminated string to convert
+	char	const	* text_in_encoding,
 					// e.g. "ASCII", "ISO-8859-1", "UTF-8"
 	char		** text_out,	// Pointer to storage space for result
-	char	const 	* text_out_encoding
+	char	const	* text_out_encoding
 					// e.g. "ASCII", "ISO-8859-1", "UTF-8"
 	);
 	// 0 = success
@@ -750,12 +758,6 @@ int mtkit_utf8_to_utf32 (
 					// (NULL = don't use)
 	);
 	// -1 = error, otherwise bytes used for character 1-4
-
-int mtkit_utf8_from_utf32 (
-	unsigned char	* src,		// Start of an empty 5 byte buffer
-	uint32_t	unicode		// UTF32 character to convert
-	);
-	// 0 = fail 1-4 = bytes used to encode
 
 char * mtkit_utf8_from_cstring (	// Create new UTF8 string.
 	char	const	* cstring	// If not UTF8 convert from ISO8859-1.
@@ -929,25 +931,6 @@ mtPrefs * mtkit_prefs_new (		// Create new prefs structure
 	mtPrefTable	const	* table	// Table to add (NULL = don't)
 	);
 
-int mtkit_prefs_add (			// Add a table to current prefs
-	mtPrefs			* prefs,
-	mtPrefTable	const	* table,
-	char		const	* prefix // Key prefix to add
-	);
-
-int mtkit_prefs_load (			// Load a prefs file into a prefs
-					// structure
-	mtPrefs		* prefs,	// Ignores entries in the file not in
-					// this structure
-	char	const	* filename	// NULL = don't load anything (i.e. use
-					// defaults)
-	);
-
-int mtkit_prefs_save (			// Save a prefs file
-	mtPrefs		* prefs,
-	char	const	* filename
-	);
-
 int mtkit_prefs_destroy (		// Destroy a prefs structure
 	mtPrefs		* prefs
 	);
@@ -958,6 +941,13 @@ int mtkit_prefs_block_callback (	// Stop all callbacks
 
 int mtkit_prefs_unblock_callback (	// Restart callbacks after blocking
 	mtPrefs		* prefs
+	);
+
+int mtkit_prefs_set_callback (		// Change callback & user data
+	mtPrefs		* prefs,
+	char	const	* key,
+	mtPrefCB	callback,
+	void		* callback_ptr
 	);
 
 int mtkit_prefs_get_int (		// Retrieve an integer
@@ -1001,7 +991,7 @@ int mtkit_prefs_set_str (
 	char	const	* value
 	);
 
-char * mtkit_prefs_type_text (		// Return a static string
+char const * mtkit_prefs_type_text (	// Return a static string
 					// representation of type
 	int		type
 	);
@@ -1111,7 +1101,7 @@ int mtkit_arg_string_boundary_check (
 
 
 /*
-The following code is a simple implentation of the ZIP file format.
+The following code is a simple implementation of the ZIP file format.
 Its goal is to provide a simply way to create and read ZIP archives for general
 programming tasks.  Due to its simplicity it does have limitations.
 
@@ -1171,59 +1161,194 @@ int mtkit_zip_load (			// Read a ZIP file created by
 	);
 	// 0 = success else MTKIT_ZIP_ERROR*
 
-mtImage * mtkit_image_new_rgb (
-	int		width,		// 1 or more (Pixels)
-	int		height		// 1 or more (Pixels)
-	);
 
-mtImage * mtkit_image_new_data (
-	int		width,
-	int		height,
-	unsigned char	* rgb,		// NULL or new data
-	unsigned char	* alpha		// NULL or new data
-	);
 
-int mtkit_image_destroy (
-	mtImage		* image
-	);
+namespace mtKit
+{
 
-int mtkit_image_get_width (
-	mtImage		* image
-	);
-	// 0 = No width, else the image width
+class CliItem;
+class CliTab;
+class Prefs;
+class RecentFile;
 
-int mtkit_image_get_height (
-	mtImage		* image
-	);
-	// 0 = No height, else the image height
 
-unsigned char * mtkit_image_get_rgb (
-	mtImage		* image
-	);
-	// NULL = No RGB, else the image RGB memory
 
-unsigned char * mtkit_image_get_alpha (
-	mtImage		* image
-	);
-	// NULL = No alpha, else the image alpha memory
+typedef struct CharInt		CharInt;
 
-mtImage * mtkit_image_load_png (
-	char	const	* filename
+typedef int (* CliFunc) (
+	char const * const * args	// NULL terminated argument list
 	);
 
 
 
-#ifdef CAIRO_VERSION_MAJOR
-/*
-Not every program using mtKit wants a Cairo dependency.  If a program needs
-this function it must #include <cairo.h> before <mtkit.h>
-*/
+struct CharInt
+{
+	char	const *	name;
+	int		num;
+};
 
-mtImage * mtkit_image_from_cairo (
-	cairo_surface_t	* surface
+
+
+class CliItem
+{
+public:
+	CliItem ();
+	~CliItem ();
+
+	int add_item ( CliItem * item );
+		// 0 = Added, 1 = Error, 2 = Already exists
+
+	int set_data (
+		char const * key,	// NULL = Don't set
+		CliFunc func,		// NULL = Don't set
+		int arg_min,
+		int arg_max,
+		char const * arg_help,	// NULL = Don't set
+		int arg_scale
+		);
+
+	CliItem * find_item ( char const * command ) const;
+	CliItem const * match_args (
+		char ** argv,
+		int * cli_error,
+		int * ncargs
+		) const;
+	int callback ( char ** argv ) const;
+	int print_help () const;
+	int print_help_item () const;
+
+private:
+
+	char		* m_key;
+	CliFunc		m_func;
+	int		m_arg_min;
+	int		m_arg_max;
+	char		* m_arg_help;
+	int		m_arg_scale;
+
+	// Key = (char const *)(m_key), data = (CliTabItem *)
+	mtTree		* m_tree;
+};
+
+
+
+class CliTab
+{
+public:
+	CliTab ();
+	~CliTab ();
+
+	int add_item (
+		char const * command,
+		CliFunc func,
+		int arg_min = 0,
+		int arg_max = 0,
+		char const * arg_help = NULL,
+		int arg_scale = 1	// 2 = pairs, 3 = triplets
+		);
+
+	int parse ( char const * cline ) const;
+	int print_help ( char const * const * argv ) const;
+
+private:
+	CliItem		m_root;
+};
+
+
+
+class Prefs
+{
+public:
+	Prefs ();
+	~Prefs ();
+
+	int initWindowPrefs ();		// Initialize default prefs for
+					// preferences window
+					// Call this before load ()
+
+	int load (
+		char const * filename,	// If NULL use bin_name
+		char const * bin_name	// ~/.config/bin_name/prefs.txt
+		);
+	int save ();
+
+	mtPrefs * getPrefsMem ();
+
+	int addTable ( mtPrefTable const * table );
+
+	int getInt ( char const * key );
+	double getDouble ( char const * key );
+	char const * getString ( char const * key );
+
+	void set ( char const * key, int value );
+	void set ( char const * key, double value );
+	void set ( char const * key, char const * value );
+
+private:
+	mtPrefs		* prefsMem;
+	char		* prefsFilename;
+};
+
+
+
+class RecentFile
+{
+public:
+	RecentFile ( char const * prefix, int tot = 20 );
+	~RecentFile ();
+
+	int init_prefs ( mtKit::Prefs * pr );
+
+	char const * get_filename ( int idx );
+	void set_filename ( char const * name );
+
+private:
+	void set_filename_idx ( int idx, char const * name );
+	char * create_key ( int idx );
+
+/// ----------------------------------------------------------------------------
+
+	int	const	total;
+	char	* const	prefs_prefix;
+	mtKit::Prefs	* prefs;
+};
+
+
+
+int prefsInitWindowPrefs (	// Initialize default prefs for
+	mtPrefs * prefs		// preferences window
+	);			// Call this before load ()
+
+int prefsWindowMirrorPrefs (
+	mtPrefs		* dest,
+	mtPrefs		* src
 	);
 
-#endif
+int snip_filename (
+	char	const	* txt,
+	char		* buf,
+	size_t		buflen,
+	int		lim_tot
+	);
+
+int cli_parse_int (
+	char	const *	input,
+	int		&output,
+	int		min,		// If max < min don't check bounds
+	int		max
+	);
+
+int cli_parse_charint (
+	char		const *	input,
+	CharInt	const * const	chint,	// NULL terminated table
+	int			&result
+	);
+	// 0 = Found
+	// 1 = Not found
+
+
+
+}		// namespace mtKit
 
 
 

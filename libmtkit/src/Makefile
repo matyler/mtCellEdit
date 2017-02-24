@@ -1,33 +1,35 @@
 include		../_conf.txt
 
-CFLAGS		= $(LIB_CFLAGS) $(CFLAG) -D_FILE_OFFSET_BITS=64
-LDFLAGS 	= $(LDFLAG)
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtkit.h
-OBJS		=		\
-		mtkit_arg.o	\
-		mtkit_file.o	\
-		mtkit_image.o	\
-		mtkit_mtstring.o \
-		mtkit_prefs.o	\
-		mtkit_string.o	\
-		mtkit_time.o	\
-		mtkit_tree.o	\
-		mtkit_utf8.o	\
-		mtkit_utree.o	\
-		mtkit_zip.o	\
+OBJS		=			\
+		mtkit_arg.o		\
+		mtkit_cli.o		\
+		mtkit_cliitem.o		\
+		mtkit_clitab.o		\
+		mtkit_file.o		\
+		mtkit_mtstring.o	\
+		mtkit_prefs.o		\
+		mtkit_recent.o		\
+		mtkit_string.o		\
+		mtkit_time.o		\
+		mtkit_tree.o		\
+		mtkit_utf8.o		\
+		mtkit_utree.o		\
+		mtkit_zip.o		\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(LIB_SONAME)
 
 $(LIB_SONAME):	$(OBJS)
-		$(CC) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
 
 $(OBJS):	*.h
 
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)

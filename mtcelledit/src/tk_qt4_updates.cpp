@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 
 
 
-void MainWindow :: updateView ()
+void MainWindow::updateView ()
 {
 	viewMain->reconfigure ();
 	viewTab->reconfigure ();
 }
 
-void MainWindow :: updateViewConfig ()
+void MainWindow::updateViewConfig ()
 {
 	updateRender ();
 	updateView ();
@@ -38,7 +38,7 @@ typedef struct
 	int		check,
 			select;
 
-	qexButtonMenu	* buttonMenu;
+	mtQEX::ButtonMenu * buttonMenu;
 
 	char	const	* active_graph;
 } gscb;
@@ -77,17 +77,17 @@ static int populate_graph_list_cb (
 	return 0;			// Continue
 }
 
-void MainWindow :: updateGraph (
+void MainWindow::updateGraph (
 	char	const	* const	graph_name
 	)
 {
-	gscb		data = { 1, 0, buttonGraph, graph_name };
+	gscb		dat = { 1, 0, buttonGraph, graph_name };
 	bool		activate;
 
 
 	if ( ! graph_name )
 	{
-		data.check = 0;
+		dat.check = 0;
 	}
 
 	/*
@@ -99,14 +99,14 @@ void MainWindow :: updateGraph (
 	buttonGraph->blockSignals ( true );
 	buttonGraph->clear ();
 
-	cui_graph_scan ( cedFile->cubook->book, populate_graph_list_cb, &data );
+	cui_graph_scan ( cedFile->cubook->book, populate_graph_list_cb, &dat );
 
-	buttonGraph->setCurrentIndex ( data.select );
+	buttonGraph->setCurrentIndex ( dat.select );
 	buttonGraph->blockSignals ( false );
 
 	if ( buttonGraph->count () > 0 )
 	{
-		graphChanged ( data.select );
+		graphChanged ( dat.select );
 
 		activate = true;
 	}
@@ -128,34 +128,40 @@ void MainWindow :: updateGraph (
 	graphTextEdit->setReadOnly ( ! activate );
 }
 
-void MainWindow :: updateRecentFiles ()
+void MainWindow::updateRecentFiles ()
 {
 	char		buf[ 2048 ];
-	int		i,
-			count = 0
-			;
+	int		i, lim_tot;
 
 
-	for ( i = 1; i <= RECENT_MENU_TOTAL; i++ )
+	lim_tot = pprfs->getInt ( GUI_INIFILE_RECENT_FILENAME_LEN );
+
+	if ( lim_tot < 50 || lim_tot > 500 )
 	{
-		if ( 1 == be_snip_filename ( i, buf, sizeof ( buf ) ) )
+		lim_tot = 80;
+	}
+
+	for ( i = 0; i < RECENT_MENU_TOTAL; i++ )
+	{
+		if ( 1 == mtKit::snip_filename (
+			backend->recent_file.get_filename ( i+1 ),
+			buf, sizeof ( buf ), lim_tot )
+			)
 		{
 			// Hide if empty
-			actFileRecent[ i - 1 ]->setVisible ( false );
+			actFileRecent[ i ]->setVisible ( false );
 
 			continue;
 		}
 
-		actFileRecent[ i - 1 ]->setText (
-			mtQEX :: qstringFromC ( buf ) );
+		actFileRecent[ i ]->setText (
+			mtQEX::qstringFromC ( buf ) );
 
-		actFileRecent[ i - 1 ]->setVisible ( true );
-
-		count ++;
+		actFileRecent[ i ]->setVisible ( true );
 	}
 
 	// Hide separator if not needed
-	if ( count > 0 )
+	if ( i > 0 )
 	{
 		actFileRecentSeparator->setVisible ( true );
 	}
@@ -165,7 +171,7 @@ void MainWindow :: updateRecentFiles ()
 	}
 }
 
-void MainWindow :: updateTitleBar ()
+void MainWindow::updateTitleBar ()
 {
 	char		txt[ 2048 ];
 	int		book;
@@ -185,7 +191,7 @@ void MainWindow :: updateTitleBar ()
 	}
 }
 
-void MainWindow :: updateMenus ()
+void MainWindow::updateMenus ()
 {
 	CedSheet	* sheet;
 
@@ -219,11 +225,11 @@ void MainWindow :: updateMenus ()
 	// Set the lock/unlock option for the sheet
 	if ( sheet && sheet->prefs.locked )
 	{
-		actSheetLock->setText ( tr ( "Unlock" ) );
+		actSheetLock->setText ( "Unlock" );
 	}
 	else
 	{
-		actSheetLock->setText ( tr ( "Lock" ) );
+		actSheetLock->setText ( "Lock" );
 	}
 
 	if (	sheet &&
@@ -231,11 +237,11 @@ void MainWindow :: updateMenus ()
 			sheet->prefs.split_c1 != 0)
 		)
 	{
-		actSheetFreezePanes->setText ( tr ( "Unfreeze Panes" ) );
+		actSheetFreezePanes->setText ( "Unfreeze Panes" );
 	}
 	else
 	{
-		actSheetFreezePanes->setText ( tr ( "Freeze Panes" ) );
+		actSheetFreezePanes->setText ( "Freeze Panes" );
 	}
 }
 
@@ -245,7 +251,7 @@ typedef struct
 {
 	int		check,
 			select;
-	qexButtonMenu	* buttonMenu;
+	mtQEX::ButtonMenu * buttonMenu;
 	char	const	* active_sheet;
 } sscb;
 
@@ -282,30 +288,30 @@ static int sselpop_cb (
 	return 0;			// Continue
 }
 
-void MainWindow :: updateSheetSelector ()
+void MainWindow::updateSheetSelector ()
 {
-	sscb		data = { 1, 0, buttonSheet, NULL };
+	sscb		dat = { 1, 0, buttonSheet, NULL };
 
 
-	data.active_sheet = cedFile->cubook->book->prefs.active_sheet;
+	dat.active_sheet = cedFile->cubook->book->prefs.active_sheet;
 
-	if ( ! data.active_sheet )
+	if ( ! dat.active_sheet )
 	{
-		data.check = 0;
+		dat.check = 0;
 	}
 
 	buttonSheet->blockSignals ( true );
 	buttonSheet->clear ();
 
-	ced_book_scan ( cedFile->cubook->book, sselpop_cb, &data );
+	ced_book_scan ( cedFile->cubook->book, sselpop_cb, &dat );
 
-	buttonSheet->setCurrentIndex ( data.select );
+	buttonSheet->setCurrentIndex ( dat.select );
 	buttonSheet->blockSignals ( false );
 
-	sheetChanged ( data.select );
+	sheetChanged ( dat.select );
 }
 
-void MainWindow :: updateEntryCellref ()
+void MainWindow::updateEntryCellref ()
 {
 	char		txt [ 128 ];
 
@@ -315,7 +321,7 @@ void MainWindow :: updateEntryCellref ()
 	editCellref->setText ( mtQEX::qstringFromC ( txt ) );
 }
 
-void MainWindow :: updateEntryCelltext ()
+void MainWindow::updateEntryCelltext ()
 {
 	CedCell		* cell = NULL;
 	CedSheet	* sheet;
@@ -365,13 +371,13 @@ void MainWindow :: updateEntryCelltext ()
 	}
 }
 
-void MainWindow :: updateRecalcBook ()
+void MainWindow::updateRecalcBook ()
 {
 	ced_book_recalculate ( cedFile->cubook->book, 0 );
 	ced_book_recalculate ( cedFile->cubook->book, 1 );
 }
 
-void MainWindow :: updateQuicksumLabel ()
+void MainWindow::updateQuicksumLabel ()
 {
 	int		op = buttonQuicksum->currentIndex ();
 
@@ -393,7 +399,7 @@ void MainWindow :: updateQuicksumLabel ()
 	labelQuicksum->show ();
 }
 
-void MainWindow :: setCursorRange (
+void MainWindow::setCursorRange (
 	int		r1,
 	int		c1,
 	int		r2,
@@ -546,26 +552,26 @@ painted over if the text cell isn't selected.
 	updateQuicksumLabel ();
 }
 
-void MainWindow :: updateRender ()
+void MainWindow::updateRender ()
 {
-	render.sheet = projectSetSheet ();
-	render.row_pad = prefs_get_int ( GUI_INIFILE_ROW_PAD );
+	crendr.sheet = projectSetSheet ();
+	crendr.row_pad = pprfs->getInt ( GUI_INIFILE_ROW_PAD );
 
-	be_cedrender_set_font_width ( &render );
+	be_cedrender_set_font_width ( &crendr );
 }
 
-CuiRender * MainWindow :: projectGetRender ()
+CuiRender * MainWindow::projectGetRender ()
 {
-	return &render;
+	return &crendr;
 }
 
-void MainWindow :: setChangesFlag ()
+void MainWindow::setChangesFlag ()
 {
 	memChanged = 1;
 	updateTitleBar ();
 }
 
-void MainWindow :: updateChangesChores (
+void MainWindow::updateChangesChores (
 	int	const	new_geometry,
 	int	const	block_sheet_recalcs
 	)
@@ -601,13 +607,13 @@ void MainWindow :: updateChangesChores (
 	}
 }
 
-void MainWindow :: updateMainArea ()
+void MainWindow::updateMainArea ()
 {
 	viewMain->updateRedraw ();
 	viewTab->updateRedraw ();
 }
 
-int MainWindow :: projectReportUpdates (
+int MainWindow::projectReportUpdates (
 	int	const	error
 	)
 {
@@ -623,7 +629,7 @@ int MainWindow :: projectReportUpdates (
 	}
 
 	// Report this error to the user
-	QMessageBox :: critical ( this, tr ( "Error" ),
+	QMessageBox::critical ( this, "Error",
 		mtQEX::qstringFromC ( msg ) );
 
 	return error;

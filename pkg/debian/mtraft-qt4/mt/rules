@@ -19,4 +19,4 @@ override_dh_installchangelogs:
 override_dh_auto_clean:
 
 override_dh_auto_configure:
-	@MT_CONF@ --enable-qt4
+	@MT_CONF@ --use-qt4

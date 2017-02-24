@@ -8,13 +8,13 @@ APP_NAME="libmtQEX"
 
 MTCF_INIT
 
-TK=qt4
+TK=qt5
 
 for A in "$@"
 do
 	case "$A" in
-	--enable-qt4 )	TK=qt4;;
-	--enable-qt5 )	TK=qt5;;
+	--use-qt4 )	TK=qt4;;
+	--use-qt5 )	TK=qt5;;
 
 	* )		MTCF_PARSE_ARG1 "$A"
 			;;
@@ -25,8 +25,8 @@ done
 MYHELP()
 {
 cat << EOF
---enable-qt4 .... Compile Qt4 version (default)
---enable-qt5 .... Compile Qt5 version
+--use-qt4 .... Compile Qt4 version
+--use-qt5 .... Compile Qt5 version (default)
 
 EOF
 }
@@ -34,7 +34,7 @@ EOF
 
 MTCF_PRINT_HELP MYHELP
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit
+MTCF_CHECK_LIBS mtkit mtpixy
 
 
 case "$TK" in

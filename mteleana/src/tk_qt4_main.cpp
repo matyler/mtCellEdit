@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ MainWindow	* mainwindow;
 
 
 
-MainWindow :: MainWindow ()
+MainWindow::MainWindow ()
 	:
 	menuBar		(),
 	comboYear	(),
@@ -59,11 +59,8 @@ MainWindow :: MainWindow ()
 	index		(),
 	election	()
 {
-	QWidget		* widget,
-			* tab,
-			* scrollAreaContent;
-	QVBoxLayout	* layout,
-			* vbox;
+	QWidget		* widget, * tab, * scrollAreaContent;
+	QVBoxLayout	* layv, * vbox;
 	QSplitter	* split;
 	QSplitter	* vsplit;
 	QHBoxLayout	* row;
@@ -84,7 +81,7 @@ MainWindow :: MainWindow ()
 { PREFS_LAST_MAP_FILE_NAME, MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
 { PREFS_LAST_MAP_FILE_FORMAT, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
 
-{ PREFS_LAST_YEAR,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
+{ PREFS_LAST_YEAR, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
 
 { PREFS_WINDOW_X, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
 { PREFS_WINDOW_Y, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
@@ -95,9 +92,7 @@ MainWindow :: MainWindow ()
 		};
 
 	prefs.addTable ( prefs_table );
-
-	mtQEX :: prefsInitPrefs ( prefs.getPrefsMem () );
-
+	prefs.initWindowPrefs ();
 	prefs.load ( NULL, BIN_NAME );
 
 	ced_init ();
@@ -106,40 +101,40 @@ MainWindow :: MainWindow ()
 	// Widgets
 
 	setWindowTitle ( VERSION );
-	this->setWindowIcon ( QPixmap ( icon_xpm ) );
+	setWindowIcon ( QPixmap ( icon_xpm ) );
 
-	layout = new QVBoxLayout ( this );
-	layout->setMargin ( 0 );
+	layv = new QVBoxLayout ( this );
+	layv->setMargin ( 0 );
 
 	split = new QSplitter ( Qt::Horizontal );
-	layout->addWidget ( split );
+	layv->addWidget ( split );
 
 	// Left split area
 
 	widget = new QWidget;
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	widget->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	widget->setLayout ( layv );
 	split->addWidget ( widget );
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
 	row->setSpacing ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	menuBar = new QMenuBar;
 	row->addWidget ( menuBar );
 
 	scrollArea = new QScrollArea;
 	scrollArea->setWidgetResizable ( true );
-	layout->addWidget ( scrollArea );
+	layv->addWidget ( scrollArea );
 
 	scrollAreaContent = new QWidget;
-	layout = new QVBoxLayout ( scrollAreaContent );
+	layv = new QVBoxLayout ( scrollAreaContent );
 
-	groupBox = new QGroupBox ( tr ( "Settings" ) );
-	layout->addWidget ( groupBox );
+	groupBox = new QGroupBox ( "Settings" );
+	layv->addWidget ( groupBox );
 
 	grid = new QGridLayout;
 	groupBox->setLayout ( grid );
@@ -169,7 +164,7 @@ MainWindow :: MainWindow ()
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	comboDiagramLeft = new QComboBox;
 	comboDiagramLeft->setSizeAdjustPolicy (
@@ -188,9 +183,9 @@ MainWindow :: MainWindow ()
 		this, SLOT ( diagramRightChanged ( int ) ) );
 
 	vsplit = new QSplitter ( Qt::Vertical );
-	layout->addWidget ( vsplit );
+	layv->addWidget ( vsplit );
 
-	groupBox = new QGroupBox ( tr ( "Results" ) );
+	groupBox = new QGroupBox ( "Results" );
 	vsplit->addWidget ( groupBox );
 
 	vbox = new QVBoxLayout;
@@ -205,7 +200,7 @@ MainWindow :: MainWindow ()
 	tableSummary->setShowGrid ( false );
 	tableSummary->verticalHeader ()->hide ();
 
-	groupBox = new QGroupBox ( tr ( "Seat" ) );
+	groupBox = new QGroupBox ( "Seat" );
 	groupBox->setSizePolicy ( QSizePolicy ( QSizePolicy::Preferred,
 		QSizePolicy::Expanding ) );
 	vsplit->addWidget ( groupBox );
@@ -235,13 +230,13 @@ MainWindow :: MainWindow ()
 	tab = new QWidget;
 	tabWidget->addTab ( tab, "Map" );
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	tab->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	tab->setLayout ( layv );
 
 	slider = new QSlider ( Qt::Horizontal );
-	layout->addWidget ( slider );
+	layv->addWidget ( slider );
 
 	slider->setRange ( 30, 2500 );
 	slider->setValue ( (int)( 100 * zoomMap ) );
@@ -251,7 +246,7 @@ MainWindow :: MainWindow ()
 		this, SLOT ( zoomMapChanged ( int ) ) );
 
 	polymapScrollArea = new MapView;
-	layout->addWidget ( polymapScrollArea );
+	layv->addWidget ( polymapScrollArea );
 
 	mapCanvas = new MapCanvas;
 	polymapScrollArea->setWidget ( mapCanvas );
@@ -259,15 +254,15 @@ MainWindow :: MainWindow ()
 	// Cartogram Tab
 
 	tab = new QWidget;
-	tabWidget->addTab ( tab, tr ( "Cartogram" ) );
+	tabWidget->addTab ( tab, "Cartogram" );
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	tab->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	tab->setLayout ( layv );
 
 	slider = new QSlider ( Qt::Horizontal );
-	layout->addWidget ( slider );
+	layv->addWidget ( slider );
 
 	slider->setRange ( 1, 32 );
 	slider->setValue ( DEFAULTzoomCartogram );
@@ -275,24 +270,24 @@ MainWindow :: MainWindow ()
 	connect ( slider, SIGNAL ( valueChanged ( int ) ),
 		this, SLOT ( zoomCartogramChanged ( int ) ) );
 
-	cartogramWidget = new qexImage;
-	cartogramWidget->setImage ( mtkit_image_new_rgb ( CARTOGRAM_WIDTH,
-		CARTOGRAM_HEIGHT ) );
+	cartogramWidget = new mtQEX::Image;
+	cartogramWidget->setImage ( mtPixy::image_create ( mtPixy::Image::RGB,
+		CARTOGRAM_WIDTH, CARTOGRAM_HEIGHT ) );
 	cartogramWidget->setZoom ( DEFAULTzoomCartogram );
-	layout->addWidget ( cartogramWidget );
+	layv->addWidget ( cartogramWidget );
 
 	// Diagram Tab
 
 	tab = new QWidget;
-	tabWidget->addTab ( tab, tr ( "Diagram" ) );
+	tabWidget->addTab ( tab, "Diagram" );
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	tab->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	tab->setLayout ( layv );
 
 	slider = new QSlider ( Qt::Horizontal );
-	layout->addWidget ( slider );
+	layv->addWidget ( slider );
 
 	slider->setRange ( 1, 16 );
 	slider->setValue ( DEFAULTzoomDiagram );
@@ -300,23 +295,23 @@ MainWindow :: MainWindow ()
 	connect ( slider, SIGNAL ( valueChanged ( int ) ),
 		this, SLOT ( zoomDiagramChanged ( int ) ) );
 
-	diagramWidget = new qexImage;
+	diagramWidget = new mtQEX::Image;
 	diagramWidget->setZoom ( DEFAULTzoomDiagram );
-	layout->addWidget ( diagramWidget );
+	layv->addWidget ( diagramWidget );
 
 	// Find Tab
 
 	tab = new QWidget;
-	tabWidget->addTab ( tab, tr ( "Find" ) );
+	tabWidget->addTab ( tab, "Find" );
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	tab->setLayout ( layout );
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	tab->setLayout ( layv );
 
 	row = new QHBoxLayout;
 	row->setMargin ( 0 );
-	layout->addLayout ( row );
+	layv->addLayout ( row );
 
 	editFindText = new QLineEdit;
 	row->addWidget ( editFindText );
@@ -324,14 +319,14 @@ MainWindow :: MainWindow ()
 	connect ( editFindText, SIGNAL ( returnPressed () ), this,
 		SLOT ( pressFindButton () ) );
 
-	QPushButton * button = new QPushButton ( tr ( "Find" ) );
+	QPushButton * button = new QPushButton ( "Find" );
 	row->addWidget ( button );
 
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressFindButton () ) );
 
 	findTable = new QTableWidget;
-	layout->addWidget ( findTable );
+	layv->addWidget ( findTable );
 
 	findTable->setSelectionMode ( QAbstractItemView::SingleSelection );
 	findTable->setSelectionBehavior ( QAbstractItemView::SelectRows );
@@ -365,8 +360,6 @@ MainWindow :: MainWindow ()
 		prefs.getInt ( PREFS_WINDOW_W ),
 		prefs.getInt ( PREFS_WINDOW_H ) );
 
-	setWindowTitle ( QString ( VERSION ) );
-
 	projectLoad ( DATA_DIR "eleana_index.tsv.zip" );
 
 	// Make split sensible
@@ -380,7 +373,7 @@ MainWindow :: MainWindow ()
 	resetMapZoomPos ();
 }
 
-MainWindow :: ~MainWindow ()
+MainWindow::~MainWindow ()
 {
 	prefs.set ( PREFS_WINDOW_X, geometry().x () );
 	prefs.set ( PREFS_WINDOW_Y, geometry().y () );

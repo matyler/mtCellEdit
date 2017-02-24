@@ -23,7 +23,7 @@
 
 
 
-eleanaIndex :: eleanaIndex ()
+eleanaIndex::eleanaIndex ()
 	:
 	dsPath		(),
 	iRecords	(0),
@@ -33,7 +33,7 @@ eleanaIndex :: eleanaIndex ()
 {
 }
 
-eleanaIndex :: ~eleanaIndex ()
+eleanaIndex::~eleanaIndex ()
 {
 	ced_book_destroy ( bookIndex );
 	bookIndex = NULL;
@@ -98,7 +98,7 @@ static int tpr_cmp_func (
 	return strcmp ( (char const *)k1, (char const *)k2 );
 }
 
-int eleanaIndex :: load (
+int eleanaIndex::load (
 	char	const * const	filename
 	)
 {
@@ -220,7 +220,7 @@ fail:
 	return 1;
 }
 
-char const * eleanaIndex :: getText (
+char const * eleanaIndex::getText (
 	int	const	row,
 	int	const	col
 	)
@@ -248,22 +248,22 @@ char const * eleanaIndex :: getText (
 	return cell->text;
 }
 
-CedSheet * eleanaIndex :: getCountySheet ()
+CedSheet * eleanaIndex::getCountySheet ()
 {
 	return ced_book_get_sheet ( bookIndex, ELEANA_BOOK_SHEET_COUNTIES );
 }
 
-CedSheet * eleanaIndex :: getRegionSheet ()
+CedSheet * eleanaIndex::getRegionSheet ()
 {
 	return ced_book_get_sheet ( bookIndex, ELEANA_BOOK_SHEET_REGIONS );
 }
 
-int eleanaIndex :: getRecords () const
+int eleanaIndex::getRecords () const
 {
 	return iRecords;
 }
 
-int eleanaIndex :: getPartyRGB (
+int eleanaIndex::getPartyRGB (
 	char	const * const	party
 	)
 {
@@ -278,7 +278,7 @@ int eleanaIndex :: getPartyRGB (
 
 	if ( ! tn )
 	{
-		return MTKIT_RGB_2_INT ( 180, 180, 180);
+		return mtPixy::rgb_2_int ( 180, 180, 180 );
 	}
 
 	return (int)(intptr_t)(tn->data);

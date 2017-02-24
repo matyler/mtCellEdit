@@ -1,0 +1,1026 @@
+----------- scripts/11.txt -----------
+
+mtpixycli > new                 128 128 indexed
+mtpixycli > palette unmask all
+mtpixycli > save as                     tmp/indexed_99.png png
+mtpixycli > 
+mtpixycli > set brush flow              1000
+mtpixycli > set brush pattern   28
+mtpixycli > set brush shape             9
+mtpixycli > set brush spacing   10
+mtpixycli > set color a         2
+mtpixycli > set color b         8
+mtpixycli > 
+mtpixycli > paint                       10 10 90 15 80 80 10 10
+mtpixycli > 
+mtpixycli > palette mask index  2
+mtpixycli > palette mask index  8
+mtpixycli > 
+mtpixycli > set brush flow              1000
+mtpixycli > set brush pattern   0
+mtpixycli > set brush shape             0
+mtpixycli > set brush spacing   1
+mtpixycli > set color a         27
+mtpixycli > set color b         31
+mtpixycli > 
+mtpixycli > paint                       10 10 90 15 80 80 10 10
+mtpixycli > 
+mtpixycli > palette mask index  27
+mtpixycli > palette unmask index        8
+mtpixycli > set color swap
+mtpixycli > 
+mtpixycli > paint                       10 10 90 15 80 80 10 10
+mtpixycli > 
+mtpixycli > palette mask all
+mtpixycli > palette unmask index        0
+mtpixycli > set color a         4
+mtpixycli > 
+mtpixycli > paint                       10 120 53 5 125 67 10 120
+mtpixycli > 
+mtpixycli > set color a         10
+mtpixycli > 
+mtpixycli > paint                       8 76 49 120 41 83 8 76
+mtpixycli > 
+mtpixycli > palette unmask all
+mtpixycli > 
+mtpixycli > set color a         23
+mtpixycli > 
+mtpixycli > paint                       13 7 122 22 30 121 13 7
+mtpixycli > 
+mtpixycli > set color a         32
+mtpixycli > set color b         34
+mtpixycli > set brush pattern   9
+mtpixycli > 
+mtpixycli > floodfill           19 82
+mtpixycli > 
+mtpixycli > set color a         28
+mtpixycli > set color b         30
+mtpixycli > set brush pattern   11
+mtpixycli > 
+mtpixycli > floodfill           37 98
+mtpixycli > 
+mtpixycli > set color a         12
+mtpixycli > set color b         24
+mtpixycli > set brush pattern   80
+mtpixycli > 
+mtpixycli > floodfill           14 116
+mtpixycli > 
+mtpixycli > set color a         27
+mtpixycli > set brush spacing   0
+mtpixycli > paint                       59 121 52 107 33 124 5 125 5 102
+mtpixycli > 
+mtpixycli > set brush pattern   88
+mtpixycli > set color a         28
+mtpixycli > set color b         34
+mtpixycli > palette mask index  23
+mtpixycli > palette mask index  4
+mtpixycli > select polygon              101 11 122 31 108 123 96 123 101 11
+mtpixycli > fill
+mtpixycli > 
+mtpixycli > palette unmask all
+mtpixycli > 
+mtpixycli > select rectangle    23 117 17 11
+mtpixycli > copy
+mtpixycli > paste                       109 42
+mtpixycli > clip save           1
+mtpixycli > 
+mtpixycli > select rectangle    23 117 17 11
+mtpixycli > lasso
+mtpixycli > paste                       101 97
+mtpixycli > clip save           2
+mtpixycli > 
+mtpixycli > clip load           1
+mtpixycli > paste                       105 122
+mtpixycli > 
+mtpixycli > clip load           2
+mtpixycli > paste                       53 18
+mtpixycli > clip flip_h
+mtpixycli > paste                       53 28
+mtpixycli > clip flip_v
+mtpixycli > paste                       53 38
+mtpixycli > clip rotate_a
+mtpixycli > paste                       53 48
+mtpixycli > clip rotate_c
+mtpixycli > paste                       53 58
+mtpixycli > 
+mtpixycli > set brush pattern   88
+mtpixycli > set color a         27
+mtpixycli > set color b         27
+mtpixycli > select polygon              102 53 116 65 102 72
+mtpixycli > cut
+mtpixycli > 
+mtpixycli > paste                       46 72
+mtpixycli > 
+mtpixycli > set brush spacing   1
+mtpixycli > set color a         34
+mtpixycli > set color b         34
+mtpixycli > select rectangle    2 32 10 10
+mtpixycli > outline
+mtpixycli > 
+mtpixycli > select rectangle    15 85 19 13
+mtpixycli > crop
+mtpixycli > 
+mtpixycli > save as                     output/indexed_00.bmp bmp
+mtpixycli > 
+mtpixycli > canvas flip_h
+mtpixycli > save as                     output/indexed_01.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas flip_v
+mtpixycli > save as                     output/indexed_02.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas rgb
+mtpixycli > save as                     output/indexed_03.bmp bmp
+mtpixycli > canvas indexed none
+mtpixycli > save as                     output/indexed_04.bmp bmp
+mtpixycli > undo
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas rotate_a
+mtpixycli > save as                     output/indexed_05.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas rotate_c
+mtpixycli > save as                     output/indexed_06.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect trans_color  10 10 -5 10 300 5
+mtpixycli > save as                     output/indexed_07.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > scale                       38 26
+mtpixycli > save as                     output/indexed_08.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > scale                       10 10
+mtpixycli > save as                     output/indexed_09.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > palette size                2
+mtpixycli > 
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/indexed_09.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x 2
+Undo + Redo               : 23 + 0
+Undo Memory               : 0.4 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 3704
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > set file            4
+mtpixycli > info
+File slot #               : 4
+File name                 : ''
+File type                 : 
+Modified                  : 0
+Image geometry            : 100 x 100 x RGB
+Undo + Redo               : 0 + 0
+Undo Memory               : 0.0 MB
+Unique RGB Pixels         : 1
+Pixels not in palette     : 0
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0   B   0
+   1   128  64  64    0   A   0
+   2   191  64  64    0       0
+   3    64 128  64    0       0
+   4   128 128  64    0       0
+   5   191 128  64    0       0
+   6    64 191  64    0       0
+   7   128 191  64    0       0
+   8   191 191  64    0       0
+   9    64  64 128    0       0
+  10   128  64 128    0       0
+  11   191  64 128    0       0
+  12    64 128 128    0       0
+  13   128 128 128    0       0
+  14   191 128 128    0       0
+  15    64 191 128    0       0
+  16   128 191 128    0       0
+  17   191 191 128    0       0
+  18    64  64 191    0       0
+  19   128  64 191    0       0
+  20   191  64 191    0       0
+  21    64 128 191    0       0
+  22   128 128 191    0       0
+  23   191 128 191    0       0
+  24    64 191 191    0       0
+  25   128 191 191    0       0
+  26   191 191 191    0       0
+  27     0   0   0    0       10000
+  28   255   0   0    0       0
+  29     0 255   0    0       0
+  30   255 255   0    0       0
+  31     0   0 255    0       0
+  32   255   0 255    0       0
+  33     0 255 255    0       0
+  34   255 255 255    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > set file            0
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/indexed_09.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x 2
+Undo + Redo               : 23 + 0
+Undo Memory               : 0.4 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 3704
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > 
+mtpixycli > undo
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/indexed_09.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x 35
+Undo + Redo               : 22 + 1
+Undo Memory               : 0.4 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 0
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+   2   191  64  64    0       102
+   3    64 128  64    0       0
+   4   128 128  64    0       285
+   5   191 128  64    0       0
+   6    64 191  64    0       0
+   7   128 191  64    0       0
+   8   191 191  64    0       97
+   9    64  64 128    0       0
+  10   128  64 128    0       108
+  11   191  64 128    0       0
+  12    64 128 128    0       103
+  13   128 128 128    0       0
+  14   191 128 128    0       0
+  15    64 191 128    0       0
+  16   128 191 128    0       0
+  17   191 191 128    0       0
+  18    64  64 191    0       0
+  19   128  64 191    0       0
+  20   191  64 191    0       0
+  21    64 128 191    0       0
+  22   128 128 191    0       0
+  23   191 128 191    0       394
+  24    64 191 191    0       129
+  25   128 191 191    0       0
+  26   191 191 191    0       0
+  27     0   0   0    0       305
+  28   255   0   0    0       1363
+  29     0 255   0    0       0
+  30   255 255   0    0       85
+  31     0   0 255    0       41
+  32   255   0 255    0       36
+  33     0 255 255    0       0
+  34   255 255 255    0  AB   656
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > redo
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/indexed_09.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x 2
+Undo + Redo               : 23 + 0
+Undo Memory               : 0.4 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 3704
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > 
+mtpixycli > resize                      -10 -10 20 20
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/indexed_09.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 20 x 20 x 2
+Undo + Redo               : 24 + 0
+Undo Memory               : 0.4 MB
+Unique RGB Pixels         : 2
+Pixels not in palette     : 3
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       397
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > undo
+mtpixycli > undo
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/indexed_09.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x 35
+Undo + Redo               : 22 + 2
+Undo Memory               : 0.4 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 0
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+   2   191  64  64    0       102
+   3    64 128  64    0       0
+   4   128 128  64    0       285
+   5   191 128  64    0       0
+   6    64 191  64    0       0
+   7   128 191  64    0       0
+   8   191 191  64    0       97
+   9    64  64 128    0       0
+  10   128  64 128    0       108
+  11   191  64 128    0       0
+  12    64 128 128    0       103
+  13   128 128 128    0       0
+  14   191 128 128    0       0
+  15    64 191 128    0       0
+  16   128 191 128    0       0
+  17   191 191 128    0       0
+  18    64  64 191    0       0
+  19   128  64 191    0       0
+  20   191  64 191    0       0
+  21    64 128 191    0       0
+  22   128 128 191    0       0
+  23   191 128 191    0       394
+  24    64 191 191    0       129
+  25   128 191 191    0       0
+  26   191 191 191    0       0
+  27     0   0   0    0       305
+  28   255   0   0    0       1363
+  29     0 255   0    0       0
+  30   255 255   0    0       85
+  31     0   0 255    0       41
+  32   255   0 255    0       36
+  33     0 255 255    0       0
+  34   255 255 255    0  AB   656
+------------------------------------
+Clipboard                 : 15 x 20 x 35 + A
+mtpixycli > 
+mtpixycli > select all
+mtpixycli > copy
+mtpixycli > clip save           10
+mtpixycli > 
+mtpixycli > save as                     output/indexed_99.bmp bmp
+mtpixycli > 
+mtpixycli > effect bacteria             5
+mtpixycli > save as                     tmp/indexed_91.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > set color a         27
+mtpixycli > set color b         34
+mtpixycli > set brush pattern   8
+mtpixycli > text                        "Hello World" "Sans" 12 bold italic unde rline strikethrough
+mtpixycli > paste                       52 112
+mtpixycli > 
+mtpixycli > save as                     tmp/indexed_99.png png
+mtpixycli > save undo           tmp/indexed_99.png
+mtpixycli > save
+mtpixycli > q
+
+
+----------- scripts/12.txt -----------
+
+mtpixycli > new 128 128 rgb
+mtpixycli > palette unmask all
+mtpixycli > save as                     tmp/rgb_99.png png
+mtpixycli > 
+mtpixycli > select all
+mtpixycli > set color swap
+mtpixycli > fill
+mtpixycli > set color swap
+mtpixycli > 
+mtpixycli > set brush flow              1000
+mtpixycli > set brush pattern   28
+mtpixycli > set brush shape             9
+mtpixycli > set brush spacing   10
+mtpixycli > set color a         2
+mtpixycli > set color b         8
+mtpixycli > 
+mtpixycli > paint                       10 10 90 15 80 80 10 10
+mtpixycli > 
+mtpixycli > palette mask index  2
+mtpixycli > palette mask index  8
+mtpixycli > 
+mtpixycli > set brush flow              1000
+mtpixycli > set brush pattern   0
+mtpixycli > set brush shape             0
+mtpixycli > set brush spacing   1
+mtpixycli > set color a         27
+mtpixycli > set color b         31
+mtpixycli > 
+mtpixycli > paint                       10 10 90 15 80 80 10 10
+mtpixycli > 
+mtpixycli > palette mask index  27
+mtpixycli > palette unmask index        8
+mtpixycli > set color swap
+mtpixycli > 
+mtpixycli > paint                       10 10 90 15 80 80 10 10
+mtpixycli > 
+mtpixycli > palette mask all
+mtpixycli > palette unmask index        0
+mtpixycli > set color a         4
+mtpixycli > 
+mtpixycli > paint                       10 120 53 5 125 67 10 120
+mtpixycli > 
+mtpixycli > set color a         10
+mtpixycli > 
+mtpixycli > paint                       8 76 49 120 41 83 8 76
+mtpixycli > 
+mtpixycli > palette unmask all
+mtpixycli > 
+mtpixycli > set color a         23
+mtpixycli > 
+mtpixycli > paint                       13 7 122 22 30 121 13 7
+mtpixycli > 
+mtpixycli > set color a         32
+mtpixycli > set color b         34
+mtpixycli > set brush pattern   9
+mtpixycli > 
+mtpixycli > floodfill           19 82
+mtpixycli > 
+mtpixycli > set color a         28
+mtpixycli > set color b         30
+mtpixycli > set brush pattern   11
+mtpixycli > 
+mtpixycli > floodfill           37 98
+mtpixycli > 
+mtpixycli > set color a         12
+mtpixycli > set color b         24
+mtpixycli > set brush pattern   80
+mtpixycli > 
+mtpixycli > floodfill           14 116
+mtpixycli > 
+mtpixycli > set color a         27
+mtpixycli > set brush spacing   0
+mtpixycli > paint                       59 121 52 107 33 124 5 125 5 102
+mtpixycli > 
+mtpixycli > set brush pattern   88
+mtpixycli > set color a         28
+mtpixycli > set color b         34
+mtpixycli > palette mask index  23
+mtpixycli > palette mask index  4
+mtpixycli > select polygon              101 11 122 31 108 123 96 123 101 11
+mtpixycli > fill
+mtpixycli > 
+mtpixycli > palette unmask all
+mtpixycli > 
+mtpixycli > select rectangle    23 117 17 11
+mtpixycli > copy
+mtpixycli > paste                       109 42
+mtpixycli > clip save           1
+mtpixycli > 
+mtpixycli > select rectangle    23 117 17 11
+mtpixycli > lasso
+mtpixycli > paste                       101 97
+mtpixycli > clip save           2
+mtpixycli > 
+mtpixycli > clip load           1
+mtpixycli > paste                       105 122
+mtpixycli > 
+mtpixycli > clip load           2
+mtpixycli > paste                       53 18
+mtpixycli > clip flip_h
+mtpixycli > paste                       53 28
+mtpixycli > clip flip_v
+mtpixycli > paste                       53 38
+mtpixycli > clip rotate_a
+mtpixycli > paste                       53 48
+mtpixycli > clip rotate_c
+mtpixycli > paste                       53 58
+mtpixycli > 
+mtpixycli > set brush pattern   88
+mtpixycli > set color a         27
+mtpixycli > set color b         27
+mtpixycli > select polygon              102 53 116 65 102 72
+mtpixycli > cut
+mtpixycli > 
+mtpixycli > paste                       46 72
+mtpixycli > 
+mtpixycli > set brush spacing   1
+mtpixycli > set color a         34
+mtpixycli > set color b         34
+mtpixycli > select rectangle    2 32 10 10
+mtpixycli > outline
+mtpixycli > 
+mtpixycli > select rectangle    15 85 19 13
+mtpixycli > crop
+mtpixycli > 
+mtpixycli > save as                     output/rgb_00.bmp bmp
+mtpixycli > 
+mtpixycli > canvas flip_h
+mtpixycli > save as                     output/rgb_01.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas flip_v
+mtpixycli > save as                     output/rgb_02.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas indexed none
+mtpixycli > save as                     output/rgb_03.bmp bmp
+mtpixycli > canvas rgb
+mtpixycli > save as                     output/rgb_04.bmp bmp
+mtpixycli > undo
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas rotate_a
+mtpixycli > save as                     output/rgb_05.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > canvas rotate_c
+mtpixycli > save as                     output/rgb_06.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect trans_color  10 10 -5 10 300 5
+mtpixycli > save as                     output/rgb_07.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > scale                       38 26
+mtpixycli > save as                     output/rgb_08.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > scale                       10 10
+mtpixycli > save as                     output/rgb_09.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > scale                       38 26 smooth
+mtpixycli > save as                     output/rgb_10.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > scale                       10 10 smooth
+mtpixycli > save as                     output/rgb_11.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect edge_detect
+mtpixycli > save as                     output/rgb_12.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect emboss
+mtpixycli > save as                     output/rgb_13.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect invert
+mtpixycli > save as                     output/rgb_14.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect sharpen              100
+mtpixycli > save as                     output/rgb_15.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > effect soften               100
+mtpixycli > save as                     output/rgb_16.bmp bmp
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > undo
+mtpixycli > 
+mtpixycli > palette size                2
+mtpixycli > 
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/rgb_16.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x RGB
+Undo + Redo               : 24 + 0
+Undo Memory               : 1.2 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 3704
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > set file            4
+mtpixycli > info
+File slot #               : 4
+File name                 : ''
+File type                 : 
+Modified                  : 0
+Image geometry            : 100 x 100 x RGB
+Undo + Redo               : 0 + 0
+Undo Memory               : 0.0 MB
+Unique RGB Pixels         : 1
+Pixels not in palette     : 0
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0   B   0
+   1   128  64  64    0   A   0
+   2   191  64  64    0       0
+   3    64 128  64    0       0
+   4   128 128  64    0       0
+   5   191 128  64    0       0
+   6    64 191  64    0       0
+   7   128 191  64    0       0
+   8   191 191  64    0       0
+   9    64  64 128    0       0
+  10   128  64 128    0       0
+  11   191  64 128    0       0
+  12    64 128 128    0       0
+  13   128 128 128    0       0
+  14   191 128 128    0       0
+  15    64 191 128    0       0
+  16   128 191 128    0       0
+  17   191 191 128    0       0
+  18    64  64 191    0       0
+  19   128  64 191    0       0
+  20   191  64 191    0       0
+  21    64 128 191    0       0
+  22   128 128 191    0       0
+  23   191 128 191    0       0
+  24    64 191 191    0       0
+  25   128 191 191    0       0
+  26   191 191 191    0       0
+  27     0   0   0    0       10000
+  28   255   0   0    0       0
+  29     0 255   0    0       0
+  30   255 255   0    0       0
+  31     0   0 255    0       0
+  32   255   0 255    0       0
+  33     0 255 255    0       0
+  34   255 255 255    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > set file            0
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/rgb_16.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x RGB
+Undo + Redo               : 24 + 0
+Undo Memory               : 1.2 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 3704
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > 
+mtpixycli > undo
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/rgb_16.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x RGB
+Undo + Redo               : 23 + 1
+Undo Memory               : 1.1 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 0
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+   2   191  64  64    0       102
+   3    64 128  64    0       0
+   4   128 128  64    0       285
+   5   191 128  64    0       0
+   6    64 191  64    0       0
+   7   128 191  64    0       0
+   8   191 191  64    0       97
+   9    64  64 128    0       0
+  10   128  64 128    0       108
+  11   191  64 128    0       0
+  12    64 128 128    0       103
+  13   128 128 128    0       0
+  14   191 128 128    0       0
+  15    64 191 128    0       0
+  16   128 191 128    0       0
+  17   191 191 128    0       0
+  18    64  64 191    0       0
+  19   128  64 191    0       0
+  20   191  64 191    0       0
+  21    64 128 191    0       0
+  22   128 128 191    0       0
+  23   191 128 191    0       394
+  24    64 191 191    0       129
+  25   128 191 191    0       0
+  26   191 191 191    0       0
+  27     0   0   0    0       305
+  28   255   0   0    0       1363
+  29     0 255   0    0       0
+  30   255 255   0    0       85
+  31     0   0 255    0       41
+  32   255   0 255    0       36
+  33     0 255 255    0       0
+  34   255 255 255    0  AB   656
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > redo
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/rgb_16.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x RGB
+Undo + Redo               : 24 + 0
+Undo Memory               : 1.2 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 3704
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > 
+mtpixycli > resize                      -10 -10 20 20
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/rgb_16.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 20 x 20 x RGB
+Undo + Redo               : 25 + 0
+Undo Memory               : 1.2 MB
+Unique RGB Pixels         : 3
+Pixels not in palette     : 303
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       97
+   1   128  64  64    0       0
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > undo
+mtpixycli > undo
+mtpixycli > info
+File slot #               : 0
+File name                 : 'output/rgb_16.bmp'
+File type                 : BMP
+Modified                  : 1
+Image geometry            : 128 x 128 x RGB
+Undo + Redo               : 23 + 2
+Undo Memory               : 1.2 MB
+Unique RGB Pixels         : 14
+Pixels not in palette     : 0
+------------------------------------
+   i       RGB       Mask AB  Freq
+------------------------------------
+   0    64  64  64    0       12680
+   1   128  64  64    0       0
+   2   191  64  64    0       102
+   3    64 128  64    0       0
+   4   128 128  64    0       285
+   5   191 128  64    0       0
+   6    64 191  64    0       0
+   7   128 191  64    0       0
+   8   191 191  64    0       97
+   9    64  64 128    0       0
+  10   128  64 128    0       108
+  11   191  64 128    0       0
+  12    64 128 128    0       103
+  13   128 128 128    0       0
+  14   191 128 128    0       0
+  15    64 191 128    0       0
+  16   128 191 128    0       0
+  17   191 191 128    0       0
+  18    64  64 191    0       0
+  19   128  64 191    0       0
+  20   191  64 191    0       0
+  21    64 128 191    0       0
+  22   128 128 191    0       0
+  23   191 128 191    0       394
+  24    64 191 191    0       129
+  25   128 191 191    0       0
+  26   191 191 191    0       0
+  27     0   0   0    0       305
+  28   255   0   0    0       1363
+  29     0 255   0    0       0
+  30   255 255   0    0       85
+  31     0   0 255    0       41
+  32   255   0 255    0       36
+  33     0 255 255    0       0
+  34   255 255 255    0  AB   656
+------------------------------------
+Clipboard                 : 15 x 20 x RGB + A
+mtpixycli > 
+mtpixycli > select all
+mtpixycli > copy
+mtpixycli > clip save           10
+mtpixycli > 
+mtpixycli > save as                     output/rgb_99.bmp bmp
+mtpixycli > 
+mtpixycli > set color a         27
+mtpixycli > set color b         34
+mtpixycli > set brush pattern   8
+mtpixycli > text                        "Hello World" "Sans" 12 bold italic unde rline strikethrough
+mtpixycli > paste                       52 112
+mtpixycli > 
+mtpixycli > save as                     tmp/rgb_99.png png
+mtpixycli > save undo           tmp/rgb_99.png
+mtpixycli > save
+mtpixycli > q
+
+
+----------- scripts/13.txt -----------
+
+mtpixycli > load                output/rgb_99.bmp
+mtpixycli > canvas indexed none
+mtpixycli > save as             tmp/rgb_99_indexed.bmp
+mtpixycli > 
+mtpixycli > 
+mtpixycli > load                output/indexed_99.bmp
+mtpixycli > canvas rgb
+mtpixycli > save as             tmp/indexed_99_rgb.bmp
+mtpixycli > 
+mtpixycli > 
+mtpixycli > load                output/indexed_99.bmp
+mtpixycli > 
+mtpixycli > palette del_unused
+mtpixycli > palette save        output/pal_01.gpl
+mtpixycli > save as             tmp/pal_01.png png
+mtpixycli > 
+mtpixycli > palette set balanced 6
+mtpixycli > palette save        output/pal_10.gpl
+mtpixycli > save as             tmp/pal_10.png png
+mtpixycli > palette sort        10 200 hue
+mtpixycli > palette save        output/pal_11.gpl
+mtpixycli > save as             tmp/pal_11.png png
+mtpixycli > 
+mtpixycli > palette set uniform 6
+mtpixycli > palette save        output/pal_20.gpl
+mtpixycli > save as             tmp/pal_20.png png
+mtpixycli > palette sort        10 200 value
+mtpixycli > palette save        output/pal_21.gpl
+mtpixycli > save as             tmp/pal_21.png png
+mtpixycli > 
+mtpixycli > 
+mtpixycli > load                output/rgb_99.bmp
+mtpixycli > palette set uniform 2
+mtpixycli > palette quantize
+mtpixycli > palette save        output/pal_30.gpl
+mtpixycli > save as             tmp/pal_30.png png
+mtpixycli > 
+mtpixycli > palette from_canvas
+mtpixycli > palette save        output/pal_31.gpl
+mtpixycli > save as             tmp/pal_31.png png
+mtpixycli > 
+mtpixycli > 
+mtpixycli > load                tmp/pal_01.png
+mtpixycli > palette load        output/pal_01.gpl
+mtpixycli > save as             tmp/pal_01b.png png
+mtpixycli > 
+mtpixycli > load                tmp/pal_10.png
+mtpixycli > palette load        output/pal_10.gpl
+mtpixycli > save as             tmp/pal_10b.png png
+mtpixycli > 
+mtpixycli > load                tmp/pal_11.png
+mtpixycli > palette load        output/pal_11.gpl
+mtpixycli > save as             tmp/pal_11b.png png
+mtpixycli > 
+mtpixycli > load                tmp/pal_20.png
+mtpixycli > palette load        output/pal_20.gpl
+mtpixycli > save as             tmp/pal_20b.png png
+mtpixycli > 
+mtpixycli > load                tmp/pal_21.png
+mtpixycli > palette load        output/pal_21.gpl
+mtpixycli > save as             tmp/pal_21b.png png
+mtpixycli > 
+mtpixycli > load                tmp/pal_30.png
+mtpixycli > palette load        output/pal_30.gpl
+mtpixycli > save as             tmp/pal_30b.png png
+mtpixycli > 
+mtpixycli > load                tmp/pal_31.png
+mtpixycli > palette load        output/pal_31.gpl
+mtpixycli > save as             tmp/pal_31b.png png
+mtpixycli > 
+mtpixycli > 
+mtpixycli > new         100 100 indexed
+mtpixycli > palette size        20
+mtpixycli > palette color       0 1 2 3
+mtpixycli > palette color       1 11 12 13
+mtpixycli > palette color       2 111 112 113
+mtpixycli > palette color       12 121 122 123
+mtpixycli > palette color       13 0 0 0
+mtpixycli > palette color       17 0 0 0
+mtpixycli > palette color       18 11 12 13
+mtpixycli > palette color       19 111 112 113
+mtpixycli > set color a 2
+mtpixycli > set color b 12
+mtpixycli > palette gradient
+mtpixycli > set color a 13
+mtpixycli > set color b 17
+mtpixycli > palette gradient
+mtpixycli > palette save        output/pal_40.gpl
+mtpixycli > save as             tmp/pal_40.png png
+mtpixycli > 
+mtpixycli > 
+mtpixycli > set brush shape     4
+mtpixycli > set color a 2
+mtpixycli > set color b 2
+mtpixycli > paint               10 10
+mtpixycli > paint               20 20
+mtpixycli > set color a 19
+mtpixycli > set color b 19
+mtpixycli > paint               30 30
+mtpixycli > paint               40 40
+mtpixycli > palette merge_dups
+mtpixycli > palette save        output/pal_41.gpl
+mtpixycli > save as             tmp/pal_41.png png
+mtpixycli > 
+mtpixycli > palette move        1 19
+mtpixycli > palette save        output/pal_42.gpl
+mtpixycli > save as             tmp/pal_42.png png
+mtpixycli > save as             output/pal_42.bmp bmp
+mtpixycli > 
+mtpixycli > 
+mtpixycli > 
+mtpixycli > q
+
+
+----------- scripts/51.txt -----------
+
+mtpixycli > new         100 100 indexedd
+Invalid charint input 'indexedd'
+Error running command 'new		100 100 indexedd'
+
+mtpixycli > new         100 100 rgbb
+Invalid charint input 'rgbb'
+Error running command 'new		100 100 rgbb'
+
+mtpixycli > new         -1 100 indexedd
+Integer -1 out of bounds (1 to 32767)
+Error running command 'new		-1 100 indexedd'
+
+mtpixycli > new         100 32768 rgbb
+Integer 32768 out of bounds (1 to 32767)
+Error running command 'new		100 32768 rgbb'
+
+mtpixycli > 
+mtpixycli > palette size        256
+Integer 256 out of bounds (2 to 255)
+Error running command 'palette size	256'
+
+mtpixycli > palette size        1
+Integer 1 out of bounds (2 to 255)
+Error running command 'palette size	1'
+
+mtpixycli > 
+mtpixycli > palette color       -1 1 2 3
+Integer -1 out of bounds (0 to 255)
+Error running command 'palette color	-1 1 2 3'
+
+mtpixycli > palette color       1 11 12 1333
+Integer 1333 out of bounds (0 to 255)
+Error running command 'palette color	1 11 12 1333'
+
+mtpixycli > set color a 256
+Integer 256 out of bounds (0 to 255)
+Error running command 'set color a	256'
+
+mtpixycli > 
+mtpixycli > 
+mtpixycli > q
+
+

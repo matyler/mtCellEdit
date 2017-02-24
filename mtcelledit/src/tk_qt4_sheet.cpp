@@ -19,7 +19,7 @@
 
 
 
-void MainWindow :: pressSheetNew ()
+void MainWindow::pressSheetNew ()
 {
 	int		res;
 
@@ -27,7 +27,7 @@ void MainWindow :: pressSheetNew ()
 	res = cui_file_sheet_add ( cedFile );
 	if ( res == 1 )
 	{
-		QMessageBox :: critical ( this, "Error",
+		QMessageBox::critical ( this, "Error",
 			"Unable to create a new sheet." );
 
 		return;
@@ -50,7 +50,7 @@ void MainWindow :: pressSheetNew ()
 	updateChangesChores ( 1, 1 );
 }
 
-void MainWindow :: pressSheetDuplicate ()
+void MainWindow::pressSheetDuplicate ()
 {
 	CedSheet	* sheet = projectGetSheet (),
 			* newsheet;
@@ -67,8 +67,8 @@ void MainWindow :: pressSheetDuplicate ()
 
 	if ( res )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to duplicate the current sheet.") );
+		QMessageBox::critical ( this, "Error",
+			"Unable to duplicate the current sheet." );
 
 		return;
 	}
@@ -88,15 +88,15 @@ void MainWindow :: pressSheetDuplicate ()
 	updateChangesChores ( 1, 0 );
 }
 
-int MainWindow :: projectRenameSheet (
+int MainWindow::projectRenameSheet (
 	CedSheet	* const	sheet,
 	QString		const	new_name
 	)
 {
 	if ( new_name.isEmpty () )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Bad sheet name.") );
+		QMessageBox::critical ( this, "Error",
+			"Bad sheet name." );
 
 		return 1;
 	}
@@ -104,8 +104,8 @@ int MainWindow :: projectRenameSheet (
 	if ( ced_book_get_sheet ( cedFile->cubook->book,
 		new_name.toUtf8 ().data () ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Sheet name already exists.") );
+		QMessageBox::critical ( this, "Error",
+			"Sheet name already exists." );
 
 		return 1;
 	}
@@ -126,7 +126,7 @@ int MainWindow :: projectRenameSheet (
 	return 0;			// Success
 }
 
-void MainWindow :: pressSheetRename ()
+void MainWindow::pressSheetRename ()
 {
 	CedSheet	* sheet = projectGetSheet ();
 
@@ -149,8 +149,8 @@ void MainWindow :: pressSheetRename ()
 	{
 		bool	ok;
 		QString new_name = QInputDialog::getText ( this,
-			tr ( "Rename Sheet" ),
-			tr ( "New Sheet Name:" ),
+			"Rename Sheet",
+			"New Sheet Name:",
 			QLineEdit::Normal,
 			mtQEX::qstringFromC ( (char *)sheet->book_tnode->key ),
 			&ok );
@@ -167,7 +167,7 @@ void MainWindow :: pressSheetRename ()
 	}
 }
 
-void MainWindow :: pressSheetDelete ()
+void MainWindow::pressSheetDelete ()
 {
 	CedSheet	* sheet = projectGetSheet ();
 	int		page_num, res;
@@ -217,7 +217,7 @@ void MainWindow :: pressSheetDelete ()
 	updateChangesChores ( 1, 1 );
 }
 
-QStringList MainWindow :: getFileExportTypes ()
+QStringList MainWindow::getFileExportTypes ()
 {
 	QStringList	list;
 	int		i;
@@ -234,7 +234,7 @@ QStringList MainWindow :: getFileExportTypes ()
 	return list;
 }
 
-void MainWindow :: pressSheetExport ()
+void MainWindow::pressSheetExport ()
 {
 	CedSheet	* sheet = projectGetSheet ();
 
@@ -246,14 +246,14 @@ void MainWindow :: pressSheetExport ()
 
 
 	QStringList	list = getFileExportTypes ();
-	QString		last = mtQEX::qstringFromC ( prefs_get_string (
+	QString		last = mtQEX::qstringFromC ( pprfs->getString (
 				GUI_INIFILE_LAST_DIR ) ) +
 				MTKIT_DIR_SEP + "export";
 
 
 	while ( 1 )
 	{
-		qexSaveFileDialog dialog ( this, tr ( "Export Sheet" ), list,
+		mtQEX::SaveFileDialog dialog ( this, "Export Sheet", list,
 			cedFile->type - 1, last.toUtf8 ().data () );
 
 		if ( ! dialog.exec () )
@@ -271,8 +271,8 @@ void MainWindow :: pressSheetExport ()
 			if ( be_export_sheet ( sheet,
 				filename.toUtf8 ().data (), format + 1 ) )
 			{
-				QMessageBox :: critical ( this, tr ( "Error" ),
-					tr ("Unable to export sheet.") );
+				QMessageBox::critical ( this, "Error",
+					"Unable to export sheet." );
 
 				continue;
 			}
@@ -284,7 +284,7 @@ void MainWindow :: pressSheetExport ()
 	}
 }
 
-void MainWindow :: pressSheetExportOutput ()
+void MainWindow::pressSheetExportOutput ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 
@@ -296,7 +296,7 @@ void MainWindow :: pressSheetExportOutput ()
 
 
 	QStringList	list;
-	QString		last = mtQEX::qstringFromC ( prefs_get_string (
+	QString		last = mtQEX::qstringFromC ( pprfs->getString (
 				GUI_INIFILE_LAST_DIR ) ) +
 				MTKIT_DIR_SEP + "export";
 
@@ -315,7 +315,7 @@ void MainWindow :: pressSheetExportOutput ()
 
 	while ( 1 )
 	{
-		qexSaveFileDialog dialog ( this, "Export Sheet Output",
+		mtQEX::SaveFileDialog dialog ( this, "Export Sheet Output",
 			list, lastExportSheetType, last.toUtf8 ().data () );
 
 		if ( ! dialog.exec () )
@@ -331,37 +331,31 @@ void MainWindow :: pressSheetExportOutput ()
 		{
 			lastExportSheetType = dialog.getFormat ();
 
-			if ( cui_export_output ( prefs_file (), sheet,
+			if ( cui_export_output ( pprfs->getPrefsMem (), sheet,
 				filename.toUtf8 ().data (),
 				cedFile->name, lastExportSheetType,
-				prefs_get_int ( GUI_INIFILE_ROW_PAD ),
-				prefs_get_string ( GUI_INIFILE_FONT_PANGO_NAME),
-				prefs_get_int ( GUI_INIFILE_FONT_SIZE ) )
+				pprfs->getInt ( GUI_INIFILE_ROW_PAD ),
+				pprfs->getString ( GUI_INIFILE_FONT_PANGO_NAME),
+				pprfs->getInt ( GUI_INIFILE_FONT_SIZE ) )
 				)
 			{
-				QMessageBox :: critical ( this, "Error",
+				QMessageBox::critical ( this, "Error",
 					"Unable to export sheet output." );
 
 				continue;
 			}
 
-			be_remember_last_dir ( filename.toUtf8 ().data () );
+			backend->remember_last_dir( filename.toUtf8 ().data ());
 		}
 
 		break;
 	}
 }
 
-void MainWindow :: pressSheetFreezePanes ()
+void MainWindow::pressSheetFreezePanes ()
 {
 	CedSheet	* sheet = projectGetSheet ();
-	int		r1,
-			c1,
-			r2,
-			c2,
-			srow,
-			scol,
-			set_pos = 0;
+	int		r1, c1, r2, c2, srow, scol, set_pos = 0;
 
 
 	if ( ! sheet )
@@ -422,7 +416,7 @@ void MainWindow :: pressSheetFreezePanes ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow :: pressSheetLock ()
+void MainWindow::pressSheetLock ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 
@@ -438,7 +432,7 @@ void MainWindow :: pressSheetLock ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow :: pressSheetPrevious ()
+void MainWindow::pressSheetPrevious ()
 {
 	int		i = buttonSheet->currentIndex () - 1;
 
@@ -446,7 +440,7 @@ void MainWindow :: pressSheetPrevious ()
 	buttonSheet->setCurrentIndex ( MAX ( i, 0 ) );
 }
 
-void MainWindow :: pressSheetNext ()
+void MainWindow::pressSheetNext ()
 {
 	int	const	i = buttonSheet->currentIndex () + 1;
 	int	const	max = buttonSheet->count () - 1;
@@ -455,13 +449,13 @@ void MainWindow :: pressSheetNext ()
 	buttonSheet->setCurrentIndex ( MIN ( i, max ) );
 }
 
-void MainWindow :: coreRecalcBook ()
+void MainWindow::coreRecalcBook ()
 {
 	ced_book_recalculate ( cedFile->cubook->book, 0 );
 	ced_book_recalculate ( cedFile->cubook->book, 1 );
 }
 
-void MainWindow :: coreRecalcSheet ()
+void MainWindow::coreRecalcSheet ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 
@@ -470,19 +464,19 @@ void MainWindow :: coreRecalcSheet ()
 	ced_sheet_recalculate ( sheet, NULL, 1 );
 }
 
-void MainWindow :: pressSheetRecalcBook ()
+void MainWindow::pressSheetRecalcBook ()
 {
 	coreRecalcBook ();
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow :: pressSheetRecalc ()
+void MainWindow::pressSheetRecalc ()
 {
 	coreRecalcSheet ();
 	updateChangesChores ( 0, 1 );
 }
 
-int MainWindow :: getSelectionPosition (
+int MainWindow::getSelectionPosition (
 	CedSheet	* const	sheet,
 	int		* const	row,
 	int		* const	col
@@ -511,7 +505,7 @@ int MainWindow :: getSelectionPosition (
 	return 0;
 }
 
-void MainWindow :: pressRowInsert ()
+void MainWindow::pressRowInsert ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	int		row,
@@ -545,7 +539,7 @@ void MainWindow :: pressRowInsert ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressRowInsertPasteHeight ()
+void MainWindow::pressRowInsertPasteHeight ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	int		row,
@@ -577,7 +571,7 @@ void MainWindow :: pressRowInsertPasteHeight ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressRowDelete ()
+void MainWindow::pressRowDelete ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	int		row,
@@ -611,7 +605,7 @@ void MainWindow :: pressRowDelete ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressColumnInsert ()
+void MainWindow::pressColumnInsert ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	int		col,
@@ -646,7 +640,7 @@ void MainWindow :: pressColumnInsert ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressColumnInsertPasteWidth ()
+void MainWindow::pressColumnInsertPasteWidth ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	int		col,
@@ -680,7 +674,7 @@ void MainWindow :: pressColumnInsertPasteWidth ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressColumnDelete ()
+void MainWindow::pressColumnDelete ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	int		col,
@@ -715,7 +709,7 @@ void MainWindow :: pressColumnDelete ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressColumnSetWidth ()
+void MainWindow::pressColumnSetWidth ()
 {
 	CedSheet	* const	sheet = projectGetSheet ();
 	CedCell		* cell;
@@ -748,8 +742,8 @@ void MainWindow :: pressColumnSetWidth ()
 
 	bool ok;
 
-	w = QInputDialog :: getInt ( this, tr ( "Set Column Width" ),
-		tr( "Set Column Width" ), w, 0, CED_MAX_COLUMN_WIDTH, 1, &ok );
+	w = QInputDialog::getInt ( this, "Set Column Width",
+		"Set Column Width", w, 0, CED_MAX_COLUMN_WIDTH, 1, &ok );
 
 	if ( ! ok )
 	{
@@ -777,7 +771,7 @@ void MainWindow :: pressColumnSetWidth ()
 	updateChangesChores ( 1, 1 );
 }
 
-void MainWindow :: pressColumnSetWidthAuto ()
+void MainWindow::pressColumnSetWidthAuto ()
 {
 	int		res,
 			c,
@@ -809,7 +803,7 @@ void MainWindow :: pressColumnSetWidthAuto ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow :: sheetChanged (
+void MainWindow::sheetChanged (
 	int		const	ARG_UNUSED ( i )
 	)
 {
@@ -838,17 +832,17 @@ void MainWindow :: sheetChanged (
 	viewMain->setFocus ();
 }
 
-CedSheet * MainWindow :: projectGetSheet ()
+CedSheet * MainWindow::projectGetSheet ()
 {
-	return render.sheet;
+	return crendr.sheet;
 }
 
-CuiFile * MainWindow :: projectGetCedFile ()
+CuiFile * MainWindow::projectGetCedFile ()
 {
 	return cedFile;
 }
 
-void MainWindow :: projectSetSheetGeometry ()
+void MainWindow::projectSetSheetGeometry ()
 {
 	sheetRows = 0;
 	sheetCols = 0;
@@ -856,17 +850,17 @@ void MainWindow :: projectSetSheetGeometry ()
 	ced_sheet_get_geometry ( projectGetSheet (), &sheetRows, &sheetCols );
 }
 
-CedSheet * MainWindow :: projectSetSheet ()
+CedSheet * MainWindow::projectSetSheet ()
 {
 	// Automatically update renderer to this new value
-	render.sheet = cui_file_get_sheet ( cedFile );
+	crendr.sheet = cui_file_get_sheet ( cedFile );
 
 	projectSetSheetGeometry ();
 
-	return render.sheet;
+	return crendr.sheet;
 }
 
-void MainWindow :: projectGetSheetGeometry (
+void MainWindow::projectGetSheetGeometry (
 	int		* const	r,
 	int		* const	c
 	)

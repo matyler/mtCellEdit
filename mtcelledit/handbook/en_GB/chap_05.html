@@ -52,7 +52,7 @@ This program demonstrates how you can use a spreadsheet to make the following jo
 </P>
 
 <UL>
-<LI>Format numerical output in a GTK+ table.
+<LI>Format numerical output in a table.
 <LI>Table sorting.
 <LI>Copying table output to the system clipboard.
 </UL>
@@ -61,7 +61,7 @@ This program demonstrates how you can use a spreadsheet to make the following jo
 <H2>5.2 Porting and Hacking mtCellEdit</H2>
 
 <P>
-mtCellEdit was designed and built on a GNU/Linux system, with the GUI created with the help of GTK+ version 2.  It should possible to port it anywhere else (with a little effort) as it is just a C/C++ program. I don't have enough time and energy to do this porting myself but feel free to port the code if you want (according to the GNU GPL of course) and tell me or the world about your experiences.
+mtCellEdit was designed and built on a GNU/Linux system, with the GUI created with the help of Qt4/5.  It should possible to port it anywhere else (with a little effort) as it is just a C/C++ program. I don't have enough time and energy to do this porting myself but feel free to port the code if you want (according to the GNU GPL of course) and tell me or the world about your experiences.
 </P>
 
 <A NAME="SEC21"></A>
@@ -72,7 +72,7 @@ If you don't like the default menu keyboard shortcuts, it is possible to change 
 </P>
 
 <UL>
-<LI>Edit the file tk_gtk2_main.c - adjust the entries in the table inside the function gui_main_init() near the top of the file.
+<LI>Edit the file tk_qt4_menu.cpp - adjust the entries in the table inside the function MainWindow::createMenus () near the top of the file.
 <LI>Recompile and reinstall the program.
 <P></P>
 If you want to easily change later versions of mtCellEdit, you will need to create a patch using the following procedure:
@@ -80,15 +80,15 @@ If you want to easily change later versions of mtCellEdit, you will need to crea
 <LI>Create a backup of gui_main.c:
 
 <PRE>
-  cp tk_gtk2_main.c tk_gtk2_main.c.old
+  cp tk_qt4_menu.cpp tk_qt4_menu.cpp.old
 </PRE>
 
 <P></P>
-<LI>Make the adjustments to tk_gtk2_main.c as you require.
+<LI>Make the adjustments to tk_qt4_menu.cpp as you require.
 <LI>Create a patch file:
 
 <PRE>
-  diff -up tk_gtk2_main.c.old tk_gtk2_main.c &gt; ~/mtcelledit_shortcuts.diff
+  diff -up tk_qt4_menu.cpp.old tk_qt4_menu.cpp &gt; ~/mtcelledit_shortcuts.diff
 </PRE>
 
 <P></P>
@@ -184,7 +184,7 @@ The shell also provides the usual redirections:
 <H3>5.3.1 awk</H3>
 
 <P>
-Writing a small awk program to process a TSV sheet offers a few advantages over a C program. For example some simple tasks require just a few awk instructions to complete, compared to a C program that would need to be much larger and therefore more time consuming to create and maintain.
+Writing a small awk program to process a TSV sheet offers a few advantages over a C++ program. For example some simple tasks require just a few awk instructions to complete, compared to a C++ program that would need to be much larger and therefore more time consuming to create and maintain.
 </P>
 
 <A NAME="SEC311"></A>
@@ -490,7 +490,7 @@ You can also change a normal TSV file into a file with rather more eccentric fie
 As mentioned in section 5.3, a GNU system can manipulate a TSV file in a number of ways. However there are some jobs that are not possible to complete quickly and easily so I have assembled a group of command line utilities that can be used by the shell to manipulate spreadsheet files.
 </P>
 <P>
-These utilities are designed for accessing CSV or TSV files using basic scripts.  If you need access to data inside a CED/ZIP file then you should unzip it to a temp directory and access the sheets there.  Any complex or CPU intensive tasks should be left to custom built C programs.
+These utilities are designed for accessing CSV or TSV files using basic scripts.  If you need access to data inside a CED/ZIP file then you should unzip it to a temp directory and access the sheets there.  Any complex or CPU intensive tasks should be left to custom built C++ programs.
 </P>
 <P>
 These utilities are accessed via the binary program cedutils.  You access its functions by calling it via a symlink to execute a single command.  Because all commands really exist in a central program, it is also possible to do multiple different operations within the same line by using the argument "-com" followed by the new command.  The advantage of this is in terms of speed and fewer file operations.  When you call 2 commands separately in two script lines, you action a load and a save operation twice.  However, with multiple commands in a single line you only have a single load and a single save operation which saves CPU cycles, and involves fewer file read/write operations.  Here is an example which flips a sheet and inserts 10 empty rows:
@@ -725,7 +725,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 </TR>
 <TR>
 <TD>load</TD>
-<TD>&lt;OS FILENAME&gt;</TD>
+<TD>&lt;OS FILENAME&gt; <A HREF="tsv">csv **|**</A></TD>
 <TD>Load a new book</TD>
 </TR>
 <TR>

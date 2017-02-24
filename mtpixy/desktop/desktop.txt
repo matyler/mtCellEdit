@@ -1,0 +1,13 @@
+[Desktop Entry]
+# Desktop Entry Specification: http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec
+Name=@APP_NAME@@BIN_SUFFIX@
+Comment=Lightweight graphics program
+GenericName=Image Editor
+Exec=@BIN_INSTALL@/@BIN_NAME@ %f
+Terminal=false
+NoDisplay=false
+Type=Application
+MimeType=image/png;image/x-png;image/bmp;image/x-bmp;image/x-ms-bmp;image/gif;image/jpeg;image/jpg;application/x-mtpixy-gpl;
+Icon=@BIN_NAME@
+Categories=Graphics;2DGraphics;RasterGraphics;
+StartupNotify=false

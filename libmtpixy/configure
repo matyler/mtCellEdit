@@ -1,0 +1,71 @@
+#!/bin/sh
+
+
+. ./mtConf.txt
+
+
+APP_NAME="libmtpixy"
+LIB_NAME="libmtpixy.so"
+
+MTCF_INIT
+
+NGIF="-lgif"
+NJPEG="-ljpeg"
+NPNG="libpng"
+
+
+for A in "$@"
+do
+	case "$A" in
+	"--disable-libpng" )	NPNG="";;
+	"--disable-libgif" )	NGIF="";;
+	"--disable-libjpeg" )	NJPEG="";;
+
+	* )			MTCF_PARSE_ARG1 "$A";;
+	esac
+done
+
+
+MYHELP()
+{
+cat << EOF
+--disable-libpng ........... Don't use libpng
+--disable-libgif ........... Don't use libgif
+--disable-libjpeg .......... Don't use libjpeg
+
+By default libpng, libgif, and libjpeg are used.
+
+EOF
+}
+
+
+MTCF_PRINT_HELP MYHELP
+MTCF_PRE_CONF
+
+MTCF_CHECK_LIBS mtkit z
+
+if [ "$NGIF" != "" ]
+then
+	L_EX="$L_EX $NGIF"
+	I_EX="$I_EX -DU_GIF"
+fi
+
+if [ "$NJPEG" != "" ]
+then
+	L_EX="$L_EX $NJPEG"
+	I_EX="$I_EX -DU_JPEG"
+fi
+
+if [ "$NPNG" != "" ]
+then
+	I_EX="$I_EX -DU_PNG"
+fi
+
+
+MTCF_PKGCONFIG "cairo pangoft2 $NPNG"
+
+MTCF_VERSION_BIN_NAME
+
+MTCF_POST_CONF
+MTCF_PRINT_CONF
+

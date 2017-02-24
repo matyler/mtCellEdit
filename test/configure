@@ -14,7 +14,7 @@ MTCF_PRINT_HELP
 MTCF_PRE_CONF
 MTCF_CHECK_LIBS mtkit mtcelledit
 
-MAKE_DIRS="libmtkit mtcedcli mtcedutils mtrdc"
+MAKE_DIRS="mtpixycli mtpixyutils libmtkit mtcedcli mtcedutils mtrdc"
 
 MTCF_POST_CONF
 MTCF_PRINT_CONF

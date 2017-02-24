@@ -22,7 +22,7 @@ In order to compile and run mtCellEdit you must have several packages already pr
 </P>
 
 <UL>
-<LI>A GNU toolchain including gcc, make, and bison.
+<LI>A GNU toolchain (gcc, make, gawk, etc).
 <LI>Qt version 5.
 <LI>Cairo (version 1.6 or later).
 <LI>Pango (version 1.22 or later).
@@ -43,7 +43,7 @@ mtCellEdit then requires various libraries that I have created:
 </TR>
 <TR>
 <TD>libmtKit</TD>
-<TD>zlib, Cairo</TD>
+<TD>zlib</TD>
 <TD>Low level C routines, including strings, UTF-8, ZIP file handling, preferences, trees.</TD>
 </TR>
 <TR>
@@ -52,13 +52,18 @@ mtCellEdit then requires various libraries that I have created:
 <TD>The spreadsheet engine, including all file handling and general operations.</TD>
 </TR>
 <TR>
+<TD>libmtPixy</TD>
+<TD>libmtKit, zlib, libpng, libjpeg, giflib, FreeType, Pango, Cairo</TD>
+<TD>The core pixel engine, including all file handling and general operations.</TD>
+</TR>
+<TR>
 <TD>libmtCedUI</TD>
-<TD>libmtKit, libmtcelledit, Freetype, Pango, Cairo</TD>
+<TD>libmtKit, libmtPixy, libmtcelledit, FreeType, Pango, Cairo</TD>
 <TD>Toolkit agnostic UI code, e.g. graph and sheet rendering.</TD>
 </TR>
 <TR>
 <TD>libmtQEX</TD>
-<TD>libmtKit, Qt5</TD>
+<TD>libmtKit, libmtPixy, Qt5</TD>
 <TD>Various Qt function utilities including preferences editor.</TD>
 </TR>
 </TABLE>
@@ -74,6 +79,11 @@ The other optional parts of the suite have these dependencies:
 <TD><B>Description</B></TD>
 </TR>
 <TR>
+<TD>libmtPixyUI</TD>
+<TD>libmtKit, libmtPixy</TD>
+<TD>Toolkit agnostic UI code, e.g. undo stack</TD>
+</TR>
+<TR>
 <TD>mtCedCLI</TD>
 <TD>libmtKit, libmtcelledit, libmtCedUI, readline</TD>
 <TD>Command line spreadsheet</TD>
@@ -85,13 +95,28 @@ The other optional parts of the suite have these dependencies:
 </TR>
 <TR>
 <TD>mtEleana</TD>
-<TD>libmtKit, libmtcelledit, libmtQEX, Cairo, Qt5</TD>
+<TD>libmtKit, libmtcelledit, libmtPixy, libmtQEX, Cairo, Qt5</TD>
 <TD>General election analysis</TD>
 </TR>
 <TR>
 <TD>mtNetlog</TD>
 <TD>libmtKit, libmtcelledit</TD>
 <TD>Network logging</TD>
+</TR>
+<TR>
+<TD>mtPixy</TD>
+<TD>libmtKit, libmtPixy, libmtPixyUI, libmtQEX, Qt5</TD>
+<TD>Pixel image editor</TD>
+</TR>
+<TR>
+<TD>mtPixyCLI</TD>
+<TD>libmtKit, libmtPixy, libmtPixyUI, readline</TD>
+<TD>Command line pixel image editor</TD>
+</TR>
+<TR>
+<TD>mtPixyUtils</TD>
+<TD>libmtKit, libmtPixy</TD>
+<TD>Command line pixel image tools</TD>
 </TR>
 <TR>
 <TD>mtRaft</TD>
@@ -115,6 +140,7 @@ As outlined above you must build and install the packages in this order:
 <UL>
 <LI>libmtKit
 <LI>libmtcelledit
+<LI>libmtPixy
 <LI>libmtCedUI
 <LI>libmtQEX
 <LI>mtCellEdit
@@ -142,7 +168,7 @@ For the complete set of configure options use:
 The build system I have created uses simple hand built scripts and makefiles.
 I find this the best way to build the various components of the project.  More
 elaborate systems like GNU Autotools are of no interest to me as they do not
-solve any problems I have (portability outside the GNU or BSD ecosystems is of
+solve any problems I have (portability outside the GNU/Linux ecosystem is of
 no interest to me).
 </P>
 
@@ -292,7 +318,7 @@ After installing all of the core library components listed earlier you do the fo
 <H4>mtQEX</H4>
 
 <PRE>
-  ./configure --enable-qt4
+  ./configure --use-qt4
   make
   sudo make install
 </PRE>
@@ -300,7 +326,7 @@ After installing all of the core library components listed earlier you do the fo
 <H4>mtCellEdit</H4>
 
 <PRE>
-  ./configure --enable-qt4
+  ./configure --use-qt4
   make
   sudo make install
 </PRE>
@@ -344,16 +370,6 @@ If you want to share the preferences between the two different programs you woul
 <PRE>
   mtcelledit-qt4 -prefs ~/.config/mtcelledit-qt5/prefs.txt
 </PRE>
-
-<A NAME="SEC7"></A>
-<H3>3.7 FreeBSD Port</H3>
-
-<P>
-Although I am mainly interested in GNU/Linux systems for my day to day work, porting to FreeBSD is useful as it allows my software to be tested from a slightly different perspective.  It also ensures I don't become entrenched in my GNU/Linux habits as I study how other people solve similar software development issues with a different philosophy and toolchain.
-</P>
-<P>
-For further details of the FreeBSD port (e.g. which version of FreeBSD I have tested) see the /pkg/ directory which contains more information and build scripts.
-</P>
 
 <HR NOSHADE SIZE=1>
 

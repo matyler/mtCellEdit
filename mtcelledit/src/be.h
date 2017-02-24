@@ -15,15 +15,16 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+extern "C" {
 
-#include <unistd.h>
-#include <sys/stat.h>
-#include <time.h>
-#include <errno.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <math.h>
+	#include <unistd.h>
+	#include <sys/stat.h>
+	#include <time.h>
+	#include <errno.h>
+}
 
 #include <mtkit.h>
 #include <mtcelledit.h>
@@ -31,14 +32,7 @@
 
 
 
-#ifdef U_NLS
-	#include <libintl.h>
-	#define _(text) gettext(text)
-	#define __(text) gettext(text)
-#else
-	#define _(text) text
-	#define __(text) text
-#endif
+class Backend;
 
 
 
@@ -81,10 +75,7 @@
 #define PREFS_WINDOW_H		GUI_INIFILE_MAIN_WINDOW"_h"
 #define RECENT_MENU_TOTAL	20
 #define	CEDVIEW_FRZ_PANE_TOT	7
-#define MTCELLEDIT_CLIP_CODE	123456
-#define MTCELLEDIT_CLIP_NAME	"application/x-mtcelledit-clipboard"
 #define MAX_SORT		10
-#define COLOR_SWATCH_SIZE	24
 #define COLOR_SWATCH_ROWS	5
 #define COLOR_SWATCH_COLS	8
 #define COLOR_SWATCH_TOTAL	40
@@ -134,59 +125,6 @@ enum
 
 
 
-void prefs_init (		// Setup memory, filename, etc.
-	char	const *	filename
-	);
-
-void prefs_load ( void );	// Load prefs file from disk into memory
-
-void prefs_save ( void );	// Save current prefs from memory to disk
-
-void prefs_close ( void );	// Free all memory created in prefs_init ()
-
-mtPrefs * prefs_file ( void );
-
-void prefs_set_int (
-	char	const	* key,
-	int		value
-	);
-
-void prefs_set_string (
-	char	const	* key,
-	char	const	* value
-	);
-
-int prefs_get_int (
-	char	const	* key
-	);
-
-char const * prefs_get_string (
-	char	const	* key
-	);
-
-double prefs_get_double (
-	char	const	* key
-	);
-
-void be_cline (
-	int			argc,
-	char	const * const *	argv,
-	char	const **	prefs_file,	// From command line
-	char	const **	input_file	// From command line
-	);
-
-int be_get_force_tsvcsv ( void );	// CED_FILE_FORCE_*
-
-int be_snip_filename (			// Snip input string to fit recently
-					// used list.  Length set by
-					// CED_INIFILE_RECENT_FILENAME_LEN.
-	int		num,		// 1..20
-	char		* buf,		// Output buffer
-	size_t		buflen		// Bytes available in buffer
-	);
-	// 0 = Buffer filled
-	// 1 = Buffer not filled
-
 int be_titlebar_text (
 	CuiFile		* file,
 	char		* buf,		// Put title bar text here
@@ -227,18 +165,6 @@ void pref_change_graph_scale (
 // NOTE: end
 
 
-
-void be_remember_last_dir (
-	char	const	* filename
-	);
-
-int be_register_project (
-	CuiFile		* file
-	);
-
-char const * be_get_recent_filename (
-	int		i		// 1..20
-	);
 
 int be_cedrender_set_font_width (
 	CuiRender	* render
@@ -311,7 +237,8 @@ int be_selection_col_extent (
 	);
 
 int be_fix_years (
-	CuiFile		* file
+	CuiFile		* file,
+	int		yr
 	);
 
 int be_export_sheet (
@@ -330,14 +257,6 @@ void fe_commit_prefs_set (
 	char	const	* pref_charp,
 	int		change_cursor,
 	void		* callback_ptr
-	);
-
-void fe_save_pref_window_prefs (
-	mtPrefs		* prefs
-	);
-
-mtPrefs * fe_load_pref_window_prefs (
-	mtPrefTable	const * table
 	);
 
 void fe_book_prefs_changed (
@@ -369,12 +288,6 @@ void be_cellpref_changed (
 	void		* callback_ptr
 	);
 
-mtPrefs * be_cellpref_init (
-	CedSheet	* sheet,
-	mtPrefCB	callback,
-	void		* ptr
-	);
-
 int be_prepare_prefs_set (
 	CedSheet	* sheet
 	);
@@ -383,20 +296,8 @@ void be_cellpref_cleanup (
 	CedSheet	* sheet
 	);
 
-void be_save_pref_window_prefs (
-	mtPrefs		* prefs
-	);
-
-void be_load_pref_window_prefs (
-	mtPrefs		* prefs
-	);
-
-mtPrefs * be_book_prefs_init (
-	CedBook		* book
-	);
-
 void be_book_prefs_finish (
-	mtPrefs		* prefs,
+	mtPrefs		* mtpr,
 	CedBook		* book
 	);
 
@@ -430,4 +331,49 @@ void be_find (
 	CedFuncScanArea	callback,
 	void		* user_data
 	);
+
+
+
+class Backend
+{
+public:
+	Backend ();
+	~Backend ();
+
+	int command_line ( int argc, char const * const * argv );
+		// 0 = Continue running
+		// 1 = Terminate program with 0
+
+	char const * get_cline_filename () const;
+	int get_force_tsvcsv () const;
+
+	void remember_last_dir ( char const * filename );
+	int register_project ( CuiFile * file );
+	mtPrefs * book_prefs_init ( CedBook * book );
+
+	mtPrefs * cellpref_init (
+		CedSheet * sheet,
+		mtPrefCB callback,
+		void * ptr
+		);
+
+	mtPrefs * load_pref_window_prefs ( mtPrefTable const * table );
+
+	void save_pref_window_prefs ( mtPrefs * mtpr );
+	void load_pref_window_prefs ( mtPrefs * mtpr );
+
+/// ----------------------------------------------------------------------------
+
+	mtKit::Prefs		preferences;
+	mtKit::RecentFile	recent_file;
+
+private:
+	void prefs_init ();
+
+/// ----------------------------------------------------------------------------
+
+	int		force_tsvcsv;
+	char	const *	cline_filename;
+	char	const *	prefs_filename;
+};
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-qexButtonMenu :: qexButtonMenu ()
+mtQEX::ButtonMenu::ButtonMenu ()
 	:
 	itemCurrent	( -1 )
 {
@@ -27,7 +27,7 @@ qexButtonMenu :: qexButtonMenu ()
 
 	signalMapper = new QSignalMapper ( this );
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-	     this, SLOT ( optionClicked ( int ) ) );
+		this, SLOT ( optionClicked ( int ) ) );
 
 	setSizePolicy ( QSizePolicy ( QSizePolicy::Maximum,
 		QSizePolicy::Preferred ) );
@@ -42,7 +42,7 @@ qexButtonMenu :: qexButtonMenu ()
 	connect ( this, SIGNAL ( pressed () ), this, SLOT ( popup () ) );
 }
 
-qexButtonMenu :: ~qexButtonMenu ()
+mtQEX::ButtonMenu::~ButtonMenu ()
 {
 	QMenu * m = menu();
 
@@ -51,11 +51,11 @@ qexButtonMenu :: ~qexButtonMenu ()
 	delete m;
 }
 
-void qexButtonMenu :: keyPressEvent (
-	QKeyEvent	* const	event
+void mtQEX::ButtonMenu::keyPressEvent (
+	QKeyEvent	* const	ev
 	)
 {
-	switch ( event->key () )
+	switch ( ev->key () )
 	{
 	case Qt::Key_Up:
 		setCurrentIndex ( itemCurrent - 1 );
@@ -67,10 +67,10 @@ void qexButtonMenu :: keyPressEvent (
 	}
 
 	// Nothing to do so let the base class handle this event instead
-	QPushButton :: keyPressEvent ( event );
+	QPushButton::keyPressEvent ( ev );
 }
 
-void qexButtonMenu :: setCurrentIndex (
+void mtQEX::ButtonMenu::setCurrentIndex (
 	int	const	i
 	)
 {
@@ -89,7 +89,7 @@ void qexButtonMenu :: setCurrentIndex (
 	currentIndexChanged ( i );
 }
 
-void qexButtonMenu :: popup ()
+void mtQEX::ButtonMenu::popup ()
 {
 	QList<QAction*>	actionList = menu()->actions ();
 
@@ -105,7 +105,7 @@ void qexButtonMenu :: popup ()
 	showMenu ();
 }
 
-int qexButtonMenu :: count ()
+int mtQEX::ButtonMenu::count ()
 {
 	QList<QAction*>	actionList = menu()->actions ();
 
@@ -113,7 +113,7 @@ int qexButtonMenu :: count ()
 	return actionList.size ();
 }
 
-int qexButtonMenu :: findText ( QString t )
+int mtQEX::ButtonMenu::findText ( QString t )
 {
 	QList<QAction*>	actionList = menu()->actions ();
 	QAction		* action;
@@ -138,19 +138,19 @@ int qexButtonMenu :: findText ( QString t )
 We need text() to reverse the & replacements we do in addItem to avoid Qt
 thinking & is used as a shortcut.
 */
-QString qexButtonMenu :: text ()
+QString mtQEX::ButtonMenu::text ()
 {
 	return QPushButton::text().replace ( "&&", "&" );
 }
 
-void qexButtonMenu :: optionClicked (
+void mtQEX::ButtonMenu::optionClicked (
 	int	const	i
 	)
 {
 	setCurrentIndex ( i );
 }
 
-void qexButtonMenu :: addItem (
+void mtQEX::ButtonMenu::addItem (
 	QString		t
 	)
 {
@@ -171,12 +171,12 @@ void qexButtonMenu :: addItem (
 	signalMapper->setMapping ( action, count () - 1 );
 }
 
-int qexButtonMenu :: currentIndex ()
+int mtQEX::ButtonMenu::currentIndex ()
 {
 	return itemCurrent;
 }
 
-void qexButtonMenu :: clear ()
+void mtQEX::ButtonMenu::clear ()
 {
 	itemCurrent = -1;
 

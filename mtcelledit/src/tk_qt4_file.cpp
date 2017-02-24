@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-void MainWindow :: pressFileNew ()
+void MainWindow::pressFileNew ()
 {
 	if ( okToLoseChanges () )
 	{
@@ -27,14 +27,14 @@ void MainWindow :: pressFileNew ()
 	}
 }
 
-void MainWindow :: pressFileOpen ()
+void MainWindow::pressFileOpen ()
 {
 	if ( okToLoseChanges () )
 	{
-		QString filename = QFileDialog :: getOpenFileName ( this,
-			tr ( "Load Project File" ),
+		QString filename = QFileDialog::getOpenFileName ( this,
+			"Load Project File",
 			mtQEX::qstringFromC (
-				prefs_get_string ( GUI_INIFILE_LAST_DIR ) ),
+				pprfs->getString ( GUI_INIFILE_LAST_DIR ) ),
 			NULL, NULL, QFileDialog::DontUseNativeDialog );
 
 
@@ -45,12 +45,12 @@ void MainWindow :: pressFileOpen ()
 	}
 }
 
-void MainWindow :: pressFileImport ()
+void MainWindow::pressFileImport ()
 {
-	QString filename = QFileDialog :: getOpenFileName ( this,
-		tr ( "Import Project File" ),
+	QString filename = QFileDialog::getOpenFileName ( this,
+		"Import Project File",
 		mtQEX::qstringFromC (
-			prefs_get_string ( GUI_INIFILE_LAST_DIR ) ),
+			pprfs->getString ( GUI_INIFILE_LAST_DIR ) ),
 		NULL, NULL, QFileDialog::DontUseNativeDialog );
 
 
@@ -60,7 +60,7 @@ void MainWindow :: pressFileImport ()
 	}
 }
 
-void MainWindow :: pressFileSave ()
+void MainWindow::pressFileSave ()
 {
 	if ( ! cedFile->name || 0 == cedFile->name[0] )
 	{
@@ -72,16 +72,16 @@ void MainWindow :: pressFileSave ()
 	}
 }
 
-void MainWindow :: pressFileSaveAs ()
+void MainWindow::pressFileSaveAs ()
 {
 	QStringList	list = getFileExportTypes ();
-	qexSaveFileDialog dialog ( this, tr ( "Save Project File" ), list,
+	mtQEX::SaveFileDialog dialog ( this, "Save Project File", list,
 				cedFile->type - 1, cedFile->name );
 
 
 	if ( ! cedFile->name )
 	{
-		dialog.setDirectory ( mtQEX::qstringFromC ( prefs_get_string (
+		dialog.setDirectory ( mtQEX::qstringFromC ( pprfs->getString (
 			GUI_INIFILE_LAST_DIR ) ) );
 	}
 
@@ -99,22 +99,22 @@ void MainWindow :: pressFileSaveAs ()
 	}
 }
 
-void MainWindow :: pressFileRecent (
+void MainWindow::pressFileRecent (
 	int	const	i
 	)
 {
 	if ( okToLoseChanges () )
 	{
-		projectLoad ( be_get_recent_filename ( i ) );
+		projectLoad ( backend->recent_file.get_filename ( i ) );
 	}
 }
 
-void MainWindow :: pressFileQuit ()
+void MainWindow::pressFileQuit ()
 {
 	close ();
 }
 
-void MainWindow :: projectClearAll ()
+void MainWindow::projectClearAll ()
 {
 	cui_file_book_new ( cedFile );
 	projectSetSheet ();		// Old sheet stale so update renderer
@@ -130,7 +130,7 @@ void MainWindow :: projectClearAll ()
 	updateGraph ( NULL );
 }
 
-int MainWindow :: projectLoad (
+int MainWindow::projectLoad (
 	char	const	* const	filename
 	)
 {
@@ -143,7 +143,7 @@ int MainWindow :: projectLoad (
 	{
 		if ( ced_file_type_class ( cedFile->type ) == 1 )
 		{
-			if ( prefs_get_int (
+			if ( pprfs->getInt (
 				GUI_INIFILE_SHEET_PREFS_PERSIST ) )
 			{
 				tmp_sheet_prefs = ced_sheet_prefs_new ();
@@ -153,10 +153,10 @@ int MainWindow :: projectLoad (
 		}
 	}
 
-	if ( cui_file_load ( cedFile, filename, be_get_force_tsvcsv () ) )
+	if ( cui_file_load ( cedFile, filename, backend->get_force_tsvcsv () ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to load project file: %1").
+		QMessageBox::critical ( this, "Error",
+			QString ("Unable to load project file: %1").
 			arg ( mtQEX::qstringFromC ( filename ) ) );
 
 		ced_sheet_prefs_free ( tmp_sheet_prefs );
@@ -165,7 +165,7 @@ int MainWindow :: projectLoad (
 	}
 
 	cui_file_set_lock ( cedFile,
-		prefs_get_int ( GUI_INIFILE_FILE_LOCK_LOAD ) );
+		pprfs->getInt ( GUI_INIFILE_FILE_LOCK_LOAD ) );
 
 	projectSetSheet ();		// Old sheet stale so update renderer
 
@@ -205,17 +205,17 @@ int MainWindow :: projectLoad (
 
 	if ( cedFile->cubook->book->prefs.disable_locks )
 	{
-		QMessageBox :: warning ( this, tr ( "Warning" ),
-			tr ("This book has the disable_locks flag set, "
-			"which is potentially dangerous." ) );
+		QMessageBox::warning ( this, "Warning",
+			"This book has the disable_locks flag set, "
+			"which is potentially dangerous." );
 	}
 
 	return 0;
 }
 
-void MainWindow :: projectRegister ()
+void MainWindow::projectRegister ()
 {
-	if ( be_register_project ( cedFile ) )
+	if ( backend->register_project ( cedFile ) )
 	{
 		return;
 	}
@@ -224,14 +224,14 @@ void MainWindow :: projectRegister ()
 	updateRecentFiles ();
 }
 
-void MainWindow :: reportLargeTSV ()
+void MainWindow::reportLargeTSV ()
 {
-	QMessageBox :: critical ( this, tr ( "Error" ),
-		tr ("The sheet geometry is too large to save in this file"
-		" format." ) );
+	QMessageBox::critical ( this, "Error",
+		"The sheet geometry is too large to save in this file"
+		" format." );
 }
 
-int MainWindow :: projectSave (
+int MainWindow::projectSave (
 	char	const	* const	filename,
 	int		const	format
 	)
@@ -258,15 +258,15 @@ int MainWindow :: projectSave (
 
 	if ( res )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to save file: %1").
+		QMessageBox::critical ( this, "Error",
+			QString ("Unable to save file: %1").
 			arg ( mtQEX::qstringFromC ( filename ) ) );
 
 		return 1;
 	}
 
 	cui_file_set_lock ( cedFile,
-		prefs_get_int ( GUI_INIFILE_FILE_LOCK_SAVE ) );
+		pprfs->getInt ( GUI_INIFILE_FILE_LOCK_SAVE ) );
 
 	memChanged = 0;
 	projectRegister ();
@@ -274,7 +274,7 @@ int MainWindow :: projectSave (
 	return 0;
 }
 
-int MainWindow :: projectImport (
+int MainWindow::projectImport (
 	char	const	* const	filename
 	)
 {
@@ -285,22 +285,22 @@ int MainWindow :: projectImport (
 	uifile = cui_file_new ();
 	if ( ! uifile )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to allocate memory to import file: %1").
+		QMessageBox::critical ( this, "Error",
+			QString("Unable to allocate memory to import file: %1").
 			arg ( mtQEX::qstringFromC ( filename ) ) );
 
 		return 1;
 	}
 
-	if (	cui_file_load ( uifile, filename, be_get_force_tsvcsv () ) ||
+	if ( cui_file_load ( uifile, filename, backend->get_force_tsvcsv () ) ||
 		! uifile->cubook			||
 		! uifile->cubook->book
 		)
 	{
 		cui_file_free ( uifile );
 
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("Unable to import file: %1").
+		QMessageBox::critical ( this, "Error",
+			QString ("Unable to import file: %1").
 			arg ( mtQEX::qstringFromC ( filename ) ) );
 
 		return 1;
@@ -318,7 +318,7 @@ int MainWindow :: projectImport (
 	// Update graph selector
 	updateGraph ( cedFile->cubook->book->prefs.active_graph );
 
-	QMessageBox :: information ( this, "Information",
+	QMessageBox::information ( this, "Information",
 		QString (
 		"%1 sheets imported.\n"
 		"%2 sheets not imported due to identical names.\n"

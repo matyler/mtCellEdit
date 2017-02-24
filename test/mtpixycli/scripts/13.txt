@@ -1,0 +1,112 @@
+load		output/rgb_99.bmp
+canvas indexed none
+save as		tmp/rgb_99_indexed.bmp
+
+
+load		output/indexed_99.bmp
+canvas rgb
+save as		tmp/indexed_99_rgb.bmp
+
+
+load		output/indexed_99.bmp
+
+palette del_unused
+palette save	output/pal_01.gpl
+save as		tmp/pal_01.png png
+
+palette set	balanced 6
+palette save	output/pal_10.gpl
+save as		tmp/pal_10.png png
+palette sort	10 200 hue
+palette save	output/pal_11.gpl
+save as		tmp/pal_11.png png
+
+palette set	uniform 6
+palette save	output/pal_20.gpl
+save as		tmp/pal_20.png png
+palette sort	10 200 value
+palette save	output/pal_21.gpl
+save as		tmp/pal_21.png png
+
+
+load		output/rgb_99.bmp
+palette set	uniform 2
+palette quantize
+palette save	output/pal_30.gpl
+save as		tmp/pal_30.png png
+
+palette from_canvas
+palette save	output/pal_31.gpl
+save as		tmp/pal_31.png png
+
+
+load		tmp/pal_01.png
+palette load	output/pal_01.gpl
+save as		tmp/pal_01b.png png
+
+load		tmp/pal_10.png
+palette load	output/pal_10.gpl
+save as		tmp/pal_10b.png png
+
+load		tmp/pal_11.png
+palette load	output/pal_11.gpl
+save as		tmp/pal_11b.png png
+
+load		tmp/pal_20.png
+palette load	output/pal_20.gpl
+save as		tmp/pal_20b.png png
+
+load		tmp/pal_21.png
+palette load	output/pal_21.gpl
+save as		tmp/pal_21b.png png
+
+load		tmp/pal_30.png
+palette load	output/pal_30.gpl
+save as		tmp/pal_30b.png png
+
+load		tmp/pal_31.png
+palette load	output/pal_31.gpl
+save as		tmp/pal_31b.png png
+
+
+new		100 100 indexed
+palette size	20
+palette color	0 1 2 3
+palette color	1 11 12 13
+palette color	2 111 112 113
+palette color	12 121 122 123
+palette color	13 0 0 0
+palette color	17 0 0 0
+palette color	18 11 12 13
+palette color	19 111 112 113
+set color a	2
+set color b	12
+palette gradient
+set color a	13
+set color b	17
+palette gradient
+palette save	output/pal_40.gpl
+save as		tmp/pal_40.png png
+
+
+set brush shape	4
+set color a	2
+set color b	2
+paint		10 10
+paint		20 20
+set color a	19
+set color b	19
+paint		30 30
+paint		40 40
+palette merge_dups
+palette save	output/pal_41.gpl
+save as		tmp/pal_41.png png
+
+palette move	1 19
+palette save	output/pal_42.gpl
+save as		tmp/pal_42.png png
+save as		output/pal_42.bmp bmp
+
+
+
+q

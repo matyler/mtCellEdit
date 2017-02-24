@@ -1,0 +1,39 @@
+@BIN_UPPER@
+mtPixy @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+@BIN_NAME@ - image editor
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+mtPixy is a lightweight pixel image editor which is designed to handle simple day to day tasks such as viewing or editing pixel art PNG files.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-prefs** STRING
+	Use this file for program preferences.
+**-s**
+	Grab a screenshot on startup.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

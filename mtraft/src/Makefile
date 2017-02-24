@@ -1,15 +1,13 @@
 include		../_conf.txt
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG) -D_FILE_OFFSET_BITS=64
-CXXFLAGS	= $(BIN_CFLAGS) $(CXXFLAG)
-LDFLAGS 	= $(LDFLAG)
 OBJS		=		\
 		$(TK_OBJ)	\
+		be_busy.o	\
 		be_misc.o	\
 		be_scan.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(BIN_NAME)
 

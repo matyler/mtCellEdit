@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014-2015 Mark Tyler
+	Copyright (C) 2014-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ static void find_cb (
 	mainwindow->addFindRow ( seat_text, cell_type, cell_text, seat_id );
 }
 
-void MainWindow :: addFindRow (
+void MainWindow::addFindRow (
 	char	const * const	seat_text,
 	char	const * const	cell_type,
 	char	const * const	cell_text,
@@ -58,14 +58,14 @@ void MainWindow :: addFindRow (
 	findTable->setItem ( row, 2, twItem );
 }
 
-void MainWindow :: pressEditFind ()
+void MainWindow::pressEditFind ()
 {
 	editFindText->setFocus ();
 	editFindText->selectAll ();
 	tabWidget->setCurrentIndex ( UI_TAB_FIND );
 }
 
-void MainWindow :: pressFindButton ()
+void MainWindow::pressFindButton ()
 {
 	mainwindow->setEnabled ( false );
 	findTable->clearContents ();
@@ -85,7 +85,7 @@ void MainWindow :: pressFindButton ()
 	findTable->setFocus ();
 }
 
-void MainWindow :: findCellChanged (
+void MainWindow::findCellChanged (
 	int	const	currentRow,
 	int	const	ARG_UNUSED ( currentColumn ),
 	int	const	previousRow,

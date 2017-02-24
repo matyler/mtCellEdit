@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2014 Mark Tyler
+	Copyright (C) 2012-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,30 +15,27 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <math.h>
-#include <stdint.h>
-#include <ctype.h>
+extern "C" {
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <pwd.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <errno.h>
+	#include <math.h>
+	#include <ctype.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <unistd.h>
+	#include <pwd.h>
+	#include <langinfo.h>
+	#include <locale.h>
+	#include <iconv.h>
 
-#include <langinfo.h>
-#include <locale.h>
-#include <iconv.h>
+	#include <zlib.h>
+}
 
-#include <zlib.h>
+
 
 #include "mtkit.h"
-
-
-
-#define _( text )		text
 
 
 

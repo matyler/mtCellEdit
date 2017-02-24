@@ -19,26 +19,26 @@
 
 
 
-int MainWindow :: projectSetFont (
+int MainWindow::projectSetFont (
 	char	const	* const	name,
-	int		const	size
+	int		const	sz
 	)
 {
-	mtFont		* newfont = NULL;
+	mtPixy::Font	* newfont = NULL;
 
 
-	newfont = cui_font_new_pango ( name, size );
+	newfont = new mtPixy::Font ( name, sz );
 	if ( ! newfont )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			QString ( tr ( "Unable to open font %1 size %2." )
-			).arg ( name ).arg ( size ) );
+		QMessageBox::critical ( this, "Error",
+			QString ( "Unable to open font %1 size %2."
+			).arg ( name ).arg ( sz ) );
 
 		return 1;
 	}
 
-	cui_font_destroy ( render.font );
-	render.font = newfont;
+	delete crendr.font;
+	crendr.font = newfont;
 
 	updateViewConfig ();
 
@@ -48,15 +48,16 @@ int MainWindow :: projectSetFont (
 void pref_change_font (
 	mtPrefValue	* const	ARG_UNUSED ( piv ),
 	int		const	ARG_UNUSED ( callback_data ),
-	void		* const	ARG_UNUSED ( callback_ptr )
+	void		* const	callback_ptr
 	)
 {
 	char	const	* name;
 	int		size;
+	mtKit::Prefs	* prefs = (mtKit::Prefs *)callback_ptr;
 
 
-	name = prefs_get_string ( GUI_INIFILE_FONT_PANGO_NAME );
-	size = prefs_get_int ( GUI_INIFILE_FONT_SIZE );
+	name = prefs->getString ( GUI_INIFILE_FONT_PANGO_NAME );
+	size = prefs->getInt ( GUI_INIFILE_FONT_SIZE );
 
 	if ( mainwindow->projectSetFont ( name, size ) )
 	{
@@ -91,34 +92,26 @@ void pref_change_recent_filename_len (
 	mainwindow->updateRecentFiles ();
 }
 
-void fe_save_pref_window_prefs (
-	mtPrefs		* const	prefs
-	)
-{
-	be_save_pref_window_prefs ( prefs );
-	mtQEX :: prefsWindowMirrorPrefs ( prefs_file (), prefs );
-}
-
-mtPrefs * fe_load_pref_window_prefs (
+mtPrefs * Backend::load_pref_window_prefs (
 	mtPrefTable	const * const	table
 	)
 {
-	mtPrefs		* prefs;
+	mtPrefs		* mtpr;
 
 
-	prefs = mtkit_prefs_new ( table );
-	mtQEX :: prefsInitPrefs ( prefs );
+	mtpr = mtkit_prefs_new ( table );
+	mtKit::prefsInitWindowPrefs ( mtpr );
 
-	if ( mtQEX :: prefsWindowMirrorPrefs ( prefs, prefs_file () ) )
+	if ( mtKit::prefsWindowMirrorPrefs ( mtpr, preferences.getPrefsMem() ))
 	{
-		mtkit_prefs_destroy ( prefs );
+		mtkit_prefs_destroy ( mtpr );
 
 		return NULL;
 	}
 
-	be_load_pref_window_prefs ( prefs );
+	load_pref_window_prefs ( mtpr );
 
-	return prefs;
+	return mtpr;
 }
 
 void fe_commit_prefs_set (
@@ -152,10 +145,10 @@ void fe_commit_prefs_set (
 	mainwindow->updateChangesChores ( 1, 1 );
 }
 
-void MainWindow :: pressOptionsCellPrefs ()
+void MainWindow::pressOptionsCellPrefs ()
 {
 	CedSheet	* sheet = projectGetSheet ();
-	mtPrefs		* prefs;
+	mtPrefs		* mtpr;
 
 
 	if ( projectReportUpdates ( cui_check_sheet_lock ( sheet ) ) )
@@ -163,41 +156,47 @@ void MainWindow :: pressOptionsCellPrefs ()
 		return;
 	}
 
-	prefs = be_cellpref_init ( sheet, be_cellpref_changed, (void *)this );
-	if ( ! prefs )
+	mtpr = backend->cellpref_init ( sheet, be_cellpref_changed,
+		(void *)this );
+	if ( ! mtpr )
 	{
 		return;
 	}
 
-	qexPrefsWindow ( prefs, "Cell Preferences" );
+	mtQEX::PrefsWindow ( mtpr, "Cell Preferences" );
 
-	fe_save_pref_window_prefs ( prefs );
+	backend->save_pref_window_prefs ( mtpr );
+	mtKit::prefsWindowMirrorPrefs ( pprfs->getPrefsMem (), mtpr );
 
-	mtkit_prefs_destroy ( prefs );
-	prefs = NULL;
+	mtkit_prefs_destroy ( mtpr );
+	mtpr = NULL;
 
 	be_cellpref_cleanup ( sheet );
 
 	updateView ();
 }
 
-void MainWindow :: pressOptionsBookPrefs ()
+void MainWindow::pressOptionsBookPrefs ()
 {
-	mtPrefs * prefs = be_book_prefs_init ( cedFile->cubook->book );
+	mtPrefs * mtpr = backend->book_prefs_init ( cedFile->cubook->book );
 
-	qexPrefsWindow ( prefs, "Book Preferences" );
-	fe_save_pref_window_prefs ( prefs );
-	be_book_prefs_finish ( prefs, cedFile->cubook->book );
 
-	mtkit_prefs_destroy ( prefs );
+	mtQEX::PrefsWindow ( mtpr, "Book Preferences" );
+
+	backend->save_pref_window_prefs ( mtpr );
+	mtKit::prefsWindowMirrorPrefs ( pprfs->getPrefsMem (), mtpr );
+
+	be_book_prefs_finish ( mtpr, cedFile->cubook->book );
+
+	mtkit_prefs_destroy ( mtpr );
 }
 
-void MainWindow :: pressOptionsProgramPrefs ()
+void MainWindow::pressOptionsProgramPrefs ()
 {
-	qexPrefsWindow ( prefs_file (), "Preferences" );
+	mtQEX::PrefsWindow ( pprfs->getPrefsMem (), "Preferences" );
 }
 
-void MainWindow :: pressOptionsTextStyle (
+void MainWindow::pressOptionsTextStyle (
 	int	const	i
 	)
 {
@@ -225,7 +224,8 @@ void MainWindow :: pressOptionsTextStyle (
 
 static void swFunc (
 	QString		const	title,
-	int		const	pref_id
+	int		const	pref_id,
+	mtKit::Prefs	* const	prefs
 	)
 {
 	if ( be_prepare_prefs_set ( mainwindow->projectGetSheet () ) )
@@ -234,7 +234,7 @@ static void swFunc (
 	}
 
 
-	SwatchDialog	dialog ( title );
+	SwatchDialog	dialog ( title, prefs );
 	int		col = dialog.getColor ();
 
 
@@ -246,22 +246,22 @@ static void swFunc (
 	be_cellpref_cleanup ( mainwindow->projectGetSheet () );
 }
 
-void MainWindow :: pressOptionsBackgroundColor ()
+void MainWindow::pressOptionsBackgroundColor ()
 {
-	swFunc ( tr ( "Background Colour" ), CUI_CELLPREFS_color_background );
+	swFunc ( "Background Colour", CUI_CELLPREFS_color_background, pprfs );
 }
 
-void MainWindow :: pressOptionsForegroundColor ()
+void MainWindow::pressOptionsForegroundColor ()
 {
-	swFunc ( tr ( "Foreground Colour" ), CUI_CELLPREFS_color_foreground );
+	swFunc ( "Foreground Colour", CUI_CELLPREFS_color_foreground, pprfs );
 }
 
-void MainWindow :: pressOptionsBorderColor ()
+void MainWindow::pressOptionsBorderColor ()
 {
-	swFunc ( tr ( "Border Colour" ), CUI_CELLPREFS_border_color );
+	swFunc ( "Border Colour", CUI_CELLPREFS_border_color, pprfs );
 }
 
-void MainWindow :: pressOptionsBorder (
+void MainWindow::pressOptionsBorder (
 	int	const	i
 	)
 {

@@ -17,10 +17,10 @@ ENABLE_DESKTOP=desktop
 for A in "$@"
 do
 	case "$A" in
-	--enable-qt4 )		TK=qt4
+	--use-qt4 )		TK=qt4
 				BIN_SUFFIX=-qt4
 				;;
-	--enable-qt5 )		TK=qt5
+	--use-qt5 )		TK=qt5
 				BIN_SUFFIX=-qt5
 				;;
 	--disable-desktop)	ENABLE_DESKTOP="";;
@@ -33,9 +33,8 @@ done
 MYHELP()
 {
 cat << EOF
---enable-gtk2 ......... Compile GTK+2 version
---enable-qt4 .......... Compile Qt4 version
---enable-qt5 .......... Compile Qt5 version (default)
+--use-qt4 ............. Compile Qt4 version
+--use-qt5 ............. Compile Qt5 version (default)
 --disable-desktop ..... Don't build desktop files
 
 EOF
@@ -51,11 +50,13 @@ DATA_NAME=$BIN_NAME
 I_EX="$I_EX -DDATA_INSTALL=\"\\\"$DATA_INSTALL\"\\\""
 I_EX="$I_EX -DDATA_NAME=\"\\\"$DATA_NAME\"\\\""
 
-CK_LIBS="mtkit mtcelledit"
+CK_LIBS="mtkit mtcelledit mtpixy"
+
+MTCF_PKGCONFIG "cairo"
 
 case "$TK" in
 qt4 )
-	MTCF_PKGCONFIG "QtGui cairo"
+	MTCF_PKGCONFIG "QtGui"
 	TK_OBJ="tk_qt4_find.o tk_qt4_input.o tk_qt4_main.o tk_qt4_map.o tk_qt4_mapview.o tk_qt4_menu.o tk_qt4_project.o moc_tk_qt4.o"
 	I_EX="$I_EX -DU_TK_QT4"
 	L_EX="$L_EX -lstdc++"
@@ -63,7 +64,7 @@ qt4 )
 	MT_GET_MOC_4
 	;;
 qt5 )
-	MTCF_PKGCONFIG "Qt5Widgets cairo"
+	MTCF_PKGCONFIG "Qt5Widgets"
 	TK_OBJ="tk_qt4_find.o tk_qt4_input.o tk_qt4_main.o tk_qt4_map.o tk_qt4_mapview.o tk_qt4_menu.o tk_qt4_project.o moc_tk_qt4.o"
 	I_EX="$I_EX -DU_TK_QT5"
 	L_EX="$L_EX -lstdc++"

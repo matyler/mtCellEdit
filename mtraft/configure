@@ -16,13 +16,10 @@ ENABLE_DESKTOP=desktop
 for A in "$@"
 do
 	case "$A" in
-	--enable-gtk2 )		TK=gtk2
-				BIN_SUFFIX=
-				;;
-	--enable-qt4 )		TK=qt4
+	--use-qt4 )		TK=qt4
 				BIN_SUFFIX=-qt4
 				;;
-	--enable-qt5 )		TK=qt5
+	--use-qt5 )		TK=qt5
 				BIN_SUFFIX=-qt5
 				;;
 	--disable-desktop)	ENABLE_DESKTOP="";;
@@ -35,9 +32,8 @@ done
 MYHELP()
 {
 cat << EOF
---enable-gtk2 ......... Compile GTK+2 version
---enable-qt4 .......... Compile Qt4 version
---enable-qt5 .......... Compile Qt5 version (default)
+--use-qt4 ............. Compile Qt4 version
+--use-qt5 ............. Compile Qt5 version (default)
 --disable-desktop ..... Don't build desktop files
 
 EOF
@@ -48,17 +44,12 @@ MTCF_PRINT_HELP MYHELP
 MTCF_PRE_CONF
 
 CK_LIBS="mtkit mtcelledit"
-
 MTCF_VERSION_BIN_NAME
 
 case "$TK" in
-gtk2 )
-	MTCF_PKGCONFIG "gtk+-2.0"
-	TK_OBJ="bec.o tk_gtk2_main.o"
-	;;
 qt4 )
 	MTCF_PKGCONFIG "QtGui"
-	TK_OBJ="becpp_busy.o tk_qt4_main.o tk_qt4_tab.o moc_tk_qt4.o"
+	TK_OBJ="tk_qt4_main.o tk_qt4_tab.o moc_tk_qt4.o"
 	I_EX="$I_EX -DU_TK_QT4"
 	L_EX="$L_EX -lstdc++"
 	CK_LIBS="$CK_LIBS mtqex4"
@@ -66,7 +57,7 @@ qt4 )
 	;;
 qt5 )
 	MTCF_PKGCONFIG "Qt5Widgets"
-	TK_OBJ="becpp_busy.o tk_qt4_main.o tk_qt4_tab.o moc_tk_qt4.o"
+	TK_OBJ="tk_qt4_main.o tk_qt4_tab.o moc_tk_qt4.o"
 	I_EX="$I_EX -DU_TK_QT5"
 	L_EX="$L_EX -lstdc++"
 	CK_LIBS="$CK_LIBS mtqex5"
@@ -78,6 +69,8 @@ esac
 MTCF_MAKE_DIRS_ADD "$ENABLE_DESKTOP"
 MTCF_CHECK_LIBS $CK_LIBS
 MTCF_MAN_PAGE
+
+BIN_FLAGS="$BIN_FLAGS -D_FILE_OFFSET_BITS=64"
 
 MTCF_POST_CONF
 

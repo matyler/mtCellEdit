@@ -6,18 +6,5 @@
 # On error exit
 #set -e
 
-. ./apps_list.txt
-
-cd ..
-
-for PKG in $APPS_DIR_ALL
-do
-	echo
-	echo $PKG
-	echo
-
-	cd $PKG
-	cppcheck --enable=all --inconclusive .
-	cd ..
-done
+cppcheck --enable=all --inconclusive ..
 

@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="Qt5 General Election Results Analysis Program"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('qt5-base' 'libmtkit' 'libmtqex5' 'libmtcelledit')
+depends=('qt5-base' 'cairo' 'libmtkit' 'libmtpixy' 'libmtqex5' 'libmtcelledit')
 install=mteleana_desktop.install
 source=($pkgname-$pkgver.tar.gz)
 md5sums
@@ -13,7 +13,7 @@ md5sums
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  @MT_CONF@ --enable-qt5
+  @MT_CONF@ --use-qt5
   make
 }
 

@@ -15,15 +15,16 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+extern "C" {
 
-#include <unistd.h>
-#include <time.h>
-#include <errno.h>
-#include <ctype.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <math.h>
+	#include <unistd.h>
+	#include <time.h>
+	#include <errno.h>
+	#include <ctype.h>
+}
 
 #include <mtkit.h>
 #include <mtcelledit.h>
@@ -44,7 +45,7 @@
 
 #define ABOUT_PRINTF \
 "%s\n" \
-"Copyright (C) 2012-2015 Mark Tyler\n" \
+"Copyright (C) 2012-2016 Mark Tyler\n" \
 "Type 'help' for command hints.  Read the manual for more specific info.\n" \
 "\n" \
 , VERSION
@@ -65,12 +66,6 @@ typedef int (* jtFunc) (
 	// 0 = success
 
 
-
-typedef struct
-{
-	char	const	* name;
-	int		num;
-} charINT;
 
 struct CedCli_STATE
 {
@@ -159,14 +154,6 @@ int jtf_print ( CedCli_STATE * state, char ** args );
 
 int jtf_print_prefs_cell ( CedCli_STATE * state, char ** args );
 
-int match_chint (
-	char	const	* txt,
-	charINT	const	* chint,
-	int		* result
-	);
-	// 0 = Found
-	// 1 = Not found
-
 int jtf_delete_column ( CedCli_STATE * state, char ** args );
 int jtf_delete_row ( CedCli_STATE * state, char ** args );
 int jtf_find ( CedCli_STATE * state, char ** args );
@@ -196,13 +183,6 @@ CedSheet * cedcli_get_sheet (		// Get active sheet + report error
 
 CedBookFile * cedcli_get_graph (	// Get active graph + report error
 	CedCli_STATE	* state
-	);
-
-int cedcli_get_integer (
-	char	const	* input,
-	int		* output,
-	int		min,		// If max < min don't check bounds
-	int		max
 	);
 
 int jtf_delete_graph ( CedCli_STATE * state, char ** args );

@@ -12,7 +12,7 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit mtcelledit
+MTCF_CHECK_LIBS mtkit mtcelledit mtpixy
 MTCF_PKGCONFIG "pangoft2 pangocairo"
 
 I_EX="$I_EX -DAPP_NAME=\"\\\"$APP_NAME\"\\\""

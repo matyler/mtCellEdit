@@ -19,7 +19,7 @@
 
 
 
-CedView :: CedView ()
+CedView::CedView ()
 	:
 	hscrollLast	( 0 ),
 	vscrollLast	( 0 )
@@ -101,23 +101,23 @@ CedView :: CedView ()
 	}
 }
 
-void CedView :: setFocus ()
+void CedView::setFocus ()
 {
 	area [ CEDVIEW_AREA_CORNER ]->setFocus ( Qt::OtherFocusReason );
 }
 
-bool CedView :: hasFocus ()
+bool CedView::hasFocus ()
 {
 	return area [ CEDVIEW_AREA_CORNER ]->hasFocus ();
 }
 
-void CedView :: vscrollMove ( int value )
+void CedView::vscrollMove ( int value )
 {
 	int		delta;
-	CuiRender	* render = mainwindow->projectGetRender ();
+	CuiRender	* crender = mainwindow->projectGetRender ();
 
 
-	if ( ! render->sheet )
+	if ( ! crender->sheet )
 	{
 		return;
 	}
@@ -130,7 +130,7 @@ void CedView :: vscrollMove ( int value )
 
 	if ( mainwindow->isMainView ( this ) )
 	{
-		render->sheet->prefs.start_row = value;
+		crender->sheet->prefs.start_row = value;
 	}
 
 
@@ -140,7 +140,7 @@ void CedView :: vscrollMove ( int value )
 	a fixed height and less work is needed.
 	*/
 
-	if ( abs ( delta ) < getVisibleRows ( render ) )
+	if ( abs ( delta ) < getVisibleRows ( crender ) )
 	{
 		int		ph;
 
@@ -148,7 +148,7 @@ void CedView :: vscrollMove ( int value )
 		// We are optimizing by scrolling
 		// (accelerated on most systems)
 
-		ph = cui_ren_y_from_row ( vscrollLast, render,
+		ph = cui_ren_y_from_row ( vscrollLast, crender,
 			vscrollLast + abs ( delta ) );
 
 		if ( delta > 0 )
@@ -170,23 +170,23 @@ void CedView :: vscrollMove ( int value )
 	vscrollLast = value;
 }
 
-void CedView :: vscrollAction (
+void CedView::vscrollAction (
 	int	const	action
 	)
 {
 	int		delta = 0,
 			value = vscroll->value (),	// Original value
 			page;
-	CuiRender	* const	render = mainwindow->projectGetRender ();
+	CuiRender	* const	crender = mainwindow->projectGetRender ();
 
 
-	if ( ! render->sheet )
+	if ( ! crender->sheet )
 	{
 		return;
 	}
 
 	// Find out how many rows fit on the screen
-	page = cui_ren_row_from_y ( value, render,
+	page = cui_ren_row_from_y ( value, crender,
 		area [ CEDVIEW_AREA_BR ]->height () ) - value;
 
 	switch ( action )
@@ -209,17 +209,15 @@ void CedView :: vscrollAction (
 	vscroll->setSliderPosition ( value );
 }
 
-void CedView :: hscrollMove (
+void CedView::hscrollMove (
 	int	const	value
 	)
 {
-	int		max_col,
-			delta,
-			pw = 0;
-	CuiRender	* const	render = mainwindow->projectGetRender ();
+	int		max_col, delta, pw = 0;
+	CuiRender	* const	crender = mainwindow->projectGetRender ();
 
 
-	if ( ! render->sheet )
+	if ( ! crender->sheet )
 	{
 		return;
 	}
@@ -232,32 +230,32 @@ void CedView :: hscrollMove (
 
 	if ( mainwindow->isMainView ( this ) )
 	{
-		render->sheet->prefs.start_col = value;
+		crender->sheet->prefs.start_col = value;
 	}
 
 	if ( delta > 0 )
 	{
 		// Scrolling to the right
-		max_col = cui_ren_column_from_x ( hscrollLast, render,
+		max_col = cui_ren_column_from_x ( hscrollLast, crender,
 			area [ CEDVIEW_AREA_BR ]->width () - 1 );
 
 		if ( max_col > value )
 		{
 			// Old & new area rectangles overlap, so scroll
-			pw = -cui_ren_x_from_column ( hscrollLast, render,
+			pw = -cui_ren_x_from_column ( hscrollLast, crender,
 				value );
 		}
 	}
 	else	// delta < 0
 	{
 		// Scrolling to the left
-		max_col = cui_ren_column_from_x ( value, render,
+		max_col = cui_ren_column_from_x ( value, crender,
 			area [ CEDVIEW_AREA_BR ]->width () - 1 );
 
 		if ( max_col > hscrollLast )
 		{
 			// Old & new area rectangles overlap, so scroll
-			pw = cui_ren_x_from_column ( value, render,
+			pw = cui_ren_x_from_column ( value, crender,
 				hscrollLast );
 		}
 	}
@@ -278,7 +276,7 @@ void CedView :: hscrollMove (
 	hscrollLast = value;
 }
 
-int CedView :: getPageColumnsLeft (
+int CedView::getPageColumnsLeft (
 	int	const	column
 	)
 {
@@ -297,7 +295,7 @@ int CedView :: getPageColumnsLeft (
 	return delta;
 }
 
-int CedView :: getPageColumnsRight (
+int CedView::getPageColumnsRight (
 	int	const	column
 	)
 {
@@ -316,16 +314,16 @@ int CedView :: getPageColumnsRight (
 	return delta;
 }
 
-void CedView :: hscrollAction (
+void CedView::hscrollAction (
 	int	const	action
 	)
 {
 	int		value = hscroll->value (),	// Original value
 			delta = 0;
-	CuiRender	* const	render = mainwindow->projectGetRender ();
+	CuiRender	* const	crender = mainwindow->projectGetRender ();
 
 
-	if ( ! render->sheet )
+	if ( ! crender->sheet )
 	{
 		return;
 	}
@@ -350,15 +348,11 @@ void CedView :: hscrollAction (
 	hscroll->setSliderPosition ( value );
 }
 
-void CedView :: setPanes ()
+void CedView::setPanes ()
 {
-	int		min_row,
-			max_row,
-			min_col,
-			max_col
-			;
+	int		min_row, max_row, min_col, max_col;
 	CedSheet	* sheet;
-	CuiRender	* render;
+	CuiRender	* crender;
 
 
 	sheet = mainwindow->projectGetSheet ();
@@ -367,7 +361,7 @@ void CedView :: setPanes ()
 		return;
 	}
 
-	render = mainwindow->projectGetRender ();
+	crender = mainwindow->projectGetRender ();
 
 	min_row = sheet->prefs.split_r1;
 	max_row = sheet->prefs.split_r2;
@@ -416,7 +410,7 @@ void CedView :: setPanes ()
 		}
 		else
 		{
-			w = cui_ren_x_from_column ( min_col, render,
+			w = cui_ren_x_from_column ( min_col, crender,
 				max_col + 1 );
 
 			area[ CEDVIEW_FRZ_H_LEFT ]->setMinimumWidth ( w );
@@ -429,7 +423,7 @@ void CedView :: setPanes ()
 		}
 		else
 		{
-			h = (max_row - min_row + 1) * CUI_ROWHEIGHT ( render );
+			h = (max_row - min_row + 1) * CUI_ROWHEIGHT ( crender );
 
 			area[ CEDVIEW_FRZ_V_TOP ]->setMinimumHeight ( h );
 			area[ CEDVIEW_FRZ_V_TOP ]->show ();
@@ -465,9 +459,9 @@ void CedView :: setPanes ()
 	}
 
 	area[ CEDVIEW_TITLE_C1 ]->setMinimumHeight (
-		cui_font_get_height ( render->font ) );
+		crender->font->get_height () );
 	area[ CEDVIEW_TITLE_C2 ]->setMinimumHeight (
-		cui_font_get_height ( render->font ) );
+		crender->font->get_height () );
 }
 
 
@@ -476,7 +470,7 @@ void CedView :: setPanes ()
 
 
 
-void CedView :: setScrollbars ()
+void CedView::setScrollbars ()
 {
 	int		min,
 			max,
@@ -522,23 +516,23 @@ void CedView :: setScrollbars ()
 	setRowHeaderWidth ();
 }
 
-void CedView :: setRowHeaderWidth ()
+void CedView::setRowHeaderWidth ()
 {
-	CuiRender	* render;
+	CuiRender	* crender;
 
 
-	render = mainwindow->projectGetRender ();
+	crender = mainwindow->projectGetRender ();
 
-	be_cedrender_set_header_width ( render,
+	be_cedrender_set_header_width ( crender,
 		vscroll->maximum () + vscroll->pageStep () );
 
 	area [ CEDVIEW_TITLE_R1 ]->setMinimumWidth (
-		render->row_header_width );
+		crender->row_header_width );
 	area [ CEDVIEW_TITLE_R2 ]->setMinimumWidth (
-		render->row_header_width );
+		crender->row_header_width );
 }
 
-void CedView :: updateRedraw ()
+void CedView::updateRedraw ()
 {
 	for ( int i = 0; i < CEDVIEW_AREA_TOTAL; i++ )
 	{
@@ -546,7 +540,7 @@ void CedView :: updateRedraw ()
 	}
 }
 
-void CedView :: reconfigure ()
+void CedView::reconfigure ()
 {
 	CedSheet	* sheet;
 
@@ -576,7 +570,7 @@ void CedView :: reconfigure ()
 	updateRedraw ();
 }
 
-void CedView :: setBell ()
+void CedView::setBell ()
 {
 	int		tmp;
 
@@ -588,22 +582,22 @@ void CedView :: setBell ()
 	area [ CEDVIEW_AREA_CORNER ]->update ();
 }
 
-int CedView :: getBell ()
+int CedView::getBell ()
 {
 	return bellState[0];
 }
 
-int CedView :: getVScrollValue ()
+int CedView::getVScrollValue ()
 {
 	return vscroll->value ();
 }
 
-int CedView :: getHScrollValue ()
+int CedView::getHScrollValue ()
 {
 	return hscroll->value ();
 }
 
-CedViewArea :: CedViewArea (
+CedViewArea::CedViewArea (
 	CedView		* const	cv,
 	int		const	id
 	)
@@ -632,26 +626,19 @@ static void expose_cb (
 	p.drawImage ( QPoint ( x, y ), im );
 }
 
-void CedViewArea :: paintEvent (
-	QPaintEvent	* const	event
+void CedViewArea::paintEvent (
+	QPaintEvent	* const	ev
 	)
 {
 	CuiRender	* ren;
 	CedSheet	* sheet;
-	int		px,
-			py,
-			pw,
-			ph,
-			col = 0,
-			start_row,
-			start_col
-			;
+	int		px, py, pw, ph, col = 0, start_row, start_col;
 
 
-	px = event->rect ().x ();
-	py = event->rect ().y ();
-	pw = event->rect ().width ();
-	ph = event->rect ().height ();
+	px = ev->rect ().x ();
+	py = ev->rect ().y ();
+	pw = ev->rect ().width ();
+	ph = ev->rect ().height ();
 
 	if ( pw < 1 || ph < 1 )
 	{
@@ -746,7 +733,7 @@ void CedViewArea :: paintEvent (
 	}
 }
 
-int MainWindow :: isMainView (
+int MainWindow::isMainView (
 	CedView		* const	v
 	)
 {
@@ -758,29 +745,29 @@ int MainWindow :: isMainView (
 	return 0;
 }
 
-int CedView :: getVisibleRows (
-	CuiRender	* render
+int CedView::getVisibleRows (
+	CuiRender	* crender
 	)
 {
 	int		tot;
 
 
-	if ( ! render )
+	if ( ! crender )
 	{
-		render = mainwindow->projectGetRender ();
+		crender = mainwindow->projectGetRender ();
 	}
 
-	tot = area [ CEDVIEW_AREA_BR ]->height () / CUI_ROWHEIGHT ( render );
+	tot = area [ CEDVIEW_AREA_BR ]->height () / CUI_ROWHEIGHT ( crender );
 
 	return MAX ( tot, 1 );
 }
 
-void CedView :: updateGeometry ()
+void CedView::updateGeometry ()
 {
 	setScrollbars ();
 }
 
-void CedView :: redrawArea (
+void CedView::redrawArea (
 	CedSheet	* const	sheet,
 	int		const	nr1,
 	int		const	nc1,
@@ -788,10 +775,7 @@ void CedView :: redrawArea (
 	int		const	nc2
 	)
 {
-	int		r1,
-			r2,
-			c1,
-			c2,
+	int		r1, r2, c1, c2,
 			r1_top = -1,
 			r1_bot = -1,	// Row min for top/bottom area
 
@@ -802,21 +786,14 @@ void CedView :: redrawArea (
 			c1_right = -1,
 			c2_left,
 			c2_right,
-			max_col,
-			max_row,
-			px1_left,
-			pw2_left,
-			px1_right,
-			pw2_right,
-			py1_top,
-			ph2_top,
-			py1_bot,
-			ph2_bot,
+			max_col, max_row,
+			px1_left, pw2_left, px1_right, pw2_right,
+			py1_top, ph2_top, py1_bot, ph2_bot,
 
 			vscroll_val = vscroll->value (),
 			hscroll_val = hscroll->value ()
 			;
-	CuiRender	* const	render = mainwindow->projectGetRender ();
+	CuiRender	* const	crender = mainwindow->projectGetRender ();
 	CedViewArea	* w;
 
 
@@ -846,13 +823,13 @@ void CedView :: redrawArea (
 
 	if ( w->width () > 0 )
 	{
-		max_col = cui_ren_column_from_x ( max_col, render,
+		max_col = cui_ren_column_from_x ( max_col, crender,
 			w->width () - 1 );
 	}
 
 	if ( w->height () > 0 )
 	{
-		max_row = cui_ren_row_from_y ( max_row, render,
+		max_row = cui_ren_row_from_y ( max_row, crender,
 			w->height () - 1 );
 	}
 
@@ -868,9 +845,9 @@ void CedView :: redrawArea (
 		c2_left = MIN ( c2, sheet->prefs.split_c2 );
 
 		px1_left = cui_ren_x_from_column ( sheet->prefs.split_c1,
-			render, c1_left );
+			crender, c1_left );
 		pw2_left = cui_ren_x_from_column ( sheet->prefs.split_c1,
-			render, c2_left + 1 ) - px1_left;
+			crender, c2_left + 1 ) - px1_left;
 
 		w = area[ CEDVIEW_TITLE_C1 ];
 		w->update ( px1_left, 0, pw2_left, w->height () );
@@ -885,9 +862,9 @@ void CedView :: redrawArea (
 		c1_right = MAX ( c1, hscroll_val );
 		c2_right = MIN ( c2, max_col );
 
-		px1_right = cui_ren_x_from_column ( hscroll_val, render,
+		px1_right = cui_ren_x_from_column ( hscroll_val, crender,
 			c1_right );
-		pw2_right = cui_ren_x_from_column ( hscroll_val, render,
+		pw2_right = cui_ren_x_from_column ( hscroll_val, crender,
 			c2_right + 1 ) - px1_right;
 
 		w = area[ CEDVIEW_TITLE_C2 ];
@@ -903,9 +880,9 @@ void CedView :: redrawArea (
 		r1_top = MAX ( r1, sheet->prefs.split_r1 );
 		r2_top = MIN ( r2, sheet->prefs.split_r2 );
 
-		py1_top = cui_ren_y_from_row ( sheet->prefs.split_r1, render,
+		py1_top = cui_ren_y_from_row ( sheet->prefs.split_r1, crender,
 			r1_top );
-		ph2_top = cui_ren_y_from_row ( sheet->prefs.split_r1, render,
+		ph2_top = cui_ren_y_from_row ( sheet->prefs.split_r1, crender,
 			r2_top + 1 ) - py1_top;
 
 		w = area[ CEDVIEW_TITLE_R1 ];
@@ -921,8 +898,8 @@ void CedView :: redrawArea (
 		r1_bot = MAX ( r1, vscroll_val );
 		r2_bot = MIN ( r2, max_row );
 
-		py1_bot = cui_ren_y_from_row ( vscroll_val, render, r1_bot );
-		ph2_bot = cui_ren_y_from_row ( vscroll_val, render, r2_bot +
+		py1_bot = cui_ren_y_from_row ( vscroll_val, crender, r1_bot );
+		ph2_bot = cui_ren_y_from_row ( vscroll_val, crender, r2_bot +
 			1 ) - py1_bot;
 
 		w = area[ CEDVIEW_TITLE_R2 ];
@@ -962,7 +939,7 @@ void CedView :: redrawArea (
 	}
 }
 
-void CedView :: ensureVisible (
+void CedView::ensureVisible (
 	CedSheet	* const	sheet,
 	int		const	row,
 	int		const	column
@@ -971,7 +948,7 @@ void CedView :: ensureVisible (
 	int		vscroll_val = vscroll->value (),
 			hscroll_val = hscroll->value ()
 			;
-	CuiRender	* const	render = mainwindow->projectGetRender ();
+	CuiRender	* const	crender = mainwindow->projectGetRender ();
 
 
 	if (	! sheet		||
@@ -995,7 +972,7 @@ void CedView :: ensureVisible (
 				new_row;
 
 
-			last_row = cui_ren_row_from_y ( vscroll_val, render,
+			last_row = cui_ren_row_from_y ( vscroll_val, crender,
 				area[ CEDVIEW_AREA_BR ]->height () );
 
 			if ( last_row <= row )
@@ -1003,7 +980,7 @@ void CedView :: ensureVisible (
 				for ( new_row = row - 1; ; new_row -- )
 				{
 					last_row = cui_ren_row_from_y ( new_row,
-						render, area [ CEDVIEW_AREA_BR
+						crender, area [ CEDVIEW_AREA_BR
 						]->height () );
 
 					if ( last_row <= row )
@@ -1032,7 +1009,7 @@ void CedView :: ensureVisible (
 					new_col;
 
 
-			last_col = cui_ren_column_from_x ( hscroll_val, render,
+			last_col = cui_ren_column_from_x ( hscroll_val, crender,
 				area [ CEDVIEW_AREA_BR ]->width () );
 
 			if ( last_col <= column )
@@ -1040,7 +1017,7 @@ void CedView :: ensureVisible (
 				for ( new_col = column - 1; ; new_col -- )
 				{
 					last_col = cui_ren_column_from_x (
-						new_col, render,
+						new_col, crender,
 						area[ CEDVIEW_AREA_BR
 						]->width () );
 

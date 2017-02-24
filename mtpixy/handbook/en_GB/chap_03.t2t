@@ -1,0 +1,163 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Chapter 3 - System Administrator Notes</TITLE>\1'
+
+
+[Previous chap_02.html] | [Contents chap_00.html] | [Next chap_04.html]
+-------------------------------------------------
+
+=3. System Administrator Notes=
+
+==3.1 Dependencies==[SEC1]
+
+In order to compile and run mtPixy you must have several packages already present on your system:
+
+- A GNU toolchain (gcc, make, gawk, etc).
+- Qt version 5.
+- Cairo (version 1.6 or later).
+- Pango (version 1.22 or later).
+- libpng (version 1.2 or later).
+
+
+These must also include library headers, which some operating systems provide in separate packages.
+
+mtPixy then requires various libraries that I have created:
+
+| **Package**   | **Dependencies** | **Description** |
+| libmtKit      | zlib             | Low level C routines, including strings, UTF-8, ZIP file handling, preferences, trees. |
+| libmtPixy     | libmtKit, zlib, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
+| libmtPixyUI   | libmtKit, libmtPixy | Toolkit agnostic UI code, e.g. undo. |
+| libmtQEX      | libmtKit, Qt5    | Various Qt function utilities including preferences editor. |
+
+The other optional parts of the suite have these dependencies:
+
+| **Package**   | **Dependencies** | **Description** |
+| mtPixyCLI     | libmtKit, libmtPixy, libmtPixyUI, readline | Command line pixel editor |
+| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel tools |
+
+
+==3.2 Compilation==[SEC2]
+
+As outlined above you must build and install the packages in this order:
+
+- libmtKit
+- libmtPixy
+- libmtPixyUI
+- libmtQEX
+- mtPixy
+
+
+In all cases you use these commands to compile the programs:
+
+```
+./configure
+make
+```
+
+
+Don't forget to study the makefile and configure script before doing anything.
+For the complete set of configure options use:
+
+```
+./configure --help
+```
+
+The build system I have created uses simple hand built scripts and makefiles.
+I find this the best way to build the various components of the project.  More
+elaborate systems like GNU Autotools are of no interest to me as they do not
+solve any problems I have (portability outside the GNU/Linux ecosystem is of
+no interest to me).
+
+
+==3.3 Installation==[SEC3]
+
+Once compilation is completed, use this to install (you must have root user rights):
+
+```
+make install
+```
+
+You can change the destination directory at this stage if you are creating a package by using:
+
+```
+make install DESTDIR=/my/chosen/directory/
+```
+
+
+===3.3.1 Program man Page===[SEC31]
+
+mtPixy has usage information contained in the associated man page.  This can be read in the usual way using the man program, such as this example:
+
+```
+man mtpixy-qt5
+```
+
+
+
+==3.4 Uninstalling==[SEC4]
+
+You can uninstall the program and libraries by using (you must have root user rights):
+
+```
+make uninstall
+```
+
+You will also need to remove any preferences files which are
+kept in the user directories such as /home/user/.config/mtpixy/prefs.txt
+
+
+
+==3.5 Package Management==[SEC5]
+
+I aim to get my software working on as many different GNU/Linux systems as possible.  To achieve this rationally without testing on hundreds of systems, I work towards compatibility with these system types: Debian, Fedora, and Arch.  In doing so I will also achieve compatibility with similar systems.
+
+To achieve these goals as quickly and as easily as possible I use various scripts in the /pkg/ directory to install and test the software (including how I package the software using native package management tools such as pacman, dpkg and rpm).  The README.txt file in /pkg/ documents how I do these things, step by step.
+
+The scripts for the different systems all do very different jobs but their interface at the command line is identical.  For example to build and install on different platforms using the native package management system you could use:
+
+```
+./build_arch.sh --preconf "CC=clang"
+./build_debian.sh --conf "debug"
+./build_fedora.sh --conf "--libdir=/usr/lib64"
+```
+
+If your system doesn't use pacman, dpkg, or rpm then you can always use the classic ./configure, make, make install based script using the same arguments:
+
+```
+./build_install.sh --preconf "CC=clang" --conf "--libdir=/usr/lib64"
+```
+
+And if you want to remove all of the installed packages from your system, just use one of these:
+
+```
+./build_arch.sh remove
+./build_debian.sh remove
+./build_fedora.sh remove
+./build_install.sh remove
+```
+
+Here are the options that are available to these 4 scripts:
+
+| flush         | Clear out the temporary files after a compilation. |
+| remove        | Remove all installed files from a previous build and install. |
+| --preconf ARG | Add environment variable settings such as CC or CFLAGS. |
+| --conf ARG    | Pass arguments to the configure script such as --libdir or debug. |
+| --bcfile ARG  | If you want to pass different configure lines to different packages you would use a custom built bcfile.  See /pkg/ for a few examples example of this.  When using --bcfile the options --preconf and --conf do nothing. |
+
+
+Normally all of the different packages are built in sequence.  However you can also pass specific package names to build and install just those items, such as:
+
+```
+./build_install.sh libmtkit libmtpixy
+```
+
+To remove these items you would use:
+
+```
+./build_install.sh libmtkit libmtpixy remove
+```
+
+
+
+
+-------------------------------------------------
+[Previous chap_02.html] | [Contents chap_00.html] | [Next chap_04.html]

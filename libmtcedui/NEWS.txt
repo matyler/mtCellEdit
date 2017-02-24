@@ -1,3 +1,7 @@
+3.0	2017-2-24
+
+	* Moved to C++.
+
 2.7	2016-5-14
 
 	* mtFont inherited from old libmtIMG.

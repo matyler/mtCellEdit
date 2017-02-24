@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,51 +19,51 @@
 
 
 
-void MainWindow :: pressFindWildcards ()
+void MainWindow::pressFindWildcards ()
 {
 	if ( actFindWildcards->isChecked () )
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_WILDCARDS, 1 );
+		pprfs->set ( GUI_INIFILE_FIND_WILDCARDS, 1 );
 	}
 	else
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_WILDCARDS, 0 );
+		pprfs->set ( GUI_INIFILE_FIND_WILDCARDS, 0 );
 	}
 }
 
-void MainWindow :: pressFindCase ()
+void MainWindow::pressFindCase ()
 {
 	if ( actFindCase->isChecked () )
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_CASE_SENSITIVE, 1 );
+		pprfs->set ( GUI_INIFILE_FIND_CASE_SENSITIVE, 1 );
 	}
 	else
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_CASE_SENSITIVE, 0 );
+		pprfs->set ( GUI_INIFILE_FIND_CASE_SENSITIVE, 0 );
 	}
 }
 
-void MainWindow :: pressFindValue ()
+void MainWindow::pressFindValue ()
 {
 	if ( actFindValue->isChecked () )
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_VALUE, 1 );
+		pprfs->set ( GUI_INIFILE_FIND_VALUE, 1 );
 	}
 	else
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_VALUE, 0 );
+		pprfs->set ( GUI_INIFILE_FIND_VALUE, 0 );
 	}
 }
 
-void MainWindow :: pressFindSheets ()
+void MainWindow::pressFindSheets ()
 {
 	if ( actFindSheets->isChecked () )
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_ALL_SHEETS, 1 );
+		pprfs->set ( GUI_INIFILE_FIND_ALL_SHEETS, 1 );
 	}
 	else
 	{
-		prefs_set_int ( GUI_INIFILE_FIND_ALL_SHEETS, 0 );
+		pprfs->set ( GUI_INIFILE_FIND_ALL_SHEETS, 0 );
 	}
 }
 
@@ -81,22 +81,21 @@ enum
 
 
 
-void MainWindow :: addFindRow (
+int MainWindow::addFindRow (
 	CedSheet	* const	sheet,
-	CedCell		* const	cell,
+	CedCell	const	* const	cell,
 	int		const	r,
 	int		const	c
 	)
 {
-	if ( ! sheet || ! cell )
-	{
-		return;
-	}
-
-
-	int		row = findTable->rowCount ();
+	int	const	row = findTable->rowCount ();
 	char	const	* sheet_name = NULL;
 
+
+	if ( ! sheet || ! cell || row >= FIND_MAX_MATCHES )
+	{
+		return 1;
+	}
 
 	findTable->setRowCount ( row + 1 );
 
@@ -128,6 +127,8 @@ void MainWindow :: addFindRow (
 	twItem = new QTableWidgetItem;
 	twItem->setText ( mtQEX::qstringFromC ( cell->text ) );
 	findTable->setItem ( row, FIND_COL_CONTENT, twItem );
+
+	return 0;
 }
 
 static int be_find_cb (
@@ -138,25 +139,20 @@ static int be_find_cb (
 	void		* const	user_data
 	)
 {
-	int		* const	tot = (int *)user_data;
+	MainWindow	* const mw = (MainWindow *)user_data;
 
 
-	tot[0] ++;
-
-	if ( tot[0] > FIND_MAX_MATCHES )
+	if ( mw->addFindRow ( sheet, cell, r, c ) )
 	{
 		return 1;
 	}
 
-	mainwindow->addFindRow ( sheet, cell, r, c );
-
 	return 0;
 }
 
-void MainWindow :: pressFind ()
+void MainWindow::pressFind ()
 {
 	CedSheet	* sheet;
-	int		counter = 0;
 
 
 	sheet = projectGetSheet ();
@@ -166,7 +162,7 @@ void MainWindow :: pressFind ()
 		return;
 	}
 
-	if ( prefs_get_int ( GUI_INIFILE_FIND_ALL_SHEETS ) )
+	if ( pprfs->getInt ( GUI_INIFILE_FIND_ALL_SHEETS ) )
 	{
 		findTable->setColumnHidden ( FIND_COL_SHEET, false );
 	}
@@ -175,20 +171,20 @@ void MainWindow :: pressFind ()
 		findTable->setColumnHidden ( FIND_COL_SHEET, true );
 	}
 
-	prefs_set_string ( GUI_INIFILE_FIND_TEXT,
+	pprfs->set ( GUI_INIFILE_FIND_TEXT,
 		editFindText->text ().toUtf8 ().data () );
 
-	mainwindow->setEnabled ( false );
+	setEnabled ( false );
 	findTable->clearContents ();
 	findTable->setRowCount ( 0 );
 
 	be_find ( cedFile, sheet,
 		editFindText->text ().toUtf8 ().data (),
-		prefs_get_int ( GUI_INIFILE_FIND_WILDCARDS ),
-		prefs_get_int ( GUI_INIFILE_FIND_CASE_SENSITIVE ),
-		prefs_get_int ( GUI_INIFILE_FIND_VALUE ),
-		prefs_get_int ( GUI_INIFILE_FIND_ALL_SHEETS ),
-		be_find_cb, (void *) &counter
+		pprfs->getInt ( GUI_INIFILE_FIND_WILDCARDS ),
+		pprfs->getInt ( GUI_INIFILE_FIND_CASE_SENSITIVE ),
+		pprfs->getInt ( GUI_INIFILE_FIND_VALUE ),
+		pprfs->getInt ( GUI_INIFILE_FIND_ALL_SHEETS ),
+		be_find_cb, (void *)this
 		);
 
 	// This hack ensures that all columns are right width (not just visible)
@@ -197,12 +193,12 @@ void MainWindow :: pressFind ()
 	findTable->setVisible ( true );
 
 	findTable->setCurrentCell ( 0, 0 );
-	mainwindow->setEnabled ( true );
+	setEnabled ( true );
 
 	findTable->setFocus ( Qt::OtherFocusReason );
 }
 
-void MainWindow :: findCellChanged (
+void MainWindow::findCellChanged (
 	int	const	currentRow,
 	int	const	ARG_UNUSED ( currentColumn ),
 	int	const	previousRow,
@@ -248,7 +244,10 @@ void MainWindow :: findCellChanged (
 			i = buttonSheet->findText ( twItem->text () );
 			if ( i >= 0 )
 			{
-				buttonSheet->setCurrentIndex ( i );
+				if ( i != buttonSheet->currentIndex () )
+				{
+					buttonSheet->setCurrentIndex ( i );
+				}
 			}
 			else
 			{
@@ -264,7 +263,7 @@ void MainWindow :: findCellChanged (
 	findTable->setFocus ( Qt::OtherFocusReason );
 }
 
-void MainWindow :: pressOptionsFind ()
+void MainWindow::pressOptionsFind ()
 {
 	if ( editFindText->hasFocus () )
 	{
@@ -280,7 +279,7 @@ void MainWindow :: pressOptionsFind ()
 	}
 }
 
-void MainWindow :: pressOptionsView ()
+void MainWindow::pressOptionsView ()
 {
 	if ( viewTab->hasFocus () )
 	{

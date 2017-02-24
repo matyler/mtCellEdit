@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,15 +19,15 @@
 
 
 
-qexSaveFileDialog :: qexSaveFileDialog (
-	QWidget		* const	parent,
+mtQEX::SaveFileDialog::SaveFileDialog (
+	QWidget		* const	par,
 	QString		const	title,
 	QStringList	const	formatList,
 	int		const	format,
 	char	const	* const	filename
 	)
 	:
-	QFileDialog	( parent ),
+	QFileDialog	( par ),
 	comboFormat	()
 {
 	QString		s;
@@ -69,7 +69,7 @@ qexSaveFileDialog :: qexSaveFileDialog (
 		row->setMargin ( 0 );
 		w->setLayout ( row );
 
-		QLabel * label = new QLabel ( tr ( "File Format:" ) );
+		QLabel * label = new QLabel ( "File Format:" );
 		row->addWidget ( label );
 
 		comboFormat = new QComboBox;
@@ -91,7 +91,7 @@ qexSaveFileDialog :: qexSaveFileDialog (
 	}
 }
 
-int qexSaveFileDialog :: getFormat ()
+int mtQEX::SaveFileDialog::getFormat ()
 {
 	if ( comboFormat )
 	{

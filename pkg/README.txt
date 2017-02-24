@@ -5,38 +5,38 @@ This document outlines my testing procedures before this release.
 * Your system must satisfy all of the requirements outlined in section 3 of the handbook.
 
 
------------------------------------
-Manjaro Linux 15.12 [x86_64] (2015)
------------------------------------
+--------------------------------
+Debian 8 (amd64) [x86_64] (2015)
+--------------------------------
 
-Package deps: base-devel txt2tags qt5-base qt4 clang-analyzer colorgcc time valgrind cppcheck
+Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline6-dev libqt4-dev qtbase5-dev qtcreator qt4-qtconfig colorgcc time libpango1.0-dev libpng12-dev libgif-dev libjpeg-dev
 
-* Install
-	./build_arch.sh --conf "debug"
-	./build_arch.sh --conf "debug" libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 libmtgex mtcelledit mtraft
-	./build_arch.sh flush
+* Install - old standards
+	./build_debian.sh --preconf "LDFLAGS=-Wl,--as-needed" --conf "debugold --libdir=/usr/lib/x86_64-linux-gnu"
+	./build_debian.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4 --preconf "LDFLAGS=-Wl,--as-needed" --conf "debugold --libdir=/usr/lib/x86_64-linux-gnu"
+	./build_debian.sh flush
+
+* Install - new standards
+	./build_debian.sh --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
+	./build_debian.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4 --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
+	./build_debian.sh flush
 
 * Test build using colourised warnings:
 	./build_test.sh --preconf "CC=colorgcc CXX=colorgcc" --conf "debug"
 	./build_install.sh flush
 
-	./build_test.sh --preconf "CC=colorgcc CXX=colorgcc" --conf "debug --enable-qt4" libmtqex4 mtcelledit-qt4 mteleana-qt4 mtraft-qt4
+	./build_test.sh --preconf "CC=colorgcc CXX=colorgcc" --conf "debug --use-qt4" libmtqex4 mtcelledit-qt4 mteleana-qt4 mtraft-qt4 mtpixy-qt4
 	./build_install.sh flush
 
 * Build using clang-static to expose possible errors:
-
 	./clang_scan.sh
 	firefox /tmp/scan-build-*/index.html
 	./build_install.sh flush
 
-* Use cppcheck to expose programmer errors:
+* Use cppcheck to expose programmer errors and unused functions:
 	./cppcheck.sh > ~/cppcheck.txt 2>&1
 	less ~/cppcheck.txt
 	rm ~/cppcheck.txt
-
-* Use readelf to study all libs and bins in search of cruft or overexposed private functions:
-	./readelf_cmp.sh --libdir /usr/lib
-	./readelf_cmp.sh flush
 
 * Run ./test/* test suites to expose regressions.
 	./configure debug
@@ -44,64 +44,91 @@ Package deps: base-devel txt2tags qt5-base qt4 clang-analyzer colorgcc time valg
 	make clean
 	make time
 	./configure flush
+
+* Use file format test suites from:
+	- http://www.schaik.com/pngsuite/
+	- http://entropymine.com/jason/bmpsuite/
+	- https://code.google.com/archive/p/imagetestsuite/
+
+	valgrind --leak-check=full --show-possibly-lost=no pixyls .../*.bmp
+	valgrind --leak-check=full --show-possibly-lost=no pixyls .../*.gif
+	valgrind --leak-check=full --show-possibly-lost=no pixyls .../*.jpg
+	valgrind --leak-check=full --show-possibly-lost=no pixyls .../*.png
 
 * Smoke test the apps.
 
 * Skim documentation to expose cruft and mistakes.
 
 * Remove
-	./build_arch.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 libmtgex mtcelledit mtraft
-	./build_arch.sh remove
-	./build_arch.sh flush
-
-
--------------------------------------
-Lubuntu 16.04 (amd64) [x86_64] (2016)
--------------------------------------
-
-Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libgtk-3-dev libgtk2.0-dev libreadline6-dev libqt4-dev qtbase5-dev qtcreator qt4-qtconfig colorgcc time
-
-* Install
-	./build_debian.sh --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
-	./build_debian.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 libmtgex mtcelledit mtraft --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
-	./build_debian.sh flush
-
-* Run ./test/* test suites to expose regressions.
-	./configure debug
-	make valg
-	make clean
-	make time
-	./configure flush
-
-* Remove
-	./build_debian.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 libmtgex mtcelledit mtraft
+	./build_debian.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4
 	./build_debian.sh remove
 	./build_debian.sh flush
 
 
-------------------------------
-Fedora 23 XFCE [x86_64] (2015)
-------------------------------
+-----------------------------------
+Manjaro Linux 16.06 [x86_64] (2016)
+-----------------------------------
 
-Package deps: clang clang-analyzer valgrind txt2tags automake gcc gcc-c++ bison flex cppcheck gtk2-devel readline-devel rpmdevtools qt5-qtbase-devel qtchooser qt-devel qt-config
+Package deps: base-devel txt2tags qt5-base qt4 clang-analyzer colorgcc time valgrind cppcheck libpng giflib libjpeg
 
 * Install
-	./build_fedora.sh --conf "--libdir=/usr/lib64"
-	./build_fedora.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 libmtgex mtcelledit mtraft --conf "--libdir=/usr/lib64"
+	./build_arch.sh
+	./build_arch.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4
+	./build_arch.sh flush
 
 * Smoke test the apps.
 
 * Remove
-	./build_fedora.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 libmtgex mtcelledit mtraft
+	./build_arch.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4
+	./build_arch.sh remove
+	./build_arch.sh flush
+
+
+-------------------------------
+CentOS 7.2 XFCE [x86_64] (2015)
+-------------------------------
+
+Package deps: clang clang-analyzer valgrind txt2tags automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools qt5-qtbase-devel qtchooser qt-devel qt-config cairo-devel pango-devel libpng-devel libjpeg-turbo-devel giflib-devel
+
+* Install
+	./build_fedora.sh --conf "--libdir=/usr/lib64"
+	./build_fedora.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4 --conf "--libdir=/usr/lib64"
+
+* Smoke test the apps.
+
+* Remove
+	./build_fedora.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mteleana-qt4 mtpixy-qt4
 	./build_fedora.sh remove
 	./build_fedora.sh flush
+
+
+-----------------------------------------
+Debian 7 (i386 256MB RAM) [x86_32] (2013)
+-----------------------------------------
+
+Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline6-dev libqt4-dev qtcreator qt4-qtconfig colorgcc time libpango1.0-dev libpng12-dev libgif-dev libjpeg-dev
+
+* Install
+	./build_debian.sh --bcfile bcfile_debian7_i386.txt
+	./build_debian.sh flush
+
+* Run ./test/* test suites to expose regressions.
+	./configure
+	make time
+	./configure flush
+
+* Smoke test the apps.
+
+* Remove
+	./build_debian.sh --bcfile bcfile_debian7_i386.txt remove
+	./build_debian.sh --bcfile bcfile_debian7_i386.txt flush
 
 
 ------------------------------------------------------
 Debian 7 (armhf vexpress-a9 256MB RAM) [ARM_32] (2013)
 ------------------------------------------------------
 
-Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libgtk-3-dev libgtk2.0-dev libreadline6-dev libqt4-dev qtcreator qt4-qtconfig colorgcc time
+Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline6-dev libqt4-dev qtcreator qt4-qtconfig colorgcc time libpango1.0-dev libpng12-dev libgif-dev libjpeg-dev
 
 * Install
 	./build_install.sh --bcfile bcfile_debian7_arm.txt
@@ -122,7 +149,7 @@ Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags autom
 Debian 7 (powerpc 256MB RAM) [PPC_32] (2013)
 --------------------------------------------
 
-Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libgtk-3-dev libgtk2.0-dev libreadline6-dev libqt4-dev qtcreator qt4-qtconfig colorgcc time
+Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline6-dev libqt4-dev qtcreator qt4-qtconfig colorgcc time libpango1.0-dev libpng12-dev libgif-dev libjpeg-dev
 
 * Install
 	./build_install.sh --bcfile bcfile_debian7_ppc.txt
@@ -137,22 +164,6 @@ Package deps: dh-make pbuilder clang valgrind bison flex cppcheck txt2tags autom
 * Remove
 	./build_install.sh --bcfile bcfile_debian7_ppc.txt remove
 	./build_install.sh --bcfile bcfile_debian7_ppc.txt flush
-
-
----------------------------
-PC-BSD 10.0 [x86_64] (2014)
----------------------------
-
-Package deps: devel/qt4
-
-* Install
-	./build_install.sh --bcfile bcfile_freebsd.txt
-
-* Smoke test the apps.
-
-* Remove
-	./build_install.sh --bcfile bcfile_freebsd.txt remove
-	./build_install.sh --bcfile bcfile_freebsd.txt flush
 
 
 -----

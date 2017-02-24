@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -66,8 +66,8 @@ public:
 
 	void		polymapScroll ( int dx, int dy );
 	cairo_t		* prepRender ( int px, int py, int pw, int ph );
-	void		wheelZoom ( int x, int y, int delta );
-	void		clickMap ( int x, int y );
+	void		wheelZoom ( int xx, int yy, int delta );
+	void		clickMap ( int xx, int yy );
 	void		resetMapSize ();
 	void		addFindRow (
 				char const * seat_text,
@@ -141,9 +141,9 @@ private:
 	MapView		* polymapScrollArea;
 	MapCanvas	* mapCanvas;
 
-	qexImage	* cartogramWidget;
+	mtQEX::Image	* cartogramWidget;
 
-	qexImage	* diagramWidget;
+	mtQEX::Image	* diagramWidget;
 	QComboBox	* comboDiagramLeft;
 	QComboBox	* comboDiagramRight;
 
@@ -154,7 +154,7 @@ private:
 	eleanaIndex	* index;
 	eleanaElection	* election;
 
-	qexPrefs	prefs;
+	mtKit::Prefs	prefs;
 };
 
 class MapView : public QScrollArea
@@ -162,7 +162,7 @@ class MapView : public QScrollArea
 	Q_OBJECT
 
 private:
-	void		resizeEvent ( QResizeEvent * event );
+	void		resizeEvent ( QResizeEvent * ev );
 };
 
 class MapCanvas : public QWidget
@@ -173,11 +173,11 @@ public:
 	MapCanvas ();
 
 private:
-	void		paintEvent ( QPaintEvent * event );
-	void		mousePressEvent ( QMouseEvent * event );
-	void		mouseMoveEvent ( QMouseEvent * event );
-	void		mouseEventRouter ( QMouseEvent * event, int caller );
-	void		wheelEvent ( QWheelEvent * event );
+	void		paintEvent ( QPaintEvent * ev );
+	void		mousePressEvent ( QMouseEvent * ev );
+	void		mouseMoveEvent ( QMouseEvent * ev );
+	void		mouseEventRouter ( QMouseEvent * ev, int caller );
+	void		wheelEvent ( QWheelEvent * ev );
 
 // -----------------------------------------------------------------------------
 

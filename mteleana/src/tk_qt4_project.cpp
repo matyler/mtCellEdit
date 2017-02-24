@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-int MainWindow :: projectLoad (
+int MainWindow::projectLoad (
 	char	const * const	filename
 	)
 {
@@ -44,9 +44,8 @@ int MainWindow :: projectLoad (
 		QString		tmp = mtQEX::qstringFromC ( filename );
 
 
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			QString ( tr ( "Unable to load index file %1." )
-			).arg ( tmp ) );
+		QMessageBox::critical ( this, "Error",
+			QString( "Unable to load index file %1.").arg ( tmp ) );
 
 		delete new_index;
 
@@ -91,21 +90,21 @@ int MainWindow :: projectLoad (
 	return 0;			// Success
 }
 
-void MainWindow :: purgeIndexLoaded ()
+void MainWindow::purgeIndexLoaded ()
 {
 	delete ( index );
 	index = NULL;
 }
 
-void MainWindow :: purgeDataLoaded ()
+void MainWindow::purgeDataLoaded ()
 {
 	delete ( election );
 	election = NULL;
 }
 
-void MainWindow :: clearSeatTable ()
+void MainWindow::clearSeatTable ()
 {
-	labelSeat->setText ( tr ( "Right click map to select a seat" ) );
+	labelSeat->setText ( "Right click map to select a seat" );
 
 	tableSeat->clear ();
 	tableSeat->setRowCount ( 0 );
@@ -120,7 +119,7 @@ void MainWindow :: clearSeatTable ()
 		QHeaderView::ResizeToContents );
 }
 
-void mtEleana :: tableSetupDetails (
+void mtEleana::tableSetupDetails (
 	QTableWidget	* const table
 	)
 {
@@ -134,7 +133,7 @@ void mtEleana :: tableSetupDetails (
 		QHeaderView::ResizeToContents );
 }
 
-void MainWindow :: setupSeatTable (
+void MainWindow::setupSeatTable (
 	int	const	row
 	)
 {
@@ -253,6 +252,6 @@ void MainWindow :: setupSeatTable (
 		}
 	}
 
-	mtEleana :: tableSetupDetails ( tableSeat );
+	mtEleana::tableSetupDetails ( tableSeat );
 }
 

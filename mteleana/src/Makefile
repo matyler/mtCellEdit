@@ -1,8 +1,5 @@
 include		../_conf.txt
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG)
-CXXFLAGS	= $(BIN_CFLAGS) $(CXXFLAG)
-LDFLAGS 	= $(LDFLAG)
 OBJS		=		\
 		$(TK_OBJ)	\
 		be_cline.o	\
@@ -15,7 +12,7 @@ OBJS		=		\
 		be_summary.o	\
 
 
-.PHONY: 	all install uninstall clean
+.PHONY:		all install uninstall clean
 
 all:		$(BIN_NAME)
 

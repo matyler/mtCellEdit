@@ -15,38 +15,37 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <time.h>
-#include <stdint.h>
-#include <pango/pangocairo.h>
+extern "C" {
+
+	#include <stdlib.h>
+	#include <string.h>
+	#include <math.h>
+	#include <unistd.h>
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <errno.h>
+	#include <time.h>
+	#include <pango/pangocairo.h>
+
+	#ifdef CAIRO_HAS_PDF_SURFACE
+	#include <cairo-pdf.h>
+	#if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
+		#define USE_CAIRO_EPS
+	#endif
+	#endif
+
+	#ifdef CAIRO_HAS_PS_SURFACE
+	#include <cairo-ps.h>
+	#endif
+
+	#ifdef CAIRO_HAS_SVG_SURFACE
+	#include <cairo-svg.h>
+	#endif
+}
+
+
 
 #include "mtcedui.h"
-
-
-
-#ifdef CAIRO_HAS_PDF_SURFACE
-#include <cairo-pdf.h>
-#if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
-	#define USE_CAIRO_EPS
-#endif
-#endif
-
-
-#ifdef CAIRO_HAS_PS_SURFACE
-#include <cairo-ps.h>
-#endif
-
-
-#ifdef CAIRO_HAS_SVG_SURFACE
-#include <cairo-svg.h>
-#endif
 
 
 
@@ -85,19 +84,6 @@ int cui_sheet_paste_area (
 	int		paste_rowtot,
 	int		paste_coltot,
 	int		mode
-	);
-
-mtImage * cui_font_render (		// Create image from text
-	mtFont		* font,
-	char	const	* utf8,
-	int		max_width,	// 0=No max width
-	int		attr_val,	// CED_TEXT_STYLE_*
-	int		row_pad		// Y start of glyph in this row
-	);
-
-void cui_font_set_attr (
-	PangoLayout	* layout,
-	int		attr_val
 	);
 
 

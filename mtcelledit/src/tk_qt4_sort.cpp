@@ -30,17 +30,15 @@ static int		sort_table [ MAX_SORT ][ SORT_TABLE_TOTAL ],
 			;
 
 
-SortDialog :: SortDialog (
+SortDialog::SortDialog (
 	int		const	axis,
-	QWidget		* const	parent
+	QWidget		* const	par
 	)
 	:
-	QDialog		( parent )
+	QDialog		( par )
 {
 	CedSheet	* const	sheet = mainwindow->projectGetSheet ();
-	int		i,
-			new_axis_tot,
-			new_sort_origin;
+	int		i, new_axis_tot, new_sort_origin;
 	QStringList	tableTitles;
 	QPushButton	* button;
 
@@ -65,8 +63,8 @@ SortDialog :: SortDialog (
 		}
 
 		new_axis_tot = MIN ( sort_rowtot, MAX_SORT );
-		setWindowTitle ( tr ( "Sort Columns" ) );
-		tableTitles << tr ( "Row" );
+		setWindowTitle ( "Sort Columns" );
+		tableTitles << "Row";
 		new_sort_origin = sort_row;
 	}
 	else				// Sort rows
@@ -77,8 +75,8 @@ SortDialog :: SortDialog (
 		}
 
 		new_axis_tot = MIN ( sort_coltot, MAX_SORT );
-		setWindowTitle ( tr ( "Sort Rows" ) );
-		tableTitles << tr ( "Column" );
+		setWindowTitle ( "Sort Rows" );
+		tableTitles << "Column";
 		new_sort_origin = sort_col;
 	}
 
@@ -105,15 +103,13 @@ SortDialog :: SortDialog (
 	}
 
 
-	QVBoxLayout * layout = new QVBoxLayout;
-	setLayout ( layout );
+	QVBoxLayout * layv = new QVBoxLayout;
+	setLayout ( layv );
 
 	QHBoxLayout * topRow = new QHBoxLayout;
-	layout->addLayout ( topRow );
+	layv->addLayout ( topRow );
 
-	tableTitles
-		 << tr ( "Direction" )
-		 << tr ( "Case Sensitive" );
+	tableTitles << "Direction" << "Case Sensitive";
 
 	tableWidget = new QTableWidget ( sort_axis_total, 3 );
 	topRow->addWidget ( tableWidget );
@@ -147,34 +143,34 @@ SortDialog :: SortDialog (
 	connect ( spinBoxWidget, SIGNAL ( valueChanged ( int ) ),
 		this, SLOT ( spinChanged ( int ) ) );
 
-	checkDirection = new QCheckBox ( tr ( "Direction" ) );
+	checkDirection = new QCheckBox ( "Direction" );
 	vlay->addWidget ( checkDirection );
 	connect ( checkDirection, SIGNAL ( stateChanged ( int ) ),
 		this, SLOT ( directionChanged ( int ) ) );
 
-	checkCase = new QCheckBox ( tr ( "Case Sensitive" ) );
+	checkCase = new QCheckBox ( "Case Sensitive" );
 	vlay->addWidget ( checkCase );
 	connect ( checkCase, SIGNAL ( stateChanged ( int ) ),
 		this, SLOT ( caseChanged ( int ) ) );
 
-	button = new QPushButton ( tr ( "Move Up" ) );
+	button = new QPushButton ( "Move Up" );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressMoveUp () ) );
 	vlay->addWidget ( button );
 
-	button = new QPushButton ( tr ( "Move Down" ) );
+	button = new QPushButton ( "Move Down" );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressMoveDown () ) );
 	vlay->addWidget ( button );
 
 	QHBoxLayout * hRow = new QHBoxLayout;
-	layout->addLayout ( hRow );
+	layv->addLayout ( hRow );
 
-	button = new QPushButton ( tr ( "&Close" ) );
+	button = new QPushButton ( "&Close" );
 	connect ( button, SIGNAL ( clicked () ), this, SLOT ( pressClose () ) );
 	hRow->addWidget ( button );
 
-	button = new QPushButton ( tr ( "&Sort" ) );
+	button = new QPushButton ( "&Sort" );
 	button->setDefault ( true );
 	connect ( button, SIGNAL ( clicked () ), this, SLOT ( pressSort () ) );
 	hRow->addWidget ( button );
@@ -198,7 +194,7 @@ SortDialog :: SortDialog (
 	exec ();
 }
 
-int SortDialog :: getTableRow ()
+int SortDialog::getTableRow ()
 {
 	int	const	i = tableWidget->currentRow ();
 
@@ -211,7 +207,7 @@ int SortDialog :: getTableRow ()
 	return i;
 }
 
-void SortDialog :: tableRowClick (
+void SortDialog::tableRowClick (
 	int	const	currentRow,
 	int	const	ARG_UNUSED ( currentColumn ),
 	int	const	previousRow,
@@ -240,7 +236,7 @@ void SortDialog :: tableRowClick (
 	setRowValues ( currentRow );
 }
 
-void SortDialog :: spinChanged (
+void SortDialog::spinChanged (
 	int	const	i
 	)
 {
@@ -252,7 +248,7 @@ void SortDialog :: spinChanged (
 	setRowValues ( r );
 }
 
-void SortDialog :: directionChanged (
+void SortDialog::directionChanged (
 	int	const	ARG_UNUSED ( i )
 	)
 {
@@ -265,7 +261,7 @@ void SortDialog :: directionChanged (
 	setRowValues ( r );
 }
 
-void SortDialog :: caseChanged (
+void SortDialog::caseChanged (
 	int	const	ARG_UNUSED ( i )
 	)
 {
@@ -278,7 +274,7 @@ void SortDialog :: caseChanged (
 	setRowValues ( r );
 }
 
-void SortDialog :: setRowValues (
+void SortDialog::setRowValues (
 	int	const	row
 	)
 {
@@ -298,32 +294,32 @@ void SortDialog :: setRowValues (
 	twItem = new QTableWidgetItem;
 	if ( sort_table [ row ][ SORT_TABLE_CASE_SENSITIVE ] )
 	{
-		twItem->setText ( tr ( "Yes" ) );
+		twItem->setText ( "Yes" );
 	}
 	else
 	{
-		twItem->setText ( tr ( "No" ) );
+		twItem->setText ( "No" );
 	}
 	tableWidget->setItem ( row, SORT_TABLE_CASE_SENSITIVE, twItem );
 
 	twItem = new QTableWidgetItem;
 	if ( sort_table [ row ][ SORT_TABLE_DIRECTION ] )
 	{
-		twItem->setText ( tr ( "9 -> 1" ) );
+		twItem->setText ( "9 -> 1" );
 	}
 	else
 	{
-		twItem->setText ( tr ( "1 -> 9" ) );
+		twItem->setText ( "1 -> 9" );
 	}
 	tableWidget->setItem ( row, SORT_TABLE_DIRECTION, twItem );
 }
 
-void SortDialog :: pressClose ()
+void SortDialog::pressClose ()
 {
 	close ();
 }
 
-void SortDialog :: swapRows (
+void SortDialog::swapRows (
 	int	const	delta
 	)
 {
@@ -352,17 +348,17 @@ void SortDialog :: swapRows (
 	tableWidget->setCurrentCell ( b, 0 );
 }
 
-void SortDialog :: pressMoveDown ()
+void SortDialog::pressMoveDown ()
 {
 	swapRows ( 1 );
 }
 
-void SortDialog :: pressMoveUp ()
+void SortDialog::pressMoveUp ()
 {
 	swapRows ( -1 );
 }
 
-void SortDialog :: pressSort ()
+void SortDialog::pressSort ()
 {
 	int		i,
 			res,
@@ -414,12 +410,12 @@ void SortDialog :: pressSort ()
 	close ();
 }
 
-void MainWindow :: pressColumnSort ()
+void MainWindow::pressColumnSort ()
 {
 	SortDialog	dialog ( SORT_COLUMNS, this );
 }
 
-void MainWindow :: pressRowSort ()
+void MainWindow::pressRowSort ()
 {
 	SortDialog	dialog ( SORT_ROWS, this );
 }

@@ -1,0 +1,13 @@
+Source: mtpixy-qt4
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libqt4-dev, libmtkit, libmtpixy, libmtpixyui, libmtqex4
+Standards-Version: 3.9.3
+Homepage: http://mtcelledit.sourceforge.net/
+
+Package: mtpixy-qt4
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt4 Pixel GUI
+ .

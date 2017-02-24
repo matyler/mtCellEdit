@@ -1,0 +1,124 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Chapter 5 - Developer Notes</TITLE>\1'
+
+
+[Previous chap_04.html] | [Contents chap_00.html] | [Next chap_A.html]
+-------------------------------------------------
+
+=5 Developer Notes=
+
+==5.1 mtPixyUtils==[SEC1]
+
+mtPixyUtils is a collection of command line programs to manipulate image files.  Here is a list of the programs provided:
+
+| **Program** | **Description** |
+| pixyls      | List image file information. |
+| pixynew     | Create a new image. |
+| pixyresize  | Resize an image. |
+| pixyscale   | Scale an image. |
+| pixyutils   | Main program which can be run directly or by using a symlink. |
+
+
+For more detailed information use:
+
+```
+man pixyutils
+```
+
+
+==5.2 mtPixyCLI==[SEC2]
+
+mtPixyCLI is a program that provides image editing functionality via a Command Line Interface (CLI).  It offers exactly the same functions as the GUI based mtPixy, but instead uses text commands.
+
+Both GUI's and CLI's have value, and allow particular jobs to be done more efficiently.  For example I use mtPixyCLI as part of the testing phase before I release the whole mtCellEdit suite.  I have created a number of tests in the form of scripts which test each part of the core libraries.  This exposes any problems that may have crept into the code, and is a good form of regression testing.
+
+
+===5.2.1 Commands===[SEC21]
+
+mtPixyCLI reads instructions from the user via GNU Readline.  This offers useful interactive facilities like using the up and down arrows to access previous commands.
+
+It is also possible to run a script from the command line like these examples:
+
+```
+cat script.txt | mtpixycli
+mtpixycli < script.txt
+mtpixycli < script.txt > log.txt 2>&1
+```
+
+Here is the complete list of commands that mtPixyCLI accepts:
+
+| **Command**            | **Arguments** | **Notes** |
+| canvas flip_h          |       | Flip canvas horizontally
+| canvas flip_v          |       | Flip canvas vertically
+| canvas indexed         | <DITHER none **|** basic **|** floyd> | Convert canvas from RGB to Indexed
+| canvas rgb             |       | Convert canvas from Indexed to RGB
+| canvas rotate_a        |       | Rotate canvas anticlockwise
+| canvas rotate_c        |       | Rotate canvas clockwise
+| clip flip_h            |       | Flip clipboard horizontally
+| clip flip_v            |       | Flip clipboard vertically
+| clip load              | <1..12> | Load clipboard from disk
+| clip rotate_a          |       | Rotate clipboard anticlockwise
+| clip rotate_c          |       | Rotate clipboard clockwise
+| clip save              | <1..12> | Save clipboard to disk
+| copy                   |       | Copy the selection to the clipboard
+| crop                   |       | Crop the image canvas to the selection
+| cut                    |       | Cut the selection to the clipboard
+| delete alpha           |       | Remove the alpha channel
+| effect bacteria        | <STRENGTH 1..100> | Indexed canvas only
+| effect edge_detect     |       | RGB canvas only
+| effect emboss          |       | RGB canvas only
+| effect invert          |
+| effect sharpen         | <STRENGTH 1..100> | RGB canvas only
+| effect soften          | <STRENGTH 1..100> | RGB canvas only
+| effect trans_color     | <GAMMA -100..100> <BRIGHTNESS -100..100> <CONTRAST -100..100> <SATURATION -100..100> <HUE -1529..1529> <POSTERIZE 1..8> | Transform the canvas colour
+| fill                   |       | Fill the current selection
+| floodfill              | <X 0..> <Y 0..> |
+| help                   | [ARG]... | Get help on these commands
+| info                   |       | Print information about this image
+| lasso                  |       | Lasso the current selection
+| load                   | <OS FILENAME> | Load a file from disk
+| new                    | <WIDTH 1..32767> <HEIGHT 1..32767> <rgb **|** indexed> | Create a new image
+| outline                |       | Draw an outline around the current selection
+| paint                  | < <X 0..> <Y 0..> >... | Paint a straight line between these points
+| palette color          | <INDEX 0..255> <RED 0..255> <GREEN 0..255> <BLUE 0..255> | Set a palette colour
+| palette del_unused     |       | Remove unused palette items. Indexed canvas only.
+| palette from_canvas    |       | Create palette from the colours on the canvas.  RGB canvas which has up to 256 colours only.
+| palette gradient       |       | Create a palette gradient from colour A to B
+| palette load           | <OS FILENAME> | Load a palette from a GPL file
+| palette mask all       |       | Mask all palette items
+| palette mask index     | <0..255> | Mask this palette item
+| palette merge_dups     |       | Merge duplicate palette items. Indexed canvas only.
+| palette move           | <FROM INDEX 0..255> <TO INDEX 0..255> | Move a palette item
+| palette quantize       |       | Quantize the image to the palette.  RGB canvas only.
+| palette save           | <OS FILENAME> | Save palette to a GPL file
+| palette set            | <uniform **|** balanced> <2..6> | Create a new palette
+| palette size           | <2..255> | Set the palette size
+| palette sort           | <START 0..255> <FINISH 0..255> <hue **|** saturation **|** value **|** min **|** brightness **|** red **|** green **|** blue **|** frequency > [reverse] | Sort the palette as per the criteria given
+| palette unmask all     |       | Unmask all palette items
+| palette unmask index   | <0..255> | Unmask this palette item
+| paste                  | <X -32766..> <Y -32766..> | Paste the clipboard here on the canvas
+| q                      |       | Quit the program
+| quit                   |       | Quit the program
+| redo                   |
+| resize                 | <X -32766..32767> <Y -32766..32767> <WIDTH 1..32767> <HEIGHT 1..32767> | Resize the canvas
+| save                   |       | Save the file
+| save as                | <OS FILENAME> [ <FILE TYPE bmp **|** png **|** jpeg **|** gif> [ COMPRESSION 0..9 **|** 0..100 ] ] | Save the file as per the criteria
+| save undo              | <OS FILENAME> | Save undo images
+| scale                  | <WIDTH 1..32767> <HEIGHT 1..32767> [smooth] | Scale the canvas
+| select all             |       | Select the whole canvas
+| select polygon         | < <X 0..> <Y 0..> >... | Select a polygon on the canvas
+| select rectangle       | <X 0..> <Y 0..> <WIDTH 1..> <HEIGHT 1..> | Select a rectangle on the canvas
+| set brush flow         | <1..1000>
+| set brush pattern      | <0..>
+| set brush shape        | <0..>
+| set brush spacing      | <0..100>
+| set color a            | <0..255> | Set colour A from the palette index
+| set color b            | <0..255> | Set colour B from the palette index
+| set color swap         |       | Swap colour A and B
+| set file               | <0..4> | Set the current file in memory
+| text                   | <STRING> <FONT NAME> <FONT SIZE 1..100> [bold] [italic] [underline] [strikethrough] | Put this text into the clipboard
+| undo                   |
+
+
+-------------------------------------------------
+[Previous chap_04.html] | [Contents chap_00.html] | [Next chap_A.html]

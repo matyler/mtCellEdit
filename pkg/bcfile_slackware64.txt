@@ -1,14 +1,16 @@
 libmtkit	 ./configure --libdir=/usr/lib64
 libmtcelledit	 ./configure --libdir=/usr/lib64
+libmtpixy	 ./configure --libdir=/usr/lib64
 libmtcedui	 ./configure --libdir=/usr/lib64
-mtcedcli	 ./configure.slackware12.0
+libmtpixyui	 ./configure --libdir=/usr/lib64
 mtcedutils	 ./configure
+mtcedcli	 ./configure.slackware12.0
+mtpixyutils	 ./configure
+mtpixycli	 ./configure
 mtnetlog	 ./configure
 mtrdc	 ./configure
-libmtqex4	 ./configure --enable-qt4 --libdir=/usr/lib64
-mtcelledit-qt4	 ./configure --enable-qt4
-mtraft-qt4	 ./configure --enable-qt4
-mteleana-qt4	 ./configure --enable-qt4
-libmtgex	 ./configure --libdir=/usr/lib64
-mtcelledit	 ./configure --enable-gtk2
-mtraft	 ./configure --enable-gtk2
+libmtqex4	 ./configure --use-qt4 --libdir=/usr/lib64
+mtcelledit-qt4	 ./configure --use-qt4
+mtraft-qt4	 ./configure --use-qt4
+mteleana-qt4	 ./configure --use-qt4
+mtpixy-qt4	 ./configure --use-qt4

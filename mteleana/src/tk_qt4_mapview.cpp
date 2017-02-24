@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 
 
-MapCanvas :: MapCanvas ()
+MapCanvas::MapCanvas ()
 	:
 	oldMouseX	( 0 ),
 	oldMouseY	( 0 )
@@ -29,8 +29,8 @@ MapCanvas :: MapCanvas ()
 	setAttribute ( Qt::WA_NoSystemBackground );
 }
 
-void MapCanvas :: paintEvent (
-	QPaintEvent	* const	event
+void MapCanvas::paintEvent (
+	QPaintEvent	* const	ev
 	)
 {
 	int		px, py, pw, ph, format, stride;
@@ -39,10 +39,10 @@ void MapCanvas :: paintEvent (
 	cairo_surface_t	* cr_surface;
 
 
-	px = event->rect ().x ();
-	py = event->rect ().y ();
-	pw = event->rect ().width ();
-	ph = event->rect ().height ();
+	px = ev->rect ().x ();
+	py = ev->rect ().y ();
+	pw = ev->rect ().width ();
+	ph = ev->rect ().height ();
 
 //printf("%i,%i wh %i,%i\n", px,py, pw,ph );
 
@@ -89,16 +89,16 @@ finish:
 	cairo_surface_destroy ( cr_surface );
 }
 
-void MapCanvas :: mouseEventRouter (
-	QMouseEvent	* const	event,
+void MapCanvas::mouseEventRouter (
+	QMouseEvent	* const	ev,
 	int		const	caller	// 0 = Press 2 = Move
 	)
 {
-	int		x, y;
+	int		xx, yy;
 
 
-	if (	! ( event->buttons () & Qt::LeftButton ) &&
-		! ( event->buttons () & Qt::RightButton )
+	if (	! ( ev->buttons () & Qt::LeftButton ) &&
+		! ( ev->buttons () & Qt::RightButton )
 		)
 	{
 		// We only look at left/right clicks/drags
@@ -106,18 +106,18 @@ void MapCanvas :: mouseEventRouter (
 		return;
 	}
 
-	x = event->x ();
-	y = event->y ();
+	xx = ev->x ();
+	yy = ev->y ();
 
 	switch ( caller )
 	{
 	case 0:	// Mouse press
-		oldMouseX = x;
-		oldMouseY = y;
+		oldMouseX = xx;
+		oldMouseY = yy;
 
-		if ( event->buttons () & Qt::RightButton )
+		if ( ev->buttons () & Qt::RightButton )
 		{
-			mainwindow->clickMap ( x, y );
+			mainwindow->clickMap ( xx, yy );
 
 			return;
 		}
@@ -125,10 +125,10 @@ void MapCanvas :: mouseEventRouter (
 		break;
 
 	case 2:	// Mouse movement
-		if ( event->buttons () & Qt::LeftButton )
+		if ( ev->buttons () & Qt::LeftButton )
 		{
-			int	const	dx = oldMouseX - x;
-			int	const	dy = oldMouseY - y;
+			int	const	dx = oldMouseX - xx;
+			int	const	dy = oldMouseY - yy;
 
 
 			mainwindow->polymapScroll ( dx, dy );
@@ -137,36 +137,36 @@ void MapCanvas :: mouseEventRouter (
 	}
 }
 
-void MapCanvas :: mousePressEvent (
-	QMouseEvent	* const	event
+void MapCanvas::mousePressEvent (
+	QMouseEvent	* const	ev
 	)
 {
-	mouseEventRouter ( event, 0 );
+	mouseEventRouter ( ev, 0 );
 }
 
-void MapCanvas :: mouseMoveEvent (
-	QMouseEvent	* const	event
+void MapCanvas::mouseMoveEvent (
+	QMouseEvent	* const	ev
 	)
 {
-	mouseEventRouter ( event, 2 );
+	mouseEventRouter ( ev, 2 );
 }
 
-void MapCanvas :: wheelEvent (
-	QWheelEvent	* const	event
+void MapCanvas::wheelEvent (
+	QWheelEvent	* const	ev
 	)
 {
-	if ( event->orientation () == Qt::Horizontal )
+	if ( ev->orientation () == Qt::Horizontal )
 	{
-		event->ignore ();
+		ev->ignore ();
 
 		return;
 	}
 
-	mainwindow->wheelZoom ( event->x (), event->y (), event->delta () );
+	mainwindow->wheelZoom ( ev->x (), ev->y (), ev->delta () );
 }
 
-void MapView :: resizeEvent (
-	QResizeEvent	* const	ARG_UNUSED ( event )
+void MapView::resizeEvent (
+	QResizeEvent	* const	ARG_UNUSED ( ev )
 	)
 {
 	mainwindow->resetMapSize ();

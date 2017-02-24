@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 
 
 
-tableAnalysis :: tableAnalysis (
+tableAnalysis::tableAnalysis (
 	CedSheet	* const	sheetData,
 	char	const	* const	pathAnalysed,
 	MainWindow	* const	mainwin,
-	QVBoxLayout	* const	layout
+	QVBoxLayout	* const	vbox
 	)
 	:
 	sortDirection	( Qt::DescendingOrder ),
@@ -33,9 +33,7 @@ tableAnalysis :: tableAnalysis (
 	sheet		( sheetData ),
 	mainWindow	( mainwin )
 {
-	int		rowtot,
-			i,
-			width;
+	int		rowtot, i, w;
 	QTableWidgetItem * twItem;
 	QStringList	columnLabels;
 	QLineEdit	* pathEdit;
@@ -60,14 +58,14 @@ tableAnalysis :: tableAnalysis (
 	setColumnCount ( RAFT_COL_TOTAL - 1 );
 
 	columnLabels
-		<< tr ( "Name" )
-		<< tr ( "Files" )
-		<< tr ( "%" )
-		<< tr ( "Bytes" )
-		<< tr ( "MB" )
-		<< tr ( "%" )
-		<< tr ( "Subdirs" )
-		<< tr ( "Other" )
+		<< "Name"
+		<< "Files"
+		<< "%"
+		<< "Bytes"
+		<< "MB"
+		<< "%"
+		<< "Subdirs"
+		<< "Other"
 		;
 	setHorizontalHeaderLabels ( columnLabels );
 
@@ -107,18 +105,18 @@ tableAnalysis :: tableAnalysis (
 	// Add some padding to columns
 	for ( i = 0; i < (RAFT_COL_TOTAL - 1); i++ )
 	{
-		width = horizontalHeader ()->sectionSize ( i );
-		horizontalHeader ()->resizeSection ( i, width + 8 );
+		w = horizontalHeader ()->sectionSize ( i );
+		horizontalHeader ()->resizeSection ( i, w + 8 );
 	}
 
-	pathEdit = new QLineEdit ( mtQEX :: qstringFromC ( pathAnalysed ) );
+	pathEdit = new QLineEdit ( mtQEX::qstringFromC ( pathAnalysed ) );
 	pathEdit->setReadOnly ( true );
 
-	layout->addWidget ( pathEdit );
-	layout->addWidget ( this );
+	vbox->addWidget ( pathEdit );
+	vbox->addWidget ( this );
 }
 
-tableAnalysis :: ~tableAnalysis ()
+tableAnalysis::~tableAnalysis ()
 {
 	free ( path );
 	path = NULL;
@@ -127,7 +125,7 @@ tableAnalysis :: ~tableAnalysis ()
 	sheet = NULL;
 }
 
-void tableAnalysis :: copyToClipboard ()
+void tableAnalysis::copyToClipboard ()
 {
 	char		* txt;
 
@@ -135,30 +133,28 @@ void tableAnalysis :: copyToClipboard ()
 	txt = raft_get_clipboard ( sheet );
 	if ( txt )
 	{
-		QApplication :: clipboard ()->setText ( txt );
+		QApplication::clipboard ()->setText ( txt );
 
 		free ( txt );
 	}
 }
 
-void tableAnalysis :: sortTable (
-	int		column,
+void tableAnalysis::sortTable (
+	int		clmn,
 	Qt::SortOrder	direction
 	)
 {
-	int		cols[] = { 1, 0 },
-			r,
-			c;
+	int		cols[] = { 1, 0 }, r, c;
 	char		* csp;
 	CedCell		* cell;
 	QTableWidgetItem * twItem;
 
 
-	if ( column < 1 )
+	if ( clmn < 1 )
 	{
-		column = -column;
+		clmn = -clmn;
 
-		if ( column == sortColumn )
+		if ( clmn == sortColumn )
 		{
 			// Toggle the current sort direction
 			if ( sortDirection == Qt::DescendingOrder )
@@ -176,9 +172,9 @@ void tableAnalysis :: sortTable (
 		}
 	}
 
-	horizontalHeader ()->setSortIndicator ( (column - 1), direction );
+	horizontalHeader ()->setSortIndicator ( (clmn - 1), direction );
 
-	sortColumn = column;
+	sortColumn = clmn;
 	sortDirection = direction;
 
 	r = 0;
@@ -212,7 +208,7 @@ void tableAnalysis :: sortTable (
 			}
 
 			twItem = new QTableWidgetItem;
-			twItem->setText ( mtQEX :: qstringFromC ( csp ) );
+			twItem->setText ( mtQEX::qstringFromC ( csp ) );
 			free ( csp );
 
 			if ( c > 1 )
@@ -228,22 +224,22 @@ void tableAnalysis :: sortTable (
 	setCurrentCell ( 0, 0 );
 }
 
-void tableAnalysis :: tableHeaderClick (
+void tableAnalysis::tableHeaderClick (
 	int	const	index
 	)
 {
 	sortTable ( -(index + 1), Qt::DescendingOrder );
 }
 
-void tableAnalysis :: tableCellActivated (
-	int	const	row,
-	int	const	ARG_UNUSED ( column )
+void tableAnalysis::tableCellActivated (
+	int	const	r,
+	int	const	ARG_UNUSED ( c )
 	)
 {
 	char		* new_path;
 
 
-	new_path = raft_path_merge ( path, sheet, row + 1 );
+	new_path = raft_path_merge ( path, sheet, r + 1 );
 	if ( new_path )
 	{
 		mainWindow->doAnalysis ( new_path );

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2015 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 
 
-MainWindow :: MainWindow (
+MainWindow::MainWindow (
 	char	const *	scan_directory
 	)
 	:
@@ -30,14 +30,13 @@ MainWindow :: MainWindow (
 	table		()
 {
 	QWidget		* widget;
-	QVBoxLayout	* layout;
 	QHBoxLayout	* topRow;
 	QPushButton	* buttonQuit;
 	QShortcut	* shortcut;
 
 
 	setWindowTitle ( VERSION );
-	this->setWindowIcon ( QPixmap ( icon_xpm ) );
+	setWindowIcon ( QPixmap ( icon_xpm ) );
 
 	widget = new QWidget;
 	setCentralWidget ( widget );
@@ -52,16 +51,16 @@ MainWindow :: MainWindow (
 	connect ( shortcut, SIGNAL ( activated () ), this,
 		SLOT ( pressTabPrevious () ) );
 
-	buttonQuit = new QPushButton ( tr ( "Quit" ) );
-	buttonQuit->setShortcut ( Qt :: CTRL + Qt :: Key_Q );
+	buttonQuit = new QPushButton ( "Quit" );
+	buttonQuit->setShortcut ( Qt::CTRL + Qt::Key_Q );
 	connect ( buttonQuit, SIGNAL ( clicked () ), this,
 		SLOT ( pressButtonQuit () ) );
 
 	progressBar = new QProgressBar;
 	progressBar->setMinimum ( 0 );
 
-	buttonCopy = new QPushButton ( tr ( "Copy To Clipboard" ) );
-	buttonCopy->setShortcut ( Qt :: CTRL + Qt :: Key_C );
+	buttonCopy = new QPushButton ( "Copy To Clipboard" );
+	buttonCopy->setShortcut ( Qt::CTRL + Qt::Key_C );
 	connect ( buttonCopy, SIGNAL ( clicked () ), this,
 		SLOT ( pressButtonCopy () ) );
 
@@ -74,12 +73,12 @@ MainWindow :: MainWindow (
 
 	tabWidget = new QTabWidget;
 
-	layout = new QVBoxLayout;
-	layout->setMargin ( 5 );
-	layout->addLayout ( topRow );
-	layout->addWidget ( tabWidget );
+	QVBoxLayout * vbox = new QVBoxLayout;
+	vbox->setMargin ( 5 );
+	vbox->addLayout ( topRow );
+	vbox->addWidget ( tabWidget );
 
-	widget->setLayout ( layout );
+	widget->setLayout ( vbox );
 
 
 	mtPrefTable	const	prefs_table[] =
@@ -107,7 +106,7 @@ MainWindow :: MainWindow (
 	doAnalysis ( scan_directory );
 }
 
-MainWindow :: ~MainWindow ()
+MainWindow::~MainWindow ()
 {
 	prefs.set ( PREFS_WINDOW_X, geometry().x () );
 	prefs.set ( PREFS_WINDOW_Y, geometry().y () );
@@ -135,12 +134,12 @@ static int raftScan (
 	MainWindow	* const	main = (MainWindow *)user_data;
 
 
-	while ( QCoreApplication :: hasPendingEvents () )
+	while ( QCoreApplication::hasPendingEvents () )
 	{
-		QCoreApplication :: processEvents ();
+		QCoreApplication::processEvents ();
 	}
 
-	if ( BUSY_WORKING != main->busy.getStatus () )
+	if ( busyState::WORKING != main->busy.getStatus () )
 	{
 		return 1;		// User wants to stop
 	}
@@ -148,7 +147,7 @@ static int raftScan (
 	return 0;			// Keep scanning
 }
 
-void MainWindow :: doAnalysis (
+void MainWindow::doAnalysis (
 	char	const * const	path
 	)
 {
@@ -187,20 +186,16 @@ void MainWindow :: doAnalysis (
 	}
 	else
 	{
-		QWidget		* widget;
-		QVBoxLayout	* layout;
-
-
-		widget = new QWidget;
+		QWidget * widget = new QWidget;
 		tabWidget->addTab ( widget, QString ("%1").arg ( tabTot + 1 ) );
 		tabWidget->setCurrentWidget ( widget );
 
-		layout = new QVBoxLayout;
-		layout->setMargin ( 0 );
-		widget->setLayout ( layout );
+		QVBoxLayout * vbox = new QVBoxLayout;
+		vbox->setMargin ( 0 );
+		widget->setLayout ( vbox );
 
 		table[ tabTot ] = new tableAnalysis ( sheet, new_path, this,
-			layout );
+			vbox );
 
 		buttonCopy->setEnabled ( true );
 	}
@@ -232,9 +227,9 @@ void MainWindow :: doAnalysis (
 	free ( new_path );
 }
 
-void MainWindow :: pressButtonQuit ()
+void MainWindow::pressButtonQuit ()
 {
-	if ( BUSY_IDLE != busy.getStatus () )
+	if ( busy.getStatus () != busyState::IDLE )
 	{
 		// We are analysing so stop
 		busy.setStopped ();
@@ -245,7 +240,7 @@ void MainWindow :: pressButtonQuit ()
 	close ();
 }
 
-void MainWindow :: pressButtonCopy ()
+void MainWindow::pressButtonCopy ()
 {
 	int		tabNum;
 
@@ -261,30 +256,30 @@ void MainWindow :: pressButtonCopy ()
 	}
 }
 
-void MainWindow :: pressTabNext ()
+void MainWindow::pressTabNext ()
 {
 	tabWidget->setCurrentIndex ( tabWidget->currentIndex () - 1 );
 }
 
-void MainWindow :: pressTabPrevious ()
+void MainWindow::pressTabPrevious ()
 {
 	tabWidget->setCurrentIndex ( tabWidget->currentIndex () + 1 );
 }
 
-void MainWindow :: closeEvent (
-	QCloseEvent	* const	event
+void MainWindow::closeEvent (
+	QCloseEvent	* const	ev
 	)
 {
-	if ( BUSY_IDLE != busy.getStatus () )
+	if ( busy.getStatus () != busyState::IDLE )
 	{
 		// Program is busy so we can't stop yet, but signal a stop
 		busy.setStopped ();
-		event->ignore ();
+		ev->ignore ();
 	}
 	else
 	{
 		// Program is idle so accept closure
-		event->accept ();
+		ev->accept ();
 	}
 }
 

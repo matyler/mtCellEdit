@@ -19,15 +19,15 @@
 
 
 
-void MainWindow :: pressOptionsAboutQt ()
+void MainWindow::pressOptionsAboutQt ()
 {
 	QMessageBox::aboutQt ( this );
 }
 
-void MainWindow :: pressOptionsAbout ()
+void MainWindow::pressOptionsAbout ()
 {
-	QMessageBox :: about ( this, tr ( "About" ),
-		tr ( VERSION"\n"
+	QMessageBox::about ( this, "About",
+		VERSION"\n"
 	"\n"
 	"Copyright (C) 2008-2016 Mark Tyler.\n"
 	"\n"
@@ -43,10 +43,10 @@ void MainWindow :: pressOptionsAbout ()
 	"\n"
 	"You should have received a copy of the GNU General Public License "
 	"along with this program.  If not, see http://www.gnu.org/licenses/\n"
-		) );
+		);
 }
 
-void MainWindow :: pressOptionsFullScreen ()
+void MainWindow::pressOptionsFullScreen ()
 {
 	if ( isFullScreen () )
 	{
@@ -58,13 +58,13 @@ void MainWindow :: pressOptionsFullScreen ()
 	}
 }
 
-void MainWindow :: pressOptionsHelp ()
+void MainWindow::pressOptionsHelp ()
 {
 	char	const	* program;
 	char	const	* html;
 
 
-	program = prefs_get_string ( GUI_INIFILE_HELP_BROWSER );
+	program = pprfs->getString ( GUI_INIFILE_HELP_BROWSER );
 
 	if ( ! program[0] )
 	{
@@ -76,14 +76,14 @@ void MainWindow :: pressOptionsHelp ()
 		program = "firefox";
 	}
 
-	html = prefs_get_string ( GUI_INIFILE_HELP_FILE );
+	html = pprfs->getString ( GUI_INIFILE_HELP_FILE );
 
 	if ( ! mtkit_file_readable ( html ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("I am unable to find the documentation.  "
+		QMessageBox::critical ( this, "Error",
+			"I am unable to find the documentation.  "
 			"You need to set the correct location in the "
-			"Preferences." ) );
+			"Preferences." );
 
 		return;
 	}
@@ -97,16 +97,16 @@ void MainWindow :: pressOptionsHelp ()
 	if ( ! QProcess::startDetached ( mtQEX::qstringFromC ( program ),
 		list ) )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ("There was a problem running the HTML browser.  "
+		QMessageBox::critical ( this, "Error",
+			"There was a problem running the HTML browser.  "
 			"You need to set the correct program name in the "
-			"Preferences window." ) );
+			"Preferences window." );
 
 		return;
 	}
 }
 
-int MainWindow :: okToLoseChanges ()
+int MainWindow::okToLoseChanges ()
 {
 	projectGraphStoreChanges ();
 
@@ -121,8 +121,8 @@ int MainWindow :: okToLoseChanges ()
 
 	mb.setIcon ( QMessageBox::Warning );
 	mb.setWindowTitle ( "Warning" );
-	mb.setText ( tr ( "This project contains changes that have not been "
-		"saved.  Do you really want to lose these changes?" ) );
+	mb.setText ( "This project contains changes that have not been "
+		"saved.  Do you really want to lose these changes?" );
 	mb.addButton ( "Cancel", QMessageBox::RejectRole );
 	mb.addButton ( "Lose Changes", QMessageBox::AcceptRole );
 
@@ -134,17 +134,15 @@ int MainWindow :: okToLoseChanges ()
 	return 1;
 }
 
-SwatchDialog :: SwatchDialog ( QString const title )
+SwatchDialog::SwatchDialog (
+	QString		const	title,
+	mtKit::Prefs	* const	prefs
+	)
 	:
 	color		( -1 )
 {
-	int		r,
-			c,
-			idx,
-			irgb,
-			ir,
-			ig,
-			ib;
+	int		r, c, idx, irgb, ir, ig, ib;
+	int		swatch_size;
 	QPushButton	* button;
 	QGridLayout	* grid;
 	QSignalMapper	* signalMapper = new QSignalMapper ( this );
@@ -152,15 +150,16 @@ SwatchDialog :: SwatchDialog ( QString const title )
 
 	setWindowTitle ( title );
 
-	QVBoxLayout * layout = new QVBoxLayout;
-	layout->setMargin ( 0 );
-	layout->setSpacing ( 0 );
-	setLayout ( layout );
+	QVBoxLayout * layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	setLayout ( layv );
 
 	grid = new QGridLayout;
-	layout->addLayout ( grid );
+	layv->addLayout ( grid );
 
-	qexArrowFilter * arrowKeyFilter = new qexArrowFilter ( grid );
+	mtQEX::ArrowFilter * arrowKeyFilter = new mtQEX::ArrowFilter ( grid );
+	swatch_size = 2 * prefs->getInt ( GUI_INIFILE_FONT_SIZE );
 
 	for ( r = 0, idx = 0; r < COLOR_SWATCH_ROWS; r++ )
 	{
@@ -175,26 +174,26 @@ SwatchDialog :: SwatchDialog ( QString const title )
 			signalMapper->setMapping ( button, idx );
 
 			irgb = be_color_swatch_get ( idx );
-			ir = MTKIT_INT_2_R ( irgb );
-			ig = MTKIT_INT_2_G ( irgb );
-			ib = MTKIT_INT_2_B ( irgb );
+			ir = mtPixy::int_2_red ( irgb );
+			ig = mtPixy::int_2_green ( irgb );
+			ib = mtPixy::int_2_blue ( irgb );
 
-			QPixmap pixmap ( COLOR_SWATCH_SIZE, COLOR_SWATCH_SIZE );
+			QPixmap pixmap ( swatch_size, swatch_size );
 			pixmap.fill ( QColor ( ir, ig, ib ) );
 
 			button->setIcon ( QIcon ( pixmap ) );
-			button->setIconSize ( QSize ( COLOR_SWATCH_SIZE,
-				COLOR_SWATCH_SIZE ) );
+			button->setIconSize ( QSize ( swatch_size,
+				swatch_size ) );
 
 			button->installEventFilter ( arrowKeyFilter );
 		}
 	}
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-	     this, SLOT ( pressButton ( int ) ) );
+		this, SLOT ( pressButton ( int ) ) );
 
-	button = new QPushButton ( tr ( "Cancel" ) );
-	layout->addWidget ( button );
+	button = new QPushButton ( "Cancel" );
+	layv->addWidget ( button );
 	connect ( button, SIGNAL ( clicked () ), this,
 		SLOT ( pressCancel () ) );
 
@@ -205,21 +204,21 @@ SwatchDialog :: SwatchDialog ( QString const title )
 	dialog can be moved partially off screen which is undesirable.
 	*/
 
-	QPoint pos = QCursor::pos ();
+	QPoint ps = QCursor::pos ();
 
-	pos.setX ( pos.x() - width () / 4 );
-	pos.setY ( pos.y() - height () / 4 );
-	move ( pos );
+	ps.setX ( ps.x() - width () / 4 );
+	ps.setY ( ps.y() - height () / 4 );
+	move ( ps );
 
 	exec ();
 }
 
-int SwatchDialog :: getColor ()
+int SwatchDialog::getColor ()
 {
 	return color;
 }
 
-void SwatchDialog :: pressButton (
+void SwatchDialog::pressButton (
 	int	const	i
 	)
 {
@@ -227,7 +226,7 @@ void SwatchDialog :: pressButton (
 	close ();
 }
 
-void SwatchDialog :: pressCancel ()
+void SwatchDialog::pressCancel ()
 {
 	close ();
 }

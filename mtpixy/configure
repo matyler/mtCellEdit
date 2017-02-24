@@ -1,0 +1,81 @@
+#!/bin/sh
+
+
+. ./mtConf.txt
+
+
+APP_NAME="mtPixy"
+BIN_NAME="mtpixy"
+
+MTCF_INIT
+
+TK=qt5
+BIN_SUFFIX=-qt5
+ENABLE_HANDBOOK=handbook
+ENABLE_DESKTOP=desktop
+
+for A in "$@"
+do
+	case "$A" in
+	--use-qt4 )		TK=qt4
+				BIN_SUFFIX=-qt4
+				;;
+	--use-qt5 )		TK=qt5
+				BIN_SUFFIX=-qt5
+				;;
+	--disable-handbook)	ENABLE_HANDBOOK="";;
+	--disable-desktop)	ENABLE_DESKTOP="";;
+
+	* )			MTCF_PARSE_ARG1 "$A";;
+	esac
+done
+
+
+MYHELP()
+{
+cat << EOF
+--use-qt4 ............. Compile Qt4 version
+--use-qt5 ............. Compile Qt5 version (default)
+--disable-handbook .... Don't build handbook
+--disable-desktop ..... Don't build desktop files
+
+EOF
+}
+
+
+MTCF_PRINT_HELP MYHELP
+MTCF_PRE_CONF
+
+CK_LIBS="mtkit mtpixy mtpixyui"
+
+case "$TK" in
+qt4 )
+	MTCF_PKGCONFIG "QtGui"
+	I_EX="$I_EX -DU_TK_QT4"
+	L_EX="$L_EX -lstdc++"
+	CK_LIBS="$CK_LIBS mtqex4"
+	MT_GET_MOC_4
+	;;
+qt5 )
+	MTCF_PKGCONFIG "Qt5Widgets"
+	I_EX="$I_EX -DU_TK_QT5"
+	L_EX="$L_EX -lstdc++"
+	CK_LIBS="$CK_LIBS mtqex5"
+	MT_GET_MOC_5
+	;;
+esac
+
+
+MTCF_CHECK_LIBS $CK_LIBS
+MTCF_VERSION_BIN_NAME
+
+DATA_NAME=$BIN_NAME
+
+I_EX="$I_EX -DDATA_INSTALL=\"\\\"$DATA_INSTALL\"\\\""
+I_EX="$I_EX -DDATA_NAME=\"\\\"$DATA_NAME\"\\\""
+
+MTCF_MAKE_DIRS_ADD "data $ENABLE_HANDBOOK $ENABLE_DESKTOP"
+MTCF_MAN_PAGE
+
+MTCF_POST_CONF
+MTCF_PRINT_CONF

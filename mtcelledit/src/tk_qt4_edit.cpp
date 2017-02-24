@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2014 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-void MainWindow :: pressEditUndo ()
+void MainWindow::pressEditUndo ()
 {
 	int		res;
 
@@ -40,7 +40,7 @@ void MainWindow :: pressEditUndo ()
 	updateChangesChores ( 1, 0 );	// Update menus/titles
 }
 
-void MainWindow :: pressEditRedo ()
+void MainWindow::pressEditRedo ()
 {
 	int		res;
 
@@ -61,23 +61,23 @@ void MainWindow :: pressEditRedo ()
 	updateChangesChores ( 1, 0 );	// Update menus/titles
 }
 
-void MainWindow :: pressEditFixYears ()
+void MainWindow::pressEditFixYears ()
 {
 	int		res;
 
 
-	res = be_fix_years ( cedFile );
+	res = be_fix_years( cedFile, pprfs->getInt( GUI_INIFILE_2DYEAR_START ));
 
 	switch ( res )
 	{
 	case 1:
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unable to fix years." ) );
+		QMessageBox::critical ( this, "Error",
+			"Unable to fix years." );
 		break;
 
 	case 2:
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Unexpected error in system date." ) );
+		QMessageBox::critical ( this, "Error",
+			"Unexpected error in system date." );
 		return;
 	}
 
@@ -94,22 +94,22 @@ void MainWindow :: pressEditFixYears ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow :: pressEditSelectAll ()
+void MainWindow::pressEditSelectAll ()
 {
 	setCursorRange ( 1, 1, MAX (1,sheetRows), MAX(1,sheetCols), 0, 0, 0 );
 }
 
-void MainWindow :: pressOptionsEditCell ()
+void MainWindow::pressOptionsEditCell ()
 {
 	editCelltext->setFocus ( Qt::OtherFocusReason );
 }
 
-void MainWindow :: quicksumChanged ( int ARG_UNUSED ( i ) )
+void MainWindow::quicksumChanged ( int ARG_UNUSED ( i ) )
 {
 	updateQuicksumLabel ();
 }
 
-void MainWindow :: createQuicksum ()
+void MainWindow::createQuicksum ()
 {
 	connect ( buttonQuicksum, SIGNAL ( currentIndexChanged ( int ) ),
 		this, SLOT ( quicksumChanged ( int ) ) );

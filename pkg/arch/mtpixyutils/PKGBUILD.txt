@@ -1,0 +1,23 @@
+# Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+pkgname=mtpixyutils
+pkgver
+pkgrel=@MT_RELVER@
+pkgdesc="Pixel Utils"
+arch=('i686' 'x86_64' 'arm')
+license=('GPL3')
+depends=('libmtkit' 'libmtpixy')
+source=($pkgname-$pkgver.tar.gz)
+md5sums
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  @MT_CONF@
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+}

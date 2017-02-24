@@ -1,0 +1,17 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Appendix B - The History of this Document</TITLE>\1'
+
+
+[Previous chap_A.html] | [Contents chap_00.html]
+-------------------------------------------------
+
+=Appendix B - The History of this Document=
+
+
+| **Date**      | **Edition** | **Notes** |
+| 2017-2-24     | 3.0         | First Edition
+
+
+
+-------------------------------------------------
+[Previous chap_A.html] | [Contents chap_00.html]

@@ -1,3 +1,9 @@
+3.0	2017-2-24
+
+	* Moved to C++.
+	* GTK+2 code removed
+	* Colour swatch size now proportional to font size.
+
 2.7	2016-5-14
 
 	* Default toolkit is now Qt5.
@@ -15,7 +21,7 @@
 	* Handbook & desktop files now in this package by default (can be disabled using configure script).
 	* -csv & -tsv command line options added: see man page.
 	* man page added.
-	* BUGFIX (Qt) - CedView :: reconfigure now sets *scrollLast properly.
+	* BUGFIX (Qt) - CedView::reconfigure now sets *scrollLast properly.
 	* BUGFIX (Qt) - Copying text from inside a text entry box and then pasting onto a sheet cell behaves as expected.
 
 2.4	2014-8-10
@@ -23,7 +29,7 @@
 	* unsigned int types cleaned up.
 	* Hardening: sprintf -> snprintf.
 	* BUGFIX - Updating book prefs now sets modified in title bar.
-	* BUGFIX (Qt) - CedView :: setScrollbars keeps track of last scroll position (needed when setting frozen pane).
+	* BUGFIX (Qt) - CedView::setScrollbars keeps track of last scroll position (needed when setting frozen pane).
 	* BUGFIX - border_type can now be edited properly in cell prefs window.
 
 2.3	2014-2-22

@@ -217,13 +217,13 @@ static int get_vote_abo (
 	return row;
 }
 
-mtImage * eleanaElection :: createDiagram (
+mtPixy::Image * eleanaElection::createDiagram (
 	eleanaIndex	* const	eindex,
 	char	const * const	party_a,
 	char	const * const	party_b
 	)
 {
-	mtImage		* im;
+	mtPixy::Image	* im;
 	int		party_a_rgb, a_r, a_g, a_b;
 	int		party_b_rgb, b_r, b_g, b_b;
 	int		gr_left[3], gr_right[3];
@@ -240,13 +240,14 @@ mtImage * eleanaElection :: createDiagram (
 		return NULL;
 	}
 
-	im = mtkit_image_new_rgb ( DIAGRAM_WIDTH, DIAGRAM_HEIGHT );
+	im = mtPixy::image_create ( mtPixy::Image::RGB, DIAGRAM_WIDTH,
+		DIAGRAM_HEIGHT );
 	if ( ! im )
 	{
 		return NULL;
 	}
 
-	rgb_mem = mtkit_image_get_rgb ( im );
+	rgb_mem = im->get_canvas ();
 	if ( ! rgb_mem )
 	{
 		// Should never happen
@@ -256,22 +257,22 @@ mtImage * eleanaElection :: createDiagram (
 	party_a_rgb = eindex->getPartyRGB ( party_a );
 	if ( party_a_rgb == 11842740 )
 	{
-		party_a_rgb = MTKIT_RGB_2_INT ( GREY_HI, GREY_HI, GREY_HI );
+		party_a_rgb = mtPixy::rgb_2_int ( GREY_HI, GREY_HI, GREY_HI );
 	}
 
 	party_b_rgb = eindex->getPartyRGB ( party_b );
 	if ( party_b_rgb == 11842740 )
 	{
-		party_b_rgb = MTKIT_RGB_2_INT ( GREY_LO, GREY_LO, GREY_LO );
+		party_b_rgb = mtPixy::rgb_2_int ( GREY_LO, GREY_LO, GREY_LO );
 	}
 
-	a_r = MTKIT_INT_2_R ( party_a_rgb );
-	a_g = MTKIT_INT_2_G ( party_a_rgb );
-	a_b = MTKIT_INT_2_B ( party_a_rgb );
+	a_r = mtPixy::int_2_red ( party_a_rgb );
+	a_g = mtPixy::int_2_green ( party_a_rgb );
+	a_b = mtPixy::int_2_blue ( party_a_rgb );
 
-	b_r = MTKIT_INT_2_R ( party_b_rgb );
-	b_g = MTKIT_INT_2_G ( party_b_rgb );
-	b_b = MTKIT_INT_2_B ( party_b_rgb );
+	b_r = mtPixy::int_2_red ( party_b_rgb );
+	b_g = mtPixy::int_2_green ( party_b_rgb );
+	b_b = mtPixy::int_2_blue ( party_b_rgb );
 
 	// Create background
 

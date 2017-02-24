@@ -1,11 +1,9 @@
 include		../_conf.txt
 
 
-.PHONY: 	all valg time build install uninstall clean
+.PHONY:		all valg time build install uninstall clean
 
 
-CFLAGS		= $(BIN_CFLAGS) $(CFLAG)
-LDFLAGS 	= $(LDFLAG)
 BIN_ALL		= mtstring
 
 
@@ -21,9 +19,10 @@ time:		$(BIN_ALL)
 build:		$(BIN_ALL)
 
 mtstring:	mtstring.o
-		$(CC) mtstring.o -o mtstring $(LDFLAGS)
+		$(CXX) mtstring.o -o mtstring $(LDFLAGS)
 
 # .c.o Implicit rule
+# .cpp.o Implicit rule
 
 install:
 

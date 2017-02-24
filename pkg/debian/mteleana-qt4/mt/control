@@ -2,7 +2,7 @@ Source: mteleana-qt4
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, libqt4-dev, libmtcelledit, libmtqex4
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libqt4-dev, libmtcelledit, libmtqex4, libmtpixy
 Standards-Version: 3.9.3
 Homepage: http://mtcelledit.sourceforge.net/
 

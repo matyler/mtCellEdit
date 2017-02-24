@@ -76,37 +76,17 @@ MTCF_INIT()
 
 	MT_VERSION="$APP_NAME $VERNUM"
 
-	BIN_SUFFIX=
 	CONF_FILE=_conf.txt
 	DEBUG=NO
-	HELP=
+	unset BIN_SUFFIX
+	unset HELP
+	unset PKGCONFIG
 
-	case $(uname) in
-	*BSD* )
-		# Default BSD = FreeBSD 10.0
-		CC=${CC:-clang}
-		CXX=${CXX:-clang}
-		YACC=${YACC:-yacc}
-
-		BIN_CFLAGS=${BIN_CFLAGS:--fPIC}
-		LIB_CFLAGS=${LIB_CFLAGS:--fPIC}
-
-		PREFIX="/usr/local"
-
-		MTCF_MAKEFILE_SETUP bsd
-		;;
-	* )
-		# GNU/Linux
-		CC=${CC:-gcc}
-		CXX=${CXX:-g++}
-		YACC=${YACC:-bison -y}
-
-		BIN_CFLAGS=${BIN_CFLAGS:--fPIC}
-		LIB_CFLAGS=${LIB_CFLAGS:--fPIC}
-
-		PREFIX="/usr"
-		;;
-	esac
+	# GNU/Linux
+	CC=${CC:-gcc}
+	CXX=${CXX:-g++}
+	BIN_FLAGS=${BIN_FLAGS:--fPIC}
+	PREFIX="/usr"
 
 	BIN_INSTALL="$PREFIX/bin"
 	HEAD_INSTALL="$PREFIX/include"
@@ -114,13 +94,6 @@ MTCF_INIT()
 	DATA_INSTALL="$PREFIX/share"
 
 	MAN_INSTALL="/usr/share/man/man1"
-
-	# When porting to a new system copy the current GNU/Linux files as a start point (cd to the root directory of the src suite):
-	# find . -name Makefile -exec cp '{}' '{}'.bsd \;
-	# Then edit in a text editor to finish off:
-	# geany -i $(find . -name Makefile.bsd)
-	# Duplicate Makefiles can be removed.  Identify them like this:
-	# find . -name Makefile -exec diff -sq '{}' '{}'.bsd \; | sort | grep identical | awk '{print $4}'
 }
 
 
@@ -140,6 +113,9 @@ MTCF_PARSE_ARG1()
 	"debug" )	DEBUG=YES
 			;;
 
+	"debugold" )	DEBUG=OLD
+			;;
+
 	"pack" )	./configure flush
 			PKNAME=$(basename $(pwd))
 			ARNAME=$PKNAME.tar.xz
@@ -155,7 +131,7 @@ MTCF_PARSE_ARG1()
 			exit
 			;;
 
-	"wc" )		wc $(find ./src -name \*.c -o -name \*.h -o -name \*.y -o -name \*.cpp)
+	"wc" )		wc $(find ./src -name \*.c -o -name \*.h -o -name \*.yy -o -name \*.cpp)
 			exit
 			;;
 
@@ -219,7 +195,8 @@ Usage: ./configure [OPTION] ...
 Options:
 
 flush ........... Flush directories to initial state
-debug ........... Include debugging info in binary
+debug ........... Include debugging info in binary c11 c++14
+debugold ........ Include debugging info in binary c99 c++03
 wc .............. Count size of source files
 
 --prefix=DIR .......... DIR = prefix location of all installs (default=/usr)
@@ -245,17 +222,26 @@ fi
 MTCF_PRE_CONF()
 {
 	UNDERLINE_TEXT "$MT_VERSION"
+	DEBUG_I_EX="-pedantic -Wall -Wextra -D_FORTIFY_SOURCE=2 -O1 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -ffunction-sections -fdata-sections -Wdouble-promotion -Wsign-conversion -Wconversion -Wstrict-overflow=5 -Wcast-align -Wundef -Wcast-qual -Wlogical-op -Wmissing-declarations -Wshadow -Winit-self -Wtrampolines -ggdb -DDEBUG"
 
-	if [ "$DEBUG" = "NO" ]
-	then
+	case "$DEBUG" in
+	"NO" )
 		I_EX=""
 		L_EX="-lm -s"
-	else
-		I_EX="-pedantic -Wall -Wextra -D_FORTIFY_SOURCE=2 -O1 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Wformat-security -ffunction-sections -fdata-sections -Wdouble-promotion -Wsign-conversion -Wconversion -Wstrict-overflow=5 -Wcast-align -Wundef -Wcast-qual -Wlogical-op -Wmissing-declarations -Winit-self -ggdb -DDEBUG"
-		L_EX="-lm -O1 -Wl,--as-needed,-z,relro,-z,now"
+		;;
+	"YES" )
+		I_EX="-fsanitize=undefined $DEBUG_I_EX"
+		L_EX="-fsanitize=undefined -lm -O1 -Wl,--as-needed,-z,relro,-z,now"
 		CFLAGS="$CFLAGS -std=gnu11 -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
-		CXXFLAGS="$CXXFLAGS -std=gnu++11"
-	fi
+		CXXFLAGS="$CXXFLAGS -std=gnu++14"
+		;;
+	"OLD" )
+		I_EX="$DEBUG_I_EX"
+		L_EX="-lm -O1 -Wl,--as-needed,-z,relro,-z,now"
+		CFLAGS="$CFLAGS -std=gnu99 -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
+		CXXFLAGS="$CXXFLAGS -std=gnu++03"
+		;;
+	esac
 
 	if [ "$BIN_NAME" != "" ]
 	then
@@ -291,16 +277,16 @@ MTCF_VERSION_BIN_NAME()
 {
 	I_EX="$I_EX -DVERSION=\"\\\"$MT_VERSION\"\\\""
 
-if [ "$BIN_NAME" != "" ]
-then
-	I_EX="$I_EX -DBIN_NAME=\"\\\"$BIN_NAME\"\\\""
-fi
+	if [ "$BIN_NAME" != "" ]
+	then
+		I_EX="$I_EX -DBIN_NAME=\"\\\"$BIN_NAME\"\\\""
+	fi
 }
 
 
 MTCF_PKGCONFIG()
 {
-	PKGCONFIG="$1"
+	PKGCONFIG="$PKGCONFIG $1"
 }
 
 
@@ -308,31 +294,28 @@ MTCF_POST_CONF()
 {
 	> $CONF_FILE
 
-if [ "$PKGCONFIG" != "" ]
-then
-	I_EX="$I_EX $(pkg-config $PKGCONFIG --cflags)"
-	L_EX="$L_EX $(pkg-config $PKGCONFIG --libs)"
-fi
+	if [ "$PKGCONFIG" != "" ]
+	then
+		I_EX="$I_EX $(pkg-config $PKGCONFIG --cflags)"
+		L_EX="$L_EX $(pkg-config $PKGCONFIG --libs)"
+	fi
 
-	F_C="$CFLAGS -I$HEAD_INSTALL $I_EX"
-	F_CXX="$CXXFLAGS -I$HEAD_INSTALL $I_EX"
+	F_C="$BIN_FLAGS $CFLAGS -I$HEAD_INSTALL $I_EX"
+	F_CXX="$BIN_FLAGS $CXXFLAGS -I$HEAD_INSTALL $I_EX"
 	F_L="$LDFLAGS -L$LIB_INSTALL $L_EX"
 
 	echo "CC            = $CC"		>> $CONF_FILE
 	echo "CXX           = $CXX"		>> $CONF_FILE
-	echo "YACC          = $YACC"		>> $CONF_FILE
-	echo "CFLAG         = $F_C"		>> $CONF_FILE
-	echo "CXXFLAG       = $F_CXX"		>> $CONF_FILE
-	echo "LDFLAG        = $F_L"		>> $CONF_FILE
+	echo "CFLAGS        = $F_C"		>> $CONF_FILE
+	echo "CXXFLAGS      = $F_CXX"		>> $CONF_FILE
+	echo "LDFLAGS       = $F_L"		>> $CONF_FILE
 
 	echo "LIB_NAME      = $LIB_NAME"	>> $CONF_FILE
 	echo "LIB_INSTALL   = $LIB_INSTALL"	>> $CONF_FILE
 	echo "HEAD_INSTALL  = $HEAD_INSTALL"	>> $CONF_FILE
-	echo "LIB_CFLAGS    = $LIB_CFLAGS"	>> $CONF_FILE
 
 	echo "BIN_NAME      = $BIN_NAME"	>> $CONF_FILE
 	echo "BIN_INSTALL   = $BIN_INSTALL"	>> $CONF_FILE
-	echo "BIN_CFLAGS    = $BIN_CFLAGS"	>> $CONF_FILE
 	echo "BIN_SUFFIX    = $BIN_SUFFIX"	>> $CONF_FILE
 
 	echo "DATA_NAME     = $DATA_NAME"	>> $CONF_FILE
@@ -341,18 +324,18 @@ fi
 	echo "APP_NAME      = $APP_NAME"	>> $CONF_FILE
 	echo "APP_VERSION   = $VERNUM"		>> $CONF_FILE
 
-if [ "$ENABLE_MAN_PAGE" != "" ]
-then
-	MTCF_MAKE_DIRS_ADD "man"
-	echo "MAN_INSTALL   = $MAN_INSTALL"	>> $CONF_FILE
-fi
+	if [ "$ENABLE_MAN_PAGE" != "" ]
+	then
+		MTCF_MAKE_DIRS_ADD "man"
+		echo "MAN_INSTALL   = $MAN_INSTALL" >> $CONF_FILE
+	fi
 
 	echo "MAKE_DIRS     = $MAKE_DIRS"	>> $CONF_FILE
 
-if [ "$MOC" != "" ]
-then
-	echo "MOC           = $MOC"		>> $CONF_FILE
-fi
+	if [ "$MOC" != "" ]
+	then
+		echo "MOC           = $MOC"	>> $CONF_FILE
+	fi
 }
 
 

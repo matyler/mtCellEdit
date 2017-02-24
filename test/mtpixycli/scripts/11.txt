@@ -1,0 +1,203 @@
+new			128 128 indexed
+palette unmask all
+save as			tmp/indexed_99.png png
+
+set brush flow		1000
+set brush pattern	28
+set brush shape		9
+set brush spacing	10
+set color a		2
+set color b		8
+
+paint			10 10 90 15 80 80 10 10
+
+palette mask index	2
+palette mask index	8
+
+set brush flow		1000
+set brush pattern	0
+set brush shape		0
+set brush spacing	1
+set color a		27
+set color b		31
+
+paint			10 10 90 15 80 80 10 10
+
+palette mask index	27
+palette unmask index	8
+set color swap
+
+paint			10 10 90 15 80 80 10 10
+
+palette mask all
+palette unmask index	0
+set color a		4
+
+paint			10 120 53 5 125 67 10 120
+
+set color a		10
+
+paint			8 76 49 120 41 83 8 76
+
+palette unmask all
+
+set color a		23
+
+paint			13 7 122 22 30 121 13 7
+
+set color a		32
+set color b		34
+set brush pattern	9
+
+floodfill		19 82
+
+set color a		28
+set color b		30
+set brush pattern	11
+
+floodfill		37 98
+
+set color a		12
+set color b		24
+set brush pattern	80
+
+floodfill		14 116
+
+set color a		27
+set brush spacing	0
+paint			59 121 52 107 33 124 5 125 5 102
+
+set brush pattern	88
+set color a		28
+set color b		34
+palette mask index	23
+palette mask index	4
+select polygon		101 11 122 31 108 123 96 123 101 11
+fill
+
+palette unmask all
+
+select rectangle	23 117 17 11
+copy
+paste			109 42
+clip save		1
+
+select rectangle	23 117 17 11
+lasso
+paste			101 97
+clip save		2
+
+clip load		1
+paste			105 122
+
+clip load		2
+paste			53 18
+clip flip_h
+paste			53 28
+clip flip_v
+paste			53 38
+clip rotate_a
+paste			53 48
+clip rotate_c
+paste			53 58
+
+set brush pattern	88
+set color a		27
+set color b		27
+select polygon		102 53 116 65 102 72
+cut
+
+paste			46 72
+
+set brush spacing	1
+set color a		34
+set color b		34
+select rectangle	2 32 10 10
+outline
+
+select rectangle	15 85 19 13
+crop
+
+save as			output/indexed_00.bmp bmp
+
+canvas flip_h
+save as			output/indexed_01.bmp bmp
+undo
+
+canvas flip_v
+save as			output/indexed_02.bmp bmp
+undo
+
+canvas rgb
+save as			output/indexed_03.bmp bmp
+canvas indexed none
+save as			output/indexed_04.bmp bmp
+undo
+undo
+
+canvas rotate_a
+save as			output/indexed_05.bmp bmp
+undo
+
+canvas rotate_c
+save as			output/indexed_06.bmp bmp
+undo
+
+effect trans_color	10 10 -5 10 300 5
+save as			output/indexed_07.bmp bmp
+undo
+
+scale			38 26
+save as			output/indexed_08.bmp bmp
+undo
+
+scale			10 10
+save as			output/indexed_09.bmp bmp
+undo
+
+
+
+
+
+
+undo
+
+palette size		2
+
+info
+set file		4
+info
+set file		0
+info
+
+undo
+info
+redo
+info
+
+resize			-10 -10 20 20
+info
+undo
+undo
+info
+
+select all
+copy
+clip save		10
+
+save as			output/indexed_99.bmp bmp
+
+effect bacteria		5
+save as			tmp/indexed_91.bmp bmp
+undo
+
+set color a		27
+set color b		34
+set brush pattern	8
+text			"Hello World" "Sans" 12 bold italic underline strikethrough
+paste			52 112
+
+save as			tmp/indexed_99.png png
+save undo		tmp/indexed_99.png
+save
+q

@@ -1,3 +1,5 @@
+3.0	2017-2-24
+
 2.7	2016-5-14
 
 	* qexSaveFileDialog added.

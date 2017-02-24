@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2014 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,14 +25,14 @@
 
 
 
-class qexDialogText : public QDialog
+class privDialogText : public QDialog
 {
 	Q_OBJECT
 
 public:
-	qexDialogText (
+	privDialogText (
 		int textType,		// 0 = Single line, 1 = Multi line
-		QWidget * parent,
+		QWidget * par,
 		QString title,
 		QString label,
 		QString text,		// Initial text to populate dialog

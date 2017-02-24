@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2014 Mark Tyler
+	Copyright (C) 2013-2016 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,15 +19,15 @@
 
 
 
-QString mtQEX :: dialogTextLine (
-	QWidget		* const	parent,
+QString mtQEX::dialogTextLine (
+	QWidget		* const	par,
 	QString		const	title,
 	QString		const	label,
 	QString		const	text,
 	int		const	maxLength
 	)
 {
-	qexDialogText	dialog ( 0, parent, title, label, text, maxLength );
+	privDialogText	dialog ( 0, par, title, label, text, maxLength );
 
 
 	if ( dialog.exec () == QDialog::Accepted )
@@ -38,14 +38,14 @@ QString mtQEX :: dialogTextLine (
 	return QString ();
 }
 
-QString mtQEX :: dialogText (
-	QWidget		* const	parent,
+QString mtQEX::dialogText (
+	QWidget		* const	par,
 	QString		const	title,
 	QString		const	label,
 	QString		const	text
 	)
 {
-	qexDialogText	dialog ( 1, parent, title, label, text );
+	privDialogText	dialog ( 1, par, title, label, text );
 
 
 	if ( dialog.exec () == QDialog::Accepted )
@@ -56,16 +56,16 @@ QString mtQEX :: dialogText (
 	return QString ();
 }
 
-qexDialogText :: qexDialogText (
+privDialogText::privDialogText (
 	int		const	textType,
-	QWidget		* const	parent,
+	QWidget		* const	par,
 	QString		const	title,
 	QString		const	label,
 	QString		const	text,
 	int		const	maxLength
 	)
 	:
-	QDialog ( parent ),
+	QDialog		( par ),
 	textLineEdit	(),
 	textEdit	()
 {
@@ -106,7 +106,7 @@ qexDialogText :: qexDialogText (
 	setWindowTitle ( title );
 }
 
-QString qexDialogText :: getText ()
+QString privDialogText::getText ()
 {
 	if ( textLineEdit )
 	{

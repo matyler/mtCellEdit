@@ -18,6 +18,8 @@
 #ifndef MTCELLEDIT_H_
 #define MTCELLEDIT_H_
 
+
+
 #include <mtkit.h>
 
 
@@ -562,6 +564,10 @@ struct CedCellStack
 
 struct CedParser
 {
+	CedParser ();
+
+///	------------------------------------------------------------------------
+
 	unsigned int	flag;		// As enum CED_PARSER_FLAG_*
 	int		ced_errno;	// CED error number
 	int		sp;		// String pointer (char offset if error
@@ -875,6 +881,7 @@ CedParser ced_sheet_parse_text (	// Parse a string that contains an infix
 					// in text, NULL = don't
 	);
 	// Return parser state
+
 
 /*
 	Low level functions

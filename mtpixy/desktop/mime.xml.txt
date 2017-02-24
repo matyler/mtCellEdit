@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-mtpixy-gpl">
+         <comment xml:lang="en">mtPixy GPL Palette</comment>
+         <acronym xml:lang="en">GPL</acronym>
+         <expanded-acronym xml:lang="en">Gimp PaLette</expanded-acronym>
+         <generic-icon name="application-x-@BIN_NAME@"/>
+         <glob weight="60" pattern="*.gpl"/>
+  </mime-type>
+</mime-info>
+

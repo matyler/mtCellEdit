@@ -1,0 +1,48 @@
+PIXYNEW
+mtPixyUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+pixynew - create new image
+
+
+= SYNOPSIS =
+**pixynew** [ **OPTION** ]...
+
+
+= DESCRIPTION =
+Creates a new image according to given geometry and type.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-compression** INTEGER
+	Set compression level for PNG/JPEG files. Default=5
+**-height** INTEGER
+	Set new image width.
+**-i** STRING
+	Load this input file.
+**-imtype** STRING
+	Image format of new image (use 'list' to list types, default=indexed).
+**-o** STRING
+	Save current image to this file (immediately).
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=BMP).
+**-width** INTEGER
+	Set new image height.
+
+
+= SEE ALSO =
+pixyutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		MT Spreadsheet UI Engine
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit cairo-devel pango-devel
-Requires:		libmtkit libmtcelledit cairo pango
+BuildRequires:		libmtkit libmtpixy libmtcelledit cairo-devel pango-devel
+Requires:		libmtkit libmtpixy libmtcelledit cairo pango
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

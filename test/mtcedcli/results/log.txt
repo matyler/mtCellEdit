@@ -73,6 +73,7 @@ mtcedcli > save as              tmp/base4.ledger.zip    ledger_value_book
 mtcedcli > 
 mtcedcli > # ERROR - bad file type
 mtcedcli > save as tmp/base5.tsv.zip "strange file type"
+Invalid charint input 'strange file type'
 Unknown file type: 'strange file type'
 
 mtcedcli > 
@@ -398,7 +399,7 @@ mtcedcli >
 mtcedcli > load tmp/base1.31.tsv.zip
 mtcedcli > 
 mtcedcli > info
-Book #=0 Sheet Name='Formulae text sorted Row' Graph Name='' Cursor=r1c1:r52c20
+Book #=0 Sheet Name='Formulae text sorted Row' Graph Name='' Cursor=r1c1:r52c20 Filename='' File Type=TSV Book
 
 mtcedcli > find 1 value all
     1 Formulae r6c8 = '=ceil(R[-5]C)'
@@ -500,7 +501,9 @@ start_row = 1
 start_col = 1
 locked = 0
 mtcedcli > print prefs state
-page_font_size = '12'
+main_font_name = 'Sans'
+main_font_size = '12'
+main_row_pad = '1'
 page_footer_centre = '0'
 page_footer_left = '6'
 page_footer_right = '4'

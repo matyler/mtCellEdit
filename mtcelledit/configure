@@ -17,13 +17,10 @@ ENABLE_DESKTOP=desktop
 for A in "$@"
 do
 	case "$A" in
-	--enable-gtk2 )		TK=gtk2
-				BIN_SUFFIX=
-				;;
-	--enable-qt4 )		TK=qt4
+	--use-qt4 )		TK=qt4
 				BIN_SUFFIX=-qt4
 				;;
-	--enable-qt5 )		TK=qt5
+	--use-qt5 )		TK=qt5
 				BIN_SUFFIX=-qt5
 				;;
 	--disable-handbook)	ENABLE_HANDBOOK="";;
@@ -37,9 +34,8 @@ done
 MYHELP()
 {
 cat << EOF
---enable-gtk2 ......... Compile GTK+2 version
---enable-qt4 .......... Compile Qt4 version
---enable-qt5 .......... Compile Qt5 version (default)
+--use-qt4 ............. Compile Qt4 version
+--use-qt5 ............. Compile Qt5 version (default)
 --disable-handbook .... Don't build handbook
 --disable-desktop ..... Don't build desktop files
 
@@ -50,16 +46,10 @@ EOF
 MTCF_PRINT_HELP MYHELP
 MTCF_PRE_CONF
 
-CK_LIBS="mtkit mtcelledit mtcedui"
+CK_LIBS="mtkit mtcelledit mtcedui mtpixy"
 
 
 case "$TK" in
-gtk2 )
-	MTCF_PKGCONFIG "gtk+-2.0"
-	TK_OBJ="tk_gtk2_clipboard.o tk_gtk2_dialogs.o tk_gtk2_edit.o tk_gtk2_file.o tk_gtk2_find.o tk_gtk2_graph.o tk_gtk2_input.o tk_gtk2_main.o tk_gtk2_prefs.o tk_gtk2_sheet.o tk_gtk2_sort.o tk_gtk2_updates.o tk_gtk2_view.o"
-	I_EX="$I_EX -DU_TK_GTK2"
-	CK_LIBS="$CK_LIBS mtgex"
-	;;
 qt4 )
 	MTCF_PKGCONFIG "QtGui"
 	TK_OBJ="moc_tk_qt4.o tk_qt4_clipboard.o tk_qt4_dialogs.o tk_qt4_edit.o tk_qt4_file.o tk_qt4_find.o tk_qt4_graph.o tk_qt4_input.o tk_qt4_main.o tk_qt4_menu.o tk_qt4_prefs.o tk_qt4_sheet.o tk_qt4_sort.o tk_qt4_updates.o tk_qt4_view.o"

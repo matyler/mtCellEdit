@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt4 General Election Results Analysis Program
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit libmtqex4 qt-devel
-Requires:		libmtkit libmtcelledit libmtqex4 qt
+BuildRequires:		libmtkit libmtcelledit libmtqex4 libmtpixy qt-devel
+Requires:		libmtkit libmtcelledit libmtqex4 libmtpixy qt
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt
@@ -16,7 +16,7 @@ Requires:		libmtkit libmtcelledit libmtqex4 qt
 %setup -q
 
 %build
-@MT_CONF@ --enable-qt4
+@MT_CONF@ --use-qt4
 make
 
 %install

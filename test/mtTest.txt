@@ -77,6 +77,19 @@ cmp_diff()
 	unset DIFF
 }
 
+run_sh_fail()
+{
+	# Check that this command fails
+
+	TXT=$1
+	shift
+	FAIL=1
+
+	$PROGPREFIX "$@" 2>>$VALG_LOGFILE && FAIL=0
+
+	cmp_arg "$TXT" "$FAIL" "1"
+}
+
 valg_results()
 {
 	case "$VALG" in

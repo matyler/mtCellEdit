@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2014 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@
 
 
 
-void MainWindow :: pressFocusOutCellRef ()
+void MainWindow::pressFocusOutCellRef ()
 {
 	updateEntryCellref ();
 }
 
-void MainWindow :: pressUpdateCellRef ()
+void MainWindow::pressUpdateCellRef ()
 {
 	CedCellRef	r1,
 			r2;
@@ -72,19 +72,19 @@ void MainWindow :: pressUpdateCellRef ()
 	viewMain->setFocus ();
 }
 
-void MainWindow :: pressTabCellRef (
+void MainWindow::pressTabCellRef (
 	int	const	ARG_UNUSED ( t )
 	)
 {
 	editCelltext->setFocus ();
 }
 
-void MainWindow :: pressStopCellRef ()
+void MainWindow::pressStopCellRef ()
 {
 	viewMain->setFocus ();		// Update happens in focus out
 }
 
-void MainWindow :: setCellFromInput (
+void MainWindow::setCellFromInput (
 	int	const	rowd,
 	int	const	cold
 	)
@@ -143,42 +143,42 @@ void MainWindow :: setCellFromInput (
 	updateChangesChores ( 0, 0 );
 }
 
-void MainWindow :: pressUpdateCellText ()
+void MainWindow::pressUpdateCellText ()
 {
 	setCellFromInput ( 1, 0 );
 }
 
-void MainWindow :: pressTabCellText (
+void MainWindow::pressTabCellText (
 	int	const	t
 	)
 {
 	setCellFromInput ( 0, t );
 }
 
-void MainWindow :: pressArrowCellText (
+void MainWindow::pressArrowCellText (
 	int	const	r
 	)
 {
 	setCellFromInput ( r, 0 );
 }
 
-void MainWindow :: pressStopCellText ()
+void MainWindow::pressStopCellText ()
 {
 	updateEntryCelltext ();
 	viewMain->setFocus ();
 }
 
-bool MyLineEdit :: event (
-	QEvent		* const	event
+bool MyLineEdit::event (
+	QEvent		* const	ev
 	)
 {
-	QKeyEvent	* const keyEvent = static_cast<QKeyEvent *>( event );
+	QKeyEvent	* const keyEvent = static_cast<QKeyEvent *>( ev );
 
 
-	if ( event->type () != QEvent::KeyPress || ! keyEvent )
+	if ( ev->type () != QEvent::KeyPress || ! keyEvent )
 	{
 		// Nothing to do so let the base class handle this event instead
-		return QLineEdit :: event ( event );
+		return QLineEdit::event ( ev );
 	}
 
 	switch ( keyEvent->key () )
@@ -213,25 +213,25 @@ bool MyLineEdit :: event (
 	}
 
 	// Nothing to do so let the base class handle this event instead
-	return QLineEdit :: event ( event );
+	return QLineEdit::event ( ev );
 }
 
-void MyLineEdit :: focusOutEvent (
+void MyLineEdit::focusOutEvent (
 	QFocusEvent	* const	e
 	)
 {
 	emit pressFocusOut ();
 
-	QLineEdit :: focusOutEvent ( e );
+	QLineEdit::focusOutEvent ( e );
 }
 
 
 
 typedef struct
 {
-	int		changed,
-			r,
-			c;
+	int		changed;
+	int		r;
+	int		c;
 } jumpSTATE;
 
 
@@ -253,8 +253,8 @@ static int jump_to_active_cb (
 	return 1;			// STOP
 }
 
-void MainWindow :: keyPressEvent (
-	QKeyEvent	* const	event
+void MainWindow::keyPressEvent (
+	QKeyEvent	* const	ev
 	)
 {
 	int		row_change = 0,
@@ -267,7 +267,7 @@ void MainWindow :: keyPressEvent (
 			return_true = 0;
 	CedSheet	* sheet;
 	jumpSTATE	jstate = { 0, 0, 0 };
-	QString		text = event->text ();
+	QString		text = ev->text ();
 	CedView		* activeView = viewMain;
 
 
@@ -277,7 +277,7 @@ void MainWindow :: keyPressEvent (
 		goto no_action;
 	}
 
-	if ( event->key () == Qt::Key_Escape )
+	if ( ev->key () == Qt::Key_Escape )
 	{
 		viewMain->setFocus ();
 		return;
@@ -296,11 +296,11 @@ void MainWindow :: keyPressEvent (
 		activeView = viewTab;
 	}
 
-	key_shift = (int)(event->modifiers () & Qt::ShiftModifier);
-	key_ctrl = (int)(event->modifiers () & Qt::ControlModifier);
-	key_alt = (int)(event->modifiers () & Qt::AltModifier);
+	key_shift = (int)(ev->modifiers () & Qt::ShiftModifier);
+	key_ctrl = (int)(ev->modifiers () & Qt::ControlModifier);
+	key_alt = (int)(ev->modifiers () & Qt::AltModifier);
 
-	switch ( event->key () )
+	switch ( ev->key () )
 	{
 	case Qt::Key_Up:
 		if ( key_ctrl )
@@ -525,13 +525,12 @@ void MainWindow :: keyPressEvent (
 
 	if ( sheet->prefs.locked )
 	{
-		QMessageBox :: critical ( this, tr ( "Error" ),
-			tr ( "Sheet locked." ) );
+		QMessageBox::critical ( this, "Error", "Sheet locked." );
 
 		return;
 	}
 
-	if ( ! editCelltext->isReadOnly () )
+	if ( editCelltext->isEnabled () )
 	{
 		editCelltext->setText ( text );
 		editCelltext->setFocus ();
@@ -541,30 +540,29 @@ void MainWindow :: keyPressEvent (
 
 no_action:
 	// Nothing to do so let the base class handle this event instead
-	QWidget :: keyPressEvent ( event );
+	QWidget::keyPressEvent ( ev );
 }
 
-bool CedViewArea :: event (
-	QEvent		* const	event
+bool CedViewArea::event (
+	QEvent		* const	ev
 	)
 {
-	QKeyEvent	* const keyEvent = static_cast<QKeyEvent *>( event );
+	QKeyEvent	* const keyEvent = static_cast<QKeyEvent *>( ev );
 
 
 	// This event is needed to catch the tab key to stop it being used
 	// to change focus from the CedViewArea.
 
-	if ( event->type () != QEvent::KeyPress || ! keyEvent )
+	if ( ev->type () != QEvent::KeyPress || ! keyEvent )
 	{
 		// Nothing to do so let the base class handle this event instead
-		return QWidget :: event ( event );
+		return QWidget::event ( ev );
 	}
 
 	switch ( keyEvent->key () )
 	{
 	case Qt::Key_Tab:
-		int		r,
-				c;
+		int		r, c;
 		CedSheet	* sheet;
 
 
@@ -593,16 +591,16 @@ bool CedViewArea :: event (
 	}
 
 	// Nothing to do so let the base class handle this event instead
-	return QWidget :: event ( event );
+	return QWidget::event ( ev );
 }
 
-void CedView :: wheelEvent (
-	QWheelEvent	* const	event
+void CedView::wheelEvent (
+	QWheelEvent	* const	ev
 	)
 {
-	if ( event->orientation () == Qt::Horizontal )
+	if ( ev->orientation () == Qt::Horizontal )
 	{
-		event->ignore ();
+		ev->ignore ();
 
 		return;
 	}
@@ -613,7 +611,7 @@ void CedView :: wheelEvent (
 
 	delta = MAX ( delta, 1 );
 
-	if ( event->delta () > 0 )
+	if ( ev->delta () > 0 )
 	{
 		delta = -delta;
 	}
@@ -621,7 +619,7 @@ void CedView :: wheelEvent (
 	vscroll->setSliderPosition ( vscroll->value () + delta );
 }
 
-int MainWindow :: isEditingCellText ()
+int MainWindow::isEditingCellText ()
 {
 	if ( editCelltext->hasFocus () )
 	{
@@ -631,7 +629,7 @@ int MainWindow :: isEditingCellText ()
 	return 0;
 }
 
-void MainWindow :: insertCellText (
+void MainWindow::insertCellText (
 	char	const * const	text
 	)
 {
@@ -643,27 +641,16 @@ void MainWindow :: insertCellText (
 	editCelltext->insert ( mtQEX::qstringFromC ( text ) );
 }
 
-void CedViewArea :: mouseEventRouter (
-	QMouseEvent	* const	event,
+void CedViewArea::mouseEventRouter (
+	QMouseEvent	* const	ev,
 	int			caller	// 0 = Press 2 = Move
 	)
 {
-	int		row_start = 0,
-			col_start = 0,
-			b = 0,
-			x,
-			y,
-			vscroll,
-			hscroll,
-			r,
-			c,
-			r1 = 1,
-			c1 = 1,
-			r2 = 1,
-			c2 = 1
-			;
+	int		row_start = 0, col_start = 0, b = 0,
+			xx, yy, vscroll, hscroll, r, c,
+			r1 = 1, c1 = 1, r2 = 1, c2 = 1;
 	CedSheet	* sheet;
-	CuiRender	* render;
+	CuiRender	* crender;
 
 
 	sheet = mainwindow->projectGetSheet ();
@@ -672,11 +659,11 @@ void CedViewArea :: mouseEventRouter (
 		return;
 	}
 
-	if ( event->buttons () & Qt::LeftButton )
+	if ( ev->buttons () & Qt::LeftButton )
 	{
 		b = 1;
 	}
-	else if ( event->buttons () & Qt::RightButton )
+	else if ( ev->buttons () & Qt::RightButton )
 	{
 		b = 3;
 	}
@@ -692,11 +679,11 @@ void CedViewArea :: mouseEventRouter (
 		return;
 	}
 
-	render = mainwindow->projectGetRender ();
+	crender = mainwindow->projectGetRender ();
 	vscroll = cedview->getVScrollValue ();
 	hscroll = cedview->getHScrollValue ();
-	x = event->x ();
-	y = event->y ();
+	xx = ev->x ();
+	yy = ev->y ();
 
 	switch ( areaID )
 	{
@@ -741,13 +728,12 @@ void CedViewArea :: mouseEventRouter (
 	switch ( caller )
 	{
 	case 0:	// Mouse press on sheet area
-		r = cui_ren_row_from_y ( row_start, render, y );
-		c = cui_ren_column_from_x ( col_start, render, x );
+		r = cui_ren_row_from_y ( row_start, crender, yy );
+		c = cui_ren_column_from_x ( col_start, crender, xx );
 
 		if ( mainwindow->isEditingCellText () )
 		{
-			char		txt[128] = {0},
-					* tp = txt;
+			char		txt[128] = {0}, * tp = txt;
 			CedCellRef	ref;
 
 
@@ -758,7 +744,7 @@ void CedViewArea :: mouseEventRouter (
 				*tp++ = ':';
 			}
 
-			if ( event->modifiers () & Qt::ShiftModifier )
+			if ( ev->modifiers () & Qt::ShiftModifier )
 			{
 				// Absolute column
 				ref.row_m = 0;
@@ -771,7 +757,7 @@ void CedViewArea :: mouseEventRouter (
 				ref.row_d = r - sheet->prefs.cursor_r1;
 			}
 
-			if ( event->modifiers () & Qt::ControlModifier )
+			if ( ev->modifiers () & Qt::ControlModifier )
 			{
 				// Absolute column
 				ref.col_m = 0;
@@ -815,12 +801,12 @@ void CedViewArea :: mouseEventRouter (
 					NULL );
 
 				c1 = c2 = cui_ren_column_from_x ( col_start,
-					render, x );
+					crender, xx );
 			}
 			else if ( row_start )
 			{
 				r1 = r2 = cui_ren_row_from_y ( row_start,
-					render, y );
+					crender, yy );
 
 				mainwindow->projectGetSheetGeometry ( NULL,
 					&c2 );
@@ -841,13 +827,13 @@ void CedViewArea :: mouseEventRouter (
 					NULL );
 
 				c2 = cui_ren_column_from_x ( col_start,
-					render, x );
+					crender, xx );
 			}
 			else if ( row_start )
 			{
 				r1 = sheet->prefs.cursor_r1;
-				r2 = cui_ren_row_from_y ( row_start, render,
-					y );
+				r2 = cui_ren_row_from_y ( row_start, crender,
+					yy );
 				mainwindow->projectGetSheetGeometry ( NULL,
 					&c2 );
 			}
@@ -866,8 +852,8 @@ void CedViewArea :: mouseEventRouter (
 		break;
 
 	case 2:	// Mouse movement on sheet area
-		r = cui_ren_row_from_y ( row_start, render, y );
-		c = cui_ren_column_from_x ( col_start, render, x );
+		r = cui_ren_row_from_y ( row_start, crender, yy );
+		c = cui_ren_column_from_x ( col_start, crender, xx );
 
 		mainwindow->setCursorRange ( sheet->prefs.cursor_r1,
 			sheet->prefs.cursor_c1, r, c, 0, 0, 0 );
@@ -881,13 +867,13 @@ void CedViewArea :: mouseEventRouter (
 
 			mainwindow->projectGetSheetGeometry ( &r2, NULL );
 
-			c2 = cui_ren_column_from_x ( col_start, render, x );
+			c2 = cui_ren_column_from_x ( col_start, crender, xx );
 		}
 		else if ( row_start )
 		{
 			r1 = sheet->prefs.cursor_r1;
 			c1 = 1;
-			r2 = cui_ren_row_from_y ( row_start, render, y );
+			r2 = cui_ren_row_from_y ( row_start, crender, yy );
 
 			mainwindow->projectGetSheetGeometry ( NULL, &c2 );
 		}
@@ -906,17 +892,17 @@ void CedViewArea :: mouseEventRouter (
 	}
 }
 
-void CedViewArea :: mousePressEvent (
-	QMouseEvent	* const	event
+void CedViewArea::mousePressEvent (
+	QMouseEvent	* const	ev
 	)
 {
-	mouseEventRouter ( event, 0 );
+	mouseEventRouter ( ev, 0 );
 }
 
-void CedViewArea :: mouseMoveEvent (
-	QMouseEvent	* const	event
+void CedViewArea::mouseMoveEvent (
+	QMouseEvent	* const	ev
 	)
 {
-	mouseEventRouter ( event, 2 );
+	mouseEventRouter ( ev, 2 );
 }
 

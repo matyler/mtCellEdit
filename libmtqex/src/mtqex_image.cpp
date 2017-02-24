@@ -19,37 +19,37 @@
 
 
 
-qexImage :: qexImage ()
+mtQEX::Image::Image ()
 	:
 	image		(),
 	zoom		( 1 )
 {
 	setAlignment ( Qt::AlignHCenter | Qt::AlignVCenter );
 
-	area = new qexImageArea ( this );
+	area = new ImageArea ( this );
 	setWidget ( area );
 
 	setBackgroundRole ( QPalette::Dark );
 }
 
-qexImage :: ~qexImage ()
+mtQEX::Image::~Image ()
 {
-	mtkit_image_destroy ( image );
+	delete image;
 	image = NULL;
 }
 
-void qexImage :: setImage (
-	mtImage		* const	im
+void mtQEX::Image::setImage (
+	mtPixy::Image	* const	im
 	)
 {
-	mtkit_image_destroy ( image );
+	delete image;
 	image = im;
 
 	if ( im )
 	{
 		area->setGeometry ( 0, 0,
-			mtkit_image_get_width ( image ) * zoom,
-			mtkit_image_get_height ( image ) * zoom );
+			image->get_width () * zoom,
+			image->get_height () * zoom );
 	}
 	else
 	{
@@ -61,12 +61,12 @@ void qexImage :: setImage (
 	area->updateGeometry ();
 }
 
-mtImage * qexImage :: getImage ()
+mtPixy::Image * mtQEX::Image::getImage ()
 {
 	return image;
 }
 
-int qexImage :: setZoom (
+int mtQEX::Image::setZoom (
 	int	const	z
 	)
 {
@@ -82,8 +82,8 @@ int qexImage :: setZoom (
 		if ( image )
 		{
 			area->setGeometry ( 0, 0,
-				mtkit_image_get_width ( image ) * zoom,
-				mtkit_image_get_height ( image ) * zoom );
+				image->get_width () * zoom,
+				image->get_height () * zoom );
 
 			area->update ();
 			area->updateGeometry ();
@@ -93,75 +93,67 @@ int qexImage :: setZoom (
 	return 0;
 }
 
-int qexImage :: getZoom ()
+int mtQEX::Image::getZoom ()
 {
 	return zoom;
 }
 
-void qexImage :: update ()
+void mtQEX::Image::update ()
 {
 	area->update ();
 }
 
-qexImageArea :: qexImageArea (
-	qexImage	* const	parent
+mtQEX::ImageArea::ImageArea (
+	Image		* const	par
 	)
 	:
-	qi		( parent )
+	qi		( par )
 {
 	setAttribute ( Qt::WA_OpaquePaintEvent );
 	setAttribute ( Qt::WA_NoSystemBackground );
 }
 
-void qexImageArea :: paintEvent (
-	QPaintEvent	* const	event
+void mtQEX::ImageArea::paintEvent (
+	QPaintEvent	* const	ev
 	)
 {
-	mtImage		* destImage,
-			* srcImage;
+	mtPixy::Image	* destImage, * srcImage;
 	int		px, py, pw, ph;
 	unsigned char	* src, * rgb;
 
 
-	px = event->rect ().x ();
-	py = event->rect ().y ();
-	pw = event->rect ().width ();
-	ph = event->rect ().height ();
+	px = ev->rect ().x ();
+	py = ev->rect ().y ();
+	pw = ev->rect ().width ();
+	ph = ev->rect ().height ();
 
-	destImage = mtkit_image_new_rgb ( pw, ph );
-	rgb = mtkit_image_get_rgb ( destImage );
+	destImage = mtPixy::image_create ( mtPixy::Image::RGB, pw, ph );
+	rgb = destImage->get_canvas ();
 
 	if ( ! rgb )
 	{
-		mtkit_image_destroy ( destImage );
+		delete destImage;
 		return;
 	}
 
+// FIXME - have a version for indexed palette images?
 	if (	qi						&&
 		(srcImage = qi->getImage () )			&&
-		(src = mtkit_image_get_rgb ( srcImage ) )
+		(src = srcImage->get_canvas () )		&&
+		srcImage->get_type () == mtPixy::Image::RGB
 		)
 	{
+		int	const	zoom = qi->getZoom ();
+		int	const	iw = srcImage->get_width ();
+		int	const	ih = srcImage->get_height ();
+
 		unsigned char	* pix, * dest;
-		int		pw2,
-				ph2,
-				nix = 0,
-				niy = 0,
-				zoom = qi->getZoom (),
-				iw,
-				ih,
-				px2,
-				py2,
-				x,
-				y
-				;
+		int		pw2, ph2, nix = 0, niy = 0;
+		int		px2, py2, xx, yy;
 
 
 		px2 = px;
 		py2 = py;
-
-		iw = mtkit_image_get_width ( srcImage );
-		ih = mtkit_image_get_height ( srcImage );
 
 		pw2 = pw;
 		ph2 = ph;
@@ -189,13 +181,13 @@ void qexImageArea :: paintEvent (
 			ph2 = ih * zoom - py2;
 		}
 
-		for ( y = niy; y < ph2; y++ )
+		for ( yy = niy; yy < ph2; yy++ )
 		{
-			dest = rgb + 3 * ( y * pw + nix );
-			for ( x = nix; x < pw2; x++ )
+			dest = rgb + 3 * ( yy * pw + nix );
+			for ( xx = nix; xx < pw2; xx++ )
 			{
-				pix = src + 3 * ( ( px2 + x ) / zoom +
-					( py2 + y ) / zoom * iw );
+				pix = src + 3 * ( ( px2 + xx ) / zoom +
+					( py2 + yy ) / zoom * iw );
 
 				*dest++ = pix[0];
 				*dest++ = pix[1];
@@ -213,8 +205,10 @@ void qexImageArea :: paintEvent (
 		p.drawImage ( QPoint ( px, py ), qim[0] );
 
 		delete qim;		// Delete before rgb image destroy
+		qim = NULL;
 	}
 
-	mtkit_image_destroy ( destImage );
+	delete destImage;
+	destImage = NULL;
 }
 

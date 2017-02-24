@@ -1,0 +1,56 @@
+
+
+
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Contents</TITLE>\1'
+
+[Previous index.html] | [Next chap_01.html]
+
+-------------------------------------------------
+=The mtPixy Handbook=
+-------------------------------------------------
+
+
+- [1. Legal chap_01.html]
+
+- [2. Introduction chap_02.html]
+  - [2.1 Project Genesis chap_02.html#SEC1]
+  - [2.2 General Philosophy chap_02.html#SEC2]
+  - [2.3 Development Timeline chap_02.html#SEC3]
+
+- [3. System Administrator Notes chap_03.html]
+  - [3.1 Dependencies chap_03.html#SEC1]
+  - [3.2 Compilation chap_03.html#SEC2]
+  - [3.3 Installation chap_03.html#SEC3]
+    - [3.3.1 Program man Page chap_03.html#SEC31]
+  - [3.4 Uninstalling chap_03.html#SEC4]
+  - [3.5 Package Management chap_03.html#SEC5]
+
+- [4. User Notes chap_04.html]
+  - [4.1 Basic Concepts chap_04.html#SEC1]
+  - [4.2 Running mtPixy for the first time chap_04.html#SEC2]
+    - [4.2.1 Program Preferences chap_04.html#SEC21]
+  - [4.3 User Interface chap_04.html#SEC3]
+    - [4.3.1 Menu Bar chap_04.html#SEC31]
+    - [4.3.2 Tool Bar chap_04.html#SEC32]
+    - [4.3.3 Palette Dock chap_04.html#SEC33]
+    - [4.3.4 Status Bar chap_04.html#SEC34]
+    - [4.3.5 Main Canvas chap_04.html#SEC35]
+  - [4.4 The Clipboard chap_04.html#SEC4]
+
+- [5. Developer Notes chap_05.html]
+  - [5.1 mtPixyUtils chap_05.html#SEC1]
+  - [5.2 mtPixyCLI chap_05.html#SEC2]
+    - [5.2.1 Commands chap_05.html#SEC21]
+
+- [A. Miscellaneous chap_A.html]
+  - [A.1 Limitations chap_A.html#SEC1]
+    - [A.1.1 Localization chap_A.html#SEC11]
+  - [A.2 Supported File Types chap_A.html#SEC2]
+
+
+
+- [B. The History of this Document chap_B.html]
+
+-------------------------------------------------
+[Previous index.html] | [Next chap_01.html]

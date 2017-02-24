@@ -38,11 +38,11 @@ is a small, no frills program which is designed to handle simple day to day
 spreadsheet tasks. I have put the most important facilities I want into a small
 customized program which means I can avoid the problems of larger programs such
 as slow operating speeds and overcomplicated user interfaces.  The GUI is
-presented using GTK+2, Qt4, or Qt5 (whichever you prefer).
+presented using Qt4, or Qt5 (whichever you prefer).
 </p>
 
 <p>
-The core of the program is a shared C library which can be used by any C
+The core of the program is a shared C++ library which can be used by any C++
 program to read, write and manipulate spreadsheets.  The source code suite also
 contains other example programs that use this library, such as command line
 tools to allow scripts to access the API.
@@ -65,7 +65,7 @@ etc).
 <h1>System Requirements</h1>
 <p>
 mtCellEdit is designed for GNU/Linux operating systems.  Hardware wise it
-has been tested on x86_32, x86_64, ARM and PowerPC platforms.
+has been tested on x86_32, x86_64, ARM_32 and PowerPC_32 platforms.
 </p>
 
 
@@ -87,7 +87,12 @@ or later.  Read more about this here
 
 <h1>Extras</h1>
 <p>
-As well as the mtCellEdit program, the source code archive also contains a suite of other programs which use the core spreadsheet libraries:
+As well as the mtCellEdit program, the source code archive also contains a suite of other programs which use the core libraries:
+</p>
+
+<h2>mtPixy</h2>
+<p>
+A GUI based program to edit pixel based images and palettes.
 </p>
 
 <h2>mtEleana</h2>
@@ -105,9 +110,19 @@ A GUI based program to study the contents of directories.
 A collection of command line tools for working on text based spreadsheets (i.e. TSV and CSV files).
 </p>
 
+<h2>mtPixyUtils</h2>
+<p>
+A collection of command line tools for working on image files.
+</p>
+
 <h2>mtCedCLI</h2>
 <p>
 An interactive command line program for manipulating spreadsheets.  The functions available are identical to mtCellEdit but accessed using a command line interface (via GNU readline).
+</p>
+
+<h2>mtPixyCLI</h2>
+<p>
+An interactive command line program for manipulating images.  The functions available are identical to mtPixy but accessed using a command line interface (via GNU readline).
 </p>
 
 <h2>mtNetLog</h2>

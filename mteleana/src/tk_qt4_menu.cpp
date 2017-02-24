@@ -19,7 +19,7 @@
 
 
 
-void MainWindow :: menuInit (
+void MainWindow::menuInit (
 	QAction		**	const	action,
 	char	const	*	const	text,
 	char	const	*	const	shortcut,
@@ -28,22 +28,22 @@ void MainWindow :: menuInit (
 {
 	if ( icon )
 	{
-		action[0] = new QAction ( QIcon :: fromTheme ( icon ),
-			tr ( text ), this );
+		action[0] = new QAction ( QIcon::fromTheme ( icon ), text,
+			this );
 		action[0]->setIconVisibleInMenu ( true );
 	}
 	else
 	{
-		action[0] = new QAction ( tr ( text ), this );
+		action[0] = new QAction ( text, this );
 	}
 
 	if ( shortcut )
 	{
-		action[0]->setShortcut ( tr ( shortcut ) );
+		action[0]->setShortcut ( QString ( shortcut ) );
 	}
 }
 
-void MainWindow :: pressFileSaveMap ()
+void MainWindow::pressFileSaveMap ()
 {
 	if ( ! election )
 	{
@@ -78,7 +78,7 @@ void MainWindow :: pressFileSaveMap ()
 
 	while ( 1 )
 	{
-		qexSaveFileDialog dialog ( this, tr ( "Save Map File" ),
+		mtQEX::SaveFileDialog dialog ( this, "Save Map File",
 			format_list, format, last.toUtf8 ().data () );
 
 		if ( ! dialog.exec () )
@@ -100,8 +100,8 @@ void MainWindow :: pressFileSaveMap ()
 				comboDiagramLeft->currentText().toUtf8().data()
 				) )
 			{
-				QMessageBox :: critical ( this, tr ( "Error" ),
-					tr ( "Unable to save map." ) );
+				QMessageBox::critical ( this, "Error",
+					"Unable to save map." );
 
 				continue;
 			}
@@ -115,20 +115,20 @@ void MainWindow :: pressFileSaveMap ()
 	}
 }
 
-void MainWindow :: pressFileQuit ()
+void MainWindow::pressFileQuit ()
 {
 	close ();
 }
 
-void MainWindow :: pressHelpAboutQt ()
+void MainWindow::pressHelpAboutQt ()
 {
 	QMessageBox::aboutQt ( this );
 }
 
-void MainWindow :: pressHelpAbout ()
+void MainWindow::pressHelpAbout ()
 {
-	QMessageBox :: about ( this, tr ( "About" ),
-		tr ( VERSION"\n"
+	QMessageBox::about ( this, "About",
+		VERSION"\n"
 	"\n"
 	"Copyright (C) 2009-2016 Mark Tyler.\n"
 	"\n"
@@ -144,10 +144,10 @@ void MainWindow :: pressHelpAbout ()
 	"\n"
 	"You should have received a copy of the GNU General Public License "
 	"along with this program.  If not, see http://www.gnu.org/licenses/\n"
-		) );
+		);
 }
 
-void MainWindow :: createMenus ()
+void MainWindow::createMenus ()
 {
 	QAction
 			* actFileSaveMap,
@@ -164,27 +164,27 @@ void MainWindow :: createMenus ()
 		SLOT ( press ## A () ) );
 
 
-MENFU ( FileSaveMap,		"Save Map Image ...",	NULL,	NULL )
-MENFU ( FileQuit,		"Quit",			"Ctrl+Q", "application-exit" )
+MENFU ( FileSaveMap,	"Save Map Image ...",	NULL,	NULL )
+MENFU ( FileQuit,	"Quit",			"Ctrl+Q", "application-exit" )
 
-MENFU ( EditFind,		"Find",			"Ctrl+F", "edit-find" )
+MENFU ( EditFind,	"Find",			"Ctrl+F", "edit-find" )
 
-MENFU ( HelpAboutQt,		"About Qt ...",		NULL, NULL )
-MENFU ( HelpAbout,		"About ...",		"F1", "help-about" )
+MENFU ( HelpAboutQt,	"About Qt ...",		NULL, NULL )
+MENFU ( HelpAbout,	"About ...",		"F1", "help-about" )
 
 
-	QMenu * menuFile = menuBar->addMenu ( tr ( "&File" ) );
+	QMenu * menuFile = menuBar->addMenu ( "&File" );
 	menuFile->setTearOffEnabled ( true );
 	menuFile->addAction ( actFileSaveMap );
 	menuFile->addSeparator ();
 	menuFile->addAction ( actFileQuit );
 
-	QMenu * menuEdit = menuBar->addMenu ( tr ( "&Edit" ) );
+	QMenu * menuEdit = menuBar->addMenu ( "&Edit" );
 	menuEdit->setTearOffEnabled ( true );
 
 	menuEdit->addAction ( actEditFind );
 
-	QMenu * menuHelp = menuBar->addMenu ( tr ( "&Help" ) );
+	QMenu * menuHelp = menuBar->addMenu ( "&Help" );
 
 	menuHelp->addAction ( actHelpAboutQt );
 	menuHelp->addAction ( actHelpAbout );
