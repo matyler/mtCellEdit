@@ -4,11 +4,15 @@ LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtkit.h
 OBJS		=			\
 		mtkit_arg.o		\
+		mtkit_bitpack.o		\
+		mtkit_bytecube.o	\
+		mtkit_chunk.o		\
 		mtkit_cli.o		\
 		mtkit_cliitem.o		\
 		mtkit_clitab.o		\
 		mtkit_file.o		\
 		mtkit_mtstring.o	\
+		mtkit_num.o		\
 		mtkit_prefs.o		\
 		mtkit_recent.o		\
 		mtkit_string.o		\

@@ -1,8 +1,8 @@
 Source: mtcedcli
 Section: unknown
 Priority: extra
-Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, libreadline6-dev, libmtcelledit, libmtcedui, libmtkit
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libreadline-dev, libmtcelledit, libmtcedui, libmtkit
 Standards-Version: 3.9.3
 Homepage: http://mtcelledit.sourceforge.net/
 

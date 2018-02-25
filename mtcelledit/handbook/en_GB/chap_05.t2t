@@ -26,12 +26,7 @@ This program demonstrates how you can create a small console program to monitor 
 
 
 
-===5.1.2 mtEleana===[SEC12]
-
-This program demonstrates how TSV files can be used to index other input files. In this case, mtEleana is a front end to the UK General Election results from 1945 to 2015.
-
-
-===5.1.3 mtRaft===[SEC14]
+===5.1.2 mtRaft===[SEC12]
 
 This program demonstrates how you can use a spreadsheet to make the following jobs easier:
 
@@ -160,61 +155,7 @@ Creates this output:
 
 
 
-====5.3.1.2 mtEleana Queries====[SEC312]
-
-Awk is able to process the mtEleana data very easily due to the simplicity of the files.  For example here is an awk program to calculate the total number of votes for each political party:
-
-[DOWNLOAD FILE ../shawk/party_totals.awk]
-
-```
-# party_totals.awk
-# by Mark Tyler 6th December 2010
-# Tweaked 22nd August 2011 to be ~25% faster (let sed remove ' at end)
-
-# examples:
-
-#	cat 2010.tsv | awk -f party_totals.awk | sort | sed -e "s/^'//"
-# This counts up the totals for each political party in the 2010 general election, sorting by name of party.
-
-#	cat 2010.tsv | awk -f party_totals.awk | sort -t $'\t' -rnk 2 | head | sed -e "s/^'//"
-# This outputs a top 10 of the most popular political parties from the 2010 general election.
-
-
-BEGIN {
-	FS = "\t"
-}
-
-NR>3 {
-	if ( $5 > 0 ) list[ $4 ] += $5
-}
-
-END {
-	for ( party in list )
-	{
-		printf "%s\t%s\n", party, list[ party ]
-	}
-}
-```
-
-
-The output from the second example is as follows:
-
-
-```
-Conservative	10703654
-Labour	8606517
-Liberal Democrat	6836248
-UK Independence Party	919471
-British National Party	564321
-Scottish National Party	491386
-Green	285612
-Independent	192963
-Sinn Fein	171942
-Democratic Unionist Party	168216
-```
-
-
-====5.3.1.3 Splitting fixed width text files====[SEC313]
+====5.3.1.2 Splitting fixed width text files====[SEC312]
 
 If a text file contains a rectangular lump of text with various columns set up using spaces it is possible to chop this up into a TSV file ready for spreadsheet editing:
 
@@ -227,7 +168,7 @@ This cuts up the output from the mtnetlog example in 5.3.1.1.  You may also want
 
 
 
-====5.3.1.4 Removing all spaces====[SEC314]
+====5.3.1.3 Removing all spaces====[SEC313]
 
 
 ```
@@ -239,7 +180,7 @@ This is a very crude and indiscriminate weapon of mass destruction, so care is n
 
 
 
-====5.3.1.5 Removing all leading and trailing spaces====[SEC315]
+====5.3.1.4 Removing all leading and trailing spaces====[SEC314]
 
 You can use sed or awk to chop off leading and trailing spaces in each cell. This is useful if you want to preserve the spaces within the cell, but remove useless spaces after splitting a fixed width file:
 
@@ -252,7 +193,7 @@ cat fixed.tsv | awk '{ sub( /^ +/, "" ); sub( / +$/, "" );  gsub( /\t +/, "\t" )
 
 
 
-====5.3.1.6 Creating fixed width text files====[SEC316]
+====5.3.1.5 Creating fixed width text files====[SEC315]
 
 To reverse the operation in 5.3.1.3 and to create a fixed width file from a TSV file:
 
@@ -475,7 +416,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 | list files             |                           | List files in the active book
 | list graphs            |                           | List graphs in the active book
 | list sheets            |                           | List sheets in the active book
-| load                   | <OS FILENAME> [csv **|** tsv] | Load a new book
+| load                   | <OS FILENAME> [ csv **|** tsv ] | Load a new book
 | new book               |                           | Destroy the current book and start a new book with a sheet called "Sheet 1"
 | new sheet              |                           | Add a new empty sheet to the book
 | new                    |                           | Destroy the current book and start a new book with a sheet called "Sheet 1"

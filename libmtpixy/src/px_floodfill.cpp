@@ -22,12 +22,12 @@
 class FloodStack
 {
 public:
-	FloodStack ( int * err );
+	explicit FloodStack ( int &err );
 	~FloodStack ();
 
 	// push, pop return 1 on failure, 0 on success
 	int push ( int y, int minx, int maxx );
-	int pop ( int * y, int * minx, int * maxx );
+	int pop ( int &y, int &minx, int &maxx );
 
 private:
 	enum Limits
@@ -43,7 +43,7 @@ private:
 
 
 FloodStack::FloodStack (
-	int	* const	err
+	int		&err
 	)
 	:
 	m_mem		(),
@@ -51,9 +51,9 @@ FloodStack::FloodStack (
 	m_position	( 0 )
 {
 	m_mem = (int *)malloc ( m_mem_size * sizeof(*m_mem) );
-	if ( ! m_mem && err )
+	if ( ! m_mem )
 	{
-		err[0] = 1;
+		err = 1;
 	}
 }
 
@@ -92,9 +92,9 @@ int FloodStack::push (
 }
 
 int FloodStack::pop (
-	int	* const	y,
-	int	* const	minx,
-	int	* const	maxx
+	int	&y,
+	int	&minx,
+	int	&maxx
 	)
 {
 	if ( m_position < 3 )
@@ -102,9 +102,9 @@ int FloodStack::pop (
 		return 1;
 	}
 
-	maxx[0] = m_mem[ --m_position ];
-	minx[0] = m_mem[ --m_position ];
-	y[0] = m_mem[ --m_position ];
+	maxx = m_mem[ --m_position ];
+	minx = m_mem[ --m_position ];
+	y = m_mem[ --m_position ];
 
 	return 0;
 }
@@ -119,7 +119,7 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 		return NULL;
 	}
 
-	Image * ial = mtPixy::image_create ( ALPHA, m_width, m_height );
+	Image * ial = mtPixy::image_create ( TYPE_ALPHA, m_width, m_height );
 	if ( ! ial )
 	{
 		return NULL;
@@ -137,7 +137,7 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 	int	const	tot = m_width * m_height;
 	int		i;
 
-	if ( m_type == INDEXED )
+	if ( m_type == TYPE_INDEXED )
 	{
 		unsigned char const pix = can[ x + y * m_width ];
 
@@ -154,7 +154,7 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 			}
 		}
 	}
-	else if ( m_type == RGB )
+	else if ( m_type == TYPE_RGB )
 	{
 		unsigned char const r = can[ 3 * (x + y * m_width) + 0 ];
 		unsigned char const g = can[ 3 * (x + y * m_width) + 1 ];
@@ -261,10 +261,10 @@ int mtPixy::Image::flood_fill_internal (
 	Image	* const	im,
 	int	const	x,
 	int	const	y
-	)
+	) const
 {
 	int		err = 0;
-	FloodStack	stack ( &err );
+	FloodStack	stack ( err );
 	unsigned char	* const	al = im->m_alpha;
 
 
@@ -277,7 +277,7 @@ int mtPixy::Image::flood_fill_internal (
 	unsigned char * pix = al + y * m_width;
 	int		minx = x;
 	int		maxx = x;
-	int		xp, yy = y, seg, xp_min, xp_max;
+	int		xp, yy = y, xp_min, xp_max;
 
 
 	// Expand to the left if possible
@@ -324,10 +324,10 @@ int mtPixy::Image::flood_fill_internal (
 		}
 	}
 
-	while ( 0 == stack.pop ( &yy, &minx, &maxx ) )
+	while ( 0 == stack.pop ( yy, minx, maxx ) )
 	{
 		pix = al + yy * m_width;
-		seg = 0;
+		int seg = 0;
 
 		if ( 1 == pix[ minx ] )
 		{

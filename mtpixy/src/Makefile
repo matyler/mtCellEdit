@@ -1,55 +1,55 @@
 include		../_conf.txt
 
-OBJS_BE		=		\
+OBJS		=		\
 		be_cline.o	\
 		be_main.o	\
 		be_prefs.o	\
 
-OBJS_QT		=			\
-		moc_qt45.o		\
-		qt45_canvas.o		\
-		qt45_d_brush.o		\
-		qt45_d_misc.o		\
-		qt45_d_palette.o	\
-		qt45_d_resize.o		\
-		qt45_d_scale.o		\
-		qt45_d_text.o		\
-		qt45_d_transcolor.o	\
-		qt45_dock.o		\
-		qt45_edit.o		\
-		qt45_file.o		\
-		qt45_img_eff.o		\
-		qt45_keyboard.o		\
-		qt45_main.o		\
-		qt45_menu.o		\
-		qt45_mouse.o		\
-		qt45_options.o		\
-		qt45_palette.o		\
-		qt45_prefs.o		\
-		qt45_selection.o	\
-		qt45_statusbar.o	\
-		qt45_tool.o		\
+OBJS_QT4	= $(OBJS)		\
+		moc_qt4.o		\
+		qt4_canvas.o		\
+		qt4_d_brush.o		\
+		qt4_d_misc.o		\
+		qt4_d_palette.o		\
+		qt4_d_resize.o		\
+		qt4_d_scale.o		\
+		qt4_d_text.o		\
+		qt4_d_transcolor.o	\
+		qt4_dock.o		\
+		qt4_edit.o		\
+		qt4_file.o		\
+		qt4_img_eff.o		\
+		qt4_keyboard.o		\
+		qt4_main.o		\
+		qt4_menu.o		\
+		qt4_mouse.o		\
+		qt4_options.o		\
+		qt4_palette.o		\
+		qt4_prefs.o		\
+		qt4_selection.o		\
+		qt4_statusbar.o		\
+		qt4_tool.o		\
+
+OBJS_QT5	= $(OBJS_QT4)
 
 
 .PHONY:		all install uninstall clean
 
 all:		$(BIN_NAME)
 
-mtpixy-qt4:	$(OBJS_BE) $(OBJS_QT)
-		$(CXX) $(OBJS_BE) $(OBJS_QT) -o $@ $(LDFLAGS)
+mtpixy-qt4:	$(OBJS_QT4)
+		$(CXX) $(OBJS_QT4) -o $@ $(LDFLAGS)
 
-mtpixy-qt5:	$(OBJS_BE) $(OBJS_QT)
-		$(CXX) $(OBJS_BE) $(OBJS_QT) -o $@ $(LDFLAGS)
+mtpixy-qt5:	$(OBJS_QT5)
+		$(CXX) $(OBJS_QT5) -o $@ $(LDFLAGS)
 
-$(OBJS_BE):	be*.h
-
-$(OBJS_QT):	qt45*.h be*.h
+$(OBJS_QT4) $(OBJS_QT5):	*.h
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule
 
-moc_qt45.cpp:	qt45.h
-		$(MOC) qt45.h -o $@
+moc_qt4.cpp:	qt4.h
+		$(MOC) qt4.h -o $@
 
 install:
 		install -d $(DESTDIR)$(BIN_INSTALL)

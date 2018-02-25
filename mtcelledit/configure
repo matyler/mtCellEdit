@@ -13,6 +13,7 @@ TK=qt5
 BIN_SUFFIX=-qt5
 ENABLE_HANDBOOK=handbook
 ENABLE_DESKTOP=desktop
+MTCF_MAN_PAGE
 
 for A in "$@"
 do
@@ -46,23 +47,19 @@ EOF
 MTCF_PRINT_HELP MYHELP
 MTCF_PRE_CONF
 
-CK_LIBS="mtkit mtcelledit mtcedui mtpixy"
+CK_LIBS="mtkit mtcelledit mtcedui mtpixy stdc++"
 
 
 case "$TK" in
 qt4 )
 	MTCF_PKGCONFIG "QtGui"
-	TK_OBJ="moc_tk_qt4.o tk_qt4_clipboard.o tk_qt4_dialogs.o tk_qt4_edit.o tk_qt4_file.o tk_qt4_find.o tk_qt4_graph.o tk_qt4_input.o tk_qt4_main.o tk_qt4_menu.o tk_qt4_prefs.o tk_qt4_sheet.o tk_qt4_sort.o tk_qt4_updates.o tk_qt4_view.o"
 	I_EX="$I_EX -DU_TK_QT4"
-	L_EX="$L_EX -lstdc++"
 	CK_LIBS="$CK_LIBS mtqex4"
 	MT_GET_MOC_4
 	;;
 qt5 )
 	MTCF_PKGCONFIG "Qt5Widgets"
-	TK_OBJ="moc_tk_qt4.o tk_qt4_clipboard.o tk_qt4_dialogs.o tk_qt4_edit.o tk_qt4_file.o tk_qt4_find.o tk_qt4_graph.o tk_qt4_input.o tk_qt4_main.o tk_qt4_menu.o tk_qt4_prefs.o tk_qt4_sheet.o tk_qt4_sort.o tk_qt4_updates.o tk_qt4_view.o"
 	I_EX="$I_EX -DU_TK_QT5"
-	L_EX="$L_EX -lstdc++"
 	CK_LIBS="$CK_LIBS mtqex5"
 	MT_GET_MOC_5
 	;;
@@ -72,11 +69,9 @@ esac
 MTCF_CHECK_LIBS $CK_LIBS
 MTCF_VERSION_BIN_NAME
 
+I_EX="$I_EX -DDATA_INSTALL=\"\\\"$DATA_INSTALL\"\\\""
+
 MTCF_MAKE_DIRS_ADD "$ENABLE_HANDBOOK $ENABLE_DESKTOP"
-MTCF_MAN_PAGE
 
 MTCF_POST_CONF
-
-echo "TK_OBJ        = $TK_OBJ" >> $CONF_FILE
-
 MTCF_PRINT_CONF

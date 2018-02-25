@@ -6,20 +6,19 @@ include		../_conf.txt
 
 BIN_ALL		= mtstring
 
-
 all:		$(BIN_ALL)
-		./suite.sh
+		$(SUITE)
 
 valg:		$(BIN_ALL)
-		VALG=Y ./suite.sh
+		VALG=Y $(SUITE)
 
 time:		$(BIN_ALL)
-		VALG=T ./suite.sh
+		VALG=T $(SUITE)
 
 build:		$(BIN_ALL)
 
 mtstring:	mtstring.o
-		$(CXX) mtstring.o -o mtstring $(LDFLAGS)
+		$(CC) mtstring.o -o mtstring $(LDFLAGS)
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule

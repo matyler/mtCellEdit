@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -63,24 +63,22 @@ bool mtQEX::ArrowFilter::eventFilter (
 	)
 {
 	QKeyEvent	* keyEvent = NULL;
-	QWidget		* widget = NULL;
 	int		idx = -1;
 
 
 	if ( ev->type () == QEvent::KeyPress )
 	{
 		keyEvent = static_cast<QKeyEvent *>(ev);
-		widget = qobject_cast<QWidget *>(obj);
+		QWidget * widget = qobject_cast<QWidget *>(obj);
 		idx = gridLayout->indexOf ( widget );
 	}
 
 	if ( idx >= 0 )
 	{
-		int		dr = 0,
-				dc = 0,
-				r = 0,
-				c = 0,
-				j;
+		int dr = 0;
+		int dc = 0;
+		int r = 0;
+		int c = 0;
 
 
 		switch ( keyEvent->key () )
@@ -94,6 +92,7 @@ bool mtQEX::ArrowFilter::eventFilter (
 		if ( dr || dc )
 		{
 			QLayoutItem	* item;
+			int		j;
 
 
 			gridLayout->getItemPosition ( idx, &r, &c, &j, &j );
@@ -191,18 +190,17 @@ int mtQEX::qt_get_state (
 
 	size_t		const	l = strlen ( txt ) / 2;
 	char	const	*	src = txt;
-	int			a, b;
 
 
 	for ( size_t i = 0; i < l; i++ )
 	{
-		a = read_hex ( *src++ );
+		int const a = read_hex ( *src++ );
 		if ( a < 0 )
 		{
 			return 1;
 		}
 
-		b = read_hex ( *src++ );
+		int const b = read_hex ( *src++ );
 		if ( b < 0 )
 		{
 			return 1;
@@ -253,7 +251,7 @@ mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
 
 	int	const	w = pm->width ();
 	int	const	h = pm->height ();
-	mtPixy::Image	* im = image_create ( mtPixy::Image::RGB, w, h );
+	mtPixy::Image	* im = image_create ( mtPixy::Image::TYPE_RGB, w, h );
 	if ( ! im )
 	{
 		return NULL;
@@ -268,22 +266,19 @@ mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
 
 
 	QImage		qi = pm->toImage ();
-	QRgb	const	* s;
-	int		x, y;
-	unsigned char	* d;
 
 
-	for ( y = 0; y < h; y++ )
+	for ( int y = 0; y < h; y++ )
 	{
-		s = (QRgb const *)qi.constScanLine ( y );
+		QRgb	const	* s = (QRgb const *)qi.constScanLine ( y );
 		if ( ! s )
 		{
 			break;
 		}
 
-		d = dst + 3 * w * y;
+		unsigned char	* d = dst + 3 * w * y;
 
-		for ( x = 0; x < w; x++ )
+		for ( int x = 0; x < w; x++ )
 		{
 			*d++ = (unsigned char)qRed ( s[0] );
 			*d++ = (unsigned char)qGreen ( s[0] );

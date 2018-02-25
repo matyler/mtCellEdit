@@ -20,8 +20,10 @@ Create a resized image according to given geometry.
 = OPTIONS =
 **--version**
 	Output version information and exit.
-**-compression** INTEGER
-	Set compression level for PNG/JPEG files. Default=5
+**-comp_jpeg** INTEGER
+	Set compression level for JPEG files. Default=85
+**-comp_png** INTEGER
+	Set compression level for PNG files. Default=6
 **-height** INTEGER
 	Set new image width.
 **-i** STRING

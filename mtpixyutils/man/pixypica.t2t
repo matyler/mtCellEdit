@@ -1,0 +1,37 @@
+PIXYPICA
+mtPixyUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+pixypica - image analysis
+
+
+= SYNOPSIS =
+**pixypica** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Analyse the given indexed palette image file by studying the 8x8 cells.
+PICA is Palette Image Cell Analysis.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-v**
+	Verbose.
+
+
+= SEE ALSO =
+pixyutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

@@ -1,7 +1,7 @@
 Source: mtcelledit-qt4
 Section: unknown
 Priority: extra
-Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+Maintainer: Mark Tyler <mt@marktyler.org>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, libqt4-dev, libmtkit, libmtcelledit, libmtpixy, libmtcedui, libmtqex4
 Standards-Version: 3.9.3
 Homepage: http://mtcelledit.sourceforge.net/

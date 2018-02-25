@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -50,16 +50,16 @@ mtPixy::Image::Image (
 
 	switch ( imtype )
 	{
-	case ALPHA:
+	case TYPE_ALPHA:
 		res = create_alpha ();
 		break;
 
-	case INDEXED:
+	case TYPE_INDEXED:
 		m_canvas_bpp = 1;
 		res = create_canvas ();
 		break;
 
-	case RGB:
+	case TYPE_RGB:
 		m_canvas_bpp = 3;
 		res = create_canvas ();
 		break;
@@ -72,7 +72,7 @@ finish:
 	if ( res )
 	{
 		// Error so tidy up
-		m_type = ALPHA;
+		m_type = TYPE_ALPHA;
 		m_canvas_bpp = 0;
 		m_width = 1;
 		m_height = 1;
@@ -189,7 +189,7 @@ int mtPixy::Image::create_indexed_canvas ()
 		return 1;
 	}
 
-	m_type = INDEXED;
+	m_type = TYPE_INDEXED;
 	m_canvas_bpp = 1;
 
 	free ( m_canvas );
@@ -207,7 +207,7 @@ int mtPixy::Image::create_rgb_canvas ()
 		return 1;
 	}
 
-	m_type = RGB;
+	m_type = TYPE_RGB;
 	m_canvas_bpp = 3;
 
 	free ( m_canvas );
@@ -324,7 +324,7 @@ mtPixy::Image * mtPixy::image_from_cairo (
 	w = cairo_image_surface_get_width ( surface );
 	h = cairo_image_surface_get_height ( surface );
 
-	image = image_create ( Image::RGB, w, h );
+	image = image_create ( Image::TYPE_RGB, w, h );
 	if ( ! image )
 	{
 		return NULL;
@@ -467,8 +467,8 @@ int mtPixy::Image::create_canvas ()
 
 	switch ( m_type )
 	{
-	case INDEXED:
-	case RGB:
+	case TYPE_INDEXED:
+	case TYPE_RGB:
 		break;
 
 	default:
@@ -512,7 +512,7 @@ void mtPixy::Image::destroy_canvas ()
 	m_canvas = NULL;
 
 	m_canvas_bpp = 0;
-	m_type = ALPHA;
+	m_type = TYPE_ALPHA;
 }
 
 int mtPixy::Image::destroy_alpha ()
@@ -533,7 +533,17 @@ unsigned char * mtPixy::Image::get_canvas ()
 	return m_canvas;
 }
 
+unsigned char const * mtPixy::Image::get_canvas () const
+{
+	return m_canvas;
+}
+
 unsigned char * mtPixy::Image::get_alpha ()
+{
+	return m_alpha;
+}
+
+unsigned char const * mtPixy::Image::get_alpha () const
 {
 	return m_alpha;
 }
@@ -563,6 +573,11 @@ mtPixy::Palette * mtPixy::Image::get_palette ()
 	return &m_palette;
 }
 
+mtPixy::Palette const * mtPixy::Image::get_palette () const
+{
+	return &m_palette;
+}
+
 void mtPixy::image_print_geometry (
 	Image	* const	im,
 	char	* const	buf,
@@ -577,12 +592,12 @@ void mtPixy::image_print_geometry (
 
 	switch ( im->get_type () )
 	{
-	case Image::RGB:
+	case Image::TYPE_RGB:
 		snprintf ( buf, buflen, "%i x %i x RGB",
 			im->get_width (), im->get_height () );
 		break;
 
-	case Image::INDEXED:
+	case Image::TYPE_INDEXED:
 		snprintf ( buf, buflen, "%i x %i x %i",
 			im->get_width (), im->get_height (),
 			im->get_palette ()->get_color_total () );

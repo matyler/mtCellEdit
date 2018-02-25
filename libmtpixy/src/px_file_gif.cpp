@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -19,17 +19,11 @@
 	along with this program in the file COPYING.
 */
 
-#ifdef U_GIF
-	#include <gif_lib.h>
-#endif
+#include <gif_lib.h>
 
 
 
 #include "private.h"
-
-
-
-#ifdef U_GIF
 
 
 
@@ -168,7 +162,7 @@ mtPixy::Image * mtPixy::image_load_gif (
 			w = giffy->Image.Width;
 			h = giffy->Image.Height;
 
-			image = image_create ( Image::INDEXED, w, h );
+			image = image_create ( Image::TYPE_INDEXED, w, h );
 			if ( ! image )
 			{
 				goto fail;
@@ -236,7 +230,7 @@ int mtPixy::Image::save_gif (
 	char	const	* const	filename
 	) const
 {
-	if ( ! filename || m_type != INDEXED )
+	if ( ! filename || m_type != TYPE_INDEXED )
 	{
 		return 1;
 	}
@@ -307,28 +301,4 @@ fail0:
 
 	return 1;
 }
-
-
-
-#else	// U_GIF
-
-
-
-mtPixy::Image * mtPixy::image_load_gif (
-	char	const	* const	ARG_UNUSED ( filename )
-	)
-{
-	return NULL;
-}
-
-int mtPixy::Image::save_gif (
-	char	const	* const	ARG_UNUSED ( filename )
-	)
-{
-	return 1;
-}
-
-
-
-#endif	// U_GIF
 

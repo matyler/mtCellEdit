@@ -12,9 +12,12 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit mtcelledit
+MTCF_CHECK_LIBS mtkit mtcelledit pthread rt
 
-MAKE_DIRS="mtpixycli mtpixyutils libmtkit mtcedcli mtcedutils mtrdc"
+MAKE_DIRS="mtpixycli mtpixyutils libmtkit libmtcelledit mtcedcli mtcedutils mtrdc"
 
 MTCF_POST_CONF
+
+echo "SUITE         = ./suite.sh | tee log.txt" >> $CONF_FILE
+
 MTCF_PRINT_CONF

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2016 Mark Tyler
+	Copyright (C) 2008-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -248,18 +248,6 @@ void be_quicksum_label (
 		operation < QUICKSUM_FUNCS
 		)
 	{
-		CedParser	parser;
-		char	const	* funcs [ QUICKSUM_FUNCS ] =
-				{	"none",
-					"sum",
-					"min",
-					"max",
-					"",
-					"average",
-					"median",
-					"count",
-					"counta"
-				};
 		int		r1, c1, r2, c2;
 
 
@@ -273,11 +261,23 @@ void be_quicksum_label (
 		}
 		else
 		{
+			char	const	* funcs [ QUICKSUM_FUNCS ] =
+				{	"none",
+					"sum",
+					"min",
+					"max",
+					"",
+					"average",
+					"median",
+					"count",
+					"counta"
+				};
+
 			snprintf ( buf, buflen, "%s( r%ic%i : r%ic%i )",
 				funcs [ operation ], r1, c1, r2, c2 );
 		}
 
-		parser = ced_sheet_parse_text ( sheet, 1, 1, buf, NULL );
+		CedParser parser = ced_sheet_parse_text(sheet, 1, 1, buf, NULL);
 
 		if (	parser.ced_errno ||
 			( parser.flag & CED_PARSER_FLAG_ERROR )
@@ -374,6 +374,8 @@ void be_update_file_to_book (
 
 	if ( newtype != CED_FILE_TYPE_NONE )
 	{
+		cui_file_unset_lock ( file );
+
 		file->type = newtype;
 		mtkit_strfreedup ( &file->name, NULL );
 	}

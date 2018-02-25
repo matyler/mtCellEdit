@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2016 Mark Tyler
+	Copyright (C) 2004-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,22 +15,44 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-	#include <dirent.h>
-	#include <sys/stat.h>
-	#include <sys/types.h>
-	#include <unistd.h>
-}
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <mtkit.h>
 #include <mtcelledit.h>
 
 
 
-class busyState;
+class BusyState;
+
+
+
+class BusyState
+{
+public:
+	enum Status
+	{
+		IDLE,
+		WORKING,
+		STOPPED
+	};
+
+
+	BusyState () : status ( IDLE )	{};
+
+	void set_working ()		{ status = WORKING;	};
+	void set_stopped ()		{ status = STOPPED;	};
+	void set_idle ()		{ status = IDLE;	};
+
+	Status get_status () const	{ return status;	};
+
+private:
+	Status status;
+};
 
 
 
@@ -48,6 +70,11 @@ enum	// Column numbers for each field in results sheet
 	RAFT_COL_TOTAL		= 9
 };
 
+enum
+{
+	MAX_TABS		= 10
+};
+
 
 
 #define PREFS_WINDOW_X		"window_x"
@@ -58,8 +85,6 @@ enum	// Column numbers for each field in results sheet
 
 
 typedef int (* raftScanFunc) (
-	CedSheet	* sheet,
-	int		row,		// Row calculated in sheet
 	void		* user_data
 	);
 	// 0 = Keep scanning
@@ -79,11 +104,13 @@ int raft_scan_sheet (
 	//  0 = Success - sheet created
 	//  1 = User termination
 
-char const * raft_cline (		// Parse command line
+int raft_cline (			// Parse command line
 	int			argc,
-	char	const * const *	argv
+	char	const * const *	argv,
+	char	const **	path	// Set to NULL if none passed
 	);
-	// Returns pointer to path, or NULL if none was passed
+	// 0 = Success
+	// 1 = Terminate program
 
 char * raft_path_check (		// Check path, put into new string
 	char	const	* path
@@ -101,28 +128,4 @@ char * raft_get_clipboard (		// Create UTF8 text for clipboard
 	CedSheet	* sheet		// from this sheet
 	);
 	// Caller must free any result after use.
-
-
-class busyState
-{
-public:
-	enum Status
-	{
-		IDLE,
-		WORKING,
-		STOPPED
-	};
-
-
-	busyState	();
-	~busyState	();
-
-	void		setWorking ();
-	void		setStopped ();
-	void		setIdle ();
-	Status		getStatus () const;
-
-private:
-	Status		status;
-};
 

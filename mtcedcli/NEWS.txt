@@ -1,3 +1,7 @@
+3.1	2018-2-25
+
+	* Refactored to use CLI functions in libmtKit like mtPixyCLI.
+
 3.0	2017-2-24
 
 2.6	2015-9-6

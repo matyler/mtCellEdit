@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,36 +25,6 @@ mtPixy::PolySelOverlay::PolySelOverlay ()
 {
 	memset ( m_x, 0, sizeof( m_x ) );
 	memset ( m_y, 0, sizeof( m_y ) );
-}
-
-void mtPixy::PolySelOverlay::set_start (
-	int	const	x,
-	int	const	y
-	)
-{
-	LineOverlay::set_start ( x, y );
-}
-
-void mtPixy::PolySelOverlay::set_end (
-	int	const	x,
-	int	const	y,
-	int		&dx,
-	int		&dy,
-	int		&dw,
-	int		&dh
-	)
-{
-	LineOverlay::set_end ( x, y, dx, dy, dw, dh );
-}
-
-int mtPixy::PolySelOverlay::get_x1 () const
-{
-	return m_x1;
-}
-
-int mtPixy::PolySelOverlay::get_y1 () const
-{
-	return m_y1;
 }
 
 void mtPixy::PolySelOverlay::get_xywh (
@@ -89,19 +59,6 @@ void mtPixy::PolySelOverlay::get_xywh (
 	y = miny;
 	w = maxx - minx + 1;
 	h = maxy - miny + 1;
-}
-
-void mtPixy::PolySelOverlay::render (
-	mtPixy::Brush		&bru,
-	unsigned char	* const	rgb,
-	int		const	x,
-	int		const	y,
-	int		const	w,
-	int		const	h,
-	int		const	zs
-	) const
-{
-	LineOverlay::render ( bru, rgb, x, y, w, h, zs );
 }
 
 void mtPixy::PolySelOverlay::clear ()
@@ -356,7 +313,8 @@ mtPixy::Image * mtPixy::PolySelOverlay::create_mask (
 
 	get_xywh ( x, y, w, h );
 
-	Image * const imask = mtPixy::image_create( mtPixy::Image::ALPHA, w, h);
+	Image * const imask = mtPixy::image_create ( mtPixy::Image::TYPE_ALPHA,
+		w, h );
 	if ( ! imask )
 	{
 		return NULL;

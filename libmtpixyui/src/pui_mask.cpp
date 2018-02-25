@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ bool mtPixyUI::PaletteMask::is_masked (
 	mtPixy::Image	* const	img,
 	int	const	x,
 	int	const	y
-	)
+	) const
 {
 	int		const	bpp = img->get_canvas_bpp ();
 	int		const	w = img->get_width ();
@@ -115,7 +115,7 @@ void mtPixyUI::PaletteMask::protect (
 	int		const	y,
 	int		const	w,
 	int		const	h
-	)
+	) const
 {
 	int	const	coltot = src->get_palette ()->get_color_total ();
 	int		i;

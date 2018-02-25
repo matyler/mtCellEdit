@@ -188,7 +188,7 @@ int jtf_scale (
 	char	const * const *	const	args
 	)
 {
-	mtPixy::Image::ScaleType	type = mtPixy::Image::BLOCKY;
+	mtPixy::Image::ScaleType	type = mtPixy::Image::SCALE_BLOCKY;
 	int				w, h;
 
 	if (	mtKit::cli_parse_int ( args[0], w, 1, 32767 )		||
@@ -202,7 +202,7 @@ int jtf_scale (
 	{
 		int		t;
 		mtKit::CharInt	const	chint_tab[] = {
-				{ "smooth",	mtPixy::Image::SMOOTH },
+				{ "smooth",	mtPixy::Image::SCALE_SMOOTH },
 				{ NULL, 0 }
 				};
 

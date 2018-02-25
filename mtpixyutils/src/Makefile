@@ -1,13 +1,23 @@
 include		../_conf.txt
 
 APPS		=		\
+		pixydelta	\
 		pixyls		\
 		pixynew		\
+		pixypica	\
 		pixyresize	\
+		pixyriba	\
+		pixyrisa	\
 		pixyscale	\
+		pixytwit	\
 
 OBJS		=		\
 		func_misc.o	\
+		func_pica.o	\
+		func_riba.o	\
+		func_rida.o	\
+		func_risa.o	\
+		func_twit.o	\
 		main.o		\
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -24,14 +24,14 @@
 
 
 void mtPixy::transform_color (
-	unsigned char * const buf,
-	int	const	buftot,
-	int		gam,
-	int		bri,
-	int		con,
-	int		sat,
-	int		hue,
-	int		pos
+	unsigned char * const	buf,
+	int		const	buftot,
+	int			gam,
+	int			bri,
+	int			con,
+	int			sat,
+	int			hue,
+	int			pos
 	)
 {
 	if ( ! buf )
@@ -274,15 +274,14 @@ mtPixy::Image * mtPixy::Image::effect_transform_color (
 	int	const	po
 	)
 {
-	Image		* im = duplicate ();
-
+	Image * const im = duplicate ();
 
 	if ( ! im )
 	{
 		return NULL;
 	}
 
-	if ( RGB == m_type )
+	if ( TYPE_RGB == m_type )
 	{
 		transform_color ( im->m_canvas, m_width * m_height, ga, br, co,
 			sa, hu, po );
@@ -295,15 +294,14 @@ mtPixy::Image * mtPixy::Image::effect_transform_color (
 
 mtPixy::Image * mtPixy::Image::effect_invert ()
 {
-	Image		* im = duplicate ();
-
+	Image * const im = duplicate ();
 
 	if ( ! im )
 	{
 		return NULL;
 	}
 
-	if ( RGB == m_type )
+	if ( TYPE_RGB == m_type )
 	{
 		if ( im->m_canvas )
 		{
@@ -320,7 +318,7 @@ mtPixy::Image * mtPixy::Image::effect_invert ()
 			}
 		}
 	}
-	else if ( INDEXED == m_type )
+	else if ( TYPE_INDEXED == m_type )
 	{
 		im->m_palette.effect_invert ();
 	}
@@ -333,14 +331,12 @@ mtPixy::Image * mtPixy::Image::effect_rgb_action (
 	int		const	it
 	)
 {
-	if ( RGB != m_type || ! m_canvas )
+	if ( TYPE_RGB != m_type || ! m_canvas )
 	{
 		return NULL;
 	}
 
-
-	Image		* im = duplicate ();
-
+	Image * const im = duplicate ();
 
 	if ( ! im )
 	{
@@ -351,14 +347,14 @@ mtPixy::Image * mtPixy::Image::effect_rgb_action (
 	double	const	blur = ((double)it) / 200;
 	unsigned char *	dest = im->m_canvas;
 	unsigned char const *	src = m_canvas;
-	int		x, y, k=0, dxp1, dxm1, dyp1, dym1;
+	int		x, y, k=0, dxp1, dxm1;
 	int	const	ll = m_width * m_canvas_bpp;
 
 
 	for ( y = 0; y < m_height; y++ )
 	{
-		dyp1 = y < m_height - 1 ? ll : -ll;
-		dym1 = y ? -ll : ll;
+		int const dyp1 = y < m_height - 1 ? ll : -ll;
+		int const dym1 = y ? -ll : ll;
 
 		for ( x = 0; x < ll; x++, src++ , dest++ )
 		{
@@ -437,19 +433,59 @@ mtPixy::Image * mtPixy::Image::effect_emboss ()
 	return effect_rgb_action ( EFFECT_EMBOSS );
 }
 
+mtPixy::Image * mtPixy::Image::effect_normalize ()
+{
+	if ( TYPE_RGB != m_type || ! m_canvas )
+	{
+		return NULL;
+	}
+
+	Image * const im = duplicate ();
+
+	if ( ! im )
+	{
+		return NULL;
+	}
+
+	unsigned char	const	* lim = im->m_canvas + m_width * m_height * 3;
+	unsigned char		min = 255, max = 0;
+
+	// Pass 1 - get max/min values for R, G, & B
+	for ( unsigned char * src = im->m_canvas; src < lim; src++ )
+	{
+		min = MIN ( src[0], min );
+		max = MAX ( src[0], max );
+	}
+
+	// Pass 2 - stretch out R, G, & B values if required
+	if (	(min > 0 || max < 255) &&
+		min != max
+		)
+	{
+		double	const	fac = 255.0 / (double)(max - min);
+
+		for ( unsigned char * src = im->m_canvas; src < lim; src++ )
+		{
+			double const val = (double)(src[0] - min) * fac;
+
+			src[0] = (unsigned char)(val + 0.5);
+		}
+	}
+
+	return im;
+}
+
 // Ode to 1994 and my Acorn A3000, mtPaint from 2004, and Dmitry's optimizations
 mtPixy::Image * mtPixy::Image::effect_bacteria (
 	int	const	n
 	)
 {
-	if ( INDEXED != m_type || ! m_canvas )
+	if ( TYPE_INDEXED != m_type || ! m_canvas )
 	{
 		return NULL;
 	}
 
-
-	Image		* im = duplicate ();
-
+	Image * const im = duplicate ();
 
 	if ( ! im )
 	{

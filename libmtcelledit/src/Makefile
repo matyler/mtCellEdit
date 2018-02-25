@@ -2,14 +2,13 @@ include		../_conf.txt
 
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtcelledit.h
-PARSER		= ced_parser.cpp
+PARSER		= ced_parser.c
 PARSER_REPORT	= ced_parser_report.txt
 OBJS		=		\
 		ced_book.o	\
 		ced_cell.o	\
 		ced_file.o	\
 		ced_find.o	\
-		ced_index.o	\
 		ced_output.o	\
 		ced_parser.o	\
 		ced_paste.o	\
@@ -25,12 +24,12 @@ OBJS		=		\
 all:		$(LIB_SONAME)
 
 $(LIB_SONAME):	$(OBJS)
-		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CC) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
 
 $(OBJS):	*.h
 
-$(PARSER):	ced_parser.yy ced_parser_def.cpp
-		bison ced_parser.yy -W --report=all --report-file=$(PARSER_REPORT) -o $(PARSER)
+$(PARSER):	ced_parser.y ced_parser_def.c
+		bison ced_parser.y -W --report=all --report-file=$(PARSER_REPORT) -o $(PARSER)
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule

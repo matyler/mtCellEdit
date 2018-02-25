@@ -712,7 +712,7 @@ File type                 : BMP
 Modified                  : 1
 Image geometry            : 128 x 128 x RGB
 Undo + Redo               : 23 + 1
-Undo Memory               : 1.1 MB
+Undo Memory               : 1.2 MB
 Unique RGB Pixels         : 14
 Pixels not in palette     : 0
 ------------------------------------

@@ -1,3 +1,13 @@
+3.1	2018-2-25
+
+	* "Save As" for images and palettes now automatically uses correct extension for the file type.
+	* File->Export Colourmap menu option added.
+	* Effects->Normalize menu option added.
+	* Palette->New menu option added.
+	* Right mouse click or release in paint mode swaps colour A & B.
+	* Mouse cursor changes when using each tool.
+	* BUGFIX - "Save as" now doesn't mangle UTF8 filenames.
+
 3.0	2017-2-24
 
 	* First feature complete release

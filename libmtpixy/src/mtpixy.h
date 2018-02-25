@@ -20,6 +20,10 @@
 
 
 
+#ifdef __cplusplus
+
+
+
 namespace mtPixy
 {
 
@@ -29,6 +33,7 @@ class Font;
 class FontData;
 class Image;
 class LineOverlay;
+class Overlay;
 class PolySelOverlay;
 class Palette;
 class RecSelOverlay;
@@ -56,21 +61,20 @@ namespace File
 {
 	enum Type
 	{
-		NONE		= -1,
+		TYPE_NONE	= -1,
 
-		MIN		= 0,
+		TYPE_MIN	= 0,
+		TYPE_BMP	= 0,	// Indexed / RGB
+		TYPE_PNG	= 1,	// Indexed / RGB
+		TYPE_JPEG	= 2,	// RGB
+		TYPE_GIF	= 3,	// Indexed
+		TYPE_GPL	= 4,	// Palette only
+		TYPE_PIXY	= 5,	// Indexed / RGB
+		TYPE_BP24	= 6,	// RGB Colorspace
 
-		// Always available
-		BMP		= 0,	// Indexed / RGB
+// Future additions will go here
 
-		// Possibly available via external libs
-		PNG		= 1,	// Indexed / RGB
-		JPEG		= 2,	// RGB
-		GIF		= 3,	// Indexed
-
-		GPL		= 4,	// Palette only
-
-		MAX		= 4
+		TYPE_MAX	= 6
 	};
 
 
@@ -100,7 +104,7 @@ public:
 class Brush
 {
 public:
-	enum Limits
+	enum	// Limits
 	{
 		SHAPE_PAD	= 8,		// On UI palette
 		PATTERN_PAD	= 8,		// On UI palette
@@ -166,8 +170,8 @@ public:
 		int cy,
 		unsigned char opacity,
 		unsigned char * dest,
-		int x,
-		int y,
+		int ox,
+		int oy,
 		int w,
 		int h,
 		int zs
@@ -211,7 +215,7 @@ private:
 class Palette
 {
 public:
-	enum Limits
+	enum	// Limits
 	{
 		COLOR_TOTAL_MIN	= 2,
 		COLOR_TOTAL_MAX	= 256,
@@ -221,11 +225,11 @@ public:
 	};
 
 
-	Palette ( int paltype = 2 ); // 1=greyscale, 2..6=uniform
+	explicit Palette ( int paltype = 2 ); // 1=greyscale, 2..6=uniform
 	~Palette ();
 
 
-	int copy ( Palette * src );	// this = src (with set_correct)
+	int copy ( Palette const * src );	// this = src (with set_correct)
 	int load ( char const * filename );
 	int save ( char	const * filename ) const;
 
@@ -278,7 +282,7 @@ private:
 class Image
 {
 public:
-	enum Limits
+	enum	// Limits
 	{
 		WIDTH_MIN	= 1,
 		WIDTH_MAX	= 32767,
@@ -291,15 +295,15 @@ public:
 
 	enum Type
 	{
-		ALPHA		= 0,	// Alpha only, no canvas
-		INDEXED		= 1,
-		RGB		= 2
+		TYPE_ALPHA	= 0,	// Alpha only, no canvas
+		TYPE_INDEXED	= 1,
+		TYPE_RGB	= 2
 	};
 
 	enum ScaleType
 	{
-		BLOCKY,			// Nearest neighbour
-		SMOOTH			// Area mapping (RGB only)
+		SCALE_BLOCKY,		// Nearest neighbour
+		SCALE_SMOOTH		// Area mapping (RGB only)
 	};
 
 	enum DitherType
@@ -337,8 +341,11 @@ public:
 	int get_width () const;
 	int get_height () const;
 	unsigned char * get_canvas ();
+	unsigned char const * get_canvas () const;
 	unsigned char * get_alpha ();
+	unsigned char const * get_alpha () const;
 	Palette * get_palette ();
+	Palette const * get_palette () const;
 	int get_information (
 		int &urp,		// Unique RGB pixels
 		int &pnip,		// Pixels not in palette
@@ -486,6 +493,7 @@ public:
 	Image * effect_sharpen ( int n );
 	Image * effect_soften ( int n );
 	Image * effect_emboss ();
+	Image * effect_normalize ();
 	Image * effect_bacteria ( int n );
 	Image * flip_horizontally ();
 	Image * flip_vertically ();
@@ -506,9 +514,15 @@ public:
 		) const;
 
 	int save_bmp ( char const * filename ) const;
+	int save_bp24 ( char const * filename,
+		int compression		// 0..9 (0 = uncompressed)
+		) const;
 	int save_gif ( char const * filename ) const;
 	int save_jpeg ( char const * filename,
 		int compression		// 0..100 (100 = best quality)
+		) const;
+	int save_pixy ( char const * filename,
+		int compression		// 0..9 (0 = uncompressed)
 		) const;
 	int save_png ( char const * filename,
 		int compression		// 0..9 (0 = uncompressed)
@@ -533,7 +547,7 @@ private:
 	void destroy_canvas ();		// Resets type to mtPixy::Image::ALPHA
 
 	int flood_fill_internal (	// Args checked by caller
-		Image * im, int x, int y );
+		Image * im, int x, int y ) const;
 
 	void paint_flow ( Brush &bru ) const;
 	mtPixy::Image * flood_fill_prepare_alpha ( int x, int y );
@@ -610,23 +624,13 @@ private:
 
 
 
-class LineOverlay
+class Overlay
 {
 public:
-	LineOverlay ();
+	Overlay ();
 
 	void set_start ( int x, int y );
 	void set_end ( int x, int y, int &dx, int &dy, int &dw, int &dh );
-
-	void render (
-		Brush &bru,
-		unsigned char * rgb,
-		int x,
-		int y,
-		int w,
-		int h,
-		int zs
-		) const;
 
 	int get_x1 () const;
 	int get_y1 () const;
@@ -639,12 +643,26 @@ protected:
 
 
 
-class RecSelOverlay : LineOverlay
+class LineOverlay : public Overlay
+{
+public:
+	void render (
+		Brush &bru,
+		unsigned char * rgb,
+		int x,
+		int y,
+		int w,
+		int h,
+		int zs
+		) const;
+};
+
+
+
+class RecSelOverlay : public Overlay
 {
 public:
 	int set ( int x, int y, int w, int h, mtPixy::Image const * im );
-	void set_start ( int x, int y );
-	void set_end ( int x, int y, int &dx, int &dy, int &dw, int &dh );
 
 	void render (
 		unsigned char * rgb,
@@ -667,9 +685,6 @@ public:
 		int &dx, int &dy, int &dw, int &dh );
 		// 0 = Not moved
 
-	int get_x1 () const;
-	int get_y1 () const;
-	void get_xy ( int &x1, int &y1, int &x2, int &y2 ) const;
 	void get_xywh ( int &x, int &y, int &w, int &h ) const;
 
 	// Set new x2, y2 by moving the closest corner to x,y
@@ -678,7 +693,7 @@ public:
 
 
 
-class PolySelOverlay : LineOverlay
+class PolySelOverlay : public LineOverlay
 {
 public:
 	enum
@@ -688,27 +703,12 @@ public:
 
 	PolySelOverlay ();
 
-	void set_start ( int x, int y );
-	void set_end ( int x, int y, int &dx, int &dy, int &dw, int &dh );
-
-	void render (
-		Brush &bru,
-		unsigned char * rgb,
-		int x,
-		int y,
-		int w,
-		int h,
-		int zs
-		) const;
-
 	Image * create_mask ( int &x, int &y, int &w, int &h ) const;
 
 	void clear ();
 	int add ();		// Push x1, y1 onto list, increment
 	Image * copy ( Image * src, int &x, int &y, int &w, int &h ) const;
 
-	int get_x1 () const;
-	int get_y1 () const;
 	void get_xywh ( int &x, int &y, int &w, int &h ) const;
 
 ///	------------------------------------------------------------------------
@@ -732,9 +732,11 @@ Image * image_load ( char const * filename,
 	File::Type * newtyp = NULL	// Optional: put file type here
 	);
 Image * image_load_bmp ( char const * filename );
-Image * image_load_png ( char const * filename );
-Image * image_load_jpeg ( char const * filename );
+Image * image_load_bp24 ( char const * filename );
 Image * image_load_gif ( char const * filename );
+Image * image_load_jpeg ( char const * filename );
+Image * image_load_pixy ( char const * filename );
+Image * image_load_png ( char const * filename );
 
 void image_print_geometry ( Image * im, char * buf, size_t buflen );
 
@@ -785,7 +787,11 @@ Image * image_from_cairo ( cairo_surface_t * surface );
 
 
 
-}
+}		// namespace mtPixy
+
+
+
+#endif		// __cplusplus
 
 
 

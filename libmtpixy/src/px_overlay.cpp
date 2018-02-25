@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-mtPixy::LineOverlay::LineOverlay ()
+mtPixy::Overlay::Overlay ()
 	:
 	m_x1		( 0 ),
 	m_y1		( 0 ),
@@ -28,7 +28,7 @@ mtPixy::LineOverlay::LineOverlay ()
 {
 }
 
-void mtPixy::LineOverlay::set_start (
+void mtPixy::Overlay::set_start (
 	int	const	x,
 	int	const	y
 	)
@@ -39,7 +39,7 @@ void mtPixy::LineOverlay::set_start (
 	m_y2 = y;
 }
 
-void mtPixy::LineOverlay::set_end (
+void mtPixy::Overlay::set_end (
 	int	const	x,
 	int	const	y,
 	int		&dx,
@@ -55,6 +55,29 @@ void mtPixy::LineOverlay::set_end (
 
 	m_x2 = x;
 	m_y2 = y;
+}
+
+int mtPixy::Overlay::get_x1 () const
+{
+	return m_x1;
+}
+
+int mtPixy::Overlay::get_y1 () const
+{
+	return m_y1;
+}
+
+void mtPixy::Overlay::get_xy (
+	int		&x1,
+	int		&y1,
+	int		&x2,
+	int		&y2
+	) const
+{
+	x1 = m_x1;
+	y1 = m_y1;
+	x2 = m_x2;
+	y2 = m_y2;
 }
 
 static inline void blit_square (
@@ -246,29 +269,6 @@ void mtPixy::LineOverlay::render (
 	}
 }
 
-int mtPixy::LineOverlay::get_x1 () const
-{
-	return m_x1;
-}
-
-int mtPixy::LineOverlay::get_y1 () const
-{
-	return m_y1;
-}
-
-void mtPixy::LineOverlay::get_xy (
-	int		&x1,
-	int		&y1,
-	int		&x2,
-	int		&y2
-	) const
-{
-	x1 = m_x1;
-	y1 = m_y1;
-	x2 = m_x2;
-	y2 = m_y2;
-}
-
 int mtPixy::RecSelOverlay::set (
 	int			const	x,
 	int			const	y,
@@ -291,26 +291,6 @@ int mtPixy::RecSelOverlay::set (
 	m_y2 = MAX ( 0, MIN ( y + h - 1, ymax ) );
 
 	return 0;
-}
-
-void mtPixy::RecSelOverlay::set_start (
-	int	const	x,
-	int	const	y
-	)
-{
-	LineOverlay::set_start ( x, y );
-}
-
-void mtPixy::RecSelOverlay::set_end (
-	int	const	x,
-	int	const	y,
-	int		&dx,
-	int		&dy,
-	int		&dw,
-	int		&dh
-	)
-{
-	LineOverlay::set_end ( x, y, dx, dy, dw, dh );
 }
 
 void mtPixy::RecSelOverlay::move_selection (
@@ -463,14 +443,13 @@ static inline void blit_hline (
 {
 	if ( y >=0 && y < h && x2 >= 0 && x1 < w )
 	{
-		int		cx1 = MAX ( 0, x1 );
-		int		cx2 = MIN ( w - 1, x2 );
-		int		p;
+		int	const	cx1 = MAX ( 0, x1 );
+		int	const	cx2 = MIN ( w - 1, x2 );
 		unsigned char	* dest = rgb + 3 * (cx1 + y * w);
 
 		for ( int cx = cx1; cx <= cx2; cx++ )
 		{
-			p = ((cx + xo) / 8) % 2;
+			int const p = ((cx + xo) / 8) % 2;
 
 			*dest++ = coltab[0][p];
 			*dest++ = coltab[1][p];
@@ -492,14 +471,13 @@ static inline void blit_vline (
 {
 	if ( x >=0 && x < w && y2 >= 0 && y1 < h )
 	{
-		int		cy1 = MAX ( 0, y1 );
-		int		cy2 = MIN ( h - 1, y2 );
-		int		p;
+		int	const	cy1 = MAX ( 0, y1 );
+		int	const	cy2 = MIN ( h - 1, y2 );
 		unsigned char	* dest = rgb + 3 * (x + cy1 * w);
 
 		for ( int cy = cy1; cy <= cy2; cy++ )
 		{
-			p = ((cy + yo) / 8) % 2;
+			int const p = ((cy + yo) / 8) % 2;
 
 			dest[0] = coltab[0][p];
 			dest[1] = coltab[1][p];
@@ -572,26 +550,6 @@ void mtPixy::RecSelOverlay::render (
 	blit_vline ( x2, y1, y2, w, h, coltab, rgb, y );
 }
 
-
-int mtPixy::RecSelOverlay::get_x1 () const
-{
-	return m_x1;
-}
-
-int mtPixy::RecSelOverlay::get_y1 () const
-{
-	return m_y1;
-}
-void mtPixy::RecSelOverlay::get_xy (
-	int		&x1,
-	int		&y1,
-	int		&x2,
-	int		&y2
-	) const
-{
-	LineOverlay::get_xy ( x1, y1, x2, y2 );
-}
-
 void mtPixy::RecSelOverlay::get_xywh (
 	int		&x,
 	int		&y,
@@ -630,6 +588,6 @@ void mtPixy::RecSelOverlay::set_corner (
 		m_y2 = t;
 	}
 
-	LineOverlay::set_end ( x, y, dx, dy, dw, dh );
+	Overlay::set_end ( x, y, dx, dy, dw, dh );
 }
 

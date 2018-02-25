@@ -1,3 +1,7 @@
+3.1	2018-2-25
+
+	* Copying to clipboard now copies numbers without commas.
+
 3.0	2017-2-24
 
 	* GTK+2 code removed

@@ -1,8 +1,8 @@
 Source: mtpixycli
 Section: unknown
 Priority: extra
-Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtpixy, libmtpixyui, libreadline6-dev
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtpixy, libmtpixyui, libreadline-dev
 Standards-Version: 3.9.3
 Homepage: http://mtcelledit.sourceforge.net/
 

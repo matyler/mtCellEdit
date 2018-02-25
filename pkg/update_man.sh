@@ -1,0 +1,1 @@
+src/update_man.sh

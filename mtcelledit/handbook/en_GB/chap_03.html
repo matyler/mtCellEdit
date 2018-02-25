@@ -91,17 +91,7 @@ The other optional parts of the suite have these dependencies:
 <TR>
 <TD>mtCedUtils</TD>
 <TD>libmtKit, libmtcelledit</TD>
-<TD>Command line text tools</TD>
-</TR>
-<TR>
-<TD>mtEleana</TD>
-<TD>libmtKit, libmtcelledit, libmtPixy, libmtQEX, Cairo, Qt5</TD>
-<TD>General election analysis</TD>
-</TR>
-<TR>
-<TD>mtNetlog</TD>
-<TD>libmtKit, libmtcelledit</TD>
-<TD>Network logging</TD>
+<TD>Command line text tools, mtNetLog, mtRDC</TD>
 </TR>
 <TR>
 <TD>mtPixy</TD>
@@ -124,9 +114,9 @@ The other optional parts of the suite have these dependencies:
 <TD>Directory analysis</TD>
 </TR>
 <TR>
-<TD>mtRDC</TD>
-<TD>libmtKit, libmtcelledit</TD>
-<TD>Random data creator</TD>
+<TD>mtUtils</TD>
+<TD>libmtKit</TD>
+<TD>Command line low level utilities</TD>
 </TR>
 </TABLE>
 
@@ -298,6 +288,36 @@ To remove these items you would use:
 <PRE>
   ./build_install.sh libmtkit libmtcelledit mtnetlog remove
 </PRE>
+
+<A NAME="SEC51"></A>
+<H2>3.5.1 Local Installation</H2>
+
+<P>
+Sometimes it is desirable not to install the program files on the system, and instead install somewhere else using the --prefix= configure script argument such as:
+</P>
+
+<UL>
+<LI>~/test_a/usr
+<LI>~/test_b/usr
+<LI>~/test_c/usr
+</UL>
+
+<P>
+This could be because a user does not have permission to install on the system, or because you want to have different test versions all using different versions of the core libraries.
+</P>
+<P>
+In this case you must use the <B>build_local.sh</B> script like this:
+</P>
+
+<PRE>
+  DIR="$HOME/test/usr"; ./build_local.sh \
+  	--preconf "LDFLAGS=-Wl,-rpath=$DIR/lib" \
+  	--conf "--disable-man --prefix=$DIR"
+</PRE>
+
+<P>
+For a longer example see the file: ./pkg/README.txt
+</P>
 
 <A NAME="SEC6"></A>
 <H2>3.6 Qt Port</H2>

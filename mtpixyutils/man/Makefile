@@ -1,11 +1,17 @@
 include		../_conf.txt
 
 OBJ		=			\
-		pixyls.1.gz		\
-		pixynew.1.gz		\
-		pixyresize.1.gz		\
-		pixyscale.1.gz		\
-		pixyutils.1.gz		\
+		pixydelta.1		\
+		pixyls.1		\
+		pixynew.1		\
+		pixypica.1		\
+		pixyresize.1		\
+		pixyriba.1		\
+		pixyrida.1		\
+		pixyrisa.1		\
+		pixyscale.1		\
+		pixytwit.1		\
+		pixyutils.1		\
 
 
 .PHONY:		all install uninstall clean
@@ -14,18 +20,22 @@ OBJ		=			\
 all:		$(OBJ)
 
 
-.SUFFIXES:	.t2t .1.gz
+.SUFFIXES:	.t2t .1
 
 
-.t2t.1.gz:
-		./buildman.sh $< $(APP_VERSION) $(BIN_NAME) | txt2tags -t man -o - -i - | gzip > $@
+.t2t.1:
+		./buildman.sh $< $(APP_VERSION) $(BIN_NAME) |		\
+			txt2tags -t man -o - -i - > $@
 
 install:
 		install -d $(DESTDIR)$(MAN_INSTALL)
 		install -m 644 $(OBJ) $(DESTDIR)$(MAN_INSTALL)
+		cd $(DESTDIR)$(MAN_INSTALL); for FILE in $(OBJ);	\
+			do gzip $$FILE; done
 
 uninstall:
-		rm $(DESTDIR)$(MAN_INSTALL)/$(OBJ)
+		cd $(DESTDIR)$(MAN_INSTALL); for FILE in $(OBJ);	\
+			do rm $$FILE.gz; done
 
 clean:
 

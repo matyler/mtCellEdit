@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -21,10 +21,7 @@
 
 #include "private.h"
 
-
-
-#ifdef U_JPEG
-	#include <jpeglib.h>
+#include <jpeglib.h>
 
 
 
@@ -94,7 +91,6 @@ static int jpeg_load_cmyk (
 
 	unsigned char	const xb = cinfo->saw_Adobe_marker ? 0 : 255;
 	unsigned char	* src;
-	unsigned char	* dest;
 	int		i, j, k, r, g, b;
 
 
@@ -107,7 +103,7 @@ static int jpeg_load_cmyk (
 	for ( i = 0; i < h; i++ )
 	{
 		src = memx;
-		dest = canmem + w * i * canvas_bpp;
+		unsigned char * dest = canmem + w * i * canvas_bpp;
 		jpeg_read_scanlines ( cinfo, &src, 1 );
 
 		for ( j = 0; j < w; j++ , src += 4 , dest += 3 )
@@ -195,7 +191,7 @@ mtPixy::Image * mtPixy::image_load_jpeg (
 	switch ( cinfo.out_color_space )
 	{
 	case JCS_GRAYSCALE:
-		image = image_create ( Image::INDEXED, w, h );
+		image = image_create ( Image::TYPE_INDEXED, w, h );
 		if ( ! image )
 		{
 			goto fail;
@@ -212,7 +208,7 @@ mtPixy::Image * mtPixy::image_load_jpeg (
 		break;
 
 	case JCS_RGB:
-		image = image_create ( Image::RGB, w, h );
+		image = image_create ( Image::TYPE_RGB, w, h );
 		if ( ! image )
 		{
 			goto fail;
@@ -227,7 +223,7 @@ mtPixy::Image * mtPixy::image_load_jpeg (
 
 	case JCS_CMYK:
 		// Photoshop writes CMYK data inverted
-		image = image_create ( Image::RGB, w, h );
+		image = image_create ( Image::TYPE_RGB, w, h );
 		if ( ! image )
 		{
 			goto fail;
@@ -266,7 +262,7 @@ int mtPixy::Image::save_jpeg (
 	) const
 {
 	if (	! filename		||
-		m_type != RGB		||
+		m_type != TYPE_RGB	||
 		compression < 0		||
 		compression > 100
 		)
@@ -324,29 +320,4 @@ int mtPixy::Image::save_jpeg (
 
 	return 0;
 }
-
-
-
-#else	// U_JPEG
-
-
-
-mtPixy::Image * mtPixy::image_load_jpeg (
-	char	const	* const	ARG_UNUSED ( filename )
-	)
-{
-	return NULL;
-}
-
-int mtPixy::Image::save_jpeg (
-	char	const	* const	ARG_UNUSED ( filename ),
-	int		const	ARG_UNUSED ( compression )
-	)
-{
-	return 1;
-}
-
-
-
-#endif	// U_JPEG
 

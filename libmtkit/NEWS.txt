@@ -1,6 +1,12 @@
+3.1	2018-2-25
+
+	* ByteCube, BitPack* added.
+	* BUGFIX - utree_formulate_input_name() performance regression fixed (introduced v2.4).
+
 3.0	2017-2-24
 
 	* Moved to C++.
+	* set_filename_extension() added.
 
 2.7	2016-5-14
 

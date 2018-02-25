@@ -15,19 +15,15 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <time.h>
-	#include <ctype.h>
-	#include <unistd.h>
-	#include <sys/types.h>
-	#include <pwd.h>
-	#include <errno.h>
-
-}
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <errno.h>
 
 
 
@@ -37,6 +33,13 @@ extern "C" {
 
 #ifndef DEBUG
 #pragma GCC visibility push ( hidden )
+#endif
+
+
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 
@@ -67,19 +70,19 @@ int ced_cell_set_prefs (
 
 int ced_cell_stack_push (		// Push a new cell reference onto the
 					// stack
-	CedCellStack	** root,
+	CedCellStack	** clear_root,
 	int		row,
-	int		column
+	int		col
 	);
 
 int ced_cell_stack_del_cells (		// Destroy all cells referenced in the
 					// stack
-	CedCellStack	* root,
+	CedCellStack	* clear_root,
 	CedSheet	* sheet
 	);
 
 void ced_cell_stack_destroy (		// Destroy the stack
-	CedCellStack	* root
+	CedCellStack	* clear_root
 	);
 
 int ced_cmp_cell (
@@ -110,6 +113,13 @@ int ced_token_exe (			// Execute a function token/args
 CedToken const * ced_token_get (	// Get token structure for a function
 	char	const	* text		// Function name
 	);
+
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -122,9 +122,9 @@ mtKit::CliItem * mtKit::CliItem::find_item (
 }
 
 mtKit::CliItem const * mtKit::CliItem::match_args (
-	char	** const	argv,
-	int	* const		cli_error,
-	int	* const		ncargs
+	char	const * const * const	argv,
+	int			* const	cli_error,
+	int			* const	ncargs
 	) const
 {
 	if ( ! argv )
@@ -206,7 +206,7 @@ finish:
 }
 
 int mtKit::CliItem::callback (
-	char	** const argv
+	char	const * const * const	argv
 	) const
 {
 	if ( ! argv || ! m_func )

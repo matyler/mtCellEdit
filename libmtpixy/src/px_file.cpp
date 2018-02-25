@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -27,13 +27,13 @@ char const * mtPixy::File::type_text (
 	Type	const	t
 	)
 {
-	static char const * const filetype_text[] =
+	char const * const filetype_text[] =
 		{
-			"BMP", "PNG", "JPEG", "GIF", "GPL"
+			"BMP", "PNG", "JPEG", "GIF", "GPL", "PIXY", "BP24"
 		};
 
 
-	if ( t < BMP || t > GPL )
+	if ( t < TYPE_MIN || t > TYPE_MAX )
 	{
 		return "";
 	}
@@ -57,7 +57,7 @@ mtPixy::File::Type mtPixy::File::detect_type (
 		fp = fopen ( filename, "rb" );
 		if ( ! fp )
 		{
-			return NONE;
+			return TYPE_NONE;
 		}
 
 		len = fread ( buf, 1, sizeof(buf), fp );
@@ -66,35 +66,45 @@ mtPixy::File::Type mtPixy::File::detect_type (
 
 	if ( len != sizeof(buf) )
 	{
-		return NONE;
+		return TYPE_NONE;
 	}
 
 	if ( 0 == memcmp ( buf, "\x89PNG", 4 ) )
 	{
-		return PNG;
+		return TYPE_PNG;
 	}
 
 	if ( 0 == memcmp ( buf, "\xFF\xD8", 2 ) )
 	{
-		return JPEG;
+		return TYPE_JPEG;
 	}
 
 	if ( 0 == memcmp ( buf, "GIF8", 4 ) )
 	{
-		return GIF;
+		return TYPE_GIF;
 	}
 
 	if ( 0 == memcmp ( buf, "BM", 2 ) )
 	{
-		return BMP;
+		return TYPE_BMP;
 	}
 
 	if ( 0 == memcmp ( buf, "GIMP Palette", 12 ) )
 	{
-		return GPL;
+		return TYPE_GPL;
 	}
 
-	return NONE;
+	if ( 0 == memcmp ( buf, "\0mtCPixyInfo", 12 ) )
+	{
+		return TYPE_PIXY;
+	}
+
+	if ( 0 == memcmp ( buf, "\0mtCBp24IceC", 12 ) )
+	{
+		return TYPE_BP24;
+	}
+
+	return TYPE_NONE;
 }
 
 mtPixy::Image * mtPixy::image_load (
@@ -109,24 +119,24 @@ mtPixy::Image * mtPixy::image_load (
 
 	switch ( detected )
 	{
-	case File::BMP:
+	case File::TYPE_BMP:
 		image = image_load_bmp ( filename );
 		break;
 
-	case File::PNG:
+	case File::TYPE_PNG:
 		image = image_load_png ( filename );
 		break;
 
-	case File::JPEG:
+	case File::TYPE_JPEG:
 		image = image_load_jpeg ( filename );
 		break;
 
-	case File::GIF:
+	case File::TYPE_GIF:
 		image = image_load_gif ( filename );
 		break;
 
-	case File::GPL:
-		image = image_create ( Image::INDEXED, 1, 1 );
+	case File::TYPE_GPL:
+		image = image_create ( Image::TYPE_INDEXED, 1, 1 );
 		if ( image )
 		{
 			Palette * pal = image->get_palette ();
@@ -142,6 +152,15 @@ mtPixy::Image * mtPixy::image_load (
 					Image::FLAG_PALETTE_LOADED );
 			}
 		}
+		break;
+
+	case File::TYPE_PIXY:
+		image = image_load_pixy ( filename );
+		break;
+
+	case File::TYPE_BP24:
+		image = image_load_bp24 ( filename );
+		break;
 
 	default:
 		break;
@@ -165,20 +184,26 @@ int mtPixy::Image::save (
 
 	switch ( filetype )
 	{
-	case File::BMP:
+	case File::TYPE_BMP:
 		return save_bmp ( filename );
 
-	case File::PNG:
+	case File::TYPE_PNG:
 		return save_png ( filename, compression );
 
-	case File::JPEG:
+	case File::TYPE_JPEG:
 		return save_jpeg ( filename, compression );
 
-	case File::GIF:
+	case File::TYPE_GIF:
 		return save_gif ( filename );
 
-	case File::GPL:
+	case File::TYPE_GPL:
 		return m_palette.save ( filename );
+
+	case File::TYPE_PIXY:
+		return save_pixy ( filename, compression );
+
+	case File::TYPE_BP24:
+		return save_bp24 ( filename, compression );
 
 	default:
 		// All other types are an error

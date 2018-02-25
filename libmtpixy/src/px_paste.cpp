@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -104,12 +104,12 @@ int mtPixy::Image::paste (
 
 	switch ( m_type )
 	{
-	case INDEXED:
+	case TYPE_INDEXED:
 		blit_pixels ( m_canvas, m_width, dx1, dy1, dx2, dy2,
 			src->m_canvas, src->m_width, sx1, sy1, m_canvas_bpp );
 		break;
 
-	case RGB:
+	case TYPE_RGB:
 		blit_pixels ( m_canvas, m_width, dx1, dy1, dx2, dy2,
 			src->m_canvas, src->m_width, sx1, sy1, m_canvas_bpp );
 		break;
@@ -138,11 +138,11 @@ int mtPixy::Image::paste_alpha_blend (
 
 	switch ( m_type )
 	{
-	case INDEXED:
+	case TYPE_INDEXED:
 		src->blit_idx_alpha_blend ( m_canvas, x, y, m_width, m_height );
 		break;
 
-	case RGB:
+	case TYPE_RGB:
 		src->blit_rgb_alpha_blend ( m_palette.get_color (), m_canvas, x,
 			y, m_width, m_height );
 		break;
@@ -175,26 +175,22 @@ static void blit_pattern_rgb (
 	}
 
 
-	int			x, y;
 	int		const	ps = mtPixy::Brush::PATTERN_SIZE;
 	unsigned char const * const pat_canvas = pat->get_canvas ();
-	unsigned char	const	* am;
-	unsigned char	const	* sm;
-	unsigned char	const	* smx;
-	unsigned char		* dm, a, b;
 
 
-	for ( y = dy1; y < dy2; y++ )
+	for ( int y = dy1; y < dy2; y++ )
 	{
-		am = src_alpha	+ (sx1 + sw * (sy1 + y - dy1));
-		sm = pat_canvas	+ (y % ps) * ps * 3;
-		dm = dst + (dx1 + dw * y) * 3;
+		unsigned char const * am = src_alpha + (sx1 + sw *
+			(sy1 + y - dy1));
+		unsigned char const * const sm = pat_canvas + (y % ps) * ps * 3;
+		unsigned char * dm = dst + (dx1 + dw * y) * 3;
 
-		for ( x = dx1; x < dx2; x++ )
+		for ( int x = dx1; x < dx2; x++ )
 		{
-			smx = sm + 3 * (x % ps);
-			a = *am++;
-			b = (unsigned char)(255 - a);
+			unsigned char const * const smx = sm + 3 * (x % ps);
+			unsigned char const a = *am++;
+			unsigned char const b = (unsigned char)(255 - a);
 
 			dm[0] = (unsigned char)((a * smx[0] + dm[0] * b) / 255);
 			dm[1] = (unsigned char)((a * smx[1] + dm[1] * b) / 255);
@@ -225,21 +221,18 @@ static void blit_pattern_idx (
 	}
 
 
-	int			x, y;
 	int		const	ps = mtPixy::Brush::PATTERN_SIZE;
 	unsigned char const * const pat_canvas = pat->get_canvas ();
-	unsigned char	const	* am;
-	unsigned char	const	* sm;
-	unsigned char		* dm;
 
 
-	for ( y = dy1; y < dy2; y++ )
+	for ( int y = dy1; y < dy2; y++ )
 	{
-		am = src_alpha	+ (sx1 + sw * (sy1 + y - dy1));
-		sm = pat_canvas	+ (y % ps) * ps;
-		dm = dst + (dx1 + dw * y);
+		unsigned char const * am = src_alpha + (sx1 + sw *
+			(sy1 + y - dy1));
+		unsigned char const * const sm = pat_canvas + (y % ps) * ps;
+		unsigned char * dm = dst + (dx1 + dw * y);
 
-		for ( x = dx1; x < dx2; x++ )
+		for ( int x = dx1; x < dx2; x++ )
 		{
 			if ( *am++ > 0 )
 			{
@@ -271,13 +264,13 @@ int mtPixy::Image::paste_alpha_pattern (
 
 	switch ( m_type )
 	{
-	case INDEXED:
+	case TYPE_INDEXED:
 		blit_pattern_idx ( m_canvas, m_width, dx1, dy1,
 			dx2, dy2, src->m_alpha, src->m_width, sx1, sy1,
 			bru.get_pattern_idx () );
 		break;
 
-	case RGB:
+	case TYPE_RGB:
 		blit_pattern_rgb ( m_canvas, m_width, dx1, dy1,
 			dx2, dy2, src->m_alpha, src->m_width, sx1, sy1,
 			bru.get_pattern_rgb () );
@@ -309,18 +302,13 @@ static void blit_pixels_alpha_or (
 		return;
 	}
 
-
-	int			x, y;
-	unsigned char const	* am;
-	unsigned char		* dm;
-
-
-	for ( y = dy1; y < dy2; y++ )
+	for ( int y = dy1; y < dy2; y++ )
 	{
-		am = src_alpha	+ (sx1 + sw * (sy1 + y - dy1));
-		dm = dst + (dx1 + dw * y);
+		unsigned char const * am = src_alpha + (sx1 + sw *
+			(sy1 + y - dy1));
+		unsigned char * dm = dst + (dx1 + dw * y);
 
-		for ( x = dx1; x < dx2; x++ )
+		for ( int x = dx1; x < dx2; x++ )
 		{
 			dm[0] = (dm[0] | *am++);
 			dm++;

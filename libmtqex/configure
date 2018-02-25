@@ -34,7 +34,7 @@ EOF
 
 MTCF_PRINT_HELP MYHELP
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit mtpixy
+MTCF_CHECK_LIBS mtkit mtpixy stdc++
 
 
 case "$TK" in
@@ -57,17 +57,7 @@ qt5 )
 esac
 
 
-L_EX="$L_EX -lstdc++"
-
-
-
 MTCF_POST_CONF
-
-# Stops noisy compilation when debugging
-mv $CONF_FILE $CONF_FILE.tmp
-cat $CONF_FILE.tmp |
-	awk '!/DEBUG/ { print } /DEBUG/ { gsub("-I","-isystem"); print }' > $CONF_FILE
-rm $CONF_FILE.tmp
 
 echo "TK_OBJ        = $TK_OBJ"		>> $CONF_FILE
 echo "HEADER_NAME   = $HEADER_NAME"	>> $CONF_FILE

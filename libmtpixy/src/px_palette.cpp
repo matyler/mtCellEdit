@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -171,9 +171,9 @@ int mtPixy::Palette::load (
 	for ( i = 0; i < 256; )
 	{
 		input = mtkit_file_readline ( fp, &len, NULL );
-		if ( ! input || len > 100 )
+		if ( ! input )
 		{
-			// EOF or line too long
+			// EOF
 			break;
 		}
 
@@ -181,18 +181,20 @@ int mtPixy::Palette::load (
 		// palette entry
 
 		if (	input[0] == ' ' ||
-			( input[0] >= '0' && input[0] <= '9')
+			( input[0] >= '0' && input[0] <= '9' )
 			)
 		{
-			if ( 3 != sscanf ( input, "%3i %3i %3i", &rgb[0],
+			if ( 3 != sscanf ( input, "%i %i %i", &rgb[0],
 				&rgb[1], &rgb[2] ) )
 			{
+				fprintf ( stderr, "Error: Bad RGB line '%s'.\n",
+					input );
 				goto error;
 			}
 
-			tmpcol[i].red = (unsigned char)rgb[0];
-			tmpcol[i].green = (unsigned char)rgb[1];
-			tmpcol[i].blue = (unsigned char)rgb[2];
+			tmpcol[i].red	= (unsigned char)rgb[0];
+			tmpcol[i].green	= (unsigned char)rgb[1];
+			tmpcol[i].blue	= (unsigned char)rgb[2];
 
 			i++;
 		}
@@ -203,6 +205,7 @@ int mtPixy::Palette::load (
 
 	if ( i < COLOR_TOTAL_MIN )
 	{
+		fprintf ( stderr, "Error: Not enough colours in palette.\n" );
 		goto error;
 	}
 
@@ -331,7 +334,7 @@ int mtPixy::Palette::set_color_total (
 }
 
 int mtPixy::Palette::copy (
-	Palette		* const	src
+	Palette	const * const	src
 	)
 {
 	if ( ! src )
@@ -398,13 +401,12 @@ int mtPixy::Palette::create_gradient (
 	int	const	x = MIN ( a, b );
 	int	const	y = MAX ( a, b );
 	double	const	delta = (double)(y - x);
-	double		p;
 	int		i;
 
 
 	for ( i = x + 1; i < y; i++ )
 	{
-		p = ((double)(i - x)) / delta;
+		double const p = ((double)(i - x)) / delta;
 
 		m_color[i].red = (unsigned char)lround (
 			(1 - p) * m_color[x].red + p * m_color[y].red );

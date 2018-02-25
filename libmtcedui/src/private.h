@@ -15,33 +15,30 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <time.h>
+#include <pango/pangocairo.h>
 
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <unistd.h>
-	#include <sys/stat.h>
-	#include <sys/types.h>
-	#include <errno.h>
-	#include <time.h>
-	#include <pango/pangocairo.h>
+#ifdef CAIRO_HAS_PDF_SURFACE
+#include <cairo-pdf.h>
+#if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
+	#define USE_CAIRO_EPS
+#endif
+#endif
 
-	#ifdef CAIRO_HAS_PDF_SURFACE
-	#include <cairo-pdf.h>
-	#if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
-		#define USE_CAIRO_EPS
-	#endif
-	#endif
+#ifdef CAIRO_HAS_PS_SURFACE
+#include <cairo-ps.h>
+#endif
 
-	#ifdef CAIRO_HAS_PS_SURFACE
-	#include <cairo-ps.h>
-	#endif
-
-	#ifdef CAIRO_HAS_SVG_SURFACE
-	#include <cairo-svg.h>
-	#endif
-}
+#ifdef CAIRO_HAS_SVG_SURFACE
+#include <cairo-svg.h>
+#endif
 
 
 
@@ -57,6 +54,10 @@ extern "C" {
 #pragma GCC visibility push ( hidden )
 #endif
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 int cui_book_add_sheet (
 	CuiBook		* ub,
@@ -85,6 +86,10 @@ int cui_sheet_paste_area (
 	int		paste_coltot,
 	int		mode
 	);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

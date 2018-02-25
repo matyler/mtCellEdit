@@ -34,14 +34,12 @@ The other optional parts of the suite have these dependencies:
 | **Package**   | **Dependencies** | **Description** |
 | libmtPixyUI   | libmtKit, libmtPixy | Toolkit agnostic UI code, e.g. undo stack |
 | mtCedCLI      | libmtKit, libmtcelledit, libmtCedUI, readline | Command line spreadsheet |
-| mtCedUtils    | libmtKit, libmtcelledit | Command line text tools |
-| mtEleana      | libmtKit, libmtcelledit, libmtPixy, libmtQEX, Cairo, Qt5 | General election analysis |
-| mtNetlog      | libmtKit, libmtcelledit | Network logging |
+| mtCedUtils    | libmtKit, libmtcelledit | Command line text tools, mtNetLog, mtRDC |
 | mtPixy        | libmtKit, libmtPixy, libmtPixyUI, libmtQEX, Qt5 | Pixel image editor |
 | mtPixyCLI     | libmtKit, libmtPixy, libmtPixyUI, readline | Command line pixel image editor |
 | mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools |
 | mtRaft        | libmtKit, libmtcelledit, libmtQEX, Qt5 | Directory analysis |
-| mtRDC         | libmtKit, libmtcelledit | Random data creator |
+| mtUtils       | libmtKit | Command line low level utilities |
 
 
 
@@ -167,6 +165,28 @@ To remove these items you would use:
 ```
 ./build_install.sh libmtkit libmtcelledit mtnetlog remove
 ```
+
+
+==3.5.1 Local Installation==[SEC51]
+Sometimes it is desirable not to install the program files on the system, and instead install somewhere else using the --prefix= configure script argument such as:
+
+- ~/test_a/usr
+- ~/test_b/usr
+- ~/test_c/usr
+
+
+This could be because a user does not have permission to install on the system, or because you want to have different test versions all using different versions of the core libraries.
+
+In this case you must use the **build_local.sh** script like this:
+
+```
+DIR="$HOME/test/usr"; ./build_local.sh \
+	--preconf "LDFLAGS=-Wl,-rpath=$DIR/lib" \
+	--conf "--disable-man --prefix=$DIR"
+```
+
+For a longer example see the file: ./pkg/README.txt
+
 
 
 ==3.6 Qt Port==[SEC6]

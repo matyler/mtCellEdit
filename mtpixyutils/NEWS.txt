@@ -1,3 +1,7 @@
+3.1	2018-2-25
+
+	* delta, pica, riba, rida, risa, twit, utils added
+
 3.0	2017-2-24
 
 	* First feature complete release

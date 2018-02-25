@@ -7,13 +7,13 @@ include		../_conf.txt
 # NOTE: - at the beginning of the instruction to ignore errors
 
 all:
-		-./suite.sh
+		-$(SUITE)
 
 valg:
-		-VALG=Y ./suite.sh
+		-VALG=Y $(SUITE)
 
 time:
-		-VALG=T ./suite.sh
+		-VALG=T $(SUITE)
 
 
 # .c.o Implicit rule
@@ -25,4 +25,4 @@ install:
 uninstall:
 
 clean:
-		rm -f output/* tmp/* valg_log.txt *.o *.tmp $(BIN_ALL)
+		rm -f output/* tmp/* valg_log.txt log.txt

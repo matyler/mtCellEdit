@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,6 +47,6 @@ int main (
 
 	backend.main_loop ();
 
-	return backend.m_exit_value;
+	return backend.exit.value ();
 }
 

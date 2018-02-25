@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -135,6 +135,11 @@ int mtPixyUI::File::effect_soften (
 int mtPixyUI::File::effect_emboss ()
 {
 	return image_new_chores ( m_image->effect_emboss () );
+}
+
+int mtPixyUI::File::effect_normalize ()
+{
+	return image_new_chores ( m_image->effect_normalize () );
 }
 
 int mtPixyUI::File::effect_bacteria (

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,20 +15,19 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <unistd.h>
-	#include <sys/stat.h>
-	#include <time.h>
-	#include <errno.h>
-}
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <errno.h>
 
 #include <mtkit.h>
 #include <mtpixy.h>
 #include <mtpixyui.h>
+
+#include "static.h"
 
 
 
@@ -45,6 +44,7 @@ class Backend;
 
 #define PREFS_CANVAS_EASEL_RGB		"canvas.easel.rgb"
 #define PREFS_CANVAS_ZOOM_GRID_GREY	"canvas.zoom.grid.grey"
+#define PREFS_CANVAS_ZOOM_GRID_SHOW	"canvas.zoom.grid.show"
 
 #define PREFS_CURSOR_NUDGE_PIXELS	"cursor.nudge.pixels"
 #define PREFS_CURSOR_BRUSH_OPACITY	"cursor.brush.opacity"
@@ -117,10 +117,14 @@ public:
 	void detect_ui_scale ( int menu_height );
 	void calc_ui_scale ();
 
+	char * get_last_directory ();	// Caller must free the result after use
+
 /// ----------------------------------------------------------------------------
 
 	mtPixyUI::Clipboard	clipboard;
 	mtPixyUI::File		file;
+
+	mtPixy::Palette		palette;	// For Palette->Store/Restore
 
 	mtKit::Prefs		prefs;
 	mtKit::RecentFile	recent_image;

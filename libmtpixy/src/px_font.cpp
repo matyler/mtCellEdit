@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2016 Mark Tyler
+	Copyright (C) 2004-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ namespace mtPixy
 class FontData
 {
 public:
-	FontData ( char	const * name );
+	explicit FontData ( char const * name );
 	~FontData ();
 
 /// ----------------------------------------------------------------------
@@ -181,7 +181,7 @@ mtPixy::Image * mtPixy::Font::render_image (
 	mtPixy::Image	* image = NULL;
 	unsigned char	* mem = NULL;
 	FT_Bitmap	bitmap;
-	int		w=0, h=0,x=0, y=0, basel=0;
+	int		w=0, h=0,basel=0;
 	PangoRectangle	logical_rect;
 
 
@@ -221,9 +221,9 @@ mtPixy::Image * mtPixy::Font::render_image (
 		bitmap.num_grays = 256;
 		bitmap.pixel_mode = FT_PIXEL_MODE_GRAY;
 
-		y = m_baseline - basel + m_style_row_pad;
+		int y = m_baseline - basel + m_style_row_pad;
 
-		pango_ft2_render_layout( &bitmap, m_font_data->m_layout, x, y );
+		pango_ft2_render_layout( &bitmap, m_font_data->m_layout, 0, y );
 	}
 
 	mem = bitmap.buffer;
@@ -232,7 +232,8 @@ mtPixy::Image * mtPixy::Font::render_image (
 		return NULL;
 	}
 
-	image = mtPixy::image_from_data( mtPixy::Image::ALPHA, w, h, NULL, mem);
+	image = mtPixy::image_from_data ( mtPixy::Image::TYPE_ALPHA, w, h, NULL,
+		mem );
 	if ( ! image )
 	{
 		free ( mem );

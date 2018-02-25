@@ -66,6 +66,7 @@ mtCedUtils is a collection of command line functions for manipulating TSV or CSV
 	**cedclear** - Clear these cells (default = r1c1:r_c_ ).
 	**cedfind** - Search in this range (default = r1c1:r_c_ ).
 	**cedpaste** - Paste from this section of the input file (default = r1c1:r_c_ ).
+	**cedfuzzmap** - Set range for the following file.
 **-recalc** INTEGER
 	Recalculate the sheet this many times (top-bottom, bottom-top).
 **-row**
@@ -99,6 +100,7 @@ ceddiff(1),
 cedeval(1),
 cedfind(1),
 cedflip(1),
+cedfuzzmap(1),
 cedinsert(1),
 cedls(1),
 cedpaste(1),

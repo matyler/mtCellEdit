@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,41 +21,62 @@
 
 mtPixyUI::Clipboard::Clipboard ()
 	:
-	m_image		(),
+	m_image		( NULL ),
 	m_x		( 0 ),
 	m_y		( 0 ),
+	m_filename	( NULL ),
 	m_text_paste	( false )
 {
-	snprintf ( m_filename, sizeof(m_filename), "%s/.cache",
-		mtkit_file_home () );
-	mkdir ( m_filename, S_IRWXU | S_IRWXG | S_IRWXO );
+	mtString * mts = mtkit_string_new ( mtkit_file_home () );
 
-	mtkit_strnncat ( m_filename, "/" APP_NAME, sizeof ( m_filename ) );
-	mkdir ( m_filename, S_IRWXU | S_IRWXG | S_IRWXO );
+	if ( ! mts )
+	{
+		return;
+	}
 
-	mtkit_strnncat ( m_filename, "/clipboard_", sizeof ( m_filename ) );
+	mtkit_string_append ( mts, "/.cache" );
+	mkdir ( mtkit_string_get_buf ( mts ), S_IRWXU | S_IRWXG | S_IRWXO );
+
+	mtkit_string_append ( mts, "/" APP_NAME );
+	mkdir ( mtkit_string_get_buf ( mts ), S_IRWXU | S_IRWXG | S_IRWXO );
+
+	mtkit_string_append ( mts, "/clipboard_" );
+
+	m_filename = mtkit_string_destroy_get_buf ( mts );
+	mts = NULL;
 }
 
 mtPixyUI::Clipboard::~Clipboard ()
 {
 	delete m_image;
 	m_image = NULL;
+
+	free ( m_filename );
+	m_filename = NULL;
+}
+
+char * mtPixyUI::Clipboard::create_filename (
+	int	const	n
+	)
+{
+	char	buf[16];
+
+	snprintf ( buf, sizeof(buf), "%i", n );
+
+	return mtkit_string_join ( m_filename, buf, ".png", NULL );
 }
 
 int mtPixyUI::Clipboard::load (
 	int	const	n
 	)
 {
-	if ( ! m_filename )
-	{
-		return 1;
-	}
+	char * filename = create_filename ( n );
 
-	char		buf [ 2048 ];
+	mtPixy::Image * im = mtPixy::image_load ( filename );
 
-	snprintf ( buf, sizeof(buf), "%s%i.png", m_filename, n );
+	free ( filename );
+	filename = NULL;
 
-	mtPixy::Image * im = mtPixy::image_load ( buf );
 	if ( ! im )
 	{
 		return 1;
@@ -64,6 +85,8 @@ int mtPixyUI::Clipboard::load (
 	if ( set_image ( im, 0, 0 ) )
 	{
 		delete im;
+		im = NULL;
+
 		return 1;
 	}
 
@@ -74,21 +97,19 @@ int mtPixyUI::Clipboard::save (
 	int	const	n
 	)
 {
-	if ( ! m_filename || ! m_image )
+	if ( ! m_image )
 	{
 		return 1;
 	}
 
-	char		buf [ 2048 ];
+	char * filename = create_filename ( n );
 
-	snprintf ( buf, sizeof(buf), "%s%i.png", m_filename, n );
+	int const res = m_image->save_png ( filename, 5 );
 
-	if ( m_image->save_png ( buf, 5 ) )
-	{
-		return 1;
-	}
+	free ( filename );
+	filename = NULL;
 
-	return 0;
+	return res;
 }
 
 int mtPixyUI::Clipboard::set_image (
@@ -281,3 +302,4 @@ bool mtPixyUI::Clipboard::is_text_paste () const
 {
 	return m_text_paste;
 }
+

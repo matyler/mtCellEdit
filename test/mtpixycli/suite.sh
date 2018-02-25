@@ -3,6 +3,9 @@
 . ../mtTest.txt
 
 
+txt_title "mtPixyCLI"
+
+
 SHEXE=scripts
 CEDCOM="mtpixycli -seed 123 -q -t -patterns /usr/share/mtpixy-qt4/patterns/default.png -shapes /usr/share/mtpixy-qt4/shapes/default.png"
 

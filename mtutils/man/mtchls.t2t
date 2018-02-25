@@ -1,0 +1,30 @@
+MTCHLS
+mtUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+mtchls - chunk file information
+
+
+= SYNOPSIS =
+**mtchls** [ **OPTIONS** ] [ FILENAME ]...
+
+
+= DESCRIPTION =
+mtChls prints information about a given chunk file, or list of files.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

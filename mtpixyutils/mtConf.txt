@@ -1,4 +1,5 @@
 #!/bin/sh
+# THIS FILE IS A COPIED TEMPLATE! - Only edit in /pkg/src/
 # Configure script helper functions
 # M.Tyler 2013-2-9
 
@@ -20,46 +21,6 @@ UNDERLINE_TEXT()
 	echo "$1"
 	echo $LINES
 	echo
-}
-
-
-MTCF_MAKEFILE_CLEANUP()
-{
-	# On error exit
-	set -e
-
-	find . -name Makefile.gnulinux |
-	while read FNAME
-	do
-		ONAME=$(echo $FNAME | sed 's/\.gnulinux$//')
-		mv "$FNAME" "$ONAME"
-	done
-
-	# On error don't exit
-	set +e
-}
-
-MTCF_MAKEFILE_SETUP()
-{
-	# Revert to original Makefile's
-	MTCF_MAKEFILE_CLEANUP
-
-	# On error exit
-	set -e
-
-	find . -name Makefile |
-	while read FNAME
-	do
-		# Only move current Makefile if preferred alternative exists
-		if [ -f "$FNAME.$1" ]
-		then
-			mv "$FNAME" "$FNAME.gnulinux"
-			cp "$FNAME.$1" "$FNAME"
-		fi
-	done
-
-	# On error don't exit
-	set +e
 }
 
 
@@ -93,7 +54,7 @@ MTCF_INIT()
 	LIB_INSTALL="$PREFIX/lib"
 	DATA_INSTALL="$PREFIX/share"
 
-	MAN_INSTALL="/usr/share/man/man1"
+	MAN_INSTALL="$DATA_INSTALL/man/man1"
 }
 
 
@@ -106,8 +67,7 @@ MTCF_PARSE_ARG1()
 			make clean
 			echo
 			rm $CONF_FILE
-			MTCF_MAKEFILE_CLEANUP
-			exit
+			exit 0
 			;;
 
 	"debug" )	DEBUG=YES
@@ -124,7 +84,7 @@ MTCF_PARSE_ARG1()
 				echo
 				echo "File already exists: ~/$ARNAME"
 				echo
-				exit
+				exit 1
 			fi
 			cd ..
 			tar cJvf ~/$ARNAME $PKNAME
@@ -132,7 +92,7 @@ MTCF_PARSE_ARG1()
 			;;
 
 	"wc" )		wc $(find ./src -name \*.c -o -name \*.h -o -name \*.yy -o -name \*.cpp)
-			exit
+			exit 0
 			;;
 
 	"--help" )	HELP=1
@@ -143,6 +103,7 @@ MTCF_PARSE_ARG1()
 			LIB_INSTALL="$MT_PREFIX/lib"
 			HEAD_INSTALL="$MT_PREFIX/include"
 			DATA_INSTALL="$MT_PREFIX/share"
+			MAN_INSTALL="$DATA_INSTALL/man/man1"
 			;;
 
 	"--bindir="* )	BIN_INSTALL=$(echo "$A" | sed "s/--bindir=//")
@@ -196,7 +157,7 @@ Options:
 
 flush ........... Flush directories to initial state
 debug ........... Include debugging info in binary c11 c++14
-debugold ........ Include debugging info in binary c99 c++03
+debugold ........ Include debugging info in binary c11 c++11
 wc .............. Count size of source files
 
 --prefix=DIR .......... DIR = prefix location of all installs (default=/usr)
@@ -214,7 +175,7 @@ EOF
 		$1
 	fi
 
-	exit
+	exit 0
 fi
 }
 
@@ -238,8 +199,8 @@ MTCF_PRE_CONF()
 	"OLD" )
 		I_EX="$DEBUG_I_EX"
 		L_EX="-lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS="$CFLAGS -std=gnu99 -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
-		CXXFLAGS="$CXXFLAGS -std=gnu++03"
+		CFLAGS="$CFLAGS -std=gnu11 -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
+		CXXFLAGS="$CXXFLAGS -std=gnu++11"
 		;;
 	esac
 
@@ -280,6 +241,11 @@ MTCF_VERSION_BIN_NAME()
 	if [ "$BIN_NAME" != "" ]
 	then
 		I_EX="$I_EX -DBIN_NAME=\"\\\"$BIN_NAME\"\\\""
+	fi
+
+	if [ "$LIB_NAME" != "" ]
+	then
+		I_EX="$I_EX -DVERNUM=\"\\\"$VERNUM\"\\\""
 	fi
 }
 

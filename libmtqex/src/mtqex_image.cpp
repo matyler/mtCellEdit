@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -119,7 +119,6 @@ void mtQEX::ImageArea::paintEvent (
 {
 	mtPixy::Image	* destImage, * srcImage;
 	int		px, py, pw, ph;
-	unsigned char	* src, * rgb;
 
 
 	px = ev->rect ().x ();
@@ -127,8 +126,8 @@ void mtQEX::ImageArea::paintEvent (
 	pw = ev->rect ().width ();
 	ph = ev->rect ().height ();
 
-	destImage = mtPixy::image_create ( mtPixy::Image::RGB, pw, ph );
-	rgb = destImage->get_canvas ();
+	destImage = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, pw, ph );
+	unsigned char * const rgb = destImage->get_canvas ();
 
 	if ( ! rgb )
 	{
@@ -136,63 +135,18 @@ void mtQEX::ImageArea::paintEvent (
 		return;
 	}
 
-// FIXME - have a version for indexed palette images?
 	if (	qi						&&
-		(srcImage = qi->getImage () )			&&
-		(src = srcImage->get_canvas () )		&&
-		srcImage->get_type () == mtPixy::Image::RGB
+		(srcImage = qi->getImage () )
 		)
 	{
-		int	const	zoom = qi->getZoom ();
-		int	const	iw = srcImage->get_width ();
-		int	const	ih = srcImage->get_height ();
+		mtPixy::Palette	* const	pal = srcImage->get_palette ();
 
-		unsigned char	* pix, * dest;
-		int		pw2, ph2, nix = 0, niy = 0;
-		int		px2, py2, xx, yy;
-
-
-		px2 = px;
-		py2 = py;
-
-		pw2 = pw;
-		ph2 = ph;
-
-		if ( px2 < 0 )
+		if ( pal )
 		{
-			nix = -px2;
-		}
+			int const zoom = qi->getZoom ();
+			mtPixy::Color const * const col = pal->get_color ();
 
-		if ( py2 < 0 )
-		{
-			niy = -py2;
-		}
-
-		if ( ( px2 + pw2 ) >= iw * zoom )
-		{
-			// Update image + blank space outside
-
-			pw2 = iw * zoom - px2;
-		}
-		if ( ( py2 + ph2 ) >= ih * zoom )
-		{
-			// Update image + blank space outside
-
-			ph2 = ih * zoom - py2;
-		}
-
-		for ( yy = niy; yy < ph2; yy++ )
-		{
-			dest = rgb + 3 * ( yy * pw + nix );
-			for ( xx = nix; xx < pw2; xx++ )
-			{
-				pix = src + 3 * ( ( px2 + xx ) / zoom +
-					( py2 + yy ) / zoom * iw );
-
-				*dest++ = pix[0];
-				*dest++ = pix[1];
-				*dest++ = pix[2];
-			}
+			srcImage->blit_rgb ( col, rgb, -px, -py, pw, ph, zoom );
 		}
 	}
 

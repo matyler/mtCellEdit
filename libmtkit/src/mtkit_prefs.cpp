@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2016 Mark Tyler
+	Copyright (C) 2009-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -68,10 +68,9 @@ static mtPrefValue * pvalue_duplicate (
 	mtPrefTable	const * const	item
 	)
 {
-	mtPrefValue	* new_item;
+	mtPrefValue * const new_item = static_cast<mtPrefValue *>(calloc ( 1,
+		sizeof (mtPrefValue) ));
 
-
-	new_item = (mtPrefValue *)calloc ( 1, sizeof ( mtPrefValue ) );
 	if ( ! new_item )
 	{
 		return NULL;
@@ -107,7 +106,7 @@ static void mtkit_prefs_node_destroy (
 	mtTreeNode	* const node
 	)
 {
-	mtPrefValue	* item = (mtPrefValue *) node->data;
+	mtPrefValue	* const item = static_cast<mtPrefValue *>(node->data);
 
 
 	pvalue_destroy ( item );
@@ -119,22 +118,18 @@ static mtPrefValue * mtkit_prefs_get_value (
 	VType			const	vtype
 	)
 {
-	mtPrefValue	* piv;
-	mtTreeNode	* node;
-
-
 	if ( ! prefs || ! key )
 	{
 		return NULL;
 	}
 
-	node = mtkit_tree_node_find ( prefs->tree, key );
+	mtTreeNode * const node = mtkit_tree_node_find ( prefs->tree, key );
 	if ( ! node )
 	{
 		return NULL;
 	}
 
-	piv = (mtPrefValue *)node->data;
+	mtPrefValue * const piv = static_cast<mtPrefValue *>(node->data);
 
 	switch ( vtype )
 	{
@@ -188,12 +183,8 @@ static int mtkit_prefs_set_value (
 	int			const	cb
 	)
 {
-	mtPrefValue	* piv;
-	char		* v;
-
-
 	// Check this key exists and is of a compatible type
-	piv = mtkit_prefs_get_value ( prefs, key, vtype );
+	mtPrefValue * const piv = mtkit_prefs_get_value ( prefs, key, vtype );
 	if ( ! piv )
 	{
 		return 1;
@@ -208,6 +199,8 @@ static int mtkit_prefs_set_value (
 	{
 		value = "";
 	}
+
+	char * v = NULL;
 
 	if (	vtype == VTYPE_STR &&
 		piv->opt
@@ -262,7 +255,6 @@ static int mtkit_prefs_add (
 	)
 {
 	mtPrefTable const * item;
-	mtPrefValue	* data;
 	size_t		lenprefix = 0;
 
 
@@ -279,7 +271,7 @@ static int mtkit_prefs_add (
 	// Populate the tree from the table
 	for ( item = table; item->key; item ++ )
 	{
-		data = pvalue_duplicate ( item );
+		mtPrefValue * const data = pvalue_duplicate ( item );
 		if ( ! data )
 		{
 			return 1;
@@ -340,10 +332,9 @@ mtPrefs * mtkit_prefs_new (
 	mtPrefTable	const * const	table
 	)
 {
-	mtPrefs		* prefs;
+	mtPrefs * const prefs = static_cast<mtPrefs *>(calloc ( sizeof(mtPrefs),
+		1 ));
 
-
-	prefs = (mtPrefs *)calloc ( sizeof ( mtPrefs ), 1 );
 	if ( ! prefs )
 	{
 		return NULL;
@@ -412,9 +403,6 @@ static int mtkit_prefs_save_recurse (
 	mtTreeNode	* const node
 	)
 {
-	mtPrefValue	* data;
-
-
 	if ( ! node )
 	{
 		return 0;
@@ -425,7 +413,7 @@ static int mtkit_prefs_save_recurse (
 		return 1;
 	}
 
-	data = (mtPrefValue *)node->data;
+	mtPrefValue * const data = static_cast<mtPrefValue *>(node->data);
 
 	if (	( data->value[0] != 0 && ! data->def ) ||
 		( data->def && strcmp ( data->value, data->def ) )
@@ -644,7 +632,7 @@ int mtkit_prefs_set_double (
 	char		str[256];
 
 
-	snprintf ( str, sizeof ( str ), "%.15lg", value );
+	snprintf ( str, sizeof ( str ), "%.15g", value );
 
 	return mtkit_prefs_set_value ( prefs, key, str, VTYPE_DOUBLE, 1 );
 }
@@ -927,55 +915,50 @@ int mtkit_prefs_value_copy (
 	mtPrefTrans	const *	const table
 	)
 {
-	int		i;
-	mtPrefValue	* item_src, * item_dest;
-	mtTreeNode	* tnode;
-
-
 	if ( ! dest || ! src || ! table )
 	{
-		goto fail;
+		return 1;
 	}
 
-	for ( i = 0; table[i].src && table[i].dest; i++ )
+	for ( int i = 0; table[i].src && table[i].dest; i++ )
 	{
 		// Get source data
-		tnode = mtkit_tree_node_find ( src->tree, table[i].src );
+		mtTreeNode * tnode = mtkit_tree_node_find ( src->tree,
+			table[i].src );
 
 		if ( ! tnode || ! tnode->data )
 		{
-			goto fail;
+			return 1;
 		}
 
-		item_src = (mtPrefValue *)tnode->data;
+		mtPrefValue * const item_src =
+			static_cast<mtPrefValue *>(tnode->data);
 
 		// Get destination data
 		tnode = mtkit_tree_node_find ( dest->tree, table[i].dest );
 
 		if ( ! tnode || ! tnode->data )
 		{
-			goto fail;
+			return 1;
 		}
 
-		item_dest = (mtPrefValue *)tnode->data;
+		mtPrefValue * const item_dest =
+			static_cast<mtPrefValue *>(tnode->data);
 
 		// Type validation
 		if ( item_src->type != item_dest->type )
 		{
-			goto fail;
+			return 1;
 		}
 
 		// Duplicate value
 		if ( mtkit_strfreedup ( &item_dest->value, item_src->value ) )
 		{
-			goto fail;
+			return 1;
 		}
 	}
 
 	return 0;
-
-fail:
-	return 1;
 }
 
 mtTree * mtkit_prefs_get_tree (
@@ -992,19 +975,20 @@ mtTree * mtkit_prefs_get_tree (
 
 mtKit::Prefs::Prefs ()
 	:
-	prefsMem	(),
-	prefsFilename	()
+	m_mem		(),
+	m_filename	()
 {
-	prefsMem = mtkit_prefs_new ( NULL );
+	m_mem = mtkit_prefs_new ( NULL );
 }
 
 mtKit::Prefs::~Prefs ()
 {
 	save ();
-	mtkit_prefs_destroy ( prefsMem );
+	mtkit_prefs_destroy ( m_mem );
+	m_mem = NULL;
 
-	free ( prefsFilename );
-	prefsFilename = NULL;
+	free ( m_filename );
+	m_filename = NULL;
 }
 
 int mtKit::Prefs::load (
@@ -1070,7 +1054,7 @@ int mtKit::Prefs::load (
 		return 0;
 	}
 
-	if ( mtkit_prefs_load ( prefsMem, tmp_str ) )
+	if ( mtkit_prefs_load ( m_mem, tmp_str ) )
 	{
 		// Error loading prefs
 		free ( tmp_str );
@@ -1080,15 +1064,15 @@ int mtKit::Prefs::load (
 	}
 
 	// Success so start using new filename
-	free ( prefsFilename );
-	prefsFilename = tmp_str;
+	free ( m_filename );
+	m_filename = tmp_str;
 
 	return 0;
 }
 
 int mtKit::Prefs::save ()
 {
-	if ( mtkit_prefs_save ( prefsMem, prefsFilename ) )
+	if ( mtkit_prefs_save ( m_mem, m_filename ) )
 	{
 		// Error saving prefs
 		return 1;
@@ -1098,15 +1082,15 @@ int mtKit::Prefs::save ()
 }
 
 int mtKit::Prefs::addTable (
-	mtPrefTable const * const	table
+	mtPrefTable	const * const	table
 	)
 {
-	return mtkit_prefs_add ( prefsMem, table, NULL );
+	return mtkit_prefs_add ( m_mem, table, NULL );
 }
 
 mtPrefs * mtKit::Prefs::getPrefsMem ()
 {
-	return prefsMem;
+	return m_mem;
 }
 
 void mtKit::Prefs::set (
@@ -1114,7 +1098,7 @@ void mtKit::Prefs::set (
 	int		value
 	)
 {
-	mtkit_prefs_set_int ( prefsMem, key, value );
+	mtkit_prefs_set_int ( m_mem, key, value );
 }
 
 void mtKit::Prefs::set (
@@ -1122,7 +1106,7 @@ void mtKit::Prefs::set (
 	double		value
 	)
 {
-	mtkit_prefs_set_double ( prefsMem, key, value );
+	mtkit_prefs_set_double ( m_mem, key, value );
 }
 
 void mtKit::Prefs::set (
@@ -1130,7 +1114,7 @@ void mtKit::Prefs::set (
 	char	const * value
 	)
 {
-	mtkit_prefs_set_str ( prefsMem, key, value );
+	mtkit_prefs_set_str ( m_mem, key, value );
 }
 
 int mtKit::Prefs::getInt (
@@ -1140,7 +1124,7 @@ int mtKit::Prefs::getInt (
 	int		res = 0;
 
 
-	mtkit_prefs_get_int ( prefsMem, key, &res );
+	mtkit_prefs_get_int ( m_mem, key, &res );
 
 	return res;
 }
@@ -1152,7 +1136,7 @@ double mtKit::Prefs::getDouble (
 	double		res = 0;
 
 
-	mtkit_prefs_get_double ( prefsMem, key, &res );
+	mtkit_prefs_get_double ( m_mem, key, &res );
 
 	return res;
 }
@@ -1165,7 +1149,7 @@ char const * mtKit::Prefs::getString (
 	char		const	*	res	= NULL;
 
 
-	mtkit_prefs_get_str ( prefsMem, key, &res );
+	mtkit_prefs_get_str ( m_mem, key, &res );
 
 	if ( ! res )
 	{
@@ -1196,7 +1180,7 @@ static mtPrefTable const default_prefs_table[] = {
 
 int mtKit::Prefs::initWindowPrefs ()
 {
-	return mtkit_prefs_add ( prefsMem, default_prefs_table, 0 );
+	return mtkit_prefs_add ( m_mem, default_prefs_table, 0 );
 }
 
 int mtKit::prefsWindowMirrorPrefs (

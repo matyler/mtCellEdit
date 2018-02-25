@@ -15,17 +15,14 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <unistd.h>
-	#include <sys/stat.h>
-	#include <sys/types.h>
-	#include <errno.h>
-	#include <time.h>
-}
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <time.h>
 
 #include "mtpixyui.h"
 

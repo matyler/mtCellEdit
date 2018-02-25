@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2016 Mark Tyler
+	Copyright (C) 2011-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -204,57 +204,51 @@ char * be_graph_duplicate (
 	return newname;
 }
 
-int be_graph_selection_clip (
-	CedSheet	* const	sheet,
-	char		* const	buf,
-	size_t		const	buflen
+char * be_graph_selection_clip (
+	CedSheet	* const	sheet
 	)
 {
 	if ( ! sheet || ! sheet->book_tnode || ! sheet->book_tnode->key )
 	{
-		return 1;
+		return NULL;
+	}
+
+	// Convert sheet name to valid utree string
+	char	* sheetname = mtkit_utree_create_name (
+				(char const *)sheet->book_tnode->key );
+	if ( ! sheetname )
+	{
+		return NULL;
 	}
 
 	int		r1, c1, r2, c2;
-	char		sheetname [ buflen ];
-	char		cellrange [ buflen ];
-	char		* smax, * dest;
-	char	const	* src;
-
-
-	// Convert sheet name to valid utree string
-	src = (char const *)sheet->book_tnode->key;
-	smax = sheetname + buflen - 3;
-
-	for ( dest = sheetname; src[0] != 0 && dest < smax; dest ++ )
-	{
-		if (	src[0] == '\\' ||
-			src[0] == '"'
-			)
-		{
-			*dest++ = '\\';
-		}
-
-		dest[0] = *src++;
-	}
-
-	dest[0] = 0;
 
 	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
 
-	snprintf ( cellrange, buflen, "r%ic%i:r%ic%i", r1, c1, r2, c2 );
-	cellrange [ buflen - 1 ] = 0;
+	char		cellrange[ 128 ];
 
-	snprintf ( buf, buflen,
-		"{ plot_graph_bar\n"
-		"	fill_color=\"0x9999FF\"\n"
-		"	gap=\"1\"\n"
-		"	sheet=\"%s\"\n"
-		"	data=\"%s\"\n"
-		"	antialias=\"0\"\n"
-		"}\n",
-		sheetname, cellrange );
+	snprintf ( cellrange, sizeof ( cellrange ), "r%ic%i:r%ic%i",
+		r1, c1, r2, c2 );
 
-	return 0;			// Success
+	size_t const buflen = strlen ( sheetname ) + strlen ( cellrange ) + 128;
+	char		* buf = (char *)malloc ( buflen );
+
+	if ( buf )
+	{
+		snprintf ( buf, buflen,
+			"{ plot_graph_bar\n"
+			"	fill_color=\"0x9999FF\"\n"
+			"	gap=\"1\"\n"
+			"	sheet=\"%s\"\n"
+			"	data=\"%s\"\n"
+			"	antialias=\"0\"\n"
+			"}\n",
+			sheetname, cellrange );
+	}
+
+	free ( sheetname );
+	sheetname = NULL;
+
+	return buf;
 }
 

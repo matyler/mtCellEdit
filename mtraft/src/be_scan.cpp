@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2016 Mark Tyler
+	Copyright (C) 2004-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ typedef struct
 
 typedef struct
 {
-	CedSheet	* sheet;
-	raftScanFunc	callback;
-	void		* user_data;
-	int		row;
+	CedSheet	* const	sheet;
+	raftScanFunc	const	callback;
+	void		* const	user_data;
+	int			row;
 } scanState;
 
 
@@ -43,10 +43,7 @@ static double get_cell_value (
 	int		const	column
 	)
 {
-	CedCell		* cell;
-
-
-	cell = ced_sheet_get_cell ( sheet, row, column );
+	CedCell * cell = ced_sheet_get_cell ( sheet, row, column );
 	if ( ! cell )
 	{
 		return 0;
@@ -70,14 +67,9 @@ static void set_row_prefs (
 	scanState	* state
 	)
 {
-	CedCellPrefs	* pref_num,
-			* pref_decimal,
-			* pref_percent;
-
-
-	pref_num = ced_cell_prefs_new ();
-	pref_decimal = ced_cell_prefs_new ();
-	pref_percent = ced_cell_prefs_new ();
+	CedCellPrefs * pref_num = ced_cell_prefs_new ();
+	CedCellPrefs * pref_decimal = ced_cell_prefs_new ();
+	CedCellPrefs * pref_percent = ced_cell_prefs_new ();
 
 	if ( ! pref_num || ! pref_decimal || ! pref_percent )
 	{
@@ -150,18 +142,14 @@ static void add_percentages (
 	scanState	* const	state
 	)
 {
-	int		i;
-	double		tot_files,
-			tot_bytes,
-			perc;
+	double const tot_files = get_cell_value ( state->sheet, state->row,
+				RAFT_COL_FILES );
+	double const tot_bytes = get_cell_value ( state->sheet, state->row,
+				RAFT_COL_BYTES );
 
-
-	tot_files = get_cell_value ( state->sheet, state->row, RAFT_COL_FILES );
-	tot_bytes = get_cell_value ( state->sheet, state->row, RAFT_COL_BYTES );
-
-	for ( i = 1; i < state->row; i++ )
+	for ( int i = 1; i < state->row; i++ )
 	{
-		perc = get_cell_value ( state->sheet, i, RAFT_COL_FILES );
+		double perc = get_cell_value( state->sheet, i, RAFT_COL_FILES );
 		perc = 100 / tot_files * perc;
 
 		ced_sheet_set_cell_value ( state->sheet, i,
@@ -179,14 +167,11 @@ static void add_totals (
 	scanState	* const	state
 	)
 {
-	int		i;
-
-
 	ced_sheet_set_cell_text ( state->sheet, state->row, RAFT_COL_NAME,
 		" < TOTAL >" );
 
 	// Set up totals formulas
-	for ( i = RAFT_COL_FILES; i < RAFT_COL_TOTAL; i++ )
+	for ( int i = RAFT_COL_FILES; i < RAFT_COL_TOTAL; i++ )
 	{
 		ced_sheet_set_cell ( state->sheet, state->row, i,
 			"=sum ( r1c:r[-1]c )" );
@@ -197,7 +182,7 @@ static void add_totals (
 	ced_sheet_recalculate ( state->sheet, NULL, 1 );
 
 	// Convert formulas into numbers
-	for ( i = RAFT_COL_FILES; i < RAFT_COL_TOTAL; i++ )
+	for ( int i = RAFT_COL_FILES; i < RAFT_COL_TOTAL; i++ )
 	{
 		ced_sheet_set_cell_value ( state->sheet, state->row, i,
 			get_cell_value ( state->sheet, state->row, i )
@@ -222,27 +207,23 @@ static int scan_recurse (
 	scanTot		* sum		// Subdirectory total for (2->3)
 	)
 {
-	int		res = 0;
-	scanTot		tot = { 0, 0, 0, 0 };
-	DIR		* dp;
-	struct dirent	* ep;
-	struct stat	buf;
-	char		* tmp;
-
-
-	if ( state->callback ( state->sheet, state->row, state->user_data ) )
+	if ( state->callback ( state->user_data ) )
 	{
 		return 1;		// User termination
 	}
 
 	// Open pathname given
-	dp = opendir ( path );
+	DIR * dp = opendir ( path );
 	if ( ! dp )
 	{
 		fprintf ( stderr, "Unable to opendir '%s'\n", path );
 
 		return 0;
 	}
+
+	int		res = 0;
+	scanTot		tot = { 0, 0, 0, 0 };
+	struct dirent	* ep;
 
 	while ( res == 0 && ( ep = readdir ( dp ) ) )
 	{
@@ -254,7 +235,7 @@ static int scan_recurse (
 			continue;
 		}
 
-		tmp = mtkit_string_join ( path, ep->d_name, NULL, NULL );
+		char * tmp = mtkit_string_join ( path, ep->d_name, NULL, NULL );
 		if ( ! tmp )
 		{
 			res = -1;
@@ -263,6 +244,7 @@ static int scan_recurse (
 
 		// Get full name of file/directory
 
+		struct stat buf;
 		if ( lstat ( tmp, &buf ) )	// Get file details
 		{
 			free ( tmp );
@@ -270,6 +252,7 @@ static int scan_recurse (
 		}
 
 		free ( tmp );
+		tmp = NULL;
 
 		if ( S_ISDIR ( buf.st_mode ) )
 		{
@@ -290,6 +273,7 @@ static int scan_recurse (
 					recurse == 2 ? &ltot : sum );
 
 				free ( tmp );
+				tmp = NULL;
 
 				if ( recurse == 2 )
 				{
@@ -341,10 +325,6 @@ int raft_scan_sheet (
 	void		*	const	user_data
 	)
 {
-	scanState	state = { NULL, callback, user_data, 1 };
-	int		res = 0;
-
-
 	if ( ! path || ! sheet )
 	{
 		return -1;		// Fail
@@ -356,9 +336,9 @@ int raft_scan_sheet (
 		return -1;		// Fail
 	}
 
-	state.sheet = sheet[0];
+	scanState	state = { sheet[0], callback, user_data, 1 };
+	int		res = scan_recurse ( path, &state, 1, NULL );
 
-	res = scan_recurse ( path, &state, 1, NULL );
 	if ( res == 0 )
 	{
 		res = scan_recurse ( path, &state, 2, NULL );
@@ -389,20 +369,18 @@ char * raft_path_check (
 	char	const	* path
 	)
 {
-	char		* new_path;
-	size_t		plen;
-
-
 	if ( ! path || path[0] == 0 )
 	{
 		return NULL;		// Argument error
 	}
 
-	plen = strlen ( path );
+	size_t plen = strlen ( path );
 	if ( plen >= MAX_PATH_LEN )
 	{
 		return NULL;		// Path too long
 	}
+
+	char * new_path = NULL;
 
 	if ( path [ plen - 1 ] != '/' )
 	{
@@ -424,16 +402,14 @@ char * raft_path_merge (
 	int		const	row
 	)
 {
-	char		* new_path = NULL;
-	CedCell		* cell;
-
-
 	if ( ! path )
 	{
 		return NULL;
 	}
 
-	cell = ced_sheet_get_cell ( sheet, row, RAFT_COL_NAME );
+	char	* new_path = NULL;
+	CedCell	* cell = ced_sheet_get_cell ( sheet, row, RAFT_COL_NAME );
+
 	if ( cell && cell->text )
 	{
 		new_path = mtkit_string_join ( path, cell->text, "/", NULL );

@@ -1,0 +1,33 @@
+MTDSIZE
+mtUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+mtdsize - directory scan sizes
+
+
+= SYNOPSIS =
+**mtdsize** [ **OPTIONS** ] [ PATHNAME ]...
+
+
+= DESCRIPTION =
+mtdsize prints information about a directory, or list of directories.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-s**
+	Output only the summary.
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

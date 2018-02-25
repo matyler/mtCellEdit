@@ -1,16 +1,15 @@
 include		../_conf.txt
 
-OBJS		=		\
-		cli_clipboard.o	\
-		cli_edit.o	\
-		cli_file.o	\
-		cli_main.o	\
-		cli_misc.o	\
-		cli_parse.o	\
-		cli_prefs.o	\
-		cli_sheet.o	\
-		cli_sort.o	\
-		cli_tab.o	\
+OBJS		=			\
+		cli_backend.o		\
+		cli_jtf_clipboard.o	\
+		cli_jtf_edit.o		\
+		cli_jtf_file.o		\
+		cli_jtf_misc.o		\
+		cli_jtf_prefs.o		\
+		cli_jtf_sheet.o		\
+		cli_jtf_sort.o		\
+		cli_main.o		\
 
 
 .PHONY:		all install uninstall clean

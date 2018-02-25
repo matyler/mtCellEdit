@@ -1,4 +1,5 @@
 #!/bin/sh
+# THIS FILE IS A COPIED TEMPLATE! - Only edit in /pkg/src/
 
 
 

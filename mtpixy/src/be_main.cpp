@@ -171,3 +171,30 @@ void Backend::get_titlebar_text (
 	mtkit_strnncat ( buf, VERSION, buflen );
 }
 
+char * Backend::get_last_directory ()
+{
+	char const * const cf = prefs.getString ( PREFS_FILE_RECENT_IMAGE
+		".001" );
+
+	if ( ! cf )
+	{
+		return NULL;
+	}
+
+	char * dir = strdup ( cf );
+
+	if ( ! dir )
+	{
+		return NULL;
+	}
+
+	char * const sep = strrchr ( dir, '/' );
+
+	if ( sep )
+	{
+		sep[0] = 0;
+	}
+
+	return dir;
+}
+

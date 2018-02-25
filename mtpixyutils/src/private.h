@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,11 +15,8 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-}
+#include <stdlib.h>
+#include <string.h>
 
 #include <mtkit.h>
 #include <mtpixy.h>
@@ -72,10 +69,18 @@ extern Global		global;
 
 
 
-int ut_load_file ( void );		// Loads image file (name in
+int ut_load_file ();			// Loads image file (name in
 					// global.s_arg).
 	// 0 = success. Failure is not sent to stderr, but global.i_error is
 	// set.
+
+int * create_cube_analysis (
+	int			i,	// 8=full cube 1=corners of cube
+	unsigned char	const *	rgb,
+	int			w,
+	int			h
+	);
+
 
 /*	Command functions
 
@@ -83,8 +88,14 @@ int ut_load_file ( void );		// Loads image file (name in
 	Return > 0 = Generic error to be reported by caller (main.c ff_errtab).
 */
 
-int pixyut_ls ( void );
-int pixyut_new ( void );
-int pixyut_resize ( void );
-int pixyut_scale ( void );
+int pixyut_delta ();
+int pixyut_ls ();
+int pixyut_new ();
+int pixyut_pica ();
+int pixyut_resize ();
+int pixyut_riba ();
+int pixyut_rida ();
+int pixyut_risa ();
+int pixyut_scale ();
+int pixyut_twit ();
 

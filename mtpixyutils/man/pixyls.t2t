@@ -20,8 +20,10 @@ List image file information.  If FILE=="" then use the current image in memory.
 = OPTIONS =
 **--version**
 	Output version information and exit.
-**-compression** INTEGER
-	Set compression level for PNG/JPEG files. Default=5
+**-comp_jpeg** INTEGER
+	Set compression level for JPEG files. Default=85
+**-comp_png** INTEGER
+	Set compression level for PNG files. Default=6
 **-i** STRING
 	Load this input file.
 **-o** STRING

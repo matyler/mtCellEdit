@@ -116,14 +116,13 @@ int mtQEX::ButtonMenu::count ()
 int mtQEX::ButtonMenu::findText ( QString t )
 {
 	QList<QAction*>	actionList = menu()->actions ();
-	QAction		* action;
 
 
 	t.replace ( "&", "&&" );
 
 	for ( int i = 0; i < actionList.size (); i++ )
 	{
-		action = actionList.value ( i, NULL );
+		QAction * const action = actionList.value ( i, NULL );
 
 		if ( action && action->text () == t )
 		{

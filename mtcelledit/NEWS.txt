@@ -1,3 +1,9 @@
+3.1	2018-2-25
+
+	* When using "Save As" dialog the correct file extension is automatically used.
+	* BUGFIX - "Save as" now doesn't mangle UTF8 filenames.
+	* BUGFIX - be_update_file_to_book() now unlocks old filename as expected in RWL mode.
+
 3.0	2017-2-24
 
 	* Moved to C++.

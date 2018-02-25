@@ -1,0 +1,48 @@
+CEDFUZZMAP
+mtCedUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+cedfuzzmap - map between fuzzed strings in mteleana data
+
+
+= SYNOPSIS =
+**cedfuzzmap** [ **OPTION** ]... DICTIONARY [[ **OPTION** ]... [ INPUT ]]...
+
+
+= DESCRIPTION =
+Take an input file, and try to replace strings so they conform to the dictionary.
+Fuzzing is done at the word level, so "foo bar" is assumed to be the same as
+"bar foo".  If an exact match is not found, the original is left in place and
+the most similar matches are sent to stdout.
+
+Before comparisons, strings are cleaned up by removing non-alpha characters,
+with everything changed to lower case.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	The following input file is CSV.
+**-o** STRING
+	Save current sheet to this file (immediately).  "-" prints to stdout.
+**-range** STRING
+	The range of cells to grab strings from (default = r1c1:r_c_ ).
+**-tsv**
+	The following input file is TSV (default).
+
+
+= SEE ALSO =
+cedutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

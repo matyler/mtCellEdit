@@ -1,4 +1,4 @@
-# Maintainer: Mark Tyler <marktyler@users.sourceforge.net>
+# Maintainer: Mark Tyler <mt@marktyler.org>
 pkgname=mtraft-qt4
 pkgver
 pkgrel=@MT_RELVER@

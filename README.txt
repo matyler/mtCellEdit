@@ -4,7 +4,10 @@ For instructions on how to use it, and why it was created, read the handbook loc
 
 ./mtcelledit/handbook/en_GB/index.html
 
+or on the web:
+
+http://mtcelledit.sourceforge.net/handbook/en_GB/index.html
 
 If you find any bugs, or you have suggestions for improvements you can contact me at this address:
 
-marktyler@users.sourceforge.net
+mt@marktyler.org

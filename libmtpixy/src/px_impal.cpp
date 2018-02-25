@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -63,22 +63,19 @@ static int get_histogram_rgb (
 	int			const	coltot
 	)
 {
-	int		rgb, i;
-	mtTree		* pal_tree;	// Key=RGB Data=Palette Index
-	mtTreeNode	* tnode;
-
-
 	memset ( histogram, 0, 256 * sizeof( histogram[0] ) );
 
-	pal_tree = mtkit_tree_new ( pal_tree_cmp, NULL );
+	// Key=RGB, Data=Palette Index
+	mtTree * const pal_tree = mtkit_tree_new ( pal_tree_cmp, NULL );
 	if ( ! pal_tree )
 	{
 		return 1;
 	}
 
-	for ( i = 0; i < coltot; i++ )
+	for ( int i = 0; i < coltot; i++ )
 	{
-		rgb = mtPixy::rgb_2_int( col[i].red, col[i].green, col[i].blue);
+		int const rgb = mtPixy::rgb_2_int( col[i].red, col[i].green,
+			col[i].blue);
 
 		if ( 0 == mtkit_tree_node_add ( pal_tree,
 			(void *)(intptr_t)rgb,
@@ -92,9 +89,10 @@ static int get_histogram_rgb (
 
 	for ( ; img < ilim; img += 3 )
 	{
-		rgb = mtPixy::rgb_2_int ( img[0], img[1], img[2] );
+		int const rgb = mtPixy::rgb_2_int ( img[0], img[1], img[2] );
+		mtTreeNode * const tnode = mtkit_tree_node_find ( pal_tree,
+			(void *)(intptr_t)rgb );
 
-		tnode = mtkit_tree_node_find( pal_tree, (void *)(intptr_t)rgb );
 		if ( tnode )
 		{
 			// Count palette entry frequency
@@ -191,7 +189,7 @@ int mtPixy::Image::palette_sort (
 		unsigned char const * const ilim = img + m_width * m_height *
 						m_canvas_bpp;
 
-		if ( RGB == m_type )
+		if ( TYPE_RGB == m_type )
 		{
 			if ( get_histogram_rgb ( img, ilim, histogram, col,
 				coltot ) )
@@ -199,7 +197,7 @@ int mtPixy::Image::palette_sort (
 				return 1;
 			}
 		}
-		else if ( INDEXED == m_type )
+		else if ( TYPE_INDEXED == m_type )
 		{
 			get_histogram ( img, ilim, histogram );
 		}
@@ -297,7 +295,7 @@ int mtPixy::Image::palette_sort (
 		col[i] = oc[ tab0[i] ];
 	}
 
-	if ( INDEXED == m_type )
+	if ( TYPE_INDEXED == m_type )
 	{
 		// Adjust canvas pixels if in indexed palette mode
 		for ( i = 0; i < 256; i++ )
@@ -323,7 +321,7 @@ int mtPixy::Image::palette_merge_duplicates (
 	int	* const	tot
 	)
 {
-	if ( m_type != INDEXED || ! m_canvas )
+	if ( m_type != TYPE_INDEXED || ! m_canvas )
 	{
 		return 1;
 	}
@@ -374,7 +372,7 @@ int mtPixy::Image::palette_remove_unused (
 	int	* const	tot
 	)
 {
-	if ( m_type != INDEXED || ! m_canvas )
+	if ( m_type != TYPE_INDEXED || ! m_canvas )
 	{
 		return 1;
 	}
@@ -453,7 +451,7 @@ int mtPixy::Image::get_information (
 		return 0;
 	}
 
-	if ( RGB == m_type )
+	if ( TYPE_RGB == m_type )
 	{
 		unsigned char * cube = (unsigned char *)calloc( 256*256, 256 );
 		if ( ! cube )
@@ -463,7 +461,6 @@ int mtPixy::Image::get_information (
 
 
 		Color	const * const	col = m_palette.get_color ();
-		int			rgb;
 
 
 		if ( get_histogram_rgb ( m_canvas, lim, pf, col, coltot ) )
@@ -474,7 +471,7 @@ int mtPixy::Image::get_information (
 
 		for ( unsigned char const * s = m_canvas; s < lim; s += 3 )
 		{
-			rgb = mtPixy::rgb_2_int ( s[0], s[1], s[2] );
+			int const rgb = mtPixy::rgb_2_int ( s[0], s[1], s[2] );
 			cube[ rgb ] = 1;
 		}
 
@@ -489,7 +486,7 @@ int mtPixy::Image::get_information (
 
 		free ( cube );
 	}
-	else if ( INDEXED == m_type )
+	else if ( TYPE_INDEXED == m_type )
 	{
 		get_histogram ( m_canvas, lim, pf );
 
@@ -515,15 +512,14 @@ int mtPixy::Image::get_information (
 
 int mtPixy::Image::palette_create_from_canvas ()
 {
-	if ( m_type != RGB || ! m_canvas )
+	if ( m_type != TYPE_RGB || ! m_canvas )
 	{
 		return 1;
 	}
 
 
 	mtTree		* pal_tree;		// Key=RGB Data=index
-	mtTreeNode	* tnode;
-	int		i = 0, rgb;
+	int		i = 0;
 	Palette		pal;
 	Color		* col = pal.get_color ();
 	unsigned char const * src;
@@ -540,9 +536,10 @@ int mtPixy::Image::palette_create_from_canvas ()
 
 	for ( src = m_canvas; src < slim; src += 3 )
 	{
-		rgb = mtPixy::rgb_2_int ( src[0], src[1], src[2] );
+		int const rgb = mtPixy::rgb_2_int ( src[0], src[1], src[2] );
+		mtTreeNode * const tnode = mtkit_tree_node_find ( pal_tree,
+			(void *)(intptr_t)rgb );
 
-		tnode = mtkit_tree_node_find( pal_tree, (void *)(intptr_t)rgb );
 		if ( tnode )
 		{
 			// Colour is already in the palette
@@ -552,6 +549,7 @@ int mtPixy::Image::palette_create_from_canvas ()
 		if ( i >= Palette::COLOR_TOTAL_MAX )
 		{
 			// Too many colours for the palette to hold
+			i++;
 			break;
 		}
 
@@ -573,11 +571,12 @@ int mtPixy::Image::palette_create_from_canvas ()
 	mtkit_tree_destroy ( pal_tree );
 	pal_tree = NULL;
 
-	if ( i >= Palette::COLOR_TOTAL_MAX )
+	if ( i > Palette::COLOR_TOTAL_MAX )
 	{
 		return 1;
 	}
 
+	// If i is too small this is ignored
 	pal.set_color_total ( i );
 	m_palette.copy ( &pal );
 
@@ -605,7 +604,7 @@ void mtPixy::Image::palette_move_color (
 
 	dst[ new_idx ] = tcol;
 
-	if ( INDEXED == m_type && m_canvas )
+	if ( TYPE_INDEXED == m_type && m_canvas )
 	{
 		unsigned char	map[256];
 		unsigned char	* img = m_canvas;

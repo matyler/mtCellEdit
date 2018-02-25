@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -18,10 +18,6 @@
 	You should have received a copy of the GNU General Public License
 	along with this program in the file COPYING.
 */
-
-#ifdef U_PNG
-
-
 
 #include <png.h>
 
@@ -289,12 +285,12 @@ mtPixy::Image * mtPixy::image_load_png (
 		bit_depth > 8
 		)
 	{
-		image = image_create ( Image::RGB, (int)pwidth,
+		image = image_create ( Image::TYPE_RGB, (int)pwidth,
 			(int)pheight );
 	}
 	else
 	{
-		image = image_create ( Image::INDEXED, (int)pwidth,
+		image = image_create ( Image::TYPE_INDEXED, (int)pwidth,
 			(int)pheight );
 	}
 
@@ -326,11 +322,12 @@ mtPixy::Image * mtPixy::image_load_png (
 		goto fail;
 	}
 
-	if ( image->get_type () == Image::RGB )
+	if ( image->get_type () == Image::TYPE_RGB )
 	{
 		if ( load_rgb ( src, image->get_alpha (), (int)pwidth,
 			(int)pheight, png_ptr, info_ptr, row_pointers ) )
 		{
+			fprintf(stderr, "Unable to load RGB image\n");
 			goto fail;
 		}
 	}
@@ -340,14 +337,15 @@ mtPixy::Image * mtPixy::image_load_png (
 			png_ptr, info_ptr, row_pointers, color_type, bit_depth )
 			)
 		{
+			fprintf(stderr, "Unable to load palette based image\n");
 			goto fail;
 		}
 
 		png_unknown_chunkp uk_p;
-		png_uint_32 const num_uk = png_get_unknown_chunks ( png_ptr,
+		int const num_uk = (int)png_get_unknown_chunks ( png_ptr,
 						info_ptr, &uk_p );
 
-		for ( png_uint_32 i = 0; i < num_uk; i++ )
+		for ( int i = 0; i < num_uk; i++ )
 		{
 			if ( 0 != strcmp( (char const *)uk_p[i].name,
 				"alPh" ) )
@@ -355,17 +353,19 @@ mtPixy::Image * mtPixy::image_load_png (
 				continue;
 			}
 
-			uLongf dest_len = (uLongf)(pwidth * pheight);
+			unsigned char * alp;
 
-			if (	image->create_alpha ()		||
-				! image->get_alpha ()
+			if (	image->create_alpha ()			||
+				! (alp = image->get_alpha ())		||
+				mtkit_mem_inflate ( uk_p[i].data,
+					uk_p[i].size, &alp, pwidth * pheight,
+					0 )
 				)
 			{
-				goto fail;
+				fprintf(stderr, "Unable to load alpha\n");
+				// Don't abort here, just give up quietly
 			}
 
-			uncompress ( image->get_alpha (), &dest_len,
-				uk_p[i].data, uk_p[i].size );
 			break;
 		}
 	}
@@ -428,13 +428,13 @@ static int save_init (
 	png_init_io ( png_ptr, fp );
 	png_set_compression_level ( png_ptr, compression );
 
-	if ( type == mtPixy::Image::INDEXED )
+	if ( type == mtPixy::Image::TYPE_INDEXED )
 	{
 		png_set_IHDR( png_ptr, info_ptr, (png_uint_32)w, (png_uint_32)h,
 			8, PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
 			PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT );
 	}
-	else if ( type == mtPixy::Image::RGB )
+	else if ( type == mtPixy::Image::TYPE_RGB )
 	{
 		png_set_IHDR( png_ptr, info_ptr, (png_uint_32)w, (png_uint_32)h,
 			8,
@@ -541,22 +541,12 @@ static int save_idx_alpha (
 	int		const	compression
 	)
 {
-	uLongf		const	dest_len = compressBound( (uLong)(w*h));
-	unsigned char		* tmp;
+	unsigned char	* tmp;
+	size_t		res_len;
 
-
-	tmp = (unsigned char *)malloc ( dest_len );
-	if ( ! tmp )
+	if ( mtkit_mem_deflate ( m_alpha, (size_t)(w * h), &tmp, &res_len,
+		compression, MTKIT_DEFLATE_MODEL_DEFAULT ) )
 	{
-		return 1;
-	}
-
-	uLongf res_len = dest_len;
-
-	if ( compress2 ( tmp, &res_len, m_alpha, (uLong)(w * h),
-		compression ) != Z_OK )
-	{
-		free ( tmp );
 		return 1;
 	}
 
@@ -616,11 +606,10 @@ int mtPixy::Image::save_png (
 
 	png_structp	png_ptr		= NULL;
 	png_infop	info_ptr	= NULL;
-	FILE		* fp		= NULL;
 	int		res		= 1;
 
 
-	fp = fopen ( filename, "wb" );
+	FILE * fp = fopen ( filename, "wb" );
 	if ( fp == NULL )
 	{
 		goto fail;
@@ -636,7 +625,7 @@ int mtPixy::Image::save_png (
 
 /// SAVE IMAGE CANVAS
 
-	if ( m_type == INDEXED || ! m_alpha )
+	if ( m_type == TYPE_INDEXED || ! m_alpha )
 	{
 		if ( save_flat ( png_ptr, m_canvas, m_width * m_canvas_bpp,
 			m_height ) )
@@ -644,7 +633,7 @@ int mtPixy::Image::save_png (
 			goto fail;
 		}
 	}
-	else if ( m_type == RGB && m_alpha )
+	else if ( m_type == TYPE_RGB && m_alpha )
 	{
 		if ( save_rgba( png_ptr, m_canvas, m_alpha, m_width, m_height ))
 		{
@@ -654,7 +643,7 @@ int mtPixy::Image::save_png (
 
 /// EXTRA CHUNK
 
-	if ( m_type == INDEXED && m_alpha )
+	if ( m_type == TYPE_INDEXED && m_alpha )
 	{
 		if ( save_idx_alpha ( png_ptr, info_ptr, m_alpha, m_width,
 			m_height, compression ) )
@@ -686,34 +675,4 @@ fail:
 
 	return res;
 }
-
-
-
-#else	// U_PNG
-
-
-
-#include "private.h"
-
-
-
-mtPixy::Image * mtPixy::image_load_png (
-	char	const	* const	ARG_UNUSED ( filename )
-	)
-{
-	return NULL;
-}
-
-int mtPixy::Image::save_png (
-	char	const	* const	ARG_UNUSED ( filename ),
-	int		const	ARG_UNUSED ( compression )
-	)
-{
-	return 1;
-}
-
-
-
-#endif	// U_PNG
-
 

@@ -7,5 +7,21 @@
          <generic-icon name="application-x-@BIN_NAME@"/>
          <glob weight="60" pattern="*.gpl"/>
   </mime-type>
+  <mime-type type="application/x-mtpixy-pixy">
+         <comment xml:lang="en">mtPixy image</comment>
+         <generic-icon name="application-x-@BIN_NAME@"/>
+         <magic>
+             <match value="\x00mtCPixyInfo" type="string" offset="0"/>
+         </magic>
+         <glob weight="60" pattern="*.pixy"/>
+  </mime-type>
+  <mime-type type="application/x-mtpixy-bp24">
+         <comment xml:lang="en">mtPixy colourmap</comment>
+         <generic-icon name="application-x-@BIN_NAME@"/>
+         <magic>
+             <match value="\x00mtCBp24IceC" type="string" offset="0"/>
+         </magic>
+         <glob weight="60" pattern="*.bp24"/>
+  </mime-type>
 </mime-info>
 

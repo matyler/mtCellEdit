@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -25,12 +25,12 @@
 
 mtPixy::Image * mtPixy::Image::convert_to_rgb ()
 {
-	if ( m_type != INDEXED )
+	if ( m_type != TYPE_INDEXED )
 	{
 		return NULL;
 	}
 
-	Image * im = image_create ( RGB, m_width, m_height );
+	Image * im = image_create ( TYPE_RGB, m_width, m_height );
 	if ( ! im )
 	{
 		return NULL;
@@ -47,12 +47,11 @@ mtPixy::Image * mtPixy::Image::convert_to_rgb ()
 	unsigned char	*	dest = im->m_canvas;
 	unsigned char	* const	dlim = dest + m_width * m_height * 3;
 	unsigned char	*	src = m_canvas;
-	unsigned char		pix;
 	Color	const	*	col = m_palette.get_color ();
 
 	while ( dest < dlim )
 	{
-		pix = *src++;
+		unsigned char const pix = *src++;
 
 		*dest++ = col [ pix ].red;
 		*dest++ = col [ pix ].green;
@@ -82,9 +81,8 @@ static void dumb_dither (
 	unsigned short		cols[32768], sqrtb[512], * sqr;
 	short			limtb[512], * lim, fr[3] = { 0, 0, 0 };
 	short			* rows = NULL, * row0 = fr, * row1 = fr;
-	unsigned char		clamp[768], * dest;
-	unsigned char	const	* src;
-	int			k, j0, dj, dj3, r, g, b, rlen, serpent = 2;
+	unsigned char		clamp[768];
+	int			k, j0, dj, r, g, b, rlen, serpent = 2;
 
 
 	// Allocate working space
@@ -141,8 +139,8 @@ static void dumb_dither (
 	// Process image
 	for ( int i = 0; i < height; i++ )
 	{
-		src = mem_src + i * width * 3;
-		dest = mem_dest + i * width;
+		unsigned char const * src = mem_src + i * width * 3;
+		unsigned char * dest = mem_dest + i * width;
 
 		if ( serpent ^= 1 )
 		{
@@ -164,7 +162,7 @@ static void dumb_dither (
 			row1 += j0;
 		}
 
-		dj3 = dj * 3;
+		int const dj3 = dj * 3;
 
 		for ( int j = 0; j < width; j++ , src += dj3 , dest += dj )
 		{
@@ -333,12 +331,12 @@ mtPixy::Image * mtPixy::Image::convert_to_indexed (
 	DitherType	const	dt
 	)
 {
-	if ( m_type != RGB )
+	if ( m_type != TYPE_RGB )
 	{
 		return NULL;
 	}
 
-	Image * im = image_create ( INDEXED, m_width, m_height );
+	Image * im = image_create ( TYPE_INDEXED, m_width, m_height );
 	if ( ! im )
 	{
 		return NULL;
@@ -391,15 +389,10 @@ static void flip_h_mem (
 		return;
 	}
 
-
-	unsigned char		* d;
-	unsigned char	const	* s;
-
-
 	for ( int y = 0; y < h; y++ )
 	{
-		d = dest + bpp * y * w;
-		s = src + bpp * y * w + bpp * (w - 1);
+		unsigned char * d = dest + bpp * y * w;
+		unsigned char const * s = src + bpp * y * w + bpp * (w - 1);
 
 		if ( bpp == 3 )
 		{
@@ -449,16 +442,12 @@ static void flip_v_mem (
 		return;
 	}
 
-
-	unsigned char		* d;
-	unsigned char	const	* s;
 	size_t		const	tot = (size_t)(bpp * w);
-
 
 	for ( int y = 0; y < h; y++ )
 	{
-		d = dest + bpp * y * w;
-		s = src + bpp * (h - y - 1) * w;
+		unsigned char * const d = dest + bpp * y * w;
+		unsigned char const * const s = src + bpp * (h - y - 1) * w;
 
 		memcpy ( d, s, tot );
 	}
@@ -492,14 +481,11 @@ static void rotate_c_mem (
 		return;
 	}
 
-
-	unsigned char		* d;
 	unsigned char	const	* s = src;
-
 
 	for ( int y = 0; y < h; y++ )
 	{
-		d = dest + bpp * (h - y - 1);
+		unsigned char * d = dest + bpp * (h - y - 1);
 
 		if ( bpp == 3 )
 		{
@@ -558,13 +544,12 @@ static void rotate_a_mem (
 	}
 
 
-	unsigned char		* d;
 	unsigned char	const	* s = src;
 
 
 	for ( int y = 0; y < h; y++ )
 	{
-		d = dest + bpp * (y + (w - 1) * h);
+		unsigned char * d = dest + bpp * (y + (w - 1) * h);
 
 		if ( bpp == 3 )
 		{

@@ -24,13 +24,11 @@
 
 Backend::Backend ()
 	:
-	m_exit_value	( 0 ),
-	m_exit_now	( 0 ),
 	m_file_p	( &m_file[0] )
 {
 	for ( int i = 0; i < FILE_TOTAL; i++ )
 	{
-		m_file[i].new_image ( mtPixy::Image::RGB, 100, 100, 1, 3 );
+		m_file[i].new_image ( mtPixy::Image::TYPE_RGB, 100, 100, 1, 3 );
 	}
 }
 
@@ -242,8 +240,8 @@ int Backend::init_table ()
 			"<HEIGHT 1..32767>" )
 		|| m_clitab.add_item ( "save", jtf_save )
 		|| m_clitab.add_item ( "save as", jtf_save_as, 1, 3,
-			"<OS FILENAME> [ <bmp | png | jpeg | gif> "
-			"[COMPRESSION 0..9 | 0..100] ]" )
+			"<OS FILENAME> [ <bmp | bp24 | gif | jpeg | pixy | "
+			"png > [COMPRESSION 0..9 | 0..100] ]" )
 		|| m_clitab.add_item ( "save undo", jtf_save_undo, 1, 1,
 			"<OS FILENAME>" )
 		|| m_clitab.add_item ( "scale", jtf_scale, 2, 3,
@@ -283,15 +281,15 @@ void Backend::main_loop ()
 {
 	if ( init_table () )
 	{
-		m_exit_now = 1;
-		m_exit_value = 1;
+		exit.abort ();
+		exit.set_value ( 1 );
 
 		fprintf ( stderr, "Error: main_loop().init_table()\n" );
 
 		return;
 	}
 
-	while ( 0 == m_exit_now )
+	while ( false == exit.aborted () )
 	{
 		char * line = readline ( BIN_NAME" > " );
 
@@ -316,7 +314,7 @@ void Backend::main_loop ()
 void Backend::print_about ()
 {
 	printf ( "%s\n"
-		"Copyright (C) 2016 Mark Tyler\n"
+		"Copyright (C) " MT_COPYRIGHT_YEARS " Mark Tyler\n"
 		"Type 'help' for command hints.  Read the manual for more "
 		"specific info.\n\n", VERSION );
 }
@@ -342,17 +340,15 @@ int Backend::set_file (
 
 int Backend::get_file_number () const
 {
-	int n;
-
-	for ( n = 0; n < FILE_TOTAL; n++ )
+	for ( int n = 0; n < FILE_TOTAL; n++ )
 	{
 		if ( m_file_p == &m_file[n] )
 		{
-			break;
+			return n;
 		}
 	}
 
-	return n >= FILE_TOTAL ? -1 : n;
+	return -1;
 }
 
 int Backend::get_help (

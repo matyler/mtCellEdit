@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,27 +24,27 @@ mtKit::RecentFile::RecentFile (
 	int		const	tot
 	)
 	:
-	total		( tot ),
-	prefs_prefix	( strdup ( prefix ) ),
-	prefs		()
+	m_total		( tot ),
+	m_prefs_prefix	( strdup ( prefix ) ),
+	m_prefs		()
 {
 }
 
 mtKit::RecentFile::~RecentFile ()
 {
-	free ( prefs_prefix );
+	free ( m_prefs_prefix );
 }
 
 int mtKit::RecentFile::init_prefs (
 	mtKit::Prefs	* const	pr
 	)
 {
-	if ( prefs )
+	if ( m_prefs )
 	{
 		return 1;
 	}
 
-	prefs = pr;
+	m_prefs = pr;
 
 
 	int		i;
@@ -55,12 +55,12 @@ int mtKit::RecentFile::init_prefs (
 		};
 
 
-	for ( i = 1; i <= total; i++ )
+	for ( i = 1; i <= m_total; i++ )
 	{
 		key = create_key ( i );
 
 		prefs_table[0].key = key;
-		prefs->addTable ( prefs_table );
+		m_prefs->addTable ( prefs_table );
 
 		free ( key );
 		key = NULL;
@@ -73,7 +73,7 @@ char * mtKit::RecentFile::create_key (
 	int	const	idx
 	)
 {
-	if ( idx < 1 || idx > total )
+	if ( idx < 1 || idx > m_total )
 	{
 		return NULL;
 	}
@@ -84,7 +84,7 @@ char * mtKit::RecentFile::create_key (
 
 	snprintf ( cbuf, sizeof(cbuf), ".%03i", idx );
 
-	return mtkit_string_join ( prefs_prefix, cbuf, NULL, NULL );
+	return mtkit_string_join ( m_prefs_prefix, cbuf, NULL, NULL );
 }
 
 char const * mtKit::RecentFile::get_filename (
@@ -95,7 +95,7 @@ char const * mtKit::RecentFile::get_filename (
 	char	const	*	val;
 
 
-	val = prefs->getString ( key );
+	val = m_prefs->getString ( key );
 	free ( key );
 
 	return val;
@@ -105,7 +105,6 @@ void mtKit::RecentFile::set_filename (
 	char	const * const	name
 	)
 {
-	char		* key;
 	char	const	* val;
 	int		i;
 
@@ -116,16 +115,18 @@ void mtKit::RecentFile::set_filename (
 	}
 
 	// Search for a current use of this filename
-	for ( i = 1; i <= total; i++ )
+	for ( i = 1; i <= m_total; i++ )
 	{
-		key = create_key ( i );
+		char * key = create_key ( i );
+
 		if ( ! key )
 		{
 			return;
 		}
 
-		val = prefs->getString ( key );
+		val = m_prefs->getString ( key );
 		free ( key );
+		key = NULL;
 
 		if ( ! val )
 		{
@@ -149,14 +150,15 @@ void mtKit::RecentFile::set_filename (
 	// Shift items to accommodate the new most recent item
 	for ( i = i - 1; i >= 1; i-- )
 	{
-		key = create_key ( i );
+		char * key = create_key ( i );
 		if ( ! key )
 		{
 			goto finish;
 		}
 
-		val = prefs->getString ( key );
+		val = m_prefs->getString ( key );
 		free ( key );
+		key = NULL;
 
 		if ( ! val )
 		{
@@ -177,93 +179,15 @@ void mtKit::RecentFile::set_filename_idx (
 	char	const * const	name
 	)
 {
-	char		* const key = create_key ( idx );
-
+	char * key = create_key ( idx );
 
 	if ( ! key )
 	{
 		return;
 	}
 
-	prefs->set ( key, name );
+	m_prefs->set ( key, name );
 	free ( key );
-}
-
-static void trim_string (
-	char		* const	buf,
-	int		const	lim_tot
-	)
-{
-	#define SNIP_LEN	5
-	char	const	* snip = " ... ";	// length = SNIP_LEN
-
-	char		* spa, * spb;
-	int		res, lim_edge, slen;
-
-
-	lim_edge = lim_tot / 2 - SNIP_LEN;
-	slen = mtkit_utf8_len ( (unsigned char *)buf, 0 );
-
-	if ( slen <= lim_tot )
-	{
-		// String is already short enough
-		return;
-	}
-
-	res = mtkit_utf8_offset ( (unsigned char *)buf, lim_edge );
-
-	if ( res < 0 )
-	{
-		return;
-	}
-
-	// Place snip text here later
-	spa = buf + res;
-
-	res = mtkit_utf8_offset ( (unsigned char *)spa, slen - 2 * lim_edge );
-
-	if ( res < 0 )
-	{
-		return;
-	}
-
-	// Points to the last lim_edge chars in buf string
-	spb = spa + res;
-
-	// Move right hand side of snip: all chars and NUL terminator
-	memmove ( spa + SNIP_LEN, spb, strlen ( spb ) + 1 );
-
-	// Insert snip text
-	memcpy ( spa, snip, SNIP_LEN );
-}
-
-int mtKit::snip_filename (
-	char	const	* const	txt,
-	char		* const	buf,
-	size_t		const	buflen,
-	int		const	lim_tot
-	)
-{
-	char		* tmp;
-
-
-	if ( ! txt || strlen ( txt ) < 2 )
-	{
-		return 1;		// buf not filled
-	}
-
-	tmp = mtkit_utf8_from_cstring ( txt );
-	if ( ! tmp )
-	{
-		return 1;		// buf not filled
-	}
-
-	mtkit_strnncpy ( buf, tmp, buflen );
-
-	free ( tmp );
-
-	trim_string ( buf, lim_tot );
-
-	return 0;			// buf filled
+	key = NULL;
 }
 

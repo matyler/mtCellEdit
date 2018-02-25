@@ -164,10 +164,15 @@ int mtKit::CliTab::parse (
 			{
 				res = match->callback ( args + ncarg );
 
-				if ( res )
+				if ( 1 == res )
 				{
+					// 1 => callback requests us to report
 					fprintf ( stderr, "Error running "
 						"command '%s'\n\n", input );
+				}
+				else
+				{
+					// 2 => callback has reported this error
 				}
 			}
 			else if ( err == -1 )

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2016 Mark Tyler
+	Copyright (C) 2011-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,8 +20,15 @@
 
 
 
+#include <mtkit.h>
 #include <mtcelledit.h>
 #include <mtpixy.h>
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -184,28 +191,6 @@ enum
 
 
 
-struct CuiRenPage
-{
-	int		width;
-	int		height;
-	int		margin_x;
-	int		margin_y;
-	int		footer[3];
-	int		header[3];
-};
-
-struct CuiRender
-{
-	CedSheet	* sheet;	// Sheet currently being edited
-
-	mtPixy::Font	* font;
-	int		font_width;	// Average width of font for numbers,
-					// i.e. "01234567890"
-	int		row_header_width; // Used to cetralize the
-					// rendering of row numbers
-	int		row_pad;	// Pixels above and below the row
-};
-
 struct CuiClip
 {
 	CedSheet	* sheet;	// Current clipboard
@@ -246,15 +231,6 @@ struct CuiBook
 
 
 
-typedef void (* CuiRenCB) (
-	int		x,
-	int		y,
-	int		w,
-	int		h,
-	unsigned char	* rgb,
-	void		* user_data
-	);
-
 typedef int (* CuiGraphScan) (
 	CedBook		* book,		// Don't add/remove any graph/file from
 					// the book during this callback
@@ -268,102 +244,6 @@ typedef int (* CuiGraphScan) (
 
 
 // Functions return: 0 = success, NULL = fail; unless otherwise stated.
-
-/*
-	GEOMETRY FUNCTIONS
-*/
-
-int cui_ren_x_from_column (
-	int		col_start,
-	CuiRender	* viewren,
-	int		column
-	);
-	// X
-
-int cui_ren_y_from_row (
-	int		row_start,
-	CuiRender	* viewren,
-	int		row
-	);
-	// Y
-
-int cui_ren_column_from_x_backwards (
-	int		col_start,
-	CuiRender	* viewren,
-	int		x
-	);
-	// Column
-
-int cui_ren_column_from_x (
-	int		col_start,
-	CuiRender	* viewren,
-	int		x
-	);
-	// Column
-
-int cui_ren_row_from_y (
-	int		row_start,
-	CuiRender	* viewren,
-	int		y
-	);
-	// Row
-
-/*
-	PAGE EXPORT FUNCTIONS
-*/
-
-int cui_export_output (
-	mtPrefs		* prefs_file,
-	CedSheet	* sheet,
-	char	const	* filename,
-	char	const	* gui_filename,
-	int		filetype,	// CUI_SHEET_EXPORT_*
-	int		row_pad,
-	char	const	* font_name,
-	int		font_size
-	);
-
-/*
-	PIXEL EXPOSURE FUNCTIONS
-
-
-	Before calling these *_expose_* functions 'view' must contain validated
-	'sheet' and 'font' data.
-*/
-
-int cui_ren_expose_main (
-	int		row_start,
-	int		col_start,
-	CuiRender	* viewren,
-	int		x,
-	int		y,
-	int		w,
-	int		h,
-	CuiRenCB	callback,
-	void		* callback_data
-	);
-
-int cui_ren_expose_row_header (
-	int		row_start,
-	CuiRender	* viewren,
-	int		x,
-	int		y,
-	int		w,
-	int		h,
-	CuiRenCB	callback,
-	void		* callback_data
-	);
-
-int cui_ren_expose_column_header (
-	int		col_start,
-	CuiRender	* viewren,
-	int		x,
-	int		y,
-	int		w,
-	int		h,
-	CuiRenCB	callback,
-	void		* callback_data
-	);
 
 /*
 	BOOK FUNCTIONS
@@ -402,7 +282,7 @@ int cui_book_destroy_sheet (
 
 int cui_book_page_rename (
 	CuiBook		* ub,
-	CedSheet	* a_sheet,
+	CedSheet	* shold,
 	char	const	* name
 	);
 
@@ -521,7 +401,7 @@ int cui_file_free (			// Release this structure, and its
 int cui_file_load (			// Load a sheet or book as a new CuBook
 	CuiFile		* file,		// On success set filetype and real
 					// filename in state
-	char	const	* filename,	// Filename to load
+	char	const	* filename_CONST, // Filename to load
 	int		force		// CED_FILE_FORCE_*
 	);
 	// 0 = success
@@ -550,6 +430,11 @@ int cui_file_set_lock (
 	// 0 = Set as requested (or unchanged)
 	// 1 = Unable to set as requested
 	// NOTE: Cannot change current RO file to RW or RWL
+
+int cui_file_unset_lock (
+	CuiFile		* file
+	);
+
 
 int cui_file_sheet_add (		// Add a new sheet "Sheet 1", 2, 3, etc.
 					// via undo system
@@ -596,6 +481,31 @@ int cui_sheet_2dyear (			// Change century of 2 digit years
 					// (MTKIT_DDT_MAX_DATE_YEAR - 99)
 	);
 	// 1 = Arg Error, else CUI_ERROR_*
+
+/*
+	cui_get_correct_*_filename
+
+These functions all return NULL to tell caller to use "filename" argument when
+using a "Save As" dialog.  A non-NULL return is an allocated string with the
+correct filename extension which the caller needs to use and then free when
+finished.
+*/
+
+char * cui_get_correct_sheet_filename (
+	char	const *	filename,
+	int		filetype	// CED_FILE_TYPE_*
+	);
+
+char * cui_get_correct_graph_filename (
+	char	const *	filename,
+	int		filetype	// CUI_GRAPH_TYPE_*
+	);
+
+char * cui_get_correct_export_filename (
+	char	const *	filename,
+	int		filetype	// CUI_SHEET_EXPORT_*
+	);
+
 
 /*
 	CLIPBOARD FUNCTIONS
@@ -666,72 +576,6 @@ int cui_clip_copy (			// Copy current selection to the
 	);
 
 /*
-	GRAPH FUNCTIONS
-*/
-
-CedBookFile * cui_graph_new (
-/*
-	Create a new graph in this book (possibly destroying same named graph)
-*/
-	CedBook		* book,
-	char		* mem,
-	int		memsize,
-	char	const	* graph_name
-	);
-
-CedBookFile * cui_graph_get (
-	CedBook		* book,
-	char	const	* graph_name
-	);
-
-int cui_graph_destroy (
-	CedBook		* book,
-	char	const	* graph_name
-	);
-
-int cui_graph_scan (			// Scan a book and use callback for each
-					// graph found
-	CedBook		* book,
-	CuiGraphScan	callback,
-	void		* user_data
-	);
-	// 0 = success
-	// 1 = error
-	// 2 = user termination
-
-mtPixy::Image * cui_graph_render_image (
-	CedBook		* book,
-	char	const	* graph_name,
-	int		* breakpoint,
-/*
-	Store point of error here (i.e. valid characters) (NULL = don't)
-	-1 = Error during rendering (not parsing)
-*/
-	double		scale		// 1 = 100% 2 = 200% (10..1000%)
-	);
-
-int cui_graph_render_file (
-	CedBook		* book,
-	char	const	* graph_name,
-	char	const	* filename,
-	int		filetype,	// CUI_GRAPH_TYPE_*
-	int		* breakpoint,
-/*
-	Store point of error here (i.e. valid characters) (NULL = don't)
-	-1 = Error during rendering (not parsing)
-*/
-	double		scale		// 1 = 100% 2 = 200% (10..1000%)
-					// Vector files use scale * 2.
-	);
-
-int cui_graph_duplicate (
-	CuiBook		* cubook,
-	char	const	* graph_name,
-	char	*	* new_name	// Optional - put allocated string to
-					// new name here
-	);
-
-/*
 	CELLPREFS FUNCTIONS
 
 All function returns: 0 = success, 1 = arg error, CUI_ERROR_*
@@ -771,6 +615,221 @@ int cui_cellprefs_border (		// Adds a border type to selected cells.
 	CuiFile		* uifile,
 	int		border_type	// CUI_CELLBORD_*
 	);
+
+
+
+/*
+	GRAPH FUNCTIONS
+*/
+
+CedBookFile * cui_graph_new (
+/*
+	Create a new graph in this book (possibly destroying same named graph)
+*/
+	CedBook		* book,
+	char		* mem,
+	int		memsize,
+	char	const	* graph_name
+	);
+
+CedBookFile * cui_graph_get (
+	CedBook		* book,
+	char	const	* graph_name
+	);
+
+int cui_graph_destroy (
+	CedBook		* book,
+	char	const	* graph_name
+	);
+
+int cui_graph_scan (			// Scan a book and use callback for each
+					// graph found
+	CedBook		* book,
+	CuiGraphScan	callback,
+	void		* user_data
+	);
+	// 0 = success
+	// 1 = error
+	// 2 = user termination
+
+int cui_graph_render_file (
+	CedBook		* book,
+	char	const	* graph_name,
+	char	const	* filename,
+	int		filetype,	// CUI_GRAPH_TYPE_*
+	int		* breakpoint,
+/*
+	Store point of error here (i.e. valid characters) (NULL = don't)
+	-1 = Error during rendering (not parsing)
+*/
+	double		scale		// 1 = 100% 2 = 200% (10..1000%)
+					// Vector files use scale * 2.
+	);
+
+int cui_graph_duplicate (
+	CuiBook		* cubook,
+	char	const	* graph_name,
+	char	*	* new_name	// Optional - put allocated string to
+					// new name here
+	);
+
+
+
+#ifdef __cplusplus
+}
+#endif	// __cplusplus
+
+
+
+#ifdef __cplusplus
+
+
+
+struct CuiRenPage
+{
+	int		width;
+	int		height;
+	int		margin_x;
+	int		margin_y;
+	int		footer[3];
+	int		header[3];
+};
+
+struct CuiRender
+{
+	CedSheet	* sheet;	// Sheet currently being edited
+
+	mtPixy::Font	* font;
+	int		font_width;	// Average width of font for numbers,
+					// i.e. "01234567890"
+	int		row_header_width; // Used to cetralize the
+					// rendering of row numbers
+	int		row_pad;	// Pixels above and below the row
+};
+
+
+
+typedef void (* CuiRenCB) (
+	int		x,
+	int		y,
+	int		w,
+	int		h,
+	unsigned char	* rgb,
+	void		* user_data
+	);
+
+
+
+/*
+	GEOMETRY FUNCTIONS
+*/
+
+int cui_ren_x_from_column (
+	int		col_start,
+	CuiRender	* viewren,
+	int		column
+	);
+	// X
+
+int cui_ren_y_from_row (
+	int		row_start,
+	CuiRender	* viewren,
+	int		row
+	);
+	// Y
+
+int cui_ren_column_from_x_backwards (
+	int		col_start,
+	CuiRender	* viewren,
+	int		x
+	);
+	// Column
+
+int cui_ren_column_from_x (
+	int		col_start,
+	CuiRender	* viewren,
+	int		x
+	);
+	// Column
+
+int cui_ren_row_from_y (
+	int		row_start,
+	CuiRender	* viewren,
+	int		y
+	);
+	// Row
+
+/*
+	PAGE EXPORT FUNCTIONS
+*/
+
+int cui_export_output (
+	mtPrefs		* prefs_file,
+	CedSheet	* sheet,
+	char	const	* filename,
+	char	const	* gui_filename,
+	int		filetype,	// CUI_SHEET_EXPORT_*
+	int		row_pad,
+	char	const	* font_name,
+	int		font_size
+	);
+
+/*
+	PIXEL EXPOSURE FUNCTIONS
+
+
+	Before calling these *_expose_* functions 'view' must contain validated
+	'sheet' and 'font' data.
+*/
+
+int cui_ren_expose_main (
+	int		row_start,
+	int		col_start,
+	CuiRender	* viewren,
+	int		x,
+	int		y,
+	int		w,
+	int		h,
+	CuiRenCB	callback,
+	void		* callback_data
+	);
+
+int cui_ren_expose_row_header (
+	int		row_start,
+	CuiRender	* viewren,
+	int		x,
+	int		y,
+	int		w,
+	int		h,
+	CuiRenCB	callback,
+	void		* callback_data
+	);
+
+int cui_ren_expose_column_header (
+	int		col_start,
+	CuiRender	* viewren,
+	int		x,
+	int		y,
+	int		w,
+	int		h,
+	CuiRenCB	callback,
+	void		* callback_data
+	);
+
+mtPixy::Image * cui_graph_render_image (
+	CedBook		* book,
+	char	const	* graph_name,
+	int		* breakpoint,
+/*
+	Store point of error here (i.e. valid characters) (NULL = don't)
+	-1 = Error during rendering (not parsing)
+*/
+	double		scale		// 1 = 100% 2 = 200% (10..1000%)
+	);
+
+
+
+#endif	// __cplusplus
 
 
 

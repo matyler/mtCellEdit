@@ -2,28 +2,31 @@ include		../_conf.txt
 
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtpixy.h
-OBJS		=		\
-		px_blit.o	\
-		px_brush.o	\
-		px_convert.o	\
-		px_effects.o	\
-		px_file.o	\
-		px_file_bmp.o	\
-		px_file_gif.o	\
-		px_file_jpeg.o	\
-		px_file_png.o	\
-		px_floodfill.o	\
-		px_font.o	\
-		px_image.o	\
-		px_impal.o	\
-		px_overlay.o	\
-		px_paint.o	\
-		px_palette.o	\
-		px_paste.o	\
-		px_polygon.o	\
-		px_quantize.o	\
-		px_scale.o	\
-		px_text.o	\
+OBJS		=			\
+		px_blit.o		\
+		px_brush.o		\
+		px_convert.o		\
+		px_effects.o		\
+		px_file.o		\
+		px_file_bmp.o		\
+		px_file_bp24.o		\
+		px_file_gif.o		\
+		px_file_jpeg.o		\
+		px_file_pixy_load.o	\
+		px_file_pixy_save.o	\
+		px_file_png.o		\
+		px_floodfill.o		\
+		px_font.o		\
+		px_image.o		\
+		px_impal.o		\
+		px_overlay.o		\
+		px_paint.o		\
+		px_palette.o		\
+		px_paste.o		\
+		px_polygon.o		\
+		px_quantize.o		\
+		px_scale.o		\
+		px_text.o		\
 
 
 .PHONY:		all install uninstall clean

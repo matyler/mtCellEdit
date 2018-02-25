@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -46,26 +46,34 @@ static utComRec const	* comrec;	// Current command record
 
 
 static utComRec const	comtab[] = {
+	{ "delta",	pixyut_delta },
 	{ "ls",		pixyut_ls },
 	{ "new",	pixyut_new },
+	{ "pica",	pixyut_pica },
 	{ "resize",	pixyut_resize },
+	{ "riba",	pixyut_riba },
+	{ "rida",	pixyut_rida },
+	{ "risa",	pixyut_risa },
 	{ "scale",	pixyut_scale },
+	{ "twit",	pixyut_twit },
 	{ NULL,		NULL }
 	};
 
 static utFTRec const ftypes[] = {
-	{ "bmp",	mtPixy::File::BMP },
-	{ "gif",	mtPixy::File::GIF },
-	{ "gpl",	mtPixy::File::GPL },
-	{ "jpeg",	mtPixy::File::JPEG },
-	{ "none",	mtPixy::File::NONE },
-	{ "png",	mtPixy::File::PNG },
+	{ "bmp",	mtPixy::File::TYPE_BMP },
+	{ "bp24",	mtPixy::File::TYPE_BP24 },
+	{ "gif",	mtPixy::File::TYPE_GIF },
+	{ "gpl",	mtPixy::File::TYPE_GPL },
+	{ "jpeg",	mtPixy::File::TYPE_JPEG },
+	{ "none",	mtPixy::File::TYPE_NONE },
+	{ "pixy",	mtPixy::File::TYPE_PIXY },
+	{ "png",	mtPixy::File::TYPE_PNG },
 	{ NULL,		0 }
 	};
 
 static utFTRec const imtypes[] = {
-	{ "indexed",	mtPixy::Image::INDEXED },
-	{ "rgb",	mtPixy::Image::RGB },
+	{ "indexed",	mtPixy::Image::TYPE_INDEXED },
+	{ "rgb",	mtPixy::Image::TYPE_RGB },
 	{ NULL,		0 }
 	};
 
@@ -87,10 +95,7 @@ static const utComRec * get_comrec (
 	char	const * const	command
 	)
 {
-	int		i;
-
-
-	for ( i = 0; comtab[i].name; i++ )
+	for ( int i = 0; comtab[i].name; i++ )
 	{
 		if ( 0 == strcmp ( command, comtab[i].name ) )
 		{
@@ -98,16 +103,12 @@ static const utComRec * get_comrec (
 		}
 	}
 
-
 	return NULL;			// Not found
 }
 
-static int get_filetype ( void )
+static int get_filetype ()
 {
-	int		i;
-
-
-	for ( i = 0; ftypes[i].name; i++ )
+	for ( int i = 0; ftypes[i].name; i++ )
 	{
 		if ( 0 == strcmp ( global.s_arg, ftypes[i].name ) )
 		{
@@ -117,16 +118,12 @@ static int get_filetype ( void )
 		}
 	}
 
-
 	return 1;			// Not found
 }
 
-static int get_imtype ( void )
+static int get_imtype ()
 {
-	int		i;
-
-
-	for ( i = 0; imtypes[i].name; i++ )
+	for ( int i = 0; imtypes[i].name; i++ )
 	{
 		if ( 0 == strcmp ( global.s_arg, imtypes[i].name ) )
 		{
@@ -135,7 +132,6 @@ static int get_imtype ( void )
 			return 0;	// Found
 		}
 	}
-
 
 	return 1;			// Not found
 }
@@ -147,12 +143,9 @@ static int file_func (
 {
 	if ( comrec && comrec->func )
 	{
-		int		res;
-
-
 		global.s_arg = filename;
 
-		res = comrec->func ();
+		int res = comrec->func ();
 
 		if ( res > 0 )
 		{
@@ -192,7 +185,7 @@ static int error_func (
 	return 0;			// Keep parsing
 }
 
-static void select_command ( void )
+static void select_command ()
 {
 	if (	global.s_arg[0] == 'p' &&
 		global.s_arg[1] == 'i' &&
@@ -257,13 +250,13 @@ static int print_help (
 Global::Global (
 	)
 	:
-	i_comp_png	( 5 ),
+	i_comp_png	( 6 ),
 	i_comp_jpeg	( 85 ),
 	i_error		( 0 ),
-	i_ftype_in	( mtPixy::File::BMP ),
-	i_ftype_out	( mtPixy::File::NONE ),
+	i_ftype_in	( mtPixy::File::TYPE_BMP ),
+	i_ftype_out	( mtPixy::File::TYPE_NONE ),
 	i_height	( 100 ),
-	i_image_type	( mtPixy::Image::INDEXED ),
+	i_image_type	( mtPixy::Image::TYPE_INDEXED ),
 	i_palette	( 0 ),
 	i_scale		( 0 ),
 	i_tmp		( 0 ),
@@ -276,12 +269,11 @@ Global::Global (
 {
 }
 
-static int init_globals ( void )
+static int init_globals ()
 {
-	mtPixy::Image	* im;
+	mtPixy::Image * const im = mtPixy::image_create (
+				mtPixy::Image::TYPE_INDEXED, 100, 100 );
 
-
-	im = mtPixy::image_create( mtPixy::Image::INDEXED, 100, 100 );
 	if ( ! im )
 	{
 		global.i_error = 1;
@@ -294,7 +286,7 @@ static int init_globals ( void )
 	return 0;			// Success
 }
 
-static void cleanup_globals ( void )
+static void cleanup_globals ()
 {
 	global.set_image ( NULL );
 }
@@ -321,12 +313,8 @@ static int argcb_com (
 	return 0;			// Continue parsing args
 }
 
-int ut_load_file ( void )
+int ut_load_file ()
 {
-	mtPixy::Image		* new_image = NULL;
-	mtPixy::File::Type	new_type;
-
-
 	if ( ! global.s_arg )
 	{
 		global.i_error = 1;
@@ -341,14 +329,16 @@ int ut_load_file ( void )
 		return 0;
 	}
 
-	new_image = mtPixy::image_load ( global.s_arg, &new_type );
+	mtPixy::File::Type new_type;
+	mtPixy::Image * const new_image = mtPixy::image_load ( global.s_arg,
+		&new_type );
+
 	if ( ! new_image )
 	{
 		return 1;		// Fail
 	}
 
 	global.set_image ( new_image );
-
 	global.i_ftype_in = new_type;
 
 	return 0;			// Success
@@ -386,7 +376,7 @@ static int argcb_o (
 	int		ftype, compress = 0;
 
 
-	if ( global.i_ftype_out == mtPixy::File::NONE )
+	if ( global.i_ftype_out == mtPixy::File::TYPE_NONE )
 	{
 		ftype = global.i_ftype_in;
 	}
@@ -397,11 +387,13 @@ static int argcb_o (
 
 	switch ( ftype )
 	{
-	case mtPixy::File::PNG:
+	case mtPixy::File::TYPE_BP24:
+	case mtPixy::File::TYPE_PIXY:
+	case mtPixy::File::TYPE_PNG:
 		compress = global.i_comp_png;
 		break;
 
-	case mtPixy::File::JPEG:
+	case mtPixy::File::TYPE_JPEG:
 		compress = global.i_comp_jpeg;
 		break;
 	}
@@ -430,12 +422,9 @@ static int argcb_otype (
 {
 	if ( strcmp ( global.s_arg, "list" ) == 0 )
 	{
-		size_t		i;
-
-
 		printf ( "Valid file types:\n\n" );
 
-		for ( i = 0; ftypes[i].name ; i++ )
+		for ( size_t i = 0; ftypes[i].name ; i++ )
 		{
 			printf ( "%s\n", ftypes[i].name );
 		}
@@ -463,12 +452,9 @@ static int argcb_imtype (
 {
 	if ( strcmp ( global.s_arg, "list" ) == 0 )
 	{
-		size_t		i;
-
-
 		printf ( "Valid image types:\n\n" );
 
-		for ( i = 0; imtypes[i].name ; i++ )
+		for ( size_t i = 0; imtypes[i].name ; i++ )
 		{
 			printf ( "%s\n", imtypes[i].name );
 		}

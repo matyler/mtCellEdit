@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ void mtPixy::Image::blit_idx_alpha_blend (
 		return;
 	}
 
-	if ( INDEXED != m_type || ! m_canvas || ! dest )
+	if ( TYPE_INDEXED != m_type || ! m_canvas || ! dest )
 	{
 		return;
 	}
@@ -73,7 +73,7 @@ void mtPixy::Image::blit_idx (
 	int		const	h
 	)
 {
-	if ( INDEXED != m_type || ! m_canvas || ! dest )
+	if ( TYPE_INDEXED != m_type || ! m_canvas || ! dest )
 	{
 		return;
 	}
@@ -140,7 +140,7 @@ void mtPixy::Image::blit_rgb_alpha_blend (
 		return;
 	}
 
-	if ( INDEXED == m_type )
+	if ( TYPE_INDEXED == m_type )
 	{
 		unsigned char		idx;
 
@@ -225,7 +225,7 @@ void mtPixy::Image::blit_rgb_alpha_blend (
 			}
 		}
 	}
-	else if ( RGB == m_type )
+	else if ( TYPE_RGB == m_type )
 	{
 		if ( zs < 0 )
 		{
@@ -349,7 +349,7 @@ void mtPixy::Image::blit_rgb (
 		return;
 	}
 
-	if ( INDEXED == m_type )
+	if ( TYPE_INDEXED == m_type )
 	{
 		unsigned char		idx;
 
@@ -411,7 +411,7 @@ void mtPixy::Image::blit_rgb (
 			}
 		}
 	}
-	else if ( RGB == m_type )
+	else if ( TYPE_RGB == m_type )
 	{
 		if ( zs < 0 )
 		{

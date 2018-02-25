@@ -30,10 +30,6 @@ mtQEX::SaveFileDialog::SaveFileDialog (
 	QFileDialog	( par ),
 	comboFormat	()
 {
-	QString		s;
-	int		i;
-
-
 	setWindowTitle ( title );
 	setAcceptMode ( QFileDialog::AcceptSave );
 	setOptions ( QFileDialog::DontUseNativeDialog );
@@ -80,9 +76,9 @@ mtQEX::SaveFileDialog::SaveFileDialog (
 			QSizePolicy::Preferred ) );
 		row->addWidget ( w );
 
-		for ( i = 0; i < formatList.count (); i++ )
+		for ( int i = 0; i < formatList.count (); i++ )
 		{
-			s = formatList.at ( i );
+			QString s = formatList.at ( i );
 
 			comboFormat->addItem ( s );
 		}
@@ -99,5 +95,32 @@ int mtQEX::SaveFileDialog::getFormat ()
 	}
 
 	return 0;
+}
+
+int mtQEX::message_file_overwrite (
+	QWidget	* const	parent,
+	QString	const	&filename
+	)
+{
+	if ( 0 == mtkit_file_readable ( filename.toUtf8 ().data () ) )
+	{
+		// No file so caller can save to this filename
+		return 0;
+	}
+
+	int const res = QMessageBox::warning ( parent, "Warning",
+		QString ( "%1 already exists. Do you want to replace it?" ).
+			arg ( QString ( filename ) ),
+		QMessageBox::Yes | QMessageBox::No,
+		QMessageBox::No );
+
+	if ( res == QMessageBox::Yes )
+	{
+		// Permission from user to overwrite
+		return 0;
+	}
+
+	// No or cancel, so caller cannot overwrite the existing file
+	return 1;
 }
 

@@ -74,8 +74,6 @@ mtcedcli >
 mtcedcli > # ERROR - bad file type
 mtcedcli > save as tmp/base5.tsv.zip "strange file type"
 Invalid charint input 'strange file type'
-Unknown file type: 'strange file type'
-
 mtcedcli > 
 mtcedcli > quit
 

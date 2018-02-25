@@ -3,13 +3,13 @@ include		../_conf.txt
 LIB_SONAME	= $(LIB_NAME).1
 HEADER		= mtcedui.h
 OBJS		=		\
-		u_clip.o	\
-		u_dup.o		\
-		u_file.o	\
-		u_graph.o	\
-		u_prefs.o	\
-		u_render.o	\
-		u_undo.o	\
+		cui_clip.o	\
+		cui_dup.o	\
+		cui_file.o	\
+		cui_graph.o	\
+		cui_prefs.o	\
+		cui_render.o	\
+		cui_undo.o	\
 
 
 .PHONY:		all install uninstall clean

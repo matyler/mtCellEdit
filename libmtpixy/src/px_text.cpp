@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ mtPixy::Image * mtPixy::text_render_preview (
 
 	switch ( type )
 	{
-	case Image::INDEXED:
+	case Image::TYPE_INDEXED:
 		for ( size_t i = 0; i < pixtot; i++ )
 		{
 			if ( alp[i] > 127 )
@@ -72,7 +72,7 @@ mtPixy::Image * mtPixy::text_render_preview (
 		}
 		break;
 
-	case Image::RGB:
+	case Image::TYPE_RGB:
 		for ( size_t i = 0; i < pixtot; i++ )
 		{
 			can[ 3*i + 0 ] = (unsigned char)(255 - alp[ i ]);
@@ -114,7 +114,7 @@ mtPixy::Image * mtPixy::text_render_paste (
 
 	switch ( type )
 	{
-	case Image::INDEXED:
+	case Image::TYPE_INDEXED:
 		if ( im->create_indexed_canvas () )
 		{
 			delete im;
@@ -122,7 +122,7 @@ mtPixy::Image * mtPixy::text_render_paste (
 		}
 		break;
 
-	case Image::RGB:
+	case Image::TYPE_RGB:
 		if ( im->create_rgb_canvas () )
 		{
 			delete im;

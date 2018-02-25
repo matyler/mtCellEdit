@@ -1,6 +1,6 @@
 /*
 	Copyright (C) 2006-2009 Dmitry Groshev
-	Copyright (C) 2009-2013,2016 Mark Tyler
+	Copyright (C) 2009-2013,2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -55,23 +55,21 @@ static void find_nn (
 	int		const	idx
 	)
 {
-	pnnbin		* bin1, * bin2;
-	int		i, nn = 0;
-	double		n1, n2, dr, dg, db, nerr, err = 1e100;
+	int		nn = 0;
+	double		err = 1e100;
+	pnnbin * const	bin1 = bins + idx, * bin2;
+	int const	n1 = bin1->cnt;
 
-
-	bin1 = bins + idx;
-	n1 = bin1->cnt;
-
-	for ( i = bin1->fw; i; i = bin2->fw )
+	for ( int i = bin1->fw; i; i = bin2->fw )
 	{
 		bin2 = bins + i;
-		n2 = bin2->cnt;
-		dr = bin2->rc - bin1->rc;
-		dg = bin2->gc - bin1->gc;
-		db = bin2->bc - bin1->bc;
-		nerr = ( ( ( dr * dr + dg * dg + db * db ) / ( n1 + n2 ) ) *
-			n1 * n2 );
+
+		double const n2 = bin2->cnt;
+		double const dr = bin2->rc - bin1->rc;
+		double const dg = bin2->gc - bin1->gc;
+		double const db = bin2->bc - bin1->bc;
+		double const nerr = ( ( ( dr * dr + dg * dg + db * db ) /
+			( n1 + n2 ) ) * n1 * n2 );
 
 		if ( nerr >= err )
 		{
@@ -96,7 +94,7 @@ static int pnnquan (
 {
 	unsigned short	heap[ 32769 ];
 	pnnbin		* bins, * tb, * nb;
-	double		d, err, n1, n2;
+	double		d, err;
 	int		i, j, k, l, l2, h, b1, maxbins, extbins;
 	mtPixy::Color	* const palcol = pal->get_color ();
 
@@ -232,8 +230,8 @@ static int pnnquan (
 
 		/* Do a merge */
 		nb = bins + tb->nn;
-		n1 = tb->cnt;
-		n2 = nb->cnt;
+		double const n1 = tb->cnt;
+		double const n2 = nb->cnt;
 		d = 1.0 / ( n1 + n2 );
 		tb->rc = d * rint ( n1 * tb->rc + n2 * nb->rc );
 		tb->gc = d * rint ( n1 * tb->gc + n2 * nb->gc );
@@ -277,7 +275,7 @@ int mtPixy::Image::quantize_pnn (
 	)
 {
 	if (	! m_canvas				||
-		m_type != RGB				||
+		m_type != TYPE_RGB			||
 		coltot < Palette::COLOR_TOTAL_MIN	||
 		coltot > Palette::COLOR_TOTAL_MAX
 		)

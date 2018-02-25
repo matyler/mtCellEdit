@@ -25,7 +25,6 @@ mtPixyUI::UndoStack::UndoStack ()
 	m_step_current	(),
 	m_max_bytes	( 1000000000 ),
 	m_max_steps	( 100 ),
-	m_total_bytes	( 0 ),
 	m_total_undo_steps ( 0 ),
 	m_total_redo_steps ( 0 )
 {
@@ -58,8 +57,6 @@ int mtPixyUI::UndoStack::undo (
 	{
 		return 1;
 	}
-
-	m_total_bytes -= m_step_current->get_byte_size ();
 
 	m_step_current = ps;
 
@@ -94,7 +91,6 @@ int mtPixyUI::UndoStack::redo (
 
 	m_step_current = ns;
 
-	m_total_bytes += m_step_current->get_byte_size ();
 	m_total_undo_steps++;
 	m_total_redo_steps--;
 
@@ -140,21 +136,20 @@ void mtPixyUI::UndoStack::add_step (
 
 		m_step_current->insert_after ( step );
 
-		m_total_bytes += m_step_current->get_byte_size ();
 		m_total_undo_steps++;
 	}
 
 	m_step_current = step;
+	int64_t undo_bytes = get_undo_bytes ();
 
 	while (	m_step_first != m_step_current &&
 		( m_total_undo_steps > m_max_steps ||
-			m_total_bytes > m_max_bytes )
+			undo_bytes > m_max_bytes )
 		)
 	{
 		UndoStep	* const	ns = m_step_first->get_step_next ();
 
-
-		m_total_bytes -= m_step_first->get_byte_size ();
+		undo_bytes -= m_step_first->get_canvas_bytes ();
 
 		delete m_step_first;
 		m_step_first = ns;
@@ -165,7 +160,56 @@ void mtPixyUI::UndoStack::add_step (
 
 int64_t mtPixyUI::UndoStack::get_undo_bytes () const
 {
-	return m_total_bytes;
+	UndoStep	* step = m_step_current;
+
+	if ( ! step )
+	{
+		return 0;
+	}
+
+	int64_t		tot = 0;
+
+	for (	step = step->get_step_previous ();
+		step;
+		step = step->get_step_previous ()
+		)
+	{
+		tot += step->get_canvas_bytes ();
+	}
+
+	return tot;
+}
+
+int64_t mtPixyUI::UndoStack::get_redo_bytes () const
+{
+	UndoStep	* step = m_step_current;
+
+	if ( ! step )
+	{
+		return 0;
+	}
+
+	int64_t		tot = 0;
+
+	for (	step = step->get_step_next ();
+		step;
+		step = step->get_step_next ()
+		)
+	{
+		tot += step->get_canvas_bytes ();
+	}
+
+	return tot;
+}
+
+int64_t mtPixyUI::UndoStack::get_canvas_bytes () const
+{
+	if ( m_step_current )
+	{
+		return m_step_current->get_canvas_bytes ();
+	}
+
+	return 0;
 }
 
 int mtPixyUI::UndoStack::get_undo_steps () const
@@ -187,16 +231,16 @@ void mtPixyUI::UndoStack::set_max_bytes (
 	int64_t	const	n
 	)
 {
-	m_max_bytes = MAX ( 1048576, n );
-	m_max_bytes = MIN ( 10485760000, m_max_bytes );
+	m_max_bytes = MAX ( MIN_BYTES, n );
+	m_max_bytes = MIN ( MAX_BYTES, m_max_bytes );
 }
 
 void mtPixyUI::UndoStack::set_max_steps (
 	int	const	n
 	)
 {
-	m_max_steps = MAX ( 1, n );
-	m_max_steps = MIN ( 1000, m_max_steps );
+	m_max_steps = MAX ( MIN_STEPS, n );
+	m_max_steps = MIN ( MAX_STEPS, m_max_steps );
 }
 
 void mtPixyUI::UndoStack::clear ()
@@ -212,7 +256,6 @@ void mtPixyUI::UndoStack::clear ()
 	m_step_first = NULL;
 	m_step_current = NULL;
 
-	m_total_bytes = 0;
 	m_total_undo_steps = 0;
 	m_total_redo_steps = 0;
 }
@@ -234,9 +277,9 @@ mtPixyUI::UndoStep::UndoStep (
 	m_step_previous	(),
 	m_step_next	(),
 	m_image		( pim ),
-	m_byte_size	( 0 )
+	m_canvas_bytes	( 0 )
 {
-	set_byte_size ();
+	set_canvas_bytes ();
 }
 
 mtPixyUI::UndoStep::~UndoStep ()
@@ -304,14 +347,14 @@ mtPixyUI::UndoStep * mtPixyUI::UndoStep::get_step_next ()
 	return m_step_next;
 }
 
-int64_t mtPixyUI::UndoStep::get_byte_size () const
+int64_t mtPixyUI::UndoStep::get_canvas_bytes () const
 {
-	return m_byte_size;
+	return m_canvas_bytes;
 }
 
-void mtPixyUI::UndoStep::set_byte_size ()
+void mtPixyUI::UndoStep::set_canvas_bytes ()
 {
-	m_byte_size = 1024;	// Default size for an 'empty' step
+	m_canvas_bytes = 1024;	// Default size for an 'empty' step
 
 
 	if ( m_image )
@@ -321,19 +364,19 @@ void mtPixyUI::UndoStep::set_byte_size ()
 
 		if ( m_image->get_alpha () )
 		{
-			m_byte_size += can;
+			m_canvas_bytes += can;
 		}
 
 		if ( m_image->get_canvas () )
 		{
 			switch ( m_image->get_type () )
 			{
-			case mtPixy::Image::INDEXED:
-				m_byte_size += can;
+			case mtPixy::Image::TYPE_INDEXED:
+				m_canvas_bytes += can;
 				break;
 
-			case mtPixy::Image::RGB:
-				m_byte_size += can * 3;
+			case mtPixy::Image::TYPE_RGB:
+				m_canvas_bytes += can * 3;
 				break;
 
 			default:

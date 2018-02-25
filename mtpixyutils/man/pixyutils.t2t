@@ -23,8 +23,10 @@ mtCedUtils is a collection of command line functions for manipulating image file
 **-com** STRING
 	Change command (with or without pixy prefix).  Available commands:
 	pixyls, pixynew, pixyresize, pixyscale.
-**-compression** INTEGER
-	Set compression level for PNG/JPEG files. Default=5
+**-comp_jpeg** INTEGER
+	Set compression level for JPEG files. Default=85
+**-comp_png** INTEGER
+	Set compression level for PNG files. Default=6
 **-height** INTEGER
 	Set new image width.
 **-i** STRING
@@ -48,7 +50,7 @@ mtCedUtils is a collection of command line functions for manipulating image file
 
 
 = SEE ALSO =
-pixyls(1), pixynew(1), pixyresize(1), pixyscale(1)
+pixydelta(1), pixyls(1), pixynew(1), pixyresize(1), pixypica(1), pixyresize(1), pixyriba(1), pixyrida(1), pixyrisa(1), pixyscale(1)
 
 
 = HOMEPAGE =

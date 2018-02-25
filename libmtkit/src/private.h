@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2016 Mark Tyler
+	Copyright (C) 2012-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,23 +15,23 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <math.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <langinfo.h>
+#include <locale.h>
+#include <iconv.h>
 
-	#include <stdlib.h>
-	#include <string.h>
-	#include <errno.h>
-	#include <math.h>
-	#include <ctype.h>
-	#include <sys/types.h>
-	#include <sys/stat.h>
-	#include <unistd.h>
-	#include <pwd.h>
-	#include <langinfo.h>
-	#include <locale.h>
-	#include <iconv.h>
+// Enforce strictness
+#define ZLIB_CONST
 
-	#include <zlib.h>
-}
+#include <zlib.h>
 
 
 
@@ -44,6 +44,10 @@ extern "C" {
 #endif
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 mtUtreeNode * mtkit_utree_load_file (
 	mtUtreeNode		* parent,	// NULL = create new root
@@ -66,6 +70,10 @@ int mtkit_utree_save_file (
 	int			output,		// MTKIT_UTREE_OUTPUT_*
 	int			filetype	// MTKIT_FILE_*
 	);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

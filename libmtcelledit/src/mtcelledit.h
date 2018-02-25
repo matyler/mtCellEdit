@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2016 Mark Tyler
+	Copyright (C) 2009-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,6 +21,12 @@
 
 
 #include <mtkit.h>
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 
@@ -128,16 +134,6 @@ enum	// ced_file_type_detect()
 					// extension or content of file.
 	CED_FILE_FORCE_TSV	= 1,
 	CED_FILE_FORCE_CSV	= 2
-};
-
-enum
-{
-	CED_INDEX_TYPE_NONE		= 0,
-
-	CED_INDEX_TYPE_VALUE,
-	CED_INDEX_TYPE_TEXT,
-
-	CED_INDEX_TYPE_TOTAL
 };
 
 enum
@@ -564,10 +560,6 @@ struct CedCellStack
 
 struct CedParser
 {
-	CedParser ();
-
-///	------------------------------------------------------------------------
-
 	unsigned int	flag;		// As enum CED_PARSER_FLAG_*
 	int		ced_errno;	// CED error number
 	int		sp;		// String pointer (char offset if error
@@ -1148,39 +1140,6 @@ int ced_cell_set_2dyear (		// If this cell has a 2 digit date
 	//  0 = No change
 	//  1 = Changed
 
-/*
-The index contains references to cells so the index must be destroyed if
-the sheet is modified to avoid problems of dangling references.
-*/
-
-CedIndex * ced_index_new (		// Create a new empty index
-	int		type		// CED_INDEX_TYPE_*
-	);
-
-int ced_index_destroy (
-	CedIndex	* index
-	);
-
-int ced_index_add_items (		// Add items to an index
-	CedIndex	* index,
-	CedSheet	* sheet,	// Sheet to index
-	int		row,		// First cell
-	int		col,		// First cell
-	int		rowtot,		// Total to index 0 = all remaining
-	int		coltot		// Total to index 0 = all remaining
-	);
-
-int ced_index_query (
-	CedIndex	* index,
-	double		value,		// Value to find as primary key
-	char	const	* text,		// Text to find as primary key
-					// NULL = use value
-	CedIndexItem	** item		// Put index item here if found
-	);
-	// -1 = error
-	//  0 = not found
-	//  1 = found
-
 CedBook * ced_book_new (		// Create a new empty book
 	void
 	);
@@ -1319,6 +1278,12 @@ CedSheet * ced_sheet_rotate_clockwise (	// Rotate this sheet
 CedSheet * ced_sheet_rotate_anticlockwise ( // Rotate this sheet
 	CedSheet	* sheet
 	);
+
+
+
+#ifdef __cplusplus
+}
+#endif	// __cplusplus
 
 
 

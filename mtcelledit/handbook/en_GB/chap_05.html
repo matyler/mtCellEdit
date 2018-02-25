@@ -38,14 +38,7 @@ This program demonstrates how you can create a small console program to monitor 
 </PRE>
 
 <A NAME="SEC12"></A>
-<H3>5.1.2 mtEleana</H3>
-
-<P>
-This program demonstrates how TSV files can be used to index other input files. In this case, mtEleana is a front end to the UK General Election results from 1945 to 2015.
-</P>
-
-<A NAME="SEC14"></A>
-<H3>5.1.3 mtRaft</H3>
+<H3>5.1.2 mtRaft</H3>
 
 <P>
 This program demonstrates how you can use a spreadsheet to make the following jobs easier:
@@ -247,64 +240,7 @@ Creates this output:
 </PRE>
 
 <A NAME="SEC312"></A>
-<H4>5.3.1.2 mtEleana Queries</H4>
-
-<P>
-Awk is able to process the mtEleana data very easily due to the simplicity of the files.  For example here is an awk program to calculate the total number of votes for each political party:
-</P>
-<P>
-<A HREF="../shawk/party_totals.awk">DOWNLOAD FILE</A>
-</P>
-
-<PRE>
-  # party_totals.awk
-  # by Mark Tyler 6th December 2010
-  # Tweaked 22nd August 2011 to be ~25% faster (let sed remove ' at end)
-  
-  # examples:
-  
-  #	cat 2010.tsv | awk -f party_totals.awk | sort | sed -e "s/^'//"
-  # This counts up the totals for each political party in the 2010 general election, sorting by name of party.
-  
-  #	cat 2010.tsv | awk -f party_totals.awk | sort -t $'\t' -rnk 2 | head | sed -e "s/^'//"
-  # This outputs a top 10 of the most popular political parties from the 2010 general election.
-  
-  
-  BEGIN {
-  	FS = "\t"
-  }
-  
-  NR&gt;3 {
-  	if ( $5 &gt; 0 ) list[ $4 ] += $5
-  }
-  
-  END {
-  	for ( party in list )
-  	{
-  		printf "%s\t%s\n", party, list[ party ]
-  	}
-  }
-</PRE>
-
-<P>
-The output from the second example is as follows:
-</P>
-
-<PRE>
-  Conservative	10703654
-  Labour	8606517
-  Liberal Democrat	6836248
-  UK Independence Party	919471
-  British National Party	564321
-  Scottish National Party	491386
-  Green	285612
-  Independent	192963
-  Sinn Fein	171942
-  Democratic Unionist Party	168216
-</PRE>
-
-<A NAME="SEC313"></A>
-<H4>5.3.1.3 Splitting fixed width text files</H4>
+<H4>5.3.1.2 Splitting fixed width text files</H4>
 
 <P>
 If a text file contains a rectangular lump of text with various columns set up using spaces it is possible to chop this up into a TSV file ready for spreadsheet editing:
@@ -318,8 +254,8 @@ If a text file contains a rectangular lump of text with various columns set up u
 This cuts up the output from the mtnetlog example in 5.3.1.1.  You may also want to remove spaces using the following sections.
 </P>
 
-<A NAME="SEC314"></A>
-<H4>5.3.1.4 Removing all spaces</H4>
+<A NAME="SEC313"></A>
+<H4>5.3.1.3 Removing all spaces</H4>
 
 <PRE>
   cat fixed.tsv | tr -d " "
@@ -329,8 +265,8 @@ This cuts up the output from the mtnetlog example in 5.3.1.1.  You may also want
 This is a very crude and indiscriminate weapon of mass destruction, so care is needed when using it. For example it destroys the space between the date and time in the example from cutting up the text from 5.3.1.1.  To avoid this problem use the following example.
 </P>
 
-<A NAME="SEC315"></A>
-<H4>5.3.1.5 Removing all leading and trailing spaces</H4>
+<A NAME="SEC314"></A>
+<H4>5.3.1.4 Removing all leading and trailing spaces</H4>
 
 <P>
 You can use sed or awk to chop off leading and trailing spaces in each cell. This is useful if you want to preserve the spaces within the cell, but remove useless spaces after splitting a fixed width file:
@@ -342,8 +278,8 @@ You can use sed or awk to chop off leading and trailing spaces in each cell. Thi
   cat fixed.tsv | awk '{ sub( /^ +/, "" ); sub( / +$/, "" );  gsub( /\t +/, "\t" ); gsub( / +\t/, "\t" ); print }'
 </PRE>
 
-<A NAME="SEC316"></A>
-<H4>5.3.1.6 Creating fixed width text files</H4>
+<A NAME="SEC315"></A>
+<H4>5.3.1.5 Creating fixed width text files</H4>
 
 <P>
 To reverse the operation in 5.3.1.3 and to create a fixed width file from a TSV file:
@@ -725,7 +661,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 </TR>
 <TR>
 <TD>load</TD>
-<TD>&lt;OS FILENAME&gt; <A HREF="tsv">csv **|**</A></TD>
+<TD>&lt;OS FILENAME&gt; [ csv <B>|</B> tsv ]</TD>
 <TD>Load a new book</TD>
 </TR>
 <TR>

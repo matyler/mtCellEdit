@@ -12,6 +12,7 @@ MTCF_INIT
 TK=qt5
 BIN_SUFFIX=-qt5
 ENABLE_DESKTOP=desktop
+MTCF_MAN_PAGE
 
 for A in "$@"
 do
@@ -43,23 +44,19 @@ EOF
 MTCF_PRINT_HELP MYHELP
 MTCF_PRE_CONF
 
-CK_LIBS="mtkit mtcelledit"
+CK_LIBS="mtkit mtcelledit stdc++"
 MTCF_VERSION_BIN_NAME
 
 case "$TK" in
 qt4 )
 	MTCF_PKGCONFIG "QtGui"
-	TK_OBJ="tk_qt4_main.o tk_qt4_tab.o moc_tk_qt4.o"
 	I_EX="$I_EX -DU_TK_QT4"
-	L_EX="$L_EX -lstdc++"
 	CK_LIBS="$CK_LIBS mtqex4"
 	MT_GET_MOC_4
 	;;
 qt5 )
 	MTCF_PKGCONFIG "Qt5Widgets"
-	TK_OBJ="tk_qt4_main.o tk_qt4_tab.o moc_tk_qt4.o"
 	I_EX="$I_EX -DU_TK_QT5"
-	L_EX="$L_EX -lstdc++"
 	CK_LIBS="$CK_LIBS mtqex5"
 	MT_GET_MOC_5
 	;;
@@ -68,12 +65,9 @@ esac
 
 MTCF_MAKE_DIRS_ADD "$ENABLE_DESKTOP"
 MTCF_CHECK_LIBS $CK_LIBS
-MTCF_MAN_PAGE
 
 BIN_FLAGS="$BIN_FLAGS -D_FILE_OFFSET_BITS=64"
 
 MTCF_POST_CONF
-
-echo "TK_OBJ        = $TK_OBJ"	>> $CONF_FILE
-
 MTCF_PRINT_CONF
+

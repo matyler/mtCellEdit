@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2016 Mark Tyler
+	Copyright (C) 2008-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ void Backend::prefs_init ()
 { GUI_INIFILE_SHARED_WINDOW"_w", MTKIT_PREF_TYPE_INT, "400", NULL, NULL, 0, NULL, NULL },
 { GUI_INIFILE_SHARED_WINDOW"_h", MTKIT_PREF_TYPE_INT, "400", NULL, NULL, 0, NULL, NULL },
 
-{ GUI_INIFILE_HELP_FILE, MTKIT_PREF_TYPE_FILE, "/usr/share/doc/" BIN_NAME "/en_GB/chap_00.html", NULL, NULL, 0, NULL, NULL },
+{ GUI_INIFILE_HELP_FILE, MTKIT_PREF_TYPE_FILE, DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html", NULL, NULL, 0, NULL, NULL },
 { GUI_INIFILE_HELP_BROWSER, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
 
 { GUI_INIFILE_MAIN_FILE"1", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },

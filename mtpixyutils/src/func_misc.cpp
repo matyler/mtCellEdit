@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,104 @@
 
 
 
-int pixyut_ls ( void )
+int pixyut_delta ()
+{
+	static char const * file_a = NULL;
+	static char const * file_b = NULL;
+
+	if ( ! file_a )
+	{
+		file_a = global.s_arg;
+		return 0;
+	}
+
+	file_b = global.s_arg;
+
+	mtPixy::File::Type	ft;
+	mtPixy::Image		* image_a = mtPixy::image_load ( file_a, &ft );
+
+	if ( ! image_a )
+	{
+		printf ( "Unable to load '%s'\n", file_a );
+
+		return 0;
+	}
+
+	global.i_ftype_in = (int)ft;
+
+	mtPixy::Image * image_b = mtPixy::image_load ( file_b, NULL );
+	if ( ! image_b )
+	{
+		delete ( image_a );
+		image_a = NULL;
+
+		printf ( "Unable to load '%s'\n", file_b );
+
+		return 0;
+	}
+
+	// Ensure images are the same size & type
+	if (	image_a->get_width ()	!= image_b->get_width ()	||
+		image_a->get_height ()	!= image_b->get_height ()	||
+		image_a->get_type ()	!= image_b->get_type ()		||
+		! image_a->get_canvas ()				||
+		! image_b->get_canvas ()
+		)
+	{
+		printf ( "Images do not share the same geometry.\n" );
+
+		delete ( image_a );
+		image_a = NULL;
+
+		delete ( image_b );
+		image_b = NULL;
+
+		return 0;
+	}
+
+	mtPixy::Image * image_out = image_a->duplicate ();
+	if ( ! image_out )
+	{
+		printf ( "Unable to duplicate image.\n" );
+
+		delete ( image_a );
+		image_a = NULL;
+
+		delete ( image_b );
+		image_b = NULL;
+
+		return ERROR_LIBMTPIXY; // Fail: caller tells user of failure
+	}
+
+	unsigned char * mem_a = image_a->get_canvas ();
+	unsigned char * mem_b = image_b->get_canvas ();
+	unsigned char * mem_out = image_out->get_canvas ();
+	unsigned char * mem_end = mem_out + image_a->get_canvas_bpp () *
+		(image_a->get_width () * image_a->get_height ());
+
+	for ( ; mem_out < mem_end; mem_out++, mem_a++, mem_b++ )
+	{
+		mem_out[0] = (unsigned char)(128 + (mem_a[0] - mem_b[0]));
+	}
+
+	delete ( image_a );
+	image_a = NULL;
+
+	delete ( image_b );
+	image_b = NULL;
+
+	/* Successully done, so allow daisy chaining, e.g.
+	pixydelta in1.png in2.png -o out1.png in3.png -o out2.png
+	*/
+
+	file_a = file_b;
+
+	global.set_image ( image_out );
+
+	return 0;
+}
+
+int pixyut_ls ()
 {
 	if ( ut_load_file () )
 	{
@@ -46,12 +143,8 @@ int pixyut_ls ( void )
 	return 0;
 }
 
-int pixyut_new ( void )
+int pixyut_new ()
 {
-	mtPixy::Image	* image;
-	mtPixy::Palette	* pal;
-
-
 	if (	global.i_palette < 0 ||
 		global.i_palette > mtPixy::Palette::UNIFORM_MAX
 		)
@@ -59,7 +152,8 @@ int pixyut_new ( void )
 		return ERROR_BAD_PALETTE; // Fail: caller tells user of failure
 	}
 
-	image = mtPixy::image_create ((mtPixy::Image::Type)global.i_image_type,
+	mtPixy::Image * image = mtPixy::image_create (
+		(mtPixy::Image::Type)global.i_image_type,
 		global.i_width, global.i_height );
 
 	if ( ! image )
@@ -69,7 +163,7 @@ int pixyut_new ( void )
 
 	global.set_image ( image );
 
-	pal = image->get_palette ();
+	mtPixy::Palette	* const pal = image->get_palette ();
 
 	switch ( global.i_palette )
 	{
@@ -88,18 +182,15 @@ int pixyut_new ( void )
 	return 0;
 }
 
-int pixyut_resize ( void )
+int pixyut_resize ()
 {
-	mtPixy::Image	* image;
-
-
 	if ( ut_load_file () )
 	{
 		return ERROR_LOAD_FILE;	// Fail: caller tells user of failure
 	}
 
-	image = global.image->resize ( global.i_x, global.i_y, global.i_width,
-		global.i_height );
+	mtPixy::Image * image = global.image->resize ( global.i_x, global.i_y,
+		global.i_width, global.i_height );
 
 	if ( ! image )
 	{
@@ -111,26 +202,24 @@ int pixyut_resize ( void )
 	return 0;
 }
 
-int pixyut_scale ( void )
+int pixyut_scale ()
 {
-	mtPixy::Image	* image;
-
-
 	if ( ut_load_file () )
 	{
 		return ERROR_LOAD_FILE;	// Fail: caller tells user of failure
 	}
 
-	mtPixy::Image::ScaleType st = mtPixy::Image::BLOCKY;
+	mtPixy::Image::ScaleType st = mtPixy::Image::SCALE_BLOCKY;
 
-	if (	global.image->get_type () == mtPixy::Image::RGB &&
+	if (	global.image->get_type () == mtPixy::Image::TYPE_RGB &&
 		global.i_scale == 0
 		)
 	{
-		st = mtPixy::Image::SMOOTH;
+		st = mtPixy::Image::SCALE_SMOOTH;
 	}
 
-	image = global.image->scale ( global.i_width, global.i_height, st );
+	mtPixy::Image * image = global.image->scale ( global.i_width,
+		global.i_height, st );
 
 	if ( ! image )
 	{

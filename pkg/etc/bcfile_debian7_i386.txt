@@ -1,0 +1,14 @@
+libmtkit	 ./configure debugold --libdir=/usr/lib/i386-linux-gnu
+libmtcelledit	 ./configure debugold --libdir=/usr/lib/i386-linux-gnu
+libmtpixy	 ./configure debugold --libdir=/usr/lib/i386-linux-gnu
+libmtcedui	 ./configure debugold --libdir=/usr/lib/i386-linux-gnu
+libmtpixyui	 ./configure debugold --libdir=/usr/lib/i386-linux-gnu
+mtutils	 ./configure debugold
+mtcedutils	 ./configure debugold
+mtcedcli	 ./configure debugold
+mtpixyutils	 ./configure debugold
+mtpixycli	 ./configure debugold
+libmtqex4	 ./configure debugold --use-qt4 --libdir=/usr/lib/i386-linux-gnu
+mtcelledit-qt4	 ./configure debugold --use-qt4
+mtraft-qt4	 ./configure debugold --use-qt4
+mtpixy-qt4	 ./configure debugold --use-qt4

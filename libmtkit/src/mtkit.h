@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2016 Mark Tyler
+	Copyright (C) 2008-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,19 +18,22 @@
 #ifndef MTKIT_H_
 #define MTKIT_H_
 
-extern "C" {
+
 
 // gcc 4.8 needs these in a C++ context
 #define __STDC_LIMIT_MACROS
 #define __STDC_FORMAT_MACROS
 
-	#include <stdio.h>
-	#include <stdint.h>
-	#include <limits.h>
-	#include <inttypes.h>
-}
+#include <stdio.h>
+#include <stdint.h>
+#include <limits.h>
+#include <inttypes.h>
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct mtArg		mtArg;
 typedef struct mtBulkDouble	mtBulkDouble;
@@ -472,6 +475,23 @@ int mtkit_file_header_zip (			// Is this a .zip file header?
 	// 0 = No
 	// 1 = Yes
 
+int mtkit_snip_filename (
+	char	const	* txt,
+	char		* buf,
+	size_t		buflen,
+	int		lim_tot
+	);
+
+// Create a new filename to set a new file extension
+char * mtkit_set_filename_extension (
+	char		const *	filename,
+	char		const *	ext_a,	// Primary choice, e.g. .jpg
+	char		const *	ext_b,	// Secondary choice, e.g. .jpeg
+	char	const * const *	ext_multi // e.g. .tsv.zip, .ledger.zip
+	);
+	// NULL = use "filename" in its current state
+	// !NULL = allocated string to use with ext_a extension
+
 mtString * mtkit_string_new (
 	char	const	* cs		// C String or NULL
 	);
@@ -545,21 +565,13 @@ char * mtkit_strtok (			// Extract the n'th token and create a
 	);
 	// Pointer to newly allocated string
 
-int mtkit_strtok_count (		// Count the number of tokens in a
-					// string
-	char	const	* input,	// Input string, NUL terminated
-	char	const	* delim		// List of character delimeters, NUL
-					// terminated
-	);
-	// -1 = fail, else number of tokens
-
 int mtkit_strtok_num (			// Extract the n'th token and convert it
 					// to a double
 	char	const	* input,	// Input string, NUL terminated
 	char	const	* delim,	// List of character delimeters, NUL
 					// terminated
 	int		n,		// n'th token (0 = first)
-	double		* num		// Put result here
+	double		* result	// Put result here
 	);
 
 char * mtkit_strcasestr (		// Find a string in another string
@@ -842,7 +854,8 @@ mtUtreeNode * mtkit_utree_load_mem (
 	mtUtreeNode	* parent,	// NULL = create new root
 	char		* buf,		// Memory buffer containing data
 	size_t		size,
-	char		** breakpoint	// Put pointer to parsing error in buf
+	char		const ** breakpoint
+					// Put pointer to parsing error in buf
 					// here, NULL = don't
 	);
 	// NULL = nothing loaded, else something loaded
@@ -914,17 +927,21 @@ int mtkit_utree_set_attribute_str (
 int mtkit_utree_bulk_get (		// Get a bunch of attribute values
 					// (missing items skipped)
 	mtUtreeNode	* node,
-	mtBulkInt	* table_i,	// NULL = skip
-	mtBulkDouble	* table_d,	// NULL = skip
-	mtBulkStr	* table_s	// NULL = skip.  All strings created
+	mtBulkInt	const * table_i, // NULL = skip
+	mtBulkDouble	const * table_d, // NULL = skip
+	mtBulkStr	const * table_s	// NULL = skip.  All strings created
 					// via mtkit_strfreedup ()
 	);
 
 int mtkit_utree_bulk_set (		// Set a bunch of attribute values
 	mtUtreeNode	* node,
-	mtBulkInt	* table_i,	// NULL = skip
-	mtBulkDouble	* table_d,	// NULL = skip
-	mtBulkStr	* table_s	// NULL = skip
+	mtBulkInt	const * table_i, // NULL = skip
+	mtBulkDouble	const * table_d, // NULL = skip
+	mtBulkStr	const * table_s	// NULL = skip
+	);
+
+char * mtkit_utree_create_name (	// Quote out \ & " characters
+	char	const	* input
 	);
 
 mtPrefs * mtkit_prefs_new (		// Create new prefs structure
@@ -1163,13 +1180,77 @@ int mtkit_zip_load (			// Read a ZIP file created by
 
 
 
+/*
+The following 2 functions are very basic wrappers for zlib deflate and
+inflate.  They handle whole memory chunks and are used for data files (e.g. ZIP
+files).
+
+DEFLATE_* is for fine tuning zlib for a specific use case.
+*/
+
+enum
+{
+	MTKIT_DEFLATE_LEVEL_MIN	= 	0,	// No compression
+					// 1=Fastest, but worst compression
+	MTKIT_DEFLATE_LEVEL_DEFAULT	= 6,
+	MTKIT_DEFLATE_LEVEL_MAX	= 	9,	// Slow, but best compression
+
+	MTKIT_DEFLATE_MODEL_MIN	= 	0,
+	MTKIT_DEFLATE_MODEL_DEFAULT	= 0,	// Normal, e.g. text
+	MTKIT_DEFLATE_MODEL_FILTERED	= 1,	// Input has been filtered
+	MTKIT_DEFLATE_MODEL_HUFFMAN	= 2,	// No string match,encoding only
+	MTKIT_DEFLATE_MODEL_RLE		= 3,	// PNG image data
+	MTKIT_DEFLATE_MODEL_MAX		= 3
+};
+
+int mtkit_mem_deflate (
+	unsigned char	const * inbuf,
+	size_t		inbuflen,
+	unsigned char	** outbuf,
+	size_t		* outbuflen,
+	int		level,		// MTKIT_DEFLATE_LEVEL_*
+	int		model		// MTKIT_DEFLATE_MODEL_*
+	);
+
+int mtkit_mem_inflate (
+	unsigned char	const * inbuf,
+	size_t		inbuflen,
+	unsigned char	** outbuf,	// outbuf[0]=NULL => will be allocated
+	size_t		outbuflen,
+	int		pad_nul		// !0=Append a NUL at the end of outbuf
+	);
+
+
+
+int mtkit_int32_unpack (		// Unpack integer from little endian
+	unsigned char	const	* mem
+	);
+
+void mtkit_int32_pack (			// Pack integer into little endian
+	unsigned char	* const	mem,
+	int			num
+	);
+
+
+
+#ifdef __cplusplus
+}
+
+
+
 namespace mtKit
 {
 
+class BitPackRead;
+class BitPackWrite;
 class CliItem;
 class CliTab;
+class Exit;
 class Prefs;
 class RecentFile;
+
+namespace ByteCube {}
+namespace ChunkFile {}
 
 
 
@@ -1178,6 +1259,9 @@ typedef struct CharInt		CharInt;
 typedef int (* CliFunc) (
 	char const * const * args	// NULL terminated argument list
 	);
+	// 0 = Success
+	// 1 = Fail (CliTab::parse reports error)
+	// 2 = Fail (this function reports error)
 
 
 
@@ -1209,11 +1293,11 @@ public:
 
 	CliItem * find_item ( char const * command ) const;
 	CliItem const * match_args (
-		char ** argv,
+		char const * const * argv,
 		int * cli_error,
 		int * ncargs
 		) const;
-	int callback ( char ** argv ) const;
+	int callback ( char const * const * argv ) const;
 	int print_help () const;
 	int print_help_item () const;
 
@@ -1256,6 +1340,23 @@ private:
 
 
 
+class Exit
+{
+public:
+	Exit () : m_value (0), m_aborted (false)	{};
+
+	inline void abort ()		{ m_aborted = true; };
+	inline bool aborted () const	{ return m_aborted; };
+	inline void set_value ( int v )	{ m_value = v; };
+	inline int value () const	{ return m_value; };
+
+private:
+	int		m_value;	// Return when program exits
+	bool		m_aborted;	// true => Exit program now!
+};
+
+
+
 class Prefs
 {
 public:
@@ -1285,8 +1386,8 @@ public:
 	void set ( char const * key, char const * value );
 
 private:
-	mtPrefs		* prefsMem;
-	char		* prefsFilename;
+	mtPrefs		* m_mem;
+	char		* m_filename;
 };
 
 
@@ -1308,27 +1409,20 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	int	const	total;
-	char	* const	prefs_prefix;
-	mtKit::Prefs	* prefs;
+	int	const	m_total;
+	char	* const	m_prefs_prefix;
+	mtKit::Prefs	* m_prefs;
 };
 
 
 
-int prefsInitWindowPrefs (	// Initialize default prefs for
-	mtPrefs * prefs		// preferences window
-	);			// Call this before load ()
+int prefsInitWindowPrefs (	// Initialize default prefs for preferences
+	mtPrefs	* prefs		// window. Call this before load ()
+	);
 
 int prefsWindowMirrorPrefs (
 	mtPrefs		* dest,
 	mtPrefs		* src
-	);
-
-int snip_filename (
-	char	const	* txt,
-	char		* buf,
-	size_t		buflen,
-	int		lim_tot
 	);
 
 int cli_parse_int (
@@ -1348,7 +1442,202 @@ int cli_parse_charint (
 
 
 
+
+
+/*
+
+Mark Tyler's chunk file implementation.
+
+----
+File
+----
+* Header ID A, 4 bytes, { 0x00 0x6d 0x74 0x43 } aka { NUL, "mtC" }
+* Header ID B, 4 bytes, set by calling app/lib
+* Chunks, 0 or more
+
+-----
+Chunk
+-----
+* Header ID, 4 bytes, set by calling app/lib
+* Encoded data length, 4 byte uint, LSB first (aka little endian)
+* Decoded data length, 4 byte uint, LSB first (aka little endian)
+* Encoding type, 4 byte uint, LSB first (aka little endian) ENCODE_* below
+* Encoded data, 0 or more bytes
+
+NOTE: both data lengths are <= CHUNK_SIZE_MAX
+
+*/
+
+namespace ChunkFile
+{
+
+class Load;
+class Save;
+
+
+
+enum
+{
+	// Encoding types
+	ENCODE_RAW		= 0,	// Raw bytes: memory <-> file
+	ENCODE_DEFLATE		= 1,	// Via zlib/mtKit
+
+	// Limits & Constants
+	CHUNK_SIZE_MAX		= 1000000000,
+	FILE_HEADER_SIZE	= 8,
+	CHUNK_HEADER_SIZE	= 4,
+	UINT_SIZE		= 4,
+
+	// int function returns
+	INT_SUCCESS		= 0,	// Function did everything as requested
+	INT_EOF			= -1,	// End Of File
+	INT_ERROR		= 1,	// Argument, or other non-fatal error
+	INT_ERROR_FATAL		= 2	// File was closed
+};
+
+
+
+class Load
+{
+public:
+	Load ();
+	~Load ();
+
+	int open ( char const * filename, char id[CHUNK_HEADER_SIZE] );
+	void close ();
+
+	int get_chunk (
+		uint8_t ** buf,
+		uint32_t * buflen,
+		char id[CHUNK_HEADER_SIZE],
+		uint32_t * buflen_enc
+		);
+		// On success, caller must free(buf) after use.
+		// All args optional.
+
+private:
+	int get_uint32 ( uint32_t &num );
+	int get_buf ( uint8_t * buf, uint32_t buflen );
+
+/// ----------------------------------------------------------------------------
+
+	FILE	* m_fp;
+};
+
+
+
+class Save
+{
+public:
+	Save ();
+	~Save ();
+
+	int open ( char const * filename, char const id[CHUNK_HEADER_SIZE] );
+	void close ();
+
+	// User requested encoding (can be overridden by the library).
+	void set_encoding_deflate (
+		int level,		// mtKit::DEFLATE_LEVEL_*
+		int model		// mtKit::DEFLATE_MODEL_*
+		);
+
+	int put_chunk (
+		uint8_t const * buf,
+		uint32_t buflen,
+		char const id[CHUNK_HEADER_SIZE]
+		);
+
+private:
+	int put_uint32 ( uint32_t num );
+	int put_buf ( uint8_t const * buf, uint32_t buflen );
+
+/// ----------------------------------------------------------------------------
+
+	FILE	* m_fp;
+	int	m_encoding_type;
+	int	m_deflate_level;
+	int	m_deflate_model;
+};
+
+
+
+}		// namespace ChunkFile
+
+
+
+namespace ByteCube
+{
+	enum
+	{
+		CUBE_MEMTOT	= 16777216
+	};
+
+unsigned char * create_bytecube (
+	size_t	const	n		// 2-256
+	);
+	// On successful allocation, all bytes are zero'd out
+
+int count_bits ( int b );		// Count 1's in first 8 bits
+
+int encode (				// Create serial encoding of a cube.
+	unsigned char const * mem,	// 256x256x256 cube of 16MB.
+					// NOTE: each byte MUST be 0 or 1!!!!!
+	unsigned char ** buf,		// Put buffer pointer here on success.
+	size_t * buflen			// Size of output buffer.
+	);
+
+int decode (				// Read serial encoding to create a cube
+	unsigned char const * mem,	// Serial memory
+	size_t memlen,			// Size of input buffer
+	unsigned char ** buf		// Put cube pointer here on success:
+					// 256x256x256 = 16MB
+	);
+
+}	// namespace ByteCube
+
+
+
+class BitPackWrite
+{
+public:
+	BitPackWrite ();
+	~BitPackWrite ();
+
+	int write ( int byte, int bit_tot );
+	unsigned char const * get_buf () const;
+	size_t get_buf_len () const;	// Bytes written (0=nothing)
+
+private:
+	int buf_expand ();
+
+	unsigned char	* m_buf;		// Beginning of buffer
+	unsigned char	* m_buflim;		// Writes must be before this
+	unsigned char	* m_cwl;		// Current write location
+	int		m_bit_next;
+	size_t		m_buf_size;
+};
+
+class BitPackRead
+{
+public:
+	BitPackRead ( unsigned char const * mem, size_t memlen );
+
+	int read ( int &byte, int bit_tot );
+
+private:
+	unsigned char	const * const	m_mem_start;
+	unsigned char		const	* m_mem;
+	unsigned char	const *	const	m_memlim;
+	int				m_bit_next;
+};
+
+
+
 }		// namespace mtKit
+
+
+
+#endif		// __cplusplus
 
 
 

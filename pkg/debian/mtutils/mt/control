@@ -1,0 +1,13 @@
+Source: mtutils
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit
+Standards-Version: 3.9.3
+Homepage: http://mtcelledit.sourceforge.net/
+
+Package: mtutils
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Command Line Low Level Utils
+ .

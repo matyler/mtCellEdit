@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -34,6 +34,13 @@ int mtPixyUI::File::palette_new_chores (
 	return 0;
 }
 
+int mtPixyUI::File::palette_set (
+	mtPixy::Palette	const * const	pal
+	)
+{
+	return palette_new_chores ( m_image->get_palette ()->copy ( pal ) );
+}
+
 int mtPixyUI::File::palette_set_size (
 	int	const	num
 	)
@@ -46,7 +53,19 @@ int mtPixyUI::File::palette_load (
 	char	const * const	fn
 	)
 {
-	return palette_new_chores ( m_image->get_palette ()->load ( fn ) );
+	int		res = 1;
+	mtPixy::Image	* im = mtPixy::image_load ( fn );
+
+	if ( im )
+	{
+		res = palette_new_chores ( m_image->get_palette ()->
+			copy ( im->get_palette () ) );
+
+		delete im;
+		im = NULL;
+	}
+
+	return res;
 }
 
 int mtPixyUI::File::palette_save (

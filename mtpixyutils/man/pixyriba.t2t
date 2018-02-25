@@ -1,0 +1,37 @@
+PIXYRIBA
+mtPixyUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+pixyriba - image analysis
+
+
+= SYNOPSIS =
+**pixyriba** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Analyse the given RGB image file by studying the distribution inside the colour
+cube.  RIBA is Rgb Image Bucket Analysis.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-v**
+	Verbose.
+
+
+= SEE ALSO =
+pixyutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

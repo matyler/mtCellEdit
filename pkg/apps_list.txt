@@ -1,4 +1,0 @@
-APPS=$(cat apps_list.tsv | awk '$3 == "1" { print $1 }' )
-APPS_ALL=$(cat apps_list.tsv | awk '{ print $1 }' )
-APPS_DIR_ALL=$(cat apps_list.tsv | awk '{ print $2 }' | sort -u )
-

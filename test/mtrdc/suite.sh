@@ -3,6 +3,9 @@
 . ../mtTest.txt
 
 
+txt_title "mtRDC"
+
+
 # Matrix, PRNG, password creation
 
 FILE_11=$OUT/11_matrix.tsv

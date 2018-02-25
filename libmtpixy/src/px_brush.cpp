@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -37,13 +37,13 @@ mtPixy::Brush::Brush ()
 	m_space_mod	( 0 ),
 	m_flow		( FLOW_MAX )
 {
-	m_shape_mask = mtPixy::image_create ( mtPixy::Image::ALPHA,
+	m_shape_mask = mtPixy::image_create ( mtPixy::Image::TYPE_ALPHA,
 		SHAPE_SIZE, SHAPE_SIZE );
 
-	m_pattern_idx = mtPixy::image_create ( mtPixy::Image::INDEXED,
+	m_pattern_idx = mtPixy::image_create ( mtPixy::Image::TYPE_INDEXED,
 		PATTERN_SIZE, PATTERN_SIZE );
 
-	m_pattern_rgb = mtPixy::image_create ( mtPixy::Image::RGB,
+	m_pattern_rgb = mtPixy::image_create ( mtPixy::Image::TYPE_RGB,
 		PATTERN_SIZE, PATTERN_SIZE );
 }
 
@@ -84,7 +84,7 @@ int mtPixy::Brush::load_shapes (
 		return 1;
 	}
 
-	if (	ni->get_type () != mtPixy::Image::INDEXED	||
+	if (	ni->get_type () != mtPixy::Image::TYPE_INDEXED	||
 		ni->get_width () % SHAPE_SIZE != 0		||
 		ni->get_height () % SHAPE_SIZE != 0
 		)
@@ -115,7 +115,7 @@ int mtPixy::Brush::load_patterns (
 		return 1;
 	}
 
-	if (	ni->get_type () != mtPixy::Image::INDEXED	||
+	if (	ni->get_type () != mtPixy::Image::TYPE_INDEXED	||
 		ni->get_width () % PATTERN_SIZE != 0		||
 		ni->get_height () % PATTERN_SIZE != 0
 		)
@@ -359,7 +359,7 @@ static mtPixy::Image * enlarge_image (
 	mtPixy::Image	* iz;
 
 
-	iz = i->scale ( w * zoom, h * zoom, mtPixy::Image::BLOCKY );
+	iz = i->scale ( w * zoom, h * zoom, mtPixy::Image::SCALE_BLOCKY );
 	delete i;
 
 	return iz;
@@ -385,7 +385,7 @@ int mtPixy::Brush::rebuild_shapes_palette (
 	mtPixy::Image	* i;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::RGB, iw, ih );
+	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, iw, ih );
 	if ( ! i )
 	{
 		return 1;
@@ -394,8 +394,6 @@ int mtPixy::Brush::rebuild_shapes_palette (
 
 	unsigned char * const	src = m_shapes->get_canvas ();
 	unsigned char * const	dest = i->get_canvas ();
-	unsigned char		* s, * d;
-	int			a;
 
 
 	if ( ! src || ! dest )
@@ -404,13 +402,14 @@ int mtPixy::Brush::rebuild_shapes_palette (
 		return 1;
 	}
 
-	for ( a = 0; a < stot; a++ )
+	for ( int a = 0; a < stot; a++ )
 	{
-		s = src;
+		unsigned char * s = src;
 		s += SHAPE_SIZE * (a % swtot);
 		s += SHAPE_SIZE * (a / swtot) * sw;
 
-		d = dest + 3 * (SHAPE_PAD / 2) + 3 * (SHAPE_PAD / 2) * iw;
+		unsigned char * d = dest + 3 * (SHAPE_PAD / 2) + 3 *
+			(SHAPE_PAD / 2) * iw;
 		d += 3 * (SHAPE_SIZE + SHAPE_PAD) * (a % swtot);
 		d += 3 * (SHAPE_SIZE + SHAPE_PAD) * (a / swtot) * iw;
 
@@ -449,7 +448,7 @@ int mtPixy::Brush::rebuild_patterns_palette (
 	mtPixy::Image	* i;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::RGB, iw, ih );
+	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, iw, ih );
 	if ( ! i )
 	{
 		return 1;
@@ -458,8 +457,6 @@ int mtPixy::Brush::rebuild_patterns_palette (
 
 	unsigned char * const	src = m_patterns->get_canvas ();
 	unsigned char * const	dest = i->get_canvas ();
-	unsigned char		* s, * d;
-	int			a;
 
 
 	if ( ! src || ! dest )
@@ -468,13 +465,14 @@ int mtPixy::Brush::rebuild_patterns_palette (
 		return 1;
 	}
 
-	for ( a = 0; a < stot; a++ )
+	for ( int a = 0; a < stot; a++ )
 	{
-		s = src;
+		unsigned char * s = src;
 		s += PATTERN_SIZE * (a % swtot);
 		s += PATTERN_SIZE * (a / swtot) * sw;
 
-		d = dest + 3 * (PATTERN_PAD / 2) + 3 * (PATTERN_PAD / 2) * iw;
+		unsigned char * d = dest + 3 * (PATTERN_PAD / 2) +
+			3 * (PATTERN_PAD / 2) * iw;
 		d += 3 * (3 * PATTERN_SIZE + PATTERN_PAD) * (a % swtot);
 		d += 3 * (3 * PATTERN_SIZE + PATTERN_PAD) * (a / swtot) * iw;
 
@@ -501,28 +499,23 @@ void mtPixy::Brush::rebuild_shape_mask ()
 		return;
 	}
 
-
-	unsigned char	* src, * dest, * s, * d;
-	int		x, y, sw, dw;
-
-
-	src = m_shapes->get_canvas ();
-	dest = m_shape_mask->get_alpha ();
+	unsigned char * src = m_shapes->get_canvas ();
+	unsigned char * dest = m_shape_mask->get_alpha ();
 
 	if ( src && dest )
 	{
-		sw = m_shapes->get_width ();
-		dw = m_shape_mask->get_width ();
+		int const sw = m_shapes->get_width ();
+		int const dw = m_shape_mask->get_width ();
 
 		src += SHAPE_SIZE * (m_shape_num % (sw / SHAPE_SIZE));
 		src += SHAPE_SIZE * (m_shape_num / (sw / SHAPE_SIZE)) * sw;
 
-		for ( y = 0; y < SHAPE_SIZE; y++ )
+		for ( int y = 0; y < SHAPE_SIZE; y++ )
 		{
-			s = src + sw * y;
-			d = dest + dw * y;
+			unsigned char * s = src + sw * y;
+			unsigned char * d = dest + dw * y;
 
-			for ( x = 0; x < SHAPE_SIZE; x++ )
+			for ( int x = 0; x < SHAPE_SIZE; x++ )
 			{
 				if ( 1 == *s++ )
 				{
@@ -622,7 +615,7 @@ mtPixy::Image * mtPixy::Brush::build_color_swatch (
 	int	const	w = zoom * 3 * mtPixy::Brush::PATTERN_SIZE;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::RGB, w, w );
+	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, w, w );
 	if ( ! i )
 	{
 		return NULL;
@@ -653,10 +646,15 @@ mtPixy::Image * mtPixy::Brush::build_shape_swatch (
 	int	const	zoom
 	)
 {
+	if ( ! m_shapes )
+	{
+		return NULL;
+	}
+
 	mtPixy::Image	* i;
 
-
-	i = mtPixy::image_create ( mtPixy::Image::RGB, SHAPE_SIZE, SHAPE_SIZE );
+	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, SHAPE_SIZE,
+		SHAPE_SIZE );
 	if ( ! i )
 	{
 		return NULL;
@@ -694,7 +692,7 @@ static mtPixy::Image * prepare_pattern (
 	int	const	w = mtPixy::Brush::PATTERN_SIZE;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::RGB, 3 * w, 3 * w );
+	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, 3 * w, 3 * w );
 	if ( ! i )
 	{
 		return NULL;
@@ -727,8 +725,12 @@ mtPixy::Image * mtPixy::Brush::build_pattern_swatch (
 	int	const	zoom
 	)
 {
-	mtPixy::Image	* i = prepare_pattern ( m_patterns, m_pattern_num );
+	if ( ! m_patterns )
+	{
+		return NULL;
+	}
 
+	mtPixy::Image	* i = prepare_pattern ( m_patterns, m_pattern_num );
 
 	if ( ! i )
 	{
@@ -746,7 +748,7 @@ mtPixy::Image * mtPixy::Brush::build_preview_swatch (
 	int	const	w = zoom * 3 * mtPixy::Brush::PATTERN_SIZE;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::RGB, w, w );
+	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, w, w );
 	if ( ! i )
 	{
 		return NULL;

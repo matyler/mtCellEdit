@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,19 @@
 
 
 
+// Disable noisy warnings for other peoples code
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wfloat-conversion"
+#pragma GCC diagnostic ignored "-Wdouble-promotion"
+
 #include <QtGui>
+
+// Re-enable warnings for my code
+#pragma GCC diagnostic pop
+
+
 
 // tableWidget->horizontalHeader ()->setClickable
 #define QEX_SETCLICKABLE	setClickable
@@ -216,6 +228,11 @@ int qt_get_state ( mtKit::Prefs * pr, char const * key, QByteArray * qb );
 
 QPixmap * qpixmap_from_pixyimage ( mtPixy::Image * i );
 mtPixy::Image * pixyimage_from_qpixmap ( QPixmap * pm );
+
+// If this file exists, get the user to confirm the save operation
+int message_file_overwrite ( QWidget * parent, QString const &filename );
+	// 0 = Caller can save the file
+	// 1 = Caller must NOT save the file
 
 
 

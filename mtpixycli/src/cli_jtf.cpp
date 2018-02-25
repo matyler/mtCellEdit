@@ -123,8 +123,8 @@ int jtf_new (
 {
 	int			w, h, im_type;
 	mtKit::CharInt	const	chint_tab[] = {
-				{ "rgb",	mtPixy::Image::RGB },
-				{ "indexed",	mtPixy::Image::INDEXED },
+				{ "rgb",	mtPixy::Image::TYPE_RGB },
+				{ "indexed",	mtPixy::Image::TYPE_INDEXED },
 				{ NULL, 0 }
 				};
 
@@ -147,7 +147,7 @@ int jtf_quit (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	backend.m_exit_now = 1;
+	backend.exit.abort ();
 
 	return 0;
 }
@@ -164,19 +164,21 @@ static int prep_save (
 	mtPixy::File::Type	&ft
 	)
 {
-	comp = 5;
+	comp = 6;
 	ft = backend.file().get_filetype ();
 
 	switch ( ft )
 	{
-	case mtPixy::File::JPEG:
+	case mtPixy::File::TYPE_JPEG:
 		comp = 85;
 		break;
 
-	case mtPixy::File::BMP:
-	case mtPixy::File::GIF:
-	case mtPixy::File::PNG:
-		comp = 5;
+	case mtPixy::File::TYPE_BMP:
+	case mtPixy::File::TYPE_BP24:
+	case mtPixy::File::TYPE_GIF:
+	case mtPixy::File::TYPE_PNG:
+	case mtPixy::File::TYPE_PIXY:
+		comp = 6;
 		break;
 
 	default:
@@ -215,10 +217,12 @@ int jtf_save_as (
 	if ( args[1] )
 	{
 		mtKit::CharInt	const	chint_tab[] = {
-				{ "bmp",	mtPixy::File::BMP },
-				{ "gif",	mtPixy::File::GIF },
-				{ "jpeg",	mtPixy::File::JPEG },
-				{ "png",	mtPixy::File::PNG },
+				{ "bmp",	mtPixy::File::TYPE_BMP },
+				{ "bp24",	mtPixy::File::TYPE_BP24 },
+				{ "gif",	mtPixy::File::TYPE_GIF },
+				{ "jpeg",	mtPixy::File::TYPE_JPEG },
+				{ "png",	mtPixy::File::TYPE_PNG },
+				{ "pixy",	mtPixy::File::TYPE_PIXY },
 				{ NULL, 0 }
 				};
 		int		fti;
@@ -232,7 +236,7 @@ int jtf_save_as (
 
 		if ( ! args[2] )
 		{
-			if ( ft == mtPixy::File::JPEG )
+			if ( ft == mtPixy::File::TYPE_JPEG )
 			{
 				comp = 85;
 			}
@@ -241,12 +245,12 @@ int jtf_save_as (
 		{
 			int	cmin = 0, cmax = 9;
 
-			if ( ft == mtPixy::File::JPEG )
+			if ( ft == mtPixy::File::TYPE_JPEG )
 			{
 				cmax = 100;
 			}
 
-			if ( mtKit::cli_parse_int( args[0], comp, cmin, cmax ) )
+			if ( mtKit::cli_parse_int( args[2], comp, cmin, cmax ) )
 			{
 				return 1;
 			}

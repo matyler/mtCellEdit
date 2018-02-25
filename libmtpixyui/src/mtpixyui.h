@@ -23,6 +23,11 @@
 
 
 
+
+#ifdef __cplusplus
+
+
+
 namespace mtPixyUI
 {
 
@@ -37,6 +42,14 @@ class UndoStep;
 class UndoStack
 {
 public:
+	enum
+	{
+		MIN_STEPS	= 1,
+		MAX_STEPS	= 1000,
+		MIN_BYTES	= 1048576,
+		MAX_BYTES	= 10485760000
+	};
+
 	UndoStack ();
 	~UndoStack ();
 
@@ -50,6 +63,9 @@ public:
 	mtPixy::Image * get_current_image ();
 
 	int64_t get_undo_bytes () const;
+	int64_t get_redo_bytes () const;
+	int64_t get_canvas_bytes () const;
+
 	int get_undo_steps () const;
 	int get_redo_steps () const;
 
@@ -69,7 +85,6 @@ private:
 	int64_t		m_max_bytes;
 	int		m_max_steps;
 
-	int64_t		m_total_bytes;	// In previous items
 	int		m_total_undo_steps;
 	int		m_total_redo_steps;
 };
@@ -79,7 +94,7 @@ private:
 class UndoStep
 {
 public:
-	UndoStep ( mtPixy::Image * pim );
+	explicit UndoStep ( mtPixy::Image * pim );
 	~UndoStep ();
 
 	void insert_after ( UndoStep * us );
@@ -88,11 +103,11 @@ public:
 	mtPixy::Image * get_image ();
 	UndoStep * get_step_previous ();
 	UndoStep * get_step_next ();
-	int64_t get_byte_size () const;
+	int64_t get_canvas_bytes () const;
 	void delete_steps_next ();
 
 private:
-	void set_byte_size ();
+	void set_canvas_bytes ();
 
 /// ----------------------------------------------------------------------------
 
@@ -101,7 +116,7 @@ private:
 
 	mtPixy::Image	* m_image;
 
-	int64_t		m_byte_size;
+	int64_t		m_canvas_bytes;	// Bytes used by m_image canvas
 };
 
 
@@ -116,7 +131,7 @@ public:
 		mtPixy::Image * img,
 		int x,
 		int y
-		);
+		) const;
 	void protect (			// Args assumed to be valid
 		mtPixy::Image * src,	// Old image
 		mtPixy::Image * dest,	// Current updated image
@@ -124,7 +139,7 @@ public:
 		int y,
 		int w,
 		int h
-		);
+		) const;
 
 /// ----------------------------------------------------------------------------
 
@@ -183,9 +198,12 @@ public:
 	bool is_text_paste () const;
 
 private:
+	char		* create_filename ( int n );
+
 	mtPixy::Image	* m_image;
+
 	int		m_x, m_y;	// Position of original copy
-	char		m_filename [ 2048 ];
+	char		* m_filename;
 	bool		m_text_paste;
 };
 
@@ -228,6 +246,15 @@ public:
 	void set_image ( mtPixy::Image * im );
 
 	int export_undo_images ( char const * fn );
+	int export_colormap ( char const * fn, int comp );
+
+	// Create a new filename to set a new file extension
+	static char * get_correct_filename (
+		char		const *	filename,
+		mtPixy::File::Type	filetype
+		);
+		// NULL = use "filename" in its current state
+		// !NULL = allocated string with correct extension
 
 	int resize ( int x, int y, int w, int h );
 	int crop ();
@@ -247,6 +274,7 @@ public:
 	int effect_sharpen ( int n );
 	int effect_soften ( int n );
 	int effect_emboss ();
+	int effect_normalize ();
 	int effect_bacteria ( int n );
 	int flip_horizontally ();
 	int flip_vertically ();
@@ -261,7 +289,7 @@ public:
 		int h,
 		int zs
 		);
-	void render_zoom_grid (
+	static void render_zoom_grid (
 		unsigned char * rgb,
 		int x,
 		int y,
@@ -272,6 +300,7 @@ public:
 		);
 
 	mtPixy::Image * get_image ();
+	mtPixy::Palette * get_palette ();
 	char const * get_filename () const;
 	int get_modified () const;
 	mtPixy::File::Type get_filetype () const;
@@ -287,7 +316,8 @@ public:
 
 ///	PALETTE
 
-	int palette_set_size ( int n );
+	int palette_set ( mtPixy::Palette const * pal );
+	int palette_set_size ( int num );
 	int palette_load ( char const * fn );
 	int palette_save ( char const * fn );
 	int palette_load_default (
@@ -423,6 +453,10 @@ private:
 
 
 }		// namespace mtPixyUI
+
+
+
+#endif		// __cplusplus
 
 
 

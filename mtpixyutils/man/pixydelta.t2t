@@ -1,0 +1,46 @@
+PIXYDELTA
+mtPixyUtils @APP_VERSION@
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+
+= NAME =
+pixydelta - get pixel delta's between 2 images
+
+
+= SYNOPSIS =
+**pixydelta** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Create an output file with the pixel differences between the 2 input files.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-comp_jpeg** INTEGER
+	Set compression level for JPEG files. Default=85
+**-comp_png** INTEGER
+	Set compression level for PNG files. Default=6
+**-o** STRING
+	Save current image to this file (immediately).
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=none).
+
+
+= EXAMPLE =
+**pixydelta** in_a.bmp in_b.png -otype png -o out.png
+
+
+= SEE ALSO =
+pixyutils(1)
+
+
+= HOMEPAGE =
+http://mtcelledit.sourceforge.net/
+
+
+= AUTHOR =
+Mark Tyler

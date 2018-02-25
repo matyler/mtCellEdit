@@ -15,20 +15,19 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <unistd.h>
-	#include <sys/stat.h>
-	#include <time.h>
-	#include <errno.h>
-}
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <errno.h>
 
 #include <mtkit.h>
 #include <mtpixy.h>
 #include <mtpixyui.h>
+
+#include "static.h"
 
 
 
@@ -51,7 +50,7 @@ public:
 	Backend ();
 	~Backend ();
 
-	int command_line ( int argc, char const * const * argv );
+	static int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running
 		// 1 = Terminate program with 0
 
@@ -68,8 +67,7 @@ public:
 
 	mtPixyUI::Clipboard	clipboard;
 
-	int		m_exit_value;		// Program exit value
-	int		m_exit_now;		// !0 => Exit program now!
+	mtKit::Exit		exit;
 
 private:
 	static void print_about ();

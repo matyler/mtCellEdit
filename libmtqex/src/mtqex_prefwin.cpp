@@ -170,8 +170,6 @@ mtQEX::PrefsWindow::PrefsWindow (
 
 mtQEX::PrefsWindow::~PrefsWindow ()
 {
-	int		i,
-			cw;
 	char		txt[ 256 ];
 
 
@@ -181,11 +179,11 @@ mtQEX::PrefsWindow::~PrefsWindow ()
 	mtkit_prefs_set_int ( prefs, "prefs.window_h", geometry().height () );
 
 	// Set column widths
-	for ( i = 0; i < COLUMN_TOTAL - 1; i++ )
+	for ( int i = 0; i < COLUMN_TOTAL - 1; i++ )
 	{
 		snprintf ( txt, sizeof ( txt ), "prefs.col%i", i + 1 );
 
-		cw = tableWidget->horizontalHeader ()-> sectionSize ( i );
+		int const cw = tableWidget->horizontalHeader()->sectionSize(i);
 		mtkit_prefs_set_int ( prefs, txt, cw );
 	}
 }
@@ -354,23 +352,19 @@ static int winget_option (
 	mtPrefValue	* const	piv
 	)
 {
-	bool		ok;
-	int		val = 0, i;
-	char		* txt;
-	QString		res;
-	QStringList	items;
-
-
 	if ( ! piv->opt )
 	{
 		return 0;		// No change
 	}
 
+	QStringList	items;
+	int		val = 0;
+
 	mtkit_prefs_get_int ( prefs, piv->key, &val );
 
-	for ( i = 0; ; i++ )
+	for ( int i = 0; ; i++ )
 	{
-		txt = mtkit_strtok ( piv->opt, "\t", i );
+		char * const txt = mtkit_strtok ( piv->opt, "\t", i );
 		if ( ! txt )
 		{
 			break;		// End of list
@@ -381,8 +375,9 @@ static int winget_option (
 		free ( txt );
 	}
 
-	res = QInputDialog::getItem ( win, "Edit Option", piv->key, items,
-		val, false, &ok );
+	bool		ok;
+	QString		res = QInputDialog::getItem ( win, "Edit Option",
+				piv->key, items, val, false, &ok );
 
 	if ( ok && ! res.isEmpty () )
 	{

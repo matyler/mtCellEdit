@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2016 Mark Tyler
+	Copyright (C) 2011-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -57,9 +57,10 @@ static int arg_error_func (
 	return 0;			// Keep parsing
 }
 
-char const * raft_cline (
+int raft_cline (
 	int			const	argc,
-	char	const * const * const	argv
+	char	const * const * const	argv,
+	char	const **	const	path
 	)
 {
 	int		show_version = 0;
@@ -78,7 +79,7 @@ char const * raft_cline (
 	case 1:
 		printf ( "%s\n\n", VERSION );
 
-		exit ( 0 );
+		return 1;		// Request caller terminates
 
 	case 2:
 		printf ( "%s\n\n"
@@ -87,28 +88,32 @@ char const * raft_cline (
 		"\n"
 		, VERSION, BIN_NAME );
 
-		exit ( 0 );
+		return 1;		// Request caller terminates
 	}
 
-	return scan_directory;
+	if ( path )
+	{
+		path[0] = scan_directory;
+	}
+
+	return 0;			// Success
 }
 
 char * raft_get_clipboard (
 	CedSheet	* const	sheet
 	)
 {
-	char		ch = 0,
-			* tbuf = NULL;
-	mtFile		* memfile;
-	void		* vb;
-	int64_t		vb_size;
+	char		* tbuf = NULL;
 
-
-	memfile = ced_sheet_save_mem ( sheet, CED_FILE_TYPE_OUTPUT_TSV );
+	mtFile * memfile = ced_sheet_save_mem ( sheet, CED_FILE_TYPE_TSV_VALUE);
 	if ( ! memfile )
 	{
 		return NULL;
 	}
+
+	char		ch = 0;
+	void		* vb = NULL;
+	int64_t		vb_size = -1;
 
 	// NUL terminate so we can use as string
 	if (	mtkit_file_write ( memfile, &ch, 1 )		||
@@ -121,7 +126,7 @@ char * raft_get_clipboard (
 
 	if ( ! mtkit_utf8_string_legal ( (unsigned char *)vb, 0 ) )
 	{
-		// Create proper UTF-8 for GTK+
+		// Create proper UTF-8. WARNING! Assumes locale.
 		tbuf = mtkit_iso8859_to_utf8 ( (char *)vb, 0, NULL );
 		if ( ! tbuf )
 		{
@@ -141,6 +146,7 @@ char * raft_get_clipboard (
 
 finish:
 	mtkit_file_close ( memfile );
+	memfile = NULL;
 
 	return tbuf;
 }

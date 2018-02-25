@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,23 +15,19 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <errno.h>
 
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <time.h>
-	#include <ctype.h>
-	#include <unistd.h>
-	#include <sys/types.h>
-	#include <pwd.h>
-	#include <errno.h>
-
-	#include <zlib.h>
-	#include <cairo.h>
-	#include <pango/pango.h>
-	#include <pango/pangoft2.h>
-}
+#include <cairo.h>
+#include <pango/pango.h>
+#include <pango/pangoft2.h>
 
 #include <mtkit.h>
 

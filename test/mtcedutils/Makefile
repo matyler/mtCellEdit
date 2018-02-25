@@ -1,17 +1,21 @@
+include		../_conf.txt
+
+
 .PHONY:		all valg time install uninstall clean
 
+
 all:
-		./suite.sh
+		$(SUITE)
 
 valg:
-		VALG=Y ./suite.sh
+		VALG=Y $(SUITE)
 
 time:
-		VALG=T ./suite.sh
+		VALG=T $(SUITE)
 
 install:
 
 uninstall:
 
 clean:
-		rm -f output/* cmp.diff valg_log.txt
+		rm -f output/* cmp.diff valg_log.txt log.txt

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2016 Mark Tyler
+	Copyright (C) 2008-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,20 +15,19 @@
 	along with this program in the file COPYING.
 */
 
-extern "C" {
-
-	#include <stdlib.h>
-	#include <string.h>
-	#include <math.h>
-	#include <unistd.h>
-	#include <sys/stat.h>
-	#include <time.h>
-	#include <errno.h>
-}
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <errno.h>
 
 #include <mtkit.h>
 #include <mtcelledit.h>
 #include <mtcedui.h>
+
+#include "static.h"
 
 
 
@@ -314,10 +313,8 @@ char * be_graph_duplicate (
 	);
 	// Caller must free result after use
 
-int be_graph_selection_clip (
-	CedSheet	* sheet,
-	char		* buf,
-	size_t		buflen
+char * be_graph_selection_clip (
+	CedSheet	* sheet
 	);
 
 void be_find (

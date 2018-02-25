@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2017 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ mtPixyUI::File::File ()
 	m_brush_x	( 0 ),
 	m_brush_y	( 0 ),
 	m_modified	( 0 ),
-	m_filetype	( mtPixy::File::NONE ),
+	m_filetype	( mtPixy::File::TYPE_NONE ),
 	m_tool_mode	( TOOL_MODE_PAINT )
 {
 }
@@ -54,7 +54,7 @@ void mtPixyUI::File::project_new_chores (
 	m_undo_stack.add_next_step ( m_image );
 
 	m_modified = 0;
-	m_filetype = mtPixy::File::NONE;
+	m_filetype = mtPixy::File::TYPE_NONE;
 
 
 	mtPixy::Color	* col = m_image->get_palette ()->get_color ();
@@ -115,7 +115,7 @@ int mtPixyUI::File::load_image (
 
 	// Deliberately avoid keeping the palette filename to help avoid data
 	// loss when trying to save a canvas to a GPL file.
-	if ( ft != mtPixy::File::GPL )
+	if ( ft != mtPixy::File::TYPE_GPL )
 	{
 		m_filename = strdup ( fn );
 		m_filetype = ft;
@@ -204,9 +204,32 @@ int mtPixyUI::File::export_undo_images (
 	return 0;
 }
 
+int mtPixyUI::File::export_colormap (
+	char	const * const	fn,
+	int		const	comp
+	)
+{
+	if ( ! m_image )
+	{
+		return 1;
+	}
+
+	return m_image->save_bp24 ( fn, comp );
+}
+
 mtPixy::Image * mtPixyUI::File::get_image ()
 {
 	return m_image;
+}
+
+mtPixy::Palette * mtPixyUI::File::get_palette ()
+{
+	if ( ! m_image )
+	{
+		return NULL;
+	}
+
+	return m_image->get_palette ();
 }
 
 char const * mtPixyUI::File::get_filename () const
@@ -265,7 +288,11 @@ int mtPixyUI::File::get_undo_steps () const
 
 double mtPixyUI::File::get_undo_mb () const
 {
-	int64_t const ub = m_undo_stack.get_undo_bytes ();
+	int64_t const ub =
+		m_undo_stack.get_undo_bytes () +
+		m_undo_stack.get_redo_bytes () +
+		m_undo_stack.get_canvas_bytes ();
+		;
 
 	return (double)ub / 1024 / 1024;
 }
@@ -287,5 +314,47 @@ void mtPixyUI::File::set_undo_steps_max (
 	)
 {
 	m_undo_stack.set_max_steps ( num );
+}
+
+char * mtPixyUI::File::get_correct_filename (
+	char		const * const	filename,
+	mtPixy::File::Type	const	filetype
+	)
+{
+	switch ( filetype )
+	{
+	case mtPixy::File::TYPE_BMP:
+		return mtkit_set_filename_extension ( filename, "bmp", NULL,
+			NULL );
+
+	case mtPixy::File::TYPE_PNG:
+		return mtkit_set_filename_extension ( filename, "png", NULL,
+			NULL );
+
+	case mtPixy::File::TYPE_JPEG:
+		return mtkit_set_filename_extension ( filename, "jpeg", "jpg",
+			NULL );
+
+	case mtPixy::File::TYPE_GIF:
+		return mtkit_set_filename_extension ( filename, "gif", NULL,
+			NULL );
+
+	case mtPixy::File::TYPE_GPL:
+		return mtkit_set_filename_extension ( filename, "gpl", NULL,
+			NULL );
+
+	case mtPixy::File::TYPE_PIXY:
+		return mtkit_set_filename_extension ( filename, "pixy", NULL,
+			NULL );
+
+	case mtPixy::File::TYPE_BP24:
+		return mtkit_set_filename_extension ( filename, "bp24", NULL,
+			NULL );
+
+	default:
+		break;
+	}
+
+	return NULL;
 }
 
