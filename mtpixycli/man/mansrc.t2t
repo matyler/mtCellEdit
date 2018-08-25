@@ -16,7 +16,7 @@ mtPixyCLI @APP_VERSION@
 = DESCRIPTION =
 mtPixyCLI provides graphics functionality via a Command Line
 Interface (CLI). It offers exactly the same functions as the GUI based
-mtPixy, but instead uses text commands. 
+mtPixy, but instead uses text commands.
 
 
 = OPTIONS =
@@ -41,7 +41,7 @@ mtpixyutils(1)
 
 
 = HOMEPAGE =
-http://mtcelledit.sourceforge.net/
+http://ced.marktyler.org/
 
 
 = AUTHOR =

@@ -22,9 +22,9 @@ These must also include library headers, which some operating systems provide in
 mtCellEdit then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtKit      | zlib             | Low level C routines, including strings, UTF-8, ZIP file handling, preferences, trees. |
+| libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
 | libmtcelledit | libmtKit         | The spreadsheet engine, including all file handling and general operations. |
-| libmtPixy     | libmtKit, zlib, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
+| libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
 | libmtCedUI    | libmtKit, libmtPixy, libmtcelledit, FreeType, Pango, Cairo | Toolkit agnostic UI code, e.g. graph and sheet rendering. |
 | libmtQEX      | libmtKit, libmtPixy, Qt5 | Various Qt function utilities including preferences editor. |
 
@@ -32,9 +32,11 @@ mtCellEdit then requires various libraries that I have created:
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
+| libmtDataWell | libmtKit, libmtPixy, libsqlite3, libsndfile | Crypto library |
 | libmtPixyUI   | libmtKit, libmtPixy | Toolkit agnostic UI code, e.g. undo stack |
 | mtCedCLI      | libmtKit, libmtcelledit, libmtCedUI, readline | Command line spreadsheet |
 | mtCedUtils    | libmtKit, libmtcelledit | Command line text tools, mtNetLog, mtRDC |
+| mtDWCLI       | libmtKit, libmtDataWell | Command line crypto app |
 | mtPixy        | libmtKit, libmtPixy, libmtPixyUI, libmtQEX, Qt5 | Pixel image editor |
 | mtPixyCLI     | libmtKit, libmtPixy, libmtPixyUI, readline | Command line pixel image editor |
 | mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools |

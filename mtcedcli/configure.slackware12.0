@@ -8,13 +8,13 @@ APP_NAME="mtCedCLI"
 BIN_NAME="mtcedcli"
 
 MTCF_INIT
+MTCF_MAN_PAGE
 MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
 MTCF_CHECK_LIBS mtkit mtcelledit mtcedui history
 MTCF_VERSION_BIN_NAME
-MTCF_MAN_PAGE
 
 L_EX="$L_EX -lreadline -lncurses"
 

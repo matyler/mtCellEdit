@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ static void analyse_rgb_image (
 		return;
 	}
 
-	mtPixy::Image * im = image_create ( mtPixy::Image::TYPE_INDEXED,
+	mtPixy::Image * im = mtPixy::Image::create( mtPixy::Image::TYPE_INDEXED,
 		4096, 4096 );
 
 	if ( prepare_output ( im ) )
@@ -227,7 +227,7 @@ static void analyse_rgb_image64 (
 		return;
 	}
 
-	mtPixy::Image * im = image_create ( mtPixy::Image::TYPE_INDEXED,
+	mtPixy::Image * im = mtPixy::Image::create( mtPixy::Image::TYPE_INDEXED,
 		512, 512 );
 
 	if ( prepare_output64 ( im ) )

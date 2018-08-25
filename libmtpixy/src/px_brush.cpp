@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -37,13 +37,13 @@ mtPixy::Brush::Brush ()
 	m_space_mod	( 0 ),
 	m_flow		( FLOW_MAX )
 {
-	m_shape_mask = mtPixy::image_create ( mtPixy::Image::TYPE_ALPHA,
+	m_shape_mask = mtPixy::Image::create ( mtPixy::Image::TYPE_ALPHA,
 		SHAPE_SIZE, SHAPE_SIZE );
 
-	m_pattern_idx = mtPixy::image_create ( mtPixy::Image::TYPE_INDEXED,
+	m_pattern_idx = mtPixy::Image::create ( mtPixy::Image::TYPE_INDEXED,
 		PATTERN_SIZE, PATTERN_SIZE );
 
-	m_pattern_rgb = mtPixy::image_create ( mtPixy::Image::TYPE_RGB,
+	m_pattern_rgb = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB,
 		PATTERN_SIZE, PATTERN_SIZE );
 }
 
@@ -78,7 +78,7 @@ int mtPixy::Brush::load_shapes (
 	mtPixy::Image	* ni;
 
 
-	ni = mtPixy::image_load ( fn );
+	ni = mtPixy::Image::load ( fn );
 	if ( ! ni )
 	{
 		return 1;
@@ -109,7 +109,7 @@ int mtPixy::Brush::load_patterns (
 	mtPixy::Image	* ni;
 
 
-	ni = mtPixy::image_load ( fn );
+	ni = mtPixy::Image::load ( fn );
 	if ( ! ni )
 	{
 		return 1;
@@ -385,7 +385,7 @@ int mtPixy::Brush::rebuild_shapes_palette (
 	mtPixy::Image	* i;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, iw, ih );
+	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, iw, ih );
 	if ( ! i )
 	{
 		return 1;
@@ -448,7 +448,7 @@ int mtPixy::Brush::rebuild_patterns_palette (
 	mtPixy::Image	* i;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, iw, ih );
+	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, iw, ih );
 	if ( ! i )
 	{
 		return 1;
@@ -615,7 +615,7 @@ mtPixy::Image * mtPixy::Brush::build_color_swatch (
 	int	const	w = zoom * 3 * mtPixy::Brush::PATTERN_SIZE;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, w, w );
+	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, w, w );
 	if ( ! i )
 	{
 		return NULL;
@@ -653,7 +653,7 @@ mtPixy::Image * mtPixy::Brush::build_shape_swatch (
 
 	mtPixy::Image	* i;
 
-	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, SHAPE_SIZE,
+	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, SHAPE_SIZE,
 		SHAPE_SIZE );
 	if ( ! i )
 	{
@@ -692,7 +692,7 @@ static mtPixy::Image * prepare_pattern (
 	int	const	w = mtPixy::Brush::PATTERN_SIZE;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, 3 * w, 3 * w );
+	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, 3 * w, 3 * w );
 	if ( ! i )
 	{
 		return NULL;
@@ -748,7 +748,7 @@ mtPixy::Image * mtPixy::Brush::build_preview_swatch (
 	int	const	w = zoom * 3 * mtPixy::Brush::PATTERN_SIZE;
 
 
-	i = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, w, w );
+	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, w, w );
 	if ( ! i )
 	{
 		return NULL;

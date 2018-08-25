@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -72,7 +72,8 @@ typedef struct
 			f,
 			pass;
 	double		d,
-			* d_list;
+			* d_list
+			;
 
 	int		r_ref,
 			c_ref,
@@ -337,7 +338,7 @@ static double state_percentile (
 	)
 {
 	double		pos,		// Position in array
-			fr;		// Ffractional position
+			fr;		// Fractional position
 
 /*
 e.g. for rstate->f = 10
@@ -630,11 +631,13 @@ static int rrpd_router (
 	}
 
 	free ( rost->d_list );
+	rost->d_list = NULL;
 
 	return 0;
 
 error:
 	free ( rost->d_list );
+	rost->d_list = NULL;
 
 	return 1;
 }
@@ -730,6 +733,31 @@ static int degrees (
 	)
 {
 	FUNC_RESULT = 180 * ARGNUM ( 0 ) / M_PI;
+
+	return 0;
+}
+
+static int factorial (
+	CedFuncState	* const	funcs
+	)
+{
+	double const d = ARGNUM ( 0 );
+
+	if ( d < 0.0 || d > 170.0 )
+	{
+		funcs->parser->ced_errno = CED_ERROR_BAD_FUNCTION_ARGUMENTS;
+		return 1;
+	}
+
+	double res = 1.0;
+	int i;
+
+	for ( i = 2; i <= d; i++ )
+	{
+		res *= i;
+	}
+
+	FUNC_RESULT = res;
 
 	return 0;
 }
@@ -1556,6 +1584,7 @@ static CedToken const token_funcs[] = {
 {"day",		CED_ARGSET_NUM,		day_func,	0 },
 {"degrees",	CED_ARGSET_NUM,		degrees,	0 },
 {"exp",		CED_ARGSET_NUM,		exp_func,	0 },
+{"fact",	CED_ARGSET_NUM,		factorial,	0 },
 {"floor",	CED_ARGSET_NUM,		floor_func,	0 },
 {"frac",	CED_ARGSET_NUM,		frac,		0 },
 {"hour",	CED_ARGSET_NUM,		hour_func,	0 },

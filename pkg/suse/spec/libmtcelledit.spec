@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		MT Spreadsheet Engine
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		zlib-devel libmtkit bison
-Requires:		zlib libmtkit
+BuildRequires:		libmtkit bison
+Requires:		libmtkit
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ mtPixy::Image::~Image ()
 	destroy_alpha ();
 }
 
-mtPixy::Image * mtPixy::image_create (
+mtPixy::Image * mtPixy::Image::create (
 	Image::Type	const	imtype,
 	int		const	w,
 	int		const	h
@@ -238,7 +238,7 @@ int mtPixy::Image::move_alpha_destroy (
 
 mtPixy::Image * mtPixy::Image::duplicate ()
 {
-	Image		* image = image_create ( m_type, m_width, m_height );
+	Image * const image = create ( m_type, m_width, m_height );
 
 
 	if ( ! image )
@@ -276,7 +276,7 @@ void mtPixy::Image::set_data (
 	m_alpha = alp;
 }
 
-mtPixy::Image * mtPixy::image_from_data (
+mtPixy::Image * mtPixy::Image::from_data (
 	Image::Type	const	imtype,
 	int		const	w,
 	int		const	h,
@@ -285,7 +285,7 @@ mtPixy::Image * mtPixy::image_from_data (
 	)
 {
 	int		err = 0;
-	Image		* image = new Image ( imtype, 1, 1, &err );
+	Image		* const image = new Image ( imtype, 1, 1, &err );
 
 
 	if ( err )
@@ -324,7 +324,7 @@ mtPixy::Image * mtPixy::image_from_cairo (
 	w = cairo_image_surface_get_width ( surface );
 	h = cairo_image_surface_get_height ( surface );
 
-	image = image_create ( Image::TYPE_RGB, w, h );
+	image = Image::create ( Image::TYPE_RGB, w, h );
 	if ( ! image )
 	{
 		return NULL;
@@ -388,10 +388,7 @@ mtPixy::Image * mtPixy::Image::resize (
 {
 	// Arguments are all checked by subroutines
 
-	Image		* i;
-
-
-	i = image_create ( m_type, w, h );
+	Image * const i = create ( m_type, w, h );
 	if ( ! i )
 	{
 		return NULL;

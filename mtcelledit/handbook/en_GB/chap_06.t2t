@@ -1,0 +1,309 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Chapter 6 - mtCedCLI</TITLE>\1'
+
+
+[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_07.html]
+-------------------------------------------------
+
+=6. mtCedCLI=
+
+mtCedCLI is a program that provides spreadsheet functionality via a Command Line Interface (CLI).  It offers exactly the same functions as the GUI based mtCellEdit, but instead uses text commands.
+
+Both GUI's and CLI's have value, and allow particular jobs to be done more efficiently.  For example I use mtCedCLI as part of the testing phase before I release the whole mtCellEdit suite.  I have created a number of tests in the form of scripts which test each part of the core libraries.  This exposes any problems that may have crept into the code, and is a good form of regression testing.
+
+
+===6.1 Commands===[SEC1]
+
+mtCedCLI reads instructions from the user via GNU Readline.  This offers useful interactive facilities like using the up and down arrows to access previous commands.
+
+It is also possible to run a script from the command line like these examples:
+
+```
+cat script.txt | mtcedcli
+mtcedcli < script.txt
+mtcedcli < script.txt > log.txt 2>&1
+```
+
+Here is the complete list of commands that mtCedCLI accepts:
+
+| **Command**            | **Arguments**             | **Notes** |
+| about                  |                           | About the program
+| clear content          |                           | Clear cell content in current selection
+| clear prefs            |                           | Clear cell preferences in current selection
+| clear                  |                           | Clear cells in current selection
+| clip flip_h            |                           | Horizontal flip of clipboard
+| clip flip_v            |                           | Vertical flip of clipboard
+| clip load              | <OS FILENAME>             | Load clipboard from a file
+| clip save              | <OS FILENAME>             | Save the current clipboard to this file
+| clip rotate_a          |                           | Rotate the clipboard anticlockwise by 90 degrees
+| clip rotate_c          |                           | Rotate the clipboard clockwise by 90 degrees
+| clip transpose         |                           | Transpose the clipboard
+| copy output            |                           | Copy the output of the currently selected cells to the clipboard
+| copy values            |                           | Copy the values of the currently selected cells to the clipboard
+| copy                   |                           | Copy the currently selected cells to the clipboard
+| cut                    |                           | Copy the currently selected cells to the clipboard and clear the cells
+| delete column          |                           | Delete the currently selected column(s)
+| delete graph           |                           | Delete the currently active graph
+| delete row             |                           | Delete the currently selected row(s)
+| delete sheet           |                           | Delete the currently active sheet
+| duplicate sheet        |                           | Duplicate the currently active sheet
+| export graph           | <OS FILENAME>             | Export the current graph to this file
+| export output graph    | <OS FILENAME> <FILETYPE>  | Export the current graph output to this file and type (as per [5.5.3 chap_05.html#SEC53])
+| export output sheet    | <OS FILENAME> <FILETYPE>  | Export the current sheet output to this file and type (as per [5.5.4 chap_05.html#SEC54])
+| export sheet           | <OS FILENAME> <FILETYPE>  | Export the current sheet to this file and type (as per [5.5.5 chap_05.html#SEC55])
+| find                   | <TEXT> [wild] [case] [value] [all] | Find cells with this text (possibly using the current selection)
+| help                   | [ARG]...                  | Display help on this command
+| import book            | <OS FILENAME>             | Import a book from a file into the current book
+| import graph           | <GRAPH NAME> <OS FILENAME> | Import a file as a graph and give it this name
+| info                   |                           | Display current information
+| insert column          | [clip]                    | Insert column(s) according to the current selection (or clipboard width)
+| insert row             | [clip]                    | Insert row(s) according to the current selection (or clipboard height)
+| list files             |                           | List files in the active book
+| list graphs            |                           | List graphs in the active book
+| list sheets            |                           | List sheets in the active book
+| load                   | <OS FILENAME> [ csv **|** tsv ] | Load a new book
+| new book               |                           | Destroy the current book and start a new book with a sheet called "Sheet 1"
+| new sheet              |                           | Add a new empty sheet to the book
+| new                    |                           | Destroy the current book and start a new book with a sheet called "Sheet 1"
+| paste content          |                           | Paste clipboard contents onto the current selection
+| paste prefs            |                           | Paste clipboard preferences onto the current selection
+| paste                  |                           | Paste clipboard onto the current selection
+| print cell num         |                           | Print the cell number for all the selected cells
+| print cell text        |                           | Print the cell text for all the selected cells
+| print cell type        |                           | Print the cell type for all the selected cells
+| print prefs book       |                           | Print the book preferences
+| print prefs cell       |                           | Print the cell preferences in all the selected cells (that are not default)
+| print prefs sheet      |                           | Print sheet preferences
+| print prefs state      |                           | Print state preferences
+| print                  |                           | Print the cell output for all the selected cells
+| q                      |                           | Quit the program
+| quit                   |                           | Quit the program
+| recalc book            |                           | Recalculate the book
+| recalc sheet           |                           | Recalculate the sheet
+| recalc                 |                           | Recalculate the sheet
+| redo                   |                           | Redo next sheet action
+| rename graph           | <NEW NAME>                | Rename the current graph
+| rename sheet           | <NEW NAME>                | Rename the current sheet
+| save                   |                           | Save the current book
+| save as                | <OS FILENAME> [FILETYPE]  | Save the current book to this file (optionally changing the type as per [5.5.2 chap_05.html#SEC52])
+| select                 | < all **|** CELLREF[:CELLREF] > | Set the current cursor selection
+| set 2dyear             | [ YEAR START ]            | Change the currently selected cells if they contain a date with a 2 digit year
+| set book               | <INTEGER>                 | Change the current active book (0..4)
+| set cell               | <CELL CONTENT>            | Set the cell text
+| set graph              | <GRAPH NAME>              | Set the current graph
+| set prefs book         | <KEY> <DATA>              | Set book preference (as per [A.8.3 chap_A.html#SEC83])
+| set prefs cell         | <KEY> <DATA>              | Set currently selected cell preferences (as per [A.8.1 chap_A.html#SEC81])
+| set prefs cellborder   | <DATA>                    | Set currently selected cell border preferences (as per [5.5.6 chap_05.html#SEC56])
+| set prefs sheet        | <KEY> <DATA>              | Set the preferences for the current sheet (as per [A.8.2 chap_A.html#SEC82])
+| set prefs state        | <KEY> <DATA>              | Set the state preferences (as per [A.8.4 chap_A.html#SEC84])
+| set sheet              | <SHEET NAME>              | Set active sheet
+| set width              | < auto **|** INTEGER >    | Set selected columns width as integer > 0 (0=default=10), or by calculating the current maximum width
+| sort column            | <EXPRESSION>              | Sort selected columns by expression as per [5.5.7 chap_05.html#SEC57]
+| sort row               | <EXPRESSION>              | Sort selected rows by expression as per [5.5.7 chap_05.html#SEC57]
+| undo                   |                           | Undo last sheet action
+
+
+
+===6.2 Book File Types===[SEC2]
+
+| tsv_book |
+| tsv_value_book
+| ledger_book
+| ledger_value_book
+
+
+===6.3 Graph Output Types===[SEC3]
+
+| eps |
+| pdf
+| png
+| ps
+| svg
+
+
+===6.4 Sheet Output Types===[SEC4]
+
+| eps |
+| html
+| pdf
+| pdf_paged
+| png
+| ps
+| svg
+| tsv
+| tsv_q
+
+
+===6.5 Sheet Types===[SEC5]
+
+| tsv |
+| tsv_gz
+| tsv_noq
+| tsv_val
+| tsv_val_gz
+| tsv_val_noq
+| csv
+| csv_noq
+| csv_val
+| csv_val_noq
+| ledger
+| ledger_gz
+| ledger_val
+| ledger_val_gz
+
+
+===6.6 Cell Border Codes===[SEC6]
+
+| -1 | Remove all borders |
+| -2 | Thin Outside
+| -3 | Thick Outside
+| -4 | Double Outside
+| -5 | Thin Top And Bottom
+| -6 | Thick Top And Bottom
+| -7 | Double Top And Bottom
+
+```
+```
+
+|   | **Horizontal** |
+| 0 | Clear Top
+| 1 | Clear Middle
+| 2 | Clear Bottom
+| 3 | Thin Top
+| 4 | Thin Middle
+| 5 | Thin Bottom
+| 6 | Thick Top
+| 7 | Thick Middle
+| 8 | Thick Bottom
+| 9 | Double Top
+| 10 | Double Middle
+| 11 | Double Bottom
+
+```
+```
+
+|    | **Vertical** |
+| 12 | Clear Left
+| 13 | Clear Centre
+| 14 | Clear Right
+| 15 | Thin Left
+| 16 | Thin Centre
+| 17 | Thin Right
+| 18 | Thick Left
+| 19 | Thick Centre
+| 20 | Thick Right
+| 21 | Double Left
+| 22 | Double Centre
+| 23 | Double Right
+
+
+===6.7 Sorting Expressions===[SEC7]
+
+<INTEGER> , < a | d > [c] [ , ... ]
+
+For example, expression **1,ac,2,d** sorts by row/column 1 (ascending, case sensitive), then row/column 2 (descending).
+
+
+
+===6.8 Shell Scripts===[SEC8]
+
+Because the interface to mtCedCLI is just text, this means that shell scripts can control the program.
+
+====6.8.1 Putting Several Sheets into a Book====[SEC81]
+
+[DOWNLOAD FILE ../shawk/cedsheetbook.sh]
+
+```
+#!/bin/sh
+# cedsheetbook.sh - Puts sheet files into a single book file
+# usage: cedsheetbook.sh BOOKFILENAME SHEETFILE... | mtcedcli
+# e.g. cedsheetbook.sh ~/output.zip *.tsv *.csv | mtcedcli
+# by Mark Tyler 19th February 2013
+
+
+echo "delete sheet"
+echo "save as \"$1\""
+
+shift
+
+while [ "$1" != "" ]
+do
+	echo "import book \"$1\""
+	shift
+done
+
+echo "save"
+```
+
+The handy thing with this approach is that you can dry run the script first
+by using:
+
+```
+./cedsheetbook.sh ~/output.zip *.tsv *.csv
+```
+
+If you are happy with the text output then you can commit the actions with:
+
+```
+./cedsheetbook.sh ~/output.zip *.tsv *.csv | mtcedcli
+```
+
+====6.8.2 Extracting Sheets From a Book====[SEC82]
+
+The following script does the reverse of the first script.
+It reads a ZIP file and extracts all of the sheets to TSV files in the
+given directory.
+
+[DOWNLOAD FILE ../shawk/cedbooksplit.sh]
+
+```
+#!/bin/sh
+# cedbooksplit.sh - Extracts the sheets from a book
+# usage: cedbooksplit.sh BOOKFILENAME OUPUTDIRECTORY
+# e.g. cedbooksplit.sh ~/output.zip ~/temp_sheet
+# by Mark Tyler 19th February 2013
+
+# On error exit
+set -e
+
+mkdir -p "$2"
+
+TMP_FILE="$2"/tmp.txt
+
+printf "load \"$1\"\n" > "$TMP_FILE"
+
+printf "load \"$1\"\nlist sheets" |
+mtcedcli -q |
+awk '!/^$/ && !/^mtcedcli/' |
+while read SHEET
+do
+	LOWER=$(echo "$SHEET" | tr '[:upper:]' '[:lower:]')
+
+	case "$LOWER" in
+	*csv )	TYPE=csv;;
+	* )	TYPE=tsv;;
+	esac
+
+	echo set sheet \"$SHEET\" >> "$TMP_FILE"
+	echo export sheet \"$2/$SHEET\" $TYPE >> "$TMP_FILE"
+done
+
+cat "$TMP_FILE"
+
+echo
+echo Type y and press ENTER to run this script
+
+read KEY
+
+if [ "$KEY" = "y" ]
+then
+	cat "$TMP_FILE" | mtcedcli
+fi
+
+echo
+```
+
+
+
+-------------------------------------------------
+[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_07.html]

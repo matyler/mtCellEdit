@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2017 Mark Tyler
+	Copyright (C) 2009-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -713,13 +713,6 @@ CedCell * ced_sheet_get_cell (		// Get a cell from the spreadsheet
 	int		column
 	);
 	// NULL = no such cell exists
-
-double ced_sheet_get_cell_value (	// Get a cell value from the spreadsheet
-	CedSheet	* sheet,
-	int		row,
-	int		column
-	);
-	// If cell doesn't exist return 0.0
 
 CedCell * ced_sheet_set_cell (		// Set cell text + parse/calculate
 					// contents

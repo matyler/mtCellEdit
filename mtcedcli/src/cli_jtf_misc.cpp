@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -348,7 +348,7 @@ static int cb_scan_prefs (
 
 		printf ( "r%ic%i\n", row, col );
 
-		tot = sizeof ( list_i_cell ) / sizeof ( list_i_cell[0] );
+		tot = (int)(sizeof(list_i_cell) / sizeof(list_i_cell[0]));
 		for ( int i = 0; i < tot; i++ )
 		{
 			if ( list_i_cell[i] != list_i_def[i] )
@@ -358,7 +358,7 @@ static int cb_scan_prefs (
 			}
 		}
 
-		tot = sizeof ( list_c_cell ) / sizeof ( list_c_cell[0] );
+		tot = (int)(sizeof(list_c_cell) / sizeof(list_c_cell[0]));
 		for ( int i = 0; i < tot; i++ )
 		{
 			if ( list_c_cell[i] )

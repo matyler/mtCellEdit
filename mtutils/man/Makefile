@@ -1,6 +1,7 @@
 include		../_conf.txt
 
 OBJ		=			\
+		mtbinana.1		\
 		mtchls.1		\
 		mtgentex.1		\
 		mtdsize.1		\

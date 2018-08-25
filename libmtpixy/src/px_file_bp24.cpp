@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ static mtPixy::Image * create_colormap (
 	int const iw = 4096;
 	int const ih = 4096;
 
-	mtPixy::Image * im = mtPixy::image_create ( mtPixy::Image::TYPE_RGB,
+	mtPixy::Image * im = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB,
 		iw, ih );
 
 	if ( ! im )
@@ -186,7 +186,7 @@ static mtPixy::Image * create_colormap (
 	return im;
 }
 
-mtPixy::Image * mtPixy::image_load_bp24 (
+mtPixy::Image * mtPixy::Image::load_bp24 (
 	char	const * const	filename
 	)
 {

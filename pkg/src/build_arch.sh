@@ -5,6 +5,8 @@
 
 MT_flush_func()
 {
+	cd $CWD
+
 	chmod a+w -R arch/*/*.tar.gz	\
 		arch/*/PKGBUILD		\
 		arch/*/pkg		\
@@ -16,7 +18,6 @@ MT_flush_func()
 		arch/*/pkg		\
 		arch/*/src		\
 		arch/*/*.pkg.tar.xz	\
-		bcfile.txt		\
 
 }
 

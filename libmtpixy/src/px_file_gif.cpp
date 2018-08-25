@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -76,7 +76,7 @@
 
 
 
-mtPixy::Image * mtPixy::image_load_gif (
+mtPixy::Image * mtPixy::Image::load_gif (
 	char	const	* const	filename
 	)
 {
@@ -162,7 +162,7 @@ mtPixy::Image * mtPixy::image_load_gif (
 			w = giffy->Image.Width;
 			h = giffy->Image.Height;
 
-			image = image_create ( Image::TYPE_INDEXED, w, h );
+			image = create ( TYPE_INDEXED, w, h );
 			if ( ! image )
 			{
 				goto fail;
@@ -183,7 +183,7 @@ mtPixy::Image * mtPixy::image_load_gif (
 			}
 
 			pal->set_correct ();
-			image->set_file_flag ( Image::FLAG_PALETTE_LOADED );
+			image->set_file_flag ( FLAG_PALETTE_LOADED );
 
 			if ( giffy->Image.Interlace )
 			{

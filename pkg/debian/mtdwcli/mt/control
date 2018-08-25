@@ -1,0 +1,13 @@
+Source: mtdwcli
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtdatawell, libreadline-dev
+Standards-Version: 3.9.3
+Homepage: http://ced.marktyler.org/
+
+Package: mtdwcli
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Crypto CLI
+ .

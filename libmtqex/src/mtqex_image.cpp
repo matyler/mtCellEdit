@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ void mtQEX::ImageArea::paintEvent (
 	pw = ev->rect ().width ();
 	ph = ev->rect ().height ();
 
-	destImage = mtPixy::image_create ( mtPixy::Image::TYPE_RGB, pw, ph );
+	destImage = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, pw, ph );
 	unsigned char * const rgb = destImage->get_canvas ();
 
 	if ( ! rgb )

@@ -35,8 +35,6 @@ MT_flush_func()
 		cd $CWD/../$PKG
 		./configure flush
 	done
-
-	rm -f bcfile.txt
 }
 
 
@@ -56,7 +54,7 @@ MT_build_app_func()
 
 	make clean
 	make $MAKE_ARGS
-	$SUDO make install
+	$SUDO make install DESTDIR=$DESTDIR
 
 	# Don't exit on error
 	set +e

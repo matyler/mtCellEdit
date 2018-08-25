@@ -6,6 +6,7 @@
 
 OUT=tmp
 VALG_LOGFILE=valg_log.txt
+SHEXE=scripts
 
 echo
 
@@ -93,6 +94,50 @@ run_sh_fail()
 	$PROGPREFIX "$@" 2>>$VALG_LOGFILE && FAIL=0
 
 	cmp_arg "$TXT" "$FAIL" "1"
+}
+
+run_sh_head()
+{
+	echo ----------- $FILE_SH -----------
+	echo ----------- $FILE_SH ----------- >> "$1"
+	echo >> $1
+}
+
+run_sh_tail()
+{
+	echo
+	echo >> $1
+	echo >> $1
+}
+
+run_sh_cli_init()
+{
+	LOGFILE=output/log.txt
+	> $LOGFILE
+}
+
+run_sh_cli()
+{
+	while [ -n "$1" ]
+	do
+		FILE_SH=$SHEXE/$1.txt
+
+		case "$VALG" in
+		"T" )
+			;&
+		"Y" )
+			run_sh_head $VALG_LOGFILE
+			$PROGPREFIX $CLICOM < $FILE_SH >> $VALG_LOGFILE 2>&1
+			run_sh_tail $VALG_LOGFILE
+			;;
+		esac
+
+		run_sh_head $LOGFILE
+		$CLICOM < $FILE_SH >> $LOGFILE 2>&1
+		run_sh_tail $LOGFILE
+
+		shift
+	done
 }
 
 valg_results()

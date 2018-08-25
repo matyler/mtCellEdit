@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -149,7 +149,7 @@ int mtKit::ChunkFile::Load::get_chunk (
 	{
 		if ( len_encoded > 0 )
 		{
-			if ( fseek ( m_fp, len_encoded, SEEK_CUR ) )
+			if ( fseek ( m_fp, (long)len_encoded, SEEK_CUR ) )
 			{
 				goto error;
 			}

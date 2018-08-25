@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -570,22 +570,6 @@ CedCell * ced_sheet_get_cell (
 	}
 
 	return (CedCell *)(cnode->data);
-}
-
-double ced_sheet_get_cell_value (
-	CedSheet	* sheet,
-	int		row,
-	int		column
-	)
-{
-	CedCell const * const cell = ced_sheet_get_cell ( sheet, row, column );
-
-	if ( cell )
-	{
-		return cell->value;
-	}
-
-	return 0.0;
 }
 
 

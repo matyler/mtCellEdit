@@ -9,7 +9,11 @@ BIN_NAME=
 LIB_NAME=
 DATA_NAME=
 MAKE_DIRS="src"
+
+ENABLE_TK=
 ENABLE_MAN_PAGE=
+ENABLE_HANDBOOK=
+ENABLE_DESKTOP=
 
 
 UNDERLINE_TEXT()
@@ -126,6 +130,22 @@ MTCF_PARSE_ARG1()
 			ENABLE_MAN_PAGE=
 			;;
 
+	"--disable-handbook" )
+			ENABLE_HANDBOOK=
+			;;
+
+	"--disable-desktop" )
+			ENABLE_DESKTOP=
+			;;
+
+	"--use-qt4" )	ENABLE_TK="qt4"
+			BIN_SUFFIX="-qt4"
+			;;
+
+	"--use-qt5" )	ENABLE_TK="qt5"
+			BIN_SUFFIX="-qt5"
+			;;
+
 	* )		echo ERROR - Unknown command \"$A\"
 			exit 1
 			;;
@@ -150,13 +170,15 @@ MTCF_PRINT_HELP()
 {
 if [ "$HELP" = 1 ]
 then
+
+# Global Help always available.
 cat << EOF
 Usage: ./configure [OPTION] ...
 
 Options:
 
 flush ........... Flush directories to initial state
-debug ........... Include debugging info in binary c11 c++14
+debug ........... Include debugging info in binary c11 c++17
 debugold ........ Include debugging info in binary c11 c++11
 wc .............. Count size of source files
 
@@ -165,10 +187,37 @@ wc .............. Count size of source files
 --libdir=DIR .......... DIR = location of library installs (default=/usr/lib)
 --includedir=DIR ...... DIR = location of header installs (default=/usr/include)
 --datadir=DIR ......... DIR = location of data installs (default=/usr/share)
+EOF
+
+
+# Conditional Help. Depends on the configure script allowing an option.
+
+	if [ "$ENABLE_MAN_PAGE" != "" ]
+	then
+cat << EOF
 --mandir=DIR .......... DIR = location of man page installs (default=/usr/share/man/man1)
 --disable-man ......... Disable man page build and install
-
 EOF
+	fi
+
+	if [ "$ENABLE_TK" != "" ]
+	then
+cat << EOF
+--use-qt4 ............. Compile Qt4 version
+--use-qt5 ............. Compile Qt5 version (default)
+EOF
+	fi
+
+	if [ "$ENABLE_HANDBOOK" != "" ]
+	then
+		echo "--disable-handbook .... Don't build handbook"
+	fi
+
+	if [ "$ENABLE_DESKTOP" != "" ]
+	then
+		echo "--disable-desktop ..... Don't build desktop files"
+	fi
+
 
 	if [ "$1" != "" ]
 	then
@@ -189,17 +238,26 @@ MTCF_PRE_CONF()
 	"NO" )
 		I_EX=""
 		L_EX="-lm -s"
+
+		if [ "$ENABLE_TK" = "qt5" ]
+		then
+			# Qt5 requires a modern compiler
+			CFLAGS="$CFLAGS -std=gnu11"
+			CXXFLAGS="$CXXFLAGS -std=gnu++11"
+		fi
 		;;
 	"YES" )
 		I_EX="-fsanitize=undefined $DEBUG_I_EX"
 		L_EX="-fsanitize=undefined -lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS="$CFLAGS -std=gnu11 -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
-		CXXFLAGS="$CXXFLAGS -std=gnu++14"
+		CFLAGS="$CFLAGS -std=gnu11"
+		CFLAGS="$CFLAGS -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
+		CXXFLAGS="$CXXFLAGS -std=gnu++17"
 		;;
 	"OLD" )
 		I_EX="$DEBUG_I_EX"
 		L_EX="-lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS="$CFLAGS -std=gnu11 -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
+		CFLAGS="$CFLAGS -std=gnu11"
+		CFLAGS="$CFLAGS -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
 		CXXFLAGS="$CXXFLAGS -std=gnu++11"
 		;;
 	esac
@@ -225,6 +283,38 @@ MTCF_CHECK_LIBS()
 MTCF_MAN_PAGE()
 {
 	ENABLE_MAN_PAGE="man"
+}
+
+
+MTCF_ENABLE_QT()
+{
+	ENABLE_TK="qt5"
+	BIN_SUFFIX="-qt5"
+}
+
+
+MTCF_ENABLE_QT_QEX ()
+{
+	case "$ENABLE_TK" in
+	qt4 )
+		MTCF_CHECK_LIBS "mtqex4"
+		;;
+	qt5 )
+		MTCF_CHECK_LIBS "mtqex5"
+		;;
+	esac
+}
+
+
+MTCF_DESKTOP()
+{
+	ENABLE_DESKTOP="desktop"
+}
+
+
+MTCF_HANDBOOK()
+{
+	ENABLE_HANDBOOK="handbook"
 }
 
 
@@ -260,6 +350,19 @@ MTCF_POST_CONF()
 {
 	> $CONF_FILE
 
+	case "$ENABLE_TK" in
+	qt4 )
+		MTCF_PKGCONFIG "QtGui"
+		I_EX="$I_EX -DU_TK_QT4"
+		MT_GET_MOC_4
+		;;
+	qt5 )
+		MTCF_PKGCONFIG "Qt5Widgets"
+		I_EX="$I_EX -DU_TK_QT5"
+		MT_GET_MOC_5
+		;;
+	esac
+
 	if [ "$PKGCONFIG" != "" ]
 	then
 		I_EX="$I_EX $(pkg-config $PKGCONFIG --cflags)"
@@ -270,38 +373,58 @@ MTCF_POST_CONF()
 	F_CXX="$BIN_FLAGS $CXXFLAGS -I$HEAD_INSTALL $I_EX"
 	F_L="$LDFLAGS -L$LIB_INSTALL $L_EX"
 
+	echo "APP_NAME      = $APP_NAME"	>> $CONF_FILE
+	echo "APP_VERSION   = $VERNUM"		>> $CONF_FILE
 	echo "CC            = $CC"		>> $CONF_FILE
 	echo "CXX           = $CXX"		>> $CONF_FILE
 	echo "CFLAGS        = $F_C"		>> $CONF_FILE
 	echo "CXXFLAGS      = $F_CXX"		>> $CONF_FILE
 	echo "LDFLAGS       = $F_L"		>> $CONF_FILE
 
-	echo "LIB_NAME      = $LIB_NAME"	>> $CONF_FILE
-	echo "LIB_INSTALL   = $LIB_INSTALL"	>> $CONF_FILE
-	echo "HEAD_INSTALL  = $HEAD_INSTALL"	>> $CONF_FILE
+	if [ "$LIB_NAME" != "" ]
+	then
+		echo "LIB_NAME      = $LIB_NAME"	>> $CONF_FILE
+		echo "LIB_INSTALL   = $LIB_INSTALL"	>> $CONF_FILE
+		echo "HEAD_INSTALL  = $HEAD_INSTALL"	>> $CONF_FILE
+	fi
 
-	echo "BIN_NAME      = $BIN_NAME"	>> $CONF_FILE
-	echo "BIN_INSTALL   = $BIN_INSTALL"	>> $CONF_FILE
-	echo "BIN_SUFFIX    = $BIN_SUFFIX"	>> $CONF_FILE
+	if [ "$BIN_NAME" != "" ]
+	then
+		echo "BIN_NAME      = $BIN_NAME"	>> $CONF_FILE
+		echo "BIN_INSTALL   = $BIN_INSTALL"	>> $CONF_FILE
+		echo "BIN_SUFFIX    = $BIN_SUFFIX"	>> $CONF_FILE
+	fi
 
-	echo "DATA_NAME     = $DATA_NAME"	>> $CONF_FILE
+	if [ "$DATA_NAME" != "" ]
+	then
+		echo "DATA_NAME     = $DATA_NAME"	>> $CONF_FILE
+	fi
+
 	echo "DATA_INSTALL  = $DATA_INSTALL"	>> $CONF_FILE
-
-	echo "APP_NAME      = $APP_NAME"	>> $CONF_FILE
-	echo "APP_VERSION   = $VERNUM"		>> $CONF_FILE
 
 	if [ "$ENABLE_MAN_PAGE" != "" ]
 	then
-		MTCF_MAKE_DIRS_ADD "man"
+		MTCF_MAKE_DIRS_ADD "$ENABLE_MAN_PAGE"
 		echo "MAN_INSTALL   = $MAN_INSTALL" >> $CONF_FILE
 	fi
 
-	echo "MAKE_DIRS     = $MAKE_DIRS"	>> $CONF_FILE
+	if [ "$ENABLE_HANDBOOK" != "" ]
+	then
+		MTCF_MAKE_DIRS_ADD "$ENABLE_HANDBOOK"
+	fi
+
+	if [ "$ENABLE_DESKTOP" != "" ]
+	then
+		MTCF_MAKE_DIRS_ADD "$ENABLE_DESKTOP"
+	fi
 
 	if [ "$MOC" != "" ]
 	then
 		echo "MOC           = $MOC"	>> $CONF_FILE
 	fi
+
+	# Always comes last
+	echo "MAKE_DIRS     = $MAKE_DIRS"	>> $CONF_FILE
 }
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -271,7 +271,7 @@ Global::Global (
 
 static int init_globals ()
 {
-	mtPixy::Image * const im = mtPixy::image_create (
+	mtPixy::Image * const im = mtPixy::Image::create (
 				mtPixy::Image::TYPE_INDEXED, 100, 100 );
 
 	if ( ! im )
@@ -330,7 +330,7 @@ int ut_load_file ()
 	}
 
 	mtPixy::File::Type new_type;
-	mtPixy::Image * const new_image = mtPixy::image_load ( global.s_arg,
+	mtPixy::Image * const new_image = mtPixy::Image::load ( global.s_arg,
 		&new_type );
 
 	if ( ! new_image )

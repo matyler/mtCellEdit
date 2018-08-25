@@ -1,0 +1,24 @@
+#!/bin/sh
+
+
+. ./mtConf.txt
+
+
+APP_NAME="mtDWCLI"
+BIN_NAME="mtdwcli"
+
+MTCF_INIT
+MTCF_MAN_PAGE
+MTCF_PARSE_ARGS "$@"
+MTCF_PRINT_HELP
+
+MTCF_PRE_CONF
+MTCF_CHECK_LIBS mtkit mtdatawell history
+
+I_EX="$I_EX -DAPP_NAME=\"\\\"$APP_NAME\"\\\""
+L_EX="$L_EX -lreadline -lncurses"
+
+MTCF_VERSION_BIN_NAME
+MTCF_POST_CONF
+MTCF_PRINT_CONF
+

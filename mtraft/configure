@@ -9,65 +9,21 @@ BIN_NAME="mtraft"
 
 MTCF_INIT
 
-TK=qt5
-BIN_SUFFIX=-qt5
-ENABLE_DESKTOP=desktop
+MTCF_ENABLE_QT
+MTCF_DESKTOP
 MTCF_MAN_PAGE
 
-for A in "$@"
-do
-	case "$A" in
-	--use-qt4 )		TK=qt4
-				BIN_SUFFIX=-qt4
-				;;
-	--use-qt5 )		TK=qt5
-				BIN_SUFFIX=-qt5
-				;;
-	--disable-desktop)	ENABLE_DESKTOP="";;
+MTCF_PARSE_ARGS "$@"
 
-	* )			MTCF_PARSE_ARG1 "$A";;
-	esac
-done
-
-
-MYHELP()
-{
-cat << EOF
---use-qt4 ............. Compile Qt4 version
---use-qt5 ............. Compile Qt5 version (default)
---disable-desktop ..... Don't build desktop files
-
-EOF
-}
-
-
-MTCF_PRINT_HELP MYHELP
+MTCF_PRINT_HELP
 MTCF_PRE_CONF
 
-CK_LIBS="mtkit mtcelledit stdc++"
+MTCF_CHECK_LIBS mtkit mtcelledit stdc++
 MTCF_VERSION_BIN_NAME
 
-case "$TK" in
-qt4 )
-	MTCF_PKGCONFIG "QtGui"
-	I_EX="$I_EX -DU_TK_QT4"
-	CK_LIBS="$CK_LIBS mtqex4"
-	MT_GET_MOC_4
-	;;
-qt5 )
-	MTCF_PKGCONFIG "Qt5Widgets"
-	I_EX="$I_EX -DU_TK_QT5"
-	CK_LIBS="$CK_LIBS mtqex5"
-	MT_GET_MOC_5
-	;;
-esac
-
-
-MTCF_MAKE_DIRS_ADD "$ENABLE_DESKTOP"
-MTCF_CHECK_LIBS $CK_LIBS
+MTCF_ENABLE_QT_QEX
 
 BIN_FLAGS="$BIN_FLAGS -D_FILE_OFFSET_BITS=64"
 
 MTCF_POST_CONF
 MTCF_PRINT_CONF
-

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -130,7 +130,7 @@ int mtPixy::Image::paint_rectangle (
 		return 0;
 	}
 
-	Image * const imask = mtPixy::image_create ( TYPE_ALPHA, w, h );
+	Image * const imask = create ( TYPE_ALPHA, w, h );
 	if ( ! imask )
 	{
 		return 1;
@@ -211,7 +211,7 @@ int mtPixy::Image::paint_brush (
 	int	const	w = abs ( rx2 - rx1 ) + bs;
 	int	const	h = abs ( ry2 - ry1 ) + bs;
 
-	Image * const imask = mtPixy::image_create ( TYPE_ALPHA, w, h );
+	Image * const imask = create ( TYPE_ALPHA, w, h );
 	if ( ! imask )
 	{
 		return 1;

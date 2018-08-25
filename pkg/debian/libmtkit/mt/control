@@ -2,12 +2,12 @@ Source: libmtkit
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, zlib1g-dev
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, zlib1g-dev, libsqlite3-dev
 Standards-Version: 3.9.3
-Homepage: http://mtcelledit.sourceforge.net/
+Homepage: http://ced.marktyler.org/
 
 Package: libmtkit
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: MT Low level C routines
+Description: MT Low level C/C++ routines
  .

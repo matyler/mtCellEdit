@@ -24,6 +24,7 @@
 #define __STDC_LIMIT_MACROS
 #define __STDC_FORMAT_MACROS
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <limits.h>
@@ -392,6 +393,12 @@ int mtkit_file_save (			// Save a memory chunk to a file
 char const * mtkit_file_home (		// Get the home directory
 	void
 	);
+
+int mtkit_file_directory_exists (
+	char	const	* path
+	);
+	// 0 = Bad arg or directory does not exist
+	// 1 = Directory exists
 
 int mtkit_file_readable (
 	char	const	* filename
@@ -816,7 +823,7 @@ int mtkit_tree_destroy (		// Destroy a whole tree
 
 mtTree * mtkit_tree_duplicate (
 	mtTree		* tree,
-	mtTreeFuncDup	duplicate	// NULL = copy key/data as static data
+	mtTreeFuncDup	duplicate
 	);
 
 int mtkit_tree_node_add (
@@ -1236,21 +1243,57 @@ void mtkit_int32_pack (			// Pack integer into little endian
 #ifdef __cplusplus
 }
 
+#include <iostream>		// Needed for std::string
+
 
 
 namespace mtKit
 {
 
+std::string realpath ( std::string const & path );
+
+int string_from_data (
+	std::string	& str,	// Push data + '\0' into here
+	void	const * data,
+	size_t		size
+	);
+
+
+
 class BitPackRead;
 class BitPackWrite;
+class BitShifter;
+class ByteBuf;
+class ByteFileRead;
+class ByteFileWrite;
 class CliItem;
 class CliTab;
 class Exit;
 class Prefs;
+class Random;
 class RecentFile;
 
 namespace ByteCube {}
 namespace ChunkFile {}
+
+template <typename T> class unique_ptr;
+
+
+
+template <typename T> class unique_ptr
+{
+public:
+	inline unique_ptr () : m_ptr () {}
+	inline explicit unique_ptr ( T * ptr ) : m_ptr ( ptr ) {}
+	inline ~unique_ptr () { delete m_ptr; }
+
+	inline T *	get () const { return m_ptr; }
+	inline void	reset ( T * ptr ) { delete m_ptr; m_ptr = ptr; }
+	inline T *	release () { T * tmp = m_ptr; m_ptr = NULL; return tmp;}
+
+private:
+	T * m_ptr;
+};
 
 
 
@@ -1361,7 +1404,7 @@ class Prefs
 {
 public:
 	Prefs ();
-	~Prefs ();
+	~Prefs ();			// save() on destruction
 
 	int initWindowPrefs ();		// Initialize default prefs for
 					// preferences window
@@ -1617,6 +1660,8 @@ private:
 	size_t		m_buf_size;
 };
 
+
+
 class BitPackRead
 {
 public:
@@ -1630,6 +1675,313 @@ private:
 	unsigned char	const *	const	m_memlim;
 	int				m_bit_next;
 };
+
+
+
+class BitShifter
+{
+public:
+	BitShifter ();
+	~BitShifter ();
+
+	// NOTE: random must be seeded by the caller.
+	int set_shifts ( Random &random );
+	int set_shifts ( int const shifts[8] );	// shifts[] contains *ALL* 0..7
+	inline void set_salt ( int i )	{ m_salt = i; }
+	inline void set_pos ( int i )	{ m_pos = i; }
+
+	uint8_t get_byte ( uint8_t input );
+	void get_shifts ( int shifts[8] ) const;
+	inline int get_salt () const	{ return m_salt; }
+	inline int get_pos () const	{ return m_pos; }
+
+protected:
+	int		m_pos;
+	int		m_shifts[ 8 ];
+	int		m_salt;
+};
+
+
+
+class ByteFileRead
+{
+public:
+	ByteFileRead ();
+	~ByteFileRead ();
+
+	int open ( char const * filename, uint64_t pos );
+	void close ();
+	size_t read ( void * mem, size_t len ) const;	// = bytes read
+
+	inline bool is_open () const { return NULL != m_fp; };
+
+private:
+	void set_file ( FILE * fp );
+
+/// ----------------------------------------------------------------------------
+
+	FILE		* m_fp;
+};
+
+
+
+class ByteFileWrite
+{
+public:
+	ByteFileWrite ();
+	~ByteFileWrite ();
+
+	int open ( char const * filename );
+	void close ();
+	int write ( void * mem, size_t len );
+
+private:
+	void set_file ( FILE * fp );
+
+/// ----------------------------------------------------------------------------
+
+	FILE		* m_fp;
+};
+
+
+
+class ByteBuf
+{
+public:
+	inline ByteBuf ()
+		:
+		array (),
+		array_len (0),
+		tot (0),
+		pos (0)
+	{}
+
+	inline explicit ByteBuf ( size_t const size )
+		:
+		array ( (uint8_t *)calloc ( size, sizeof(uint8_t) ) ),
+		array_len ( size ),
+		tot (0),
+		pos (0)
+	{
+		if ( ! array )
+		{
+			throw 123;
+		}
+	}
+
+	inline ~ByteBuf () { set ( NULL, 0 ); }
+
+	inline void set ( uint8_t * const buf, size_t const len )
+	{
+		free ( array );
+		array = buf;
+		array_len = len;
+		tot = 0;
+		pos = 0;
+	}
+
+	int save ( std::string const &filename );
+	void load ( std::string const &filename );
+
+/// ----------------------------------------------------------------------------
+
+	uint8_t		* array;
+	size_t		array_len;
+	size_t		tot;		// Current items in array
+	size_t		pos;		// Current position in array
+};
+
+
+
+class Random
+{
+public:
+	inline Random () : m_seed (0) {}
+	inline ~Random () {}
+
+	inline void set_seed ( uint64_t seed )	{ m_seed = seed; }
+	inline uint64_t get_seed () const	{ return m_seed; }
+
+	void set_seed_by_time ();		// Use current time as the seed
+
+	int get_int ();				// = INT_MIN..INT_MAX
+	int get_int ( int modulo );		// = 0..(modulo - 1)
+
+	void get_data ( uint8_t * buf, size_t buflen );
+
+protected:
+	uint64_t	m_seed;
+};
+
+
+
+#ifdef SQLITE_VERSION
+
+/*
+This is only in the mtKit API if the caller has used #include <sqlite3.h> before
+#include <mtkit.h>
+*/
+
+class Sqlite;
+class SqliteAddRecord;
+class SqliteGetRecord;
+class SqliteStmt;
+class SqliteTransaction;
+
+class SqliteAddRecordOp;	// Opaque / Pimpl
+
+
+
+class Sqlite
+{
+public:
+	inline Sqlite () : m_db () {}
+	inline ~Sqlite () { set_sqlite3 ( NULL ); }
+
+	int open ( std::string const & filename );
+	void set_sqlite3 ( sqlite3 * db );
+	inline sqlite3 * get_sqlite3 () const { return m_db; };
+
+	inline int exec_sql ( std::string const & sql ) const
+		{ return exec_sql ( sql.c_str () ); };
+	int exec_sql ( char const * const sql ) const;
+
+	int empty_table ( std::string const & table ) const;
+	int count_rows ( std::string const & table ) const;
+
+protected:
+	sqlite3		* m_db;
+};
+
+
+
+class SqliteAddRecord		// All items throw on fail
+{
+public:
+	// NOTE: all text/memory values must be valid when insert() is called.
+
+	SqliteAddRecord ( Sqlite const & db, char const * table );
+	~SqliteAddRecord ();
+
+	void text ( char const * name, char const * value ) const;
+	void blob ( char const * name, char const * value, int value_len) const;
+	void integer ( char const * name, sqlite3_int64 value ) const;
+
+	void insert () const;
+
+private:
+	SqliteAddRecordOp * const op;
+
+	SqliteAddRecord ( const SqliteAddRecord & ); // Disable copy constructor
+};
+
+
+
+class SqliteTransaction
+{
+public:
+	inline explicit SqliteTransaction ( Sqlite const & db )
+		:
+		m_db		( db )
+	{
+		m_db.exec_sql ( "BEGIN TRANSACTION" );
+	}
+
+	inline ~SqliteTransaction ()
+	{
+		m_db.exec_sql ( "COMMIT" );
+	}
+
+protected:
+	Sqlite	const	& m_db;
+};
+
+
+
+class SqliteStmt
+{
+public:
+	inline SqliteStmt ( Sqlite const & db, std::string const & sql )
+		:
+		stmt	()
+	{
+		err = sqlite3_prepare_v2 ( db.get_sqlite3 (), sql.c_str(), -1,
+			&stmt, 0 );
+	}
+
+	inline ~SqliteStmt ()
+	{
+		if ( stmt )
+		{
+			sqlite3_finalize ( stmt );
+			stmt = NULL;
+		}
+	}
+
+	inline int step ()
+	{
+		return (err = sqlite3_step ( stmt ));
+	}
+
+	inline int bind_text (
+		int const item,
+		char const * const text
+		)
+	{
+		err = sqlite3_bind_text ( stmt, item, text, -1, SQLITE_STATIC );
+
+		return err;
+	}
+
+	inline int bind_blob (
+		int const item,
+		void const * const mem,
+		int const mem_len
+		)
+	{
+		err = sqlite3_bind_blob ( stmt, item, mem, mem_len,
+			SQLITE_STATIC );
+
+		return err;
+	}
+
+	inline int bind_int64 (
+		int const item,
+		sqlite3_int64 num
+		)
+	{
+		err = sqlite3_bind_int64 ( stmt, item, num );
+
+		return err;
+	}
+
+/// ----------------------------------------------------------------------------
+
+	sqlite3_stmt	* stmt;
+	int		err;
+};
+
+
+
+class SqliteGetRecord
+{
+public:
+	SqliteGetRecord ( Sqlite & db, std::string const & sql ); // throws
+	~SqliteGetRecord ();
+
+	int next ();
+
+	void		blob_string ( int arg, std::string & str );
+	sqlite3_int64	integer ( int arg );
+
+/// ----------------------------------------------------------------------------
+
+	SqliteStmt	stmt;
+};
+
+
+
+#endif	// #ifdef SQLITE_VERSION
 
 
 

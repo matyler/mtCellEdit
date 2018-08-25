@@ -333,6 +333,27 @@ char const * mtkit_file_home ( void )
 	return homedir;
 }
 
+int mtkit_file_directory_exists (
+	char	const *	const	path
+	)
+{
+	if ( ! path )
+	{
+		return 0;
+	}
+
+	DIR * dir = opendir ( path );
+
+	if ( dir )
+	{
+		closedir ( dir );
+
+		return 1;
+	}
+
+	return 0;
+}
+
 int mtkit_file_readable (
 	char	const *	const	filename
 	)

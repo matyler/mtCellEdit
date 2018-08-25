@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2017 Mark Tyler
+	Copyright (C) 2004-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -232,8 +232,8 @@ mtPixy::Image * mtPixy::Font::render_image (
 		return NULL;
 	}
 
-	image = mtPixy::image_from_data ( mtPixy::Image::TYPE_ALPHA, w, h, NULL,
-		mem );
+	image = mtPixy::Image::from_data ( mtPixy::Image::TYPE_ALPHA, w, h,
+		NULL, mem );
 	if ( ! image )
 	{
 		free ( mem );

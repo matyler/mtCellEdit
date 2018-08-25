@@ -1,0 +1,102 @@
+----------- scripts/01.txt -----------
+
+mtDWCLI > well add path ../..
+mtDWCLI > 
+mtDWCLI > butt add name bertie_06
+mtDWCLI > butt add name bertie_06
+Butt already exists.
+Error running command 'butt add name bertie_06'
+
+mtDWCLI > butt add buckets 1
+mtDWCLI > 
+mtDWCLI > butt add name george_15
+mtDWCLI > butt add buckets 2
+mtDWCLI > 
+mtDWCLI > butt add name jane_54
+mtDWCLI > butt add buckets 1
+mtDWCLI > 
+mtDWCLI > butt add name rosi_06
+mtDWCLI > butt add buckets 1
+mtDWCLI > 
+mtDWCLI > 
+
+----------- scripts/11.txt -----------
+
+mtDWCLI > well save file 1      d1/001.bin
+mtDWCLI > well save file 2      d1/002.bin
+mtDWCLI > well save file 3      d1/003.bin
+mtDWCLI > well save file 11     d1/004.bin
+mtDWCLI > well save file 127    d1/005.bin
+mtDWCLI > well save file 128    d1/006.bin
+mtDWCLI > well save file 129    d1/007.bin
+mtDWCLI > well save file 1000000        d1/010.bin
+mtDWCLI > well save file 11000000       d1/011.bin
+mtDWCLI > 
+mtDWCLI > 
+
+----------- scripts/21.txt -----------
+
+mtDWCLI > butt set name jane_54
+mtDWCLI > 
+mtDWCLI > # encode but don't encrypt
+mtDWCLI > soda set mode 1
+mtDWCLI > 
+mtDWCLI > soda encode d1/000.bin                d2/000.bin.soda
+mtDWCLI > soda encode d1/001.bin                d2/001.bin.soda
+mtDWCLI > soda encode d1/002.bin                d2/002.bin.soda
+mtDWCLI > soda encode d1/003.bin                d2/003.bin.soda
+mtDWCLI > soda encode d1/004.bin                d2/004.bin.soda
+mtDWCLI > 
+mtDWCLI > soda encode d1/in.001.txt     d2/in.001.txt.soda
+mtDWCLI > 
+mtDWCLI > # encode and encrypt
+mtDWCLI > soda set mode 0
+mtDWCLI > 
+mtDWCLI > soda encode d1/005.bin                d2/005.bin.soda
+mtDWCLI > soda encode d1/006.bin                d2/006.bin.soda
+mtDWCLI > soda encode d1/007.bin                d2/007.bin.soda
+mtDWCLI > soda encode d1/010.bin                d2/010.bin.soda
+mtDWCLI > soda encode d1/011.bin                d2/011.bin.soda
+mtDWCLI > 
+mtDWCLI > tap encode d0/bottle.flac     d2/006.bin.soda d2/bottle.006.soda.flac
+mtDWCLI > tap encode d0/bottle.png      d2/007.bin.soda d2/bottle.007.soda.png
+mtDWCLI > 
+mtDWCLI > soda encode d1/in.002.txt     d2/in.002.txt.soda
+mtDWCLI > 
+mtDWCLI > soda multi encode d1/in.003.txt d2/in.003.txt.soda bertie_06 george_15 [AmtDWCLI > soda multi encode d1/in.003.txt d2/in.003.txt.soda bertie_06 george_1[K5
+mtDWCLI > soda multi encode d1/in.004.txt d2/in.004.txt.soda bertie_06 george_15  jane_54
+mtDWCLI > soda multi encode d1/in.005.txt d2/in.005.txt.soda bertie_06 george_15  jane_54 rosi_06
+mtDWCLI > soda multi encode d1/in.006.txt d2/in.006.txt.soda george_15 jane_54 roosi_06 bertie_06
+mtDWCLI > 
+mtDWCLI > tap encode d0/bottle.flac     d2/in.005.txt.soda d2/bottle.in.005.soda..flac
+mtDWCLI > tap encode d0/bottle.png      d2/in.006.txt.soda d2/bottle.in.006.soda..png
+mtDWCLI > 
+mtDWCLI > 
+
+----------- scripts/31.txt -----------
+
+mtDWCLI > soda decode d2/000.bin.soda                   d3/000.bin
+mtDWCLI > soda decode d2/001.bin.soda                   d3/001.bin
+mtDWCLI > soda decode d2/002.bin.soda                   d3/002.bin
+mtDWCLI > soda decode d2/003.bin.soda                   d3/003.bin
+mtDWCLI > soda decode d2/004.bin.soda                   d3/004.bin
+mtDWCLI > 
+mtDWCLI > soda decode d2/in.001.txt.soda                        d3/in.001.txt
+mtDWCLI > 
+mtDWCLI > soda decode d2/005.bin.soda                   d3/005.bin
+mtDWCLI > 
+mtDWCLI > tap decode d2/bottle.006.soda.flac            d3/006.bin
+mtDWCLI > tap decode d2/bottle.007.soda.png             d3/007.bin
+mtDWCLI > 
+mtDWCLI > soda decode d2/010.bin.soda                   d3/010.bin
+mtDWCLI > soda decode d2/011.bin.soda                   d3/011.bin
+mtDWCLI > 
+mtDWCLI > soda decode d2/in.002.txt.soda                        d3/in.002.txt
+mtDWCLI > 
+mtDWCLI > soda multi decode d2/in.003.txt.soda          d3/in.003.txt
+mtDWCLI > soda multi decode d2/in.004.txt.soda          d3/in.004.txt
+mtDWCLI > 
+mtDWCLI > tap multi decode d2/bottle.in.005.soda.flac   d3/in.005.txt
+mtDWCLI > tap multi decode d2/bottle.in.006.soda.png    d3/in.006.txt
+mtDWCLI > 
+

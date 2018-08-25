@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -210,7 +210,7 @@ static int load_png_palette (
 	return 0;
 }
 
-mtPixy::Image * mtPixy::image_load_png (
+mtPixy::Image * mtPixy::Image::load_png (
 	char	const	* const	filename
 	)
 {
@@ -285,13 +285,11 @@ mtPixy::Image * mtPixy::image_load_png (
 		bit_depth > 8
 		)
 	{
-		image = image_create ( Image::TYPE_RGB, (int)pwidth,
-			(int)pheight );
+		image = create ( TYPE_RGB, (int)pwidth, (int)pheight );
 	}
 	else
 	{
-		image = image_create ( Image::TYPE_INDEXED, (int)pwidth,
-			(int)pheight );
+		image = create ( TYPE_INDEXED, (int)pwidth, (int)pheight );
 	}
 
 	if ( ! image )

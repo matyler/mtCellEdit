@@ -11,8 +11,6 @@
 ./update_mtconf.sh
 ./update_handbook.sh
 
-rm bcfile.txt
-
 
 # On error exit
 set -e

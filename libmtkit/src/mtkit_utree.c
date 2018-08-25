@@ -53,7 +53,6 @@ static char * utree_formulate_input (
 	char		const * const input = in[0];
 	char		* output = NULL;
 	char		const * s1;
-	char		* s2;
 
 
 	// Count the substitutions required
@@ -88,14 +87,16 @@ static char * utree_formulate_input (
 	}
 	else
 	{
-		for ( s1 = input, s2 = output; s1[0] != '"'; )
+		char * dest = output;
+
+		for ( s1 = input; s1[0] != '"'; )
 		{
 			if ( s1[0] == '\\' )
 			{
 				s1 ++;
 			}
 
-			*s2++ = *s1++;
+			*dest++ = *s1++;
 		}
 	}
 

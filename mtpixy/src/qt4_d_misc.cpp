@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -298,10 +298,10 @@ DialogImageIndexed::DialogImageIndexed (
 	QVBoxLayout * vbox = new QVBoxLayout;
 	gbox->setLayout ( vbox );
 
-	m_rbut_none = new QRadioButton ( "None" );
+	m_rbut_none = new QRadioButton ( "None (approximate colour)" );
 	vbox->addWidget ( m_rbut_none );
 
-	m_rbut_basic = new QRadioButton ( "Basic" );
+	m_rbut_basic = new QRadioButton ( "Basic (exact colour)" );
 	vbox->addWidget ( m_rbut_basic );
 
 	m_rbut_floyd = new QRadioButton ( "Floyd-Steinberg" );

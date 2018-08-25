@@ -1,0 +1,213 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Chapter 7 - mtDWCLI</TITLE>\1'
+
+
+[Previous chap_06.html] | [Contents chap_00.html] | [Next chap_A.html]
+-------------------------------------------------
+
+=7. mtDWCLI=
+
+mtDWCLI is a program that provides random number and cryptographic functionality via a Command Line Interface (CLI).  It offers features in 4 parts:
+
+- Random data creation.
+- One time pad management.
+- Encoding, decoding, encryption, and decryption of user files.
+- Storing data within image and audio files using steganography.
+
+
+To make operations easier to understand I have employed a simple metaphor:
+	**Random data is water**.
+
+- A well is the source of water.
+- A butt holds water taken from the well.
+- Soda is created by mixing water from the butt with flavour.
+- A tap is used to funnel soda into a bottle.
+
+
+This metaphor translates to computing activities as follows:
+
+- Well = non-reversible process to create quality HRNG data files.
+	Quality HRNG = Hybrid Random Number Generator (PRNG XOR'd with
+	entropy) which cannot be reversed, and is statistically random.
+
+- Butt = database of HRNG files from the well.
+
+- Soda = reversible file process: e.g.
+	flavour XOR water => soda.
+	soda XOR water => flavour.
+	Flavour = User file.
+
+- Tap = reversible file process: get soda in and out of a bottle: e.g.
+	input bottle filled with soda => output bottle.
+	output bottle emptied => soda.
+	bottle = PNG or FLAC file.
+
+
+==7.1 Commands==[SEC1]
+
+mtDWCLI reads instructions from the user via GNU Readline.  This offers useful interactive facilities like using the up and down arrows to access previous commands.
+
+It is also possible to run a script from the command line like these examples:
+
+```
+cat script.txt | mtdwcli
+mtdwcli < script.txt
+mtdwcli < script.txt > log.txt 2>&1
+```
+
+Here is the complete list of commands that mtDWCLI accepts:
+
+| **Command**            | **Arguments**      | **Notes** |
+| about                  |                    | About the program
+| butt add buckets       | <INTEGER>          | Add buckets to the current butt
+| butt add name          | <STRING>           | Create a new named butt
+| butt info              |                    | Print info about the current butt
+| butt list              |                    | List all of the butt names
+| butt set name          | <STRING>           | Change the current butt
+| help                   | [ARG]...           | Display help on this command
+| q                      |                    | Quit the program
+| quit                   |                    | Quit the program
+| soda decode            | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a soda file
+| soda encode            | <INPUT FILENAME> <OUTPUT FILENAME> | Create a soda file
+| soda file info         | <FILENAME>         | Print information about a soda file
+| soda info              |                    | Print information about the current soda settings
+| soda multi decode      | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a nested soda file
+| soda multi encode      | <INPUT FILENAME> <OUTPUT FILENAME> <BUTT NAME>... | Create a nested soda file
+| soda set mode          | <INTEGER>          | Set the soda mode. 0=Encrypt using the butt; 1=Don't encrypt, store as raw data
+| tap decode             | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a tap file to the original file stored inside the soda
+| tap encode             | <INPUT BOTTLE> <INPUT FILE> <OUTPUT BOTTLE> | Create a tap file using a PNG/FLAC bottle and a soda input file
+| tap file info          | <FILENAME>         | Print information about this tap file
+| tap multi decode       | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a nested tap file (e.g. a PNG stored inside a FLAC)
+| well add path          | <PATH>             | Add the filenames inside this path to the well database
+| well empty             |                    | Remove all filenames from the well database
+| well info              |                    | Print information about the well
+| well save file         | <BYTES> <FILENAME> | Create a file of random data using the well
+| well seed              |                    | Re-seed the well PRNG using the current time
+| well seed int          | <INTEGER>          | Re-seed the well PRNG using this integer
+
+
+
+==7.2 Examples==[SEC2]
+
+
+==7.2.1 Setting up a Well==[SEC21]
+
+The first time you use mtDWCLI you will need to set up the well in order to create high quality random data.  This is done by passing some files to the well as a source of real world entropy as follows:
+
+```
+well add path /some/directory/location/001
+well add path /some/directory/location/002
+well add path /some/directory/location/003
+```
+
+The current state of the well is found out as follows:
+
+```
+well info
+```
+
+Once the well is set up you can use it to create arbitrary files of random data like this:
+
+```
+well save file 11 /some/directory/location/004.bin
+well save file 127 /some/directory/location/005.bin
+well save file 128 /some/directory/location/006.bin
+well save file 129 /some/directory/location/007.bin
+well save file 1000000 /some/directory/location/010.bin
+```
+
+
+
+==7.2.2 Managing Butt's==[SEC22]
+
+The first time you use mtDWCLI you will need to set up a butt to use as a one time pad. By default a random butt name is created for you, but it will be easier to remember if you create one using a code name such as:
+
+```
+butt add name jane_54
+```
+
+You must then put some well data into the butt using the well as a source:
+
+```
+butt add buckets 25
+```
+
+Each bucket is 16 megabytes.
+
+You can create as many butt's as you like, such as:
+
+```
+butt add name bertie_06
+butt add name george_15
+butt add name rosi_06
+```
+
+To switch to using a different butt for encryption, and to see its current state use these commands:
+
+```
+butt set name jane_54
+butt info
+```
+
+
+
+
+==7.2.3 Creating Soda==[SEC23]
+To encode a user file using encryption with data from the current butt you could do this:
+
+```
+# encode and encrypt
+soda set mode 0
+
+soda encode input.txt output.soda
+```
+
+Sometimes you may not want to encrypt something. For example if you wanted to store some data in a PNG or FLAC file later using a tap, you may not want to encrypt.  In this case to encode a soda file you would use:
+
+```
+# encode but don't encrypt
+soda set mode 1
+
+soda encode input.txt output.soda
+```
+
+You can also encode multiple times using different butts as follows:
+
+```
+soda multi encode input.txt output.soda george_15 jane_54 rosi_06 bertie_06
+```
+
+To decode a single or multiple soda file you would use:
+
+```
+soda multi decode output.soda input.txt
+```
+
+
+
+
+==7.2.4 Using a Tap==[SEC24]
+If you want to conceal a soda file inside a PNG or FLAC file you would do this:
+
+```
+tap encode bottle.flac input.soda bottle.soda.flac
+```
+
+The output file is still a valid audio file and can be used as such.  However it also contains the input.soda file which can be extracted by using:
+
+```
+tap decode bottle.soda.flac input.txt
+```
+
+It is possible to nest FLAC and PNG files in a kind of Russian doll approach.  To extract a message buried inside more than one level you could use:
+
+```
+tap multi decode bottle.soda.flac input.txt
+```
+
+
+
+
+
+-------------------------------------------------
+[Previous chap_06.html] | [Contents chap_00.html] | [Next chap_A.html]

@@ -2,10 +2,10 @@
 pkgname=libmtkit
 pkgver
 pkgrel=@MT_RELVER@
-pkgdesc="MT Low level C routines"
+pkgdesc="MT Low level C/C++ routines"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('zlib')
+depends=('zlib' 'sqlite')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

@@ -23,8 +23,8 @@ These must also include library headers, which some operating systems provide in
 mtPixy then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtKit      | zlib             | Low level C routines, including strings, UTF-8, ZIP file handling, preferences, trees. |
-| libmtPixy     | libmtKit, zlib, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
+| libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
+| libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
 | libmtPixyUI   | libmtKit, libmtPixy | Toolkit agnostic UI code, e.g. undo. |
 | libmtQEX      | libmtKit, Qt5    | Various Qt function utilities including preferences editor. |
 

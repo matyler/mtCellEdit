@@ -7,6 +7,8 @@ OBJS		=		\
 		chap_03.html	\
 		chap_04.html	\
 		chap_05.html	\
+		chap_06.html	\
+		chap_07.html	\
 		chap_A.html	\
 		chap_B.html	\
 		index.html	\

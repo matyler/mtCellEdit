@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -313,7 +313,7 @@ mtPixy::Image * mtPixy::PolySelOverlay::create_mask (
 
 	get_xywh ( x, y, w, h );
 
-	Image * const imask = mtPixy::image_create ( mtPixy::Image::TYPE_ALPHA,
+	Image * const imask = mtPixy::Image::create ( mtPixy::Image::TYPE_ALPHA,
 		w, h );
 	if ( ! imask )
 	{

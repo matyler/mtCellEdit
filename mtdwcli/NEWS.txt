@@ -1,0 +1,10 @@
+3.2	2018-8-25
+
+1.0	2018-6-19
+
+	* Project split and renamed mtdwcli.
+
+0.0	2018-5-18
+
+	* Project started as mtdatawell.
+

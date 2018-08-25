@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -107,7 +107,7 @@ mtPixy::File::Type mtPixy::File::detect_type (
 	return TYPE_NONE;
 }
 
-mtPixy::Image * mtPixy::image_load (
+mtPixy::Image * mtPixy::Image::load (
 	char	const	* const	filename,
 	File::Type	* const	newtyp
 	)
@@ -120,23 +120,23 @@ mtPixy::Image * mtPixy::image_load (
 	switch ( detected )
 	{
 	case File::TYPE_BMP:
-		image = image_load_bmp ( filename );
+		image = load_bmp ( filename );
 		break;
 
 	case File::TYPE_PNG:
-		image = image_load_png ( filename );
+		image = load_png ( filename );
 		break;
 
 	case File::TYPE_JPEG:
-		image = image_load_jpeg ( filename );
+		image = load_jpeg ( filename );
 		break;
 
 	case File::TYPE_GIF:
-		image = image_load_gif ( filename );
+		image = load_gif ( filename );
 		break;
 
 	case File::TYPE_GPL:
-		image = image_create ( Image::TYPE_INDEXED, 1, 1 );
+		image = create ( Image::TYPE_INDEXED, 1, 1 );
 		if ( image )
 		{
 			Palette * pal = image->get_palette ();
@@ -155,11 +155,11 @@ mtPixy::Image * mtPixy::image_load (
 		break;
 
 	case File::TYPE_PIXY:
-		image = image_load_pixy ( filename );
+		image = load_pixy ( filename );
 		break;
 
 	case File::TYPE_BP24:
-		image = image_load_bp24 ( filename );
+		image = load_bp24 ( filename );
 		break;
 
 	default:

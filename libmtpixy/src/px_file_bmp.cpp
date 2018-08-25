@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -23,7 +23,7 @@
 
 
 
-mtPixy::Image * mtPixy::image_load_bmp (
+mtPixy::Image * mtPixy::Image::load_bmp (
 	char	const	* const	filename
 	)
 {
@@ -80,11 +80,11 @@ mtPixy::Image * mtPixy::image_load_bmp (
 
 	if ( bitcount == 24 )
 	{
-		image = image_create ( Image::TYPE_RGB, w, h );
+		image = create ( TYPE_RGB, w, h );
 	}
 	else
 	{
-		image = image_create ( Image::TYPE_INDEXED, w, h );
+		image = create ( TYPE_INDEXED, w, h );
 	}
 
 	if ( ! image )

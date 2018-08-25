@@ -1,0 +1,1 @@
+src/build_appimage_all.sh

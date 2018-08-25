@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ int pixyut_delta ()
 	file_b = global.s_arg;
 
 	mtPixy::File::Type	ft;
-	mtPixy::Image		* image_a = mtPixy::image_load ( file_a, &ft );
+	mtPixy::Image		* image_a = mtPixy::Image::load ( file_a, &ft );
 
 	if ( ! image_a )
 	{
@@ -44,7 +44,7 @@ int pixyut_delta ()
 
 	global.i_ftype_in = (int)ft;
 
-	mtPixy::Image * image_b = mtPixy::image_load ( file_b, NULL );
+	mtPixy::Image * image_b = mtPixy::Image::load ( file_b, NULL );
 	if ( ! image_b )
 	{
 		delete ( image_a );
@@ -152,7 +152,7 @@ int pixyut_new ()
 		return ERROR_BAD_PALETTE; // Fail: caller tells user of failure
 	}
 
-	mtPixy::Image * image = mtPixy::image_create (
+	mtPixy::Image * image = mtPixy::Image::create (
 		(mtPixy::Image::Type)global.i_image_type,
 		global.i_width, global.i_height );
 

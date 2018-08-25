@@ -6,6 +6,7 @@ OBJS_GENTEX	=			\
 		mtgentex_main.o		\
 
 BINS		=			\
+		mtbinana		\
 		mtchls			\
 		mtdsize			\
 		mtgentex		\
@@ -14,6 +15,9 @@ BINS		=			\
 .PHONY:		all install uninstall clean
 
 all:		$(BINS)
+
+mtbinana:	mtbinana.o
+		$(CXX) mtbinana.o -o $@ $(LDFLAGS)
 
 mtchls:		mtchls.o
 		$(CXX) mtchls.o -o $@ $(LDFLAGS)

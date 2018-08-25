@@ -6,51 +6,8 @@
 txt_title "mtPixyCLI"
 
 
-SHEXE=scripts
-CEDCOM="mtpixycli -seed 123 -q -t -patterns /usr/share/mtpixy-qt4/patterns/default.png -shapes /usr/share/mtpixy-qt4/shapes/default.png"
-
-
-run_sh_head()
-{
-	echo ----------- $FILE_SH -----------
-	echo ----------- $FILE_SH ----------- >> $1
-	echo >> $1
-}
-
-run_sh_tail()
-{
-	echo
-	echo >> $1
-	echo >> $1
-}
-
-run_sh_cli()
-{
-	while [ -n "$1" ]
-	do
-		FILE_SH=$SHEXE/$1.txt
-
-		case "$VALG" in
-		"T" )
-			;&
-		"Y" )
-			run_sh_head $VALG_LOGFILE
-			$PROGPREFIX $CEDCOM < $FILE_SH >> $VALG_LOGFILE 2>&1
-			run_sh_tail $VALG_LOGFILE
-			;;
-		esac
-
-		run_sh_head $LOGFILE
-		$CEDCOM < $FILE_SH >> $LOGFILE 2>&1
-		run_sh_tail $LOGFILE
-
-		shift
-	done
-}
-
-
-LOGFILE=output/log.txt
-> $LOGFILE
+CLICOM="mtpixycli -seed 123 -q -t -patterns /usr/share/mtpixy-qt4/patterns/default.png -shapes /usr/share/mtpixy-qt4/shapes/default.png"
+run_sh_cli_init
 
 
 # Creative
@@ -59,8 +16,6 @@ run_sh_cli 11 12 13
 
 # Misc, including errors
 run_sh_cli 51
-
-
 
 
 valg_results

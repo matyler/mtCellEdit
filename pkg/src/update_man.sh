@@ -38,7 +38,7 @@ FIND_MAN_PAGES()
 	then
 		# Targetted man page
 		ARGS="--use-$1"
-		GREP="$1"
+		GREP="MTCF_ENABLE_QT"
 	else
 		# General man page
 		ARGS=""

@@ -5,7 +5,9 @@
 
 MT_flush_func()
 {
-	rm -rf $CWD/$DISTRO_PATH/tmp/*/* bcfile.txt
+	cd $CWD
+
+	rm -rf $DISTRO_PATH/tmp/*/*
 }
 
 

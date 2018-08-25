@@ -85,6 +85,7 @@ An important decision I have taken is to release it as free software using the G
 | 2016-5-14  | 2.7         | Qt5 is now the default GUI toolkit.  GTK+2 version of mtEleana removed. libmtIMG dispersed into libmtKit & libmtCedUI. mtEleana reworked. Pango now renders GUI and output file text (enables font substitution, kerning, etc).  |
 | 2017-2-24  | 3.0         | C code converted to C++.  mtPixy, mtPixyCLI, mtPixyUtils, libmtPixy, libmtPixyUI added. All GTK+2 code removed. |
 | 2018-2-25  | 3.1         | General improvements. mtEleana removed. |
+| 2018-8-25  | 3.2         | libmtdatawell, mtDWCLI added. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

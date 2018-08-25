@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -30,7 +30,7 @@ mtPixy::Image * mtPixy::Image::convert_to_rgb ()
 		return NULL;
 	}
 
-	Image * im = image_create ( TYPE_RGB, m_width, m_height );
+	Image * im = create ( TYPE_RGB, m_width, m_height );
 	if ( ! im )
 	{
 		return NULL;
@@ -282,6 +282,11 @@ static void basic_dither (
 					closest[1][1] = closest[1][0];
 					closest[0][0] = k;
 					closest[1][0] = closest[2][0];
+
+					if ( closest[2][0] == 0 )
+					{
+						break;
+					}
 				}
 				else
 				{
@@ -336,7 +341,7 @@ mtPixy::Image * mtPixy::Image::convert_to_indexed (
 		return NULL;
 	}
 
-	Image * im = image_create ( TYPE_INDEXED, m_width, m_height );
+	Image * im = create ( TYPE_INDEXED, m_width, m_height );
 	if ( ! im )
 	{
 		return NULL;
@@ -510,7 +515,7 @@ static void rotate_c_mem (
 
 mtPixy::Image * mtPixy::Image::rotate_clockwise ()
 {
-	Image * im = image_create ( m_type, m_height, m_width );
+	Image * im = create ( m_type, m_height, m_width );
 	if ( ! im )
 	{
 		return NULL;
@@ -574,7 +579,7 @@ static void rotate_a_mem (
 
 mtPixy::Image * mtPixy::Image::rotate_anticlockwise ()
 {
-	Image * im = image_create ( m_type, m_height, m_width );
+	Image * im = create ( m_type, m_height, m_width );
 	if ( ! im )
 	{
 		return NULL;

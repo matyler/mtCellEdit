@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -430,10 +430,7 @@ mtPixy::Image * mtPixy::Image::scale (
 	}
 
 
-	Image	* newim;
-
-
-	newim = image_create ( m_type, w, h );
+	Image * const newim = create ( m_type, w, h );
 	if ( ! newim )
 	{
 		return NULL;

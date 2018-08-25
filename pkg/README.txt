@@ -5,17 +5,15 @@ This document outlines my testing procedures before this release.
 * Your system must satisfy all of the requirements outlined in section 3 of the handbook.
 
 
---------------------------------
-Debian 9 (amd64) [x86_64] (2017)
---------------------------------
+---------------------------------
+Debian 10 (amd64) [x86_64] (2018)
+---------------------------------
 
 Package deps:
-sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtbase5-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev
+sudo apt-get install dh-make pbuilder clang clang-tools-6.0 valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtbase5-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev
 
 * Install
-	./build_debian.sh --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
-	./build_debian.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4 --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
-	./build_debian.sh flush
+	./build_debian.sh all clean --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu"
 
 * Build using clang-static to expose possible errors:
 	./clang_scan.sh
@@ -51,9 +49,7 @@ sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tag
 * Skim documentation to expose cruft and mistakes.
 
 * Remove
-	./build_debian.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4
-	./build_debian.sh remove
-	./build_debian.sh flush
+	./build_debian.sh remove all clean
 
 * Install, test, uninstall locally:
 	DIR="$HOME/test/usr"; ./build_local.sh --preconf "LDFLAGS=-Wl,-rpath=$DIR/lib" --conf "--disable-man --prefix=$DIR"
@@ -66,44 +62,37 @@ sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tag
 	DIR="$HOME/test/usr"; ./build_local.sh --conf "--disable-man --prefix=$DIR" remove
 	./build_local.sh flush
 
-------------------------------------
-Manjaro Linux 17.0.1 [x86_64] (2017)
-------------------------------------
+-------------------------------
+ArcoLinux 6.9.1 [x86_64] (2018)
+-------------------------------
 
 Package deps:
-sudo pacman -S base-devel txt2tags qt5-base qt4 clang-analyzer time valgrind cppcheck libpng giflib libjpeg
+sudo pacman -S base-devel txt2tags qt5-base qt4 clang-analyzer time valgrind cppcheck libpng giflib libjpeg sqlite libsndfile
 
 * Install
-	./build_arch.sh
-	./build_arch.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4
-	./build_arch.sh flush
+	./build_arch.sh all clean
 
 * Smoke test the apps.
 
 * Remove
-	./build_arch.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4
-	./build_arch.sh remove
-	./build_arch.sh flush
+	./build_arch.sh remove all clean
 
 
 -------------------------------
-CentOS 7.3 XFCE [x86_64] (2016)
-Fedora  27 XFCE [x86_64] (2017)
+CentOS 7.4 XFCE [x86_64] (2017)
+Fedora  28 XFCE [x86_64] (2018)
 -------------------------------
 
 Package deps:
-sudo yum install clang clang-analyzer valgrind txt2tags automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools qt5-qtbase-devel qtchooser qt-devel qt-config cairo-devel pango-devel libpng-devel libjpeg-turbo-devel giflib-devel
+sudo yum install clang clang-analyzer valgrind txt2tags automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools qt5-qtbase-devel qtchooser qt-devel qt-config cairo-devel pango-devel libpng-devel libjpeg-turbo-devel giflib-devel libsqlite3x-devel libsndfile-devel
 
 * Install
-	./build_fedora.sh --conf "--libdir=/usr/lib64"
-	./build_fedora.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4 --conf "--libdir=/usr/lib64"
+	./build_fedora.sh all clean --conf "--libdir=/usr/lib64"
 
 * Smoke test the apps.
 
 * Remove
-	./build_fedora.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4
-	./build_fedora.sh remove
-	./build_fedora.sh flush
+	./build_fedora.sh remove all clean
 
 
 ------------------------------
@@ -111,18 +100,15 @@ Suse 42.3 XFCE [x86_64] (2017)
 ------------------------------
 
 Package deps:
-sudo zypper install automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools libqt5-qtbase-devel qt-devel cairo-devel pango-devel libpng-devel libjpeg62-devel giflib-devel
+sudo zypper install automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools libqt5-qtbase-devel qt-devel cairo-devel pango-devel libpng-devel libjpeg62-devel giflib-devel sqlite3-devel libsndfile-devel
 
 * Install
-	./build_suse.sh --conf "--libdir=/usr/lib64"
-	./build_suse.sh libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4 --conf "--libdir=/usr/lib64"
+	./build_suse.sh all clean --conf "--libdir=/usr/lib64"
 
 * Smoke test the apps.
 
 * Remove
-	./build_suse.sh remove libmtqex4 mtcelledit-qt4 mtraft-qt4 mtpixy-qt4
-	./build_suse.sh remove
-	./build_suse.sh flush
+	./build_suse.sh remove all clean
 
 
 -----------------------------------------
@@ -130,10 +116,10 @@ Debian 7 (i386 256MB RAM) [x86_32] (2013)
 -----------------------------------------
 
 Package deps:
-sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev
+sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev
 
 * Install
-	./build_debian.sh --bcfile etc/bcfile_debian7_i386.txt
+	./build_debian.sh clean --bcfile etc/bcfile_debian7_i386.txt
 	./build_debian.sh flush
 
 * Run ./test/* test suites to expose regressions.
@@ -153,7 +139,7 @@ Debian 7 (armhf vexpress-a9 256MB RAM) [ARM_32] (2013)
 ------------------------------------------------------
 
 Package deps:
-sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev
+sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev
 
 * Install
 	./build_install.sh --bcfile etc/bcfile_debian7_arm.txt
@@ -175,7 +161,7 @@ Debian 7 (powerpc 256MB RAM) [PPC_32] (2013)
 --------------------------------------------
 
 Package deps:
-sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev
+sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tags automake libreadline-dev libqt4-dev qtcreator qt4-qtconfig time libpango1.0-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev
 
 * Install
 	./build_install.sh --bcfile etc/bcfile_debian7_ppc.txt
@@ -190,6 +176,16 @@ sudo apt-get install dh-make pbuilder clang valgrind bison flex cppcheck txt2tag
 * Remove
 	./build_install.sh --bcfile etc/bcfile_debian7_ppc.txt remove
 	./build_install.sh --bcfile etc/bcfile_debian7_ppc.txt flush
+
+-------------------------------------
+Lubuntu 14.04 (amd64) [x86_64] (2014)
+-------------------------------------
+
+sudo apt-get install bison flex automake libqt4-dev libpango1.0-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev
+
+Build AppImages:
+
+./build_appimage_all.sh
 
 
 -----

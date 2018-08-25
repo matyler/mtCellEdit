@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 	along with this program in the file COPYING.
 */
 
+#include <memory>
 #include "private.h"
 
 
@@ -22,73 +23,78 @@
 class FloodStack
 {
 public:
-	explicit FloodStack ( int &err );
+	explicit FloodStack ();
 	~FloodStack ();
 
-	// push, pop return 1 on failure, 0 on success
-	int push ( int y, int minx, int maxx );
-	int pop ( int &y, int &minx, int &maxx );
+	void push ( int y, int minx, int maxx );	// Throws on fail
+	int pop ( int &y, int &minx, int &maxx );	// 0=pop 1=no data
 
 private:
-	enum Limits
+	void get_next_chunk ();
+
+	typedef struct
 	{
-		MEM_SLICE = 3000
+		int m_y;
+		int m_minx;
+		int m_maxx;
+	} Item;
+
+	enum
+	{
+		ITEM_CHUNK = 1000
 	};
 
-	int		* m_mem;
-	size_t		m_mem_size;	// Starts at MEM_SLICE, then grows
-	size_t		m_position;	// Next free slot
+	Item		* m_item;
+	size_t		m_item_tot;
+	size_t		m_item_pos;	// Next free slot
 };
 
 
 
-FloodStack::FloodStack (
-	int		&err
-	)
+FloodStack::FloodStack ()
 	:
-	m_mem		(),
-	m_mem_size	( MEM_SLICE ),
-	m_position	( 0 )
+	m_item		(),
+	m_item_tot	( 0 ),
+	m_item_pos	( 0 )
 {
-	m_mem = (int *)malloc ( m_mem_size * sizeof(*m_mem) );
-	if ( ! m_mem )
-	{
-		err = 1;
-	}
 }
 
 FloodStack::~FloodStack ()
 {
-	free ( m_mem );
+	free ( m_item );
+	m_item = NULL;
 }
 
-int FloodStack::push (
+void FloodStack::get_next_chunk ()
+{
+	size_t	const	neo_size = m_item_tot + ITEM_CHUNK;
+	Item	* const	neo_mem = (Item *)realloc( m_item, neo_size *
+				sizeof(*m_item) );
+	if ( ! neo_mem )
+	{
+		throw 123;
+	}
+
+	m_item = neo_mem;
+	m_item_tot = neo_size;
+}
+
+void FloodStack::push (
 	int	const	y,
 	int	const	minx,
 	int	const	maxx
 	)
 {
-	if ( (m_position + 2) >= m_mem_size )
+	if ( m_item_pos >= m_item_tot )
 	{
-		size_t	const	neo_size = m_mem_size + MEM_SLICE;
-		int		* neo_mem;
-
-
-		neo_mem = (int *)realloc ( m_mem, neo_size * sizeof(*m_mem) );
-		if ( ! neo_mem )
-		{
-			return 1;
-		}
-
-		m_mem = neo_mem;
-		m_mem_size = neo_size;
+		get_next_chunk ();
 	}
 
-	m_mem[ m_position++ ] = y;
-	m_mem[ m_position++ ] = minx;
-	m_mem[ m_position++ ] = maxx;
+	m_item[ m_item_pos ].m_y = y;
+	m_item[ m_item_pos ].m_minx = minx;
+	m_item[ m_item_pos ].m_maxx = maxx;
 
-	return 0;
+	m_item_pos++;
 }
 
 int FloodStack::pop (
@@ -97,14 +103,16 @@ int FloodStack::pop (
 	int	&maxx
 	)
 {
-	if ( m_position < 3 )
+	if ( m_item_pos < 1 )
 	{
 		return 1;
 	}
 
-	maxx = m_mem[ --m_position ];
-	minx = m_mem[ --m_position ];
-	y = m_mem[ --m_position ];
+	m_item_pos--;
+
+	maxx = m_item[ m_item_pos ].m_maxx;
+	minx = m_item[ m_item_pos ].m_minx;
+	y = m_item[ m_item_pos ].m_y;
 
 	return 0;
 }
@@ -119,18 +127,18 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 		return NULL;
 	}
 
-	Image * ial = mtPixy::image_create ( TYPE_ALPHA, m_width, m_height );
-	if ( ! ial )
+	mtKit::unique_ptr<Image> alpha( create( TYPE_ALPHA, m_width, m_height));
+
+	if ( ! alpha.get () )
 	{
 		return NULL;
 	}
 
 	unsigned char	const * const	can = m_canvas;
-	unsigned char		* const	alp = ial->m_alpha;
+	unsigned char		* const	alp = alpha.get ()->m_alpha;
 
 	if ( ! can || ! alp )
 	{
-		delete ial;
 		return NULL;
 	}
 
@@ -178,13 +186,15 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 	}
 	else
 	{
-		delete ial;
 		return NULL;
 	}
 
-	if ( flood_fill_internal ( ial, x, y ) )
+	try
 	{
-		delete ial;
+		flood_fill_internal ( alpha.get (), x, y );
+	}
+	catch ( ... )
+	{
 		return NULL;
 	}
 
@@ -197,7 +207,7 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 		}
 	}
 
-	return ial;
+	return alpha.release ();
 }
 
 int mtPixy::Image::paint_flood_fill (
@@ -206,18 +216,15 @@ int mtPixy::Image::paint_flood_fill (
 	int	const	y
 	)
 {
-	Image * ial = flood_fill_prepare_alpha ( x, y );
-	if ( ! ial )
+	mtKit::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
+	if ( ! alpha.get () )
 	{
 		return 1;
 	}
 
-	ial->paint_flow ( bru );
+	alpha.get ()->paint_flow ( bru );
 
-	int res = paste_alpha_pattern ( ial, bru, 0, 0 );
-	delete ial;
-
-	return res;
+	return paste_alpha_pattern ( alpha.get (), bru, 0, 0 );
 }
 
 int mtPixy::Image::lasso (
@@ -225,8 +232,8 @@ int mtPixy::Image::lasso (
 	int	const	y
 	)
 {
-	Image * alp = flood_fill_prepare_alpha ( x, y );
-	if ( ! alp )
+	mtKit::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
+	if ( ! alpha.get () )
 	{
 		return 1;
 	}
@@ -237,44 +244,40 @@ int mtPixy::Image::lasso (
 	{
 		if ( create_alpha () || ! m_alpha )
 		{
-			delete alp;
 			return 1;
 		}
 
 		memset ( m_alpha, 255, (size_t)pixtot );
 	}
 
+	unsigned char const * const src = alpha.get ()->m_alpha;
+
 	for ( int i = 0; i < pixtot; i++ )
 	{
-		if ( alp->m_alpha[ i ] == 255 )
+		if ( src[ i ] == 255 )
 		{
 			m_alpha[ i ] = 0;
 		}
 	}
 
-	delete alp;
-
 	return 0;
 }
 
-int mtPixy::Image::flood_fill_internal (
+void mtPixy::Image::flood_fill_internal (
 	Image	* const	im,
 	int	const	x,
 	int	const	y
 	) const
 {
-	int		err = 0;
-	FloodStack	stack ( err );
-	unsigned char	* const	al = im->m_alpha;
+	FloodStack	stack;
+	unsigned char	* const	al = im->get_alpha ();
 
-
-	if ( ! al || err )
+	if ( ! al )
 	{
-		return 1;
+		return;
 	}
 
-
-	unsigned char * pix = al + y * m_width;
+	unsigned char	* pix = al + y * m_width;
 	int		minx = x;
 	int		maxx = x;
 	int		xp, yy = y, xp_min, xp_max;
@@ -310,18 +313,12 @@ int mtPixy::Image::flood_fill_internal (
 
 	if ( (yy - 1) >= 0 )
 	{
-		if ( stack.push ( yy - 1, minx, maxx ) )
-		{
-			return 1;
-		}
+		stack.push ( yy - 1, minx, maxx );
 	}
 
 	if ( (yy + 1) < m_height )
 	{
-		if ( stack.push ( yy + 1, minx, maxx ) )
-		{
-			return 1;
-		}
+		stack.push ( yy + 1, minx, maxx );
 	}
 
 	while ( 0 == stack.pop ( yy, minx, maxx ) )
@@ -384,20 +381,14 @@ int mtPixy::Image::flood_fill_internal (
 
 					if ( (yy - 1) >= 0 )
 					{
-						if ( stack.push ( yy - 1,
-							xp_min, xp_max ) )
-						{
-							return 1;
-						}
+						stack.push ( yy - 1,
+							xp_min, xp_max );
 					}
 
 					if ( (yy + 1) < m_height )
 					{
-						if ( stack.push ( yy + 1,
-							xp_min, xp_max ) )
-						{
-							return 1;
-						}
+						stack.push ( yy + 1,
+							xp_min, xp_max );
 					}
 				}
 			}
@@ -408,22 +399,14 @@ int mtPixy::Image::flood_fill_internal (
 		{
 			if ( (yy - 1) >= 0 )
 			{
-				if ( stack.push ( yy - 1, xp_min, xp_max ) )
-				{
-					return 1;
-				}
+				stack.push ( yy - 1, xp_min, xp_max );
 			}
 
 			if ( (yy + 1) < m_height )
 			{
-				if ( stack.push ( yy + 1, xp_min, xp_max ) )
-				{
-					return 1;
-				}
+				stack.push ( yy + 1, xp_min, xp_max );
 			}
 		}
 	}
-
-	return 0;
 }
 

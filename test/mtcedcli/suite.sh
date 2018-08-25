@@ -8,51 +8,9 @@ txt_title "mtCedCLI"
 
 OUT=output
 CHECK=results
-SHEXE=scripts
-CEDCOM="mtcedcli -q -t"
 
-
-run_sh_head()
-{
-	echo ----------- $FILE_SH -----------
-	echo ----------- $FILE_SH ----------- >> $1
-	echo >> $1
-}
-
-run_sh_tail()
-{
-	echo
-	echo >> $1
-	echo >> $1
-}
-
-run_sh_cli()
-{
-	while [ -n "$1" ]
-	do
-		FILE_SH=$SHEXE/$1.txt
-
-		case "$VALG" in
-		"T" )
-			;&
-		"Y" )
-			run_sh_head $VALG_LOGFILE
-			$PROGPREFIX $CEDCOM < $FILE_SH >> $VALG_LOGFILE 2>&1
-			run_sh_tail $VALG_LOGFILE
-			;;
-		esac
-
-		run_sh_head $LOGFILE
-		$CEDCOM < $FILE_SH >> $LOGFILE 2>&1
-		run_sh_tail $LOGFILE
-
-		shift
-	done
-}
-
-
-LOGFILE=output/log.txt
-> $LOGFILE
+CLICOM="mtcedcli -q -t"
+run_sh_cli_init
 
 
 # Creative
@@ -94,7 +52,6 @@ diff -q tmp/soak_01.tsv tmp/soak_03.tsv && txt_pass "Soak undo 1"
 diff -q tmp/soak_01.tsv tmp/soak_05.tsv && txt_pass "Soak undo 2"
 diff -q tmp/soak_02.tsv tmp/soak_04.tsv && txt_pass "Soak undo 3"
 echo
-
 
 
 valg_results

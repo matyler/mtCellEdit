@@ -1,11 +1,11 @@
 Name:			libmtkit
 Version:		@MT_VERSION@
 Release:		@MT_RELVER@%{?dist}
-Summary:		MT Low level C routines
+Summary:		MT Low level C/C++ routines
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		zlib-devel
-Requires:		zlib
+BuildRequires:		zlib-devel libsqlite3x-devel
+Requires:		zlib libsqlite3x
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

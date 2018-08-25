@@ -2521,7 +2521,7 @@ static int execute_node (
 		return 0;
 	}
 
-	int const fn_table_size = sizeof ( fn_table ) / sizeof ( fn_table[0] );
+	int const fn_table_size = (int)sizeof(fn_table) / sizeof(fn_table[0]);
 	int a = 0;
 	int c = fn_table_size - 1;
 

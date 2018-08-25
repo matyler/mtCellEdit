@@ -5,8 +5,10 @@
 
 MT_flush_func()
 {
+	cd $CWD
+
 	chmod a+w -R debian/*/tmp
-	rm -vrf debian/*/tmp bcfile.txt
+	rm -vrf debian/*/tmp
 }
 
 
@@ -45,7 +47,7 @@ MT_build_app_func()
 	tar czf $DEB_SRC_DIR.orig.tar.gz $NEW_SRC_DIR
 
 	cd $NEW_SRC_DIR
-	dh_make --single --copyright gpl3 \
+	dh_make -y --single --copyright gpl3 \
 		--email "mt@marktyler.org"
 
 	cp $CWD/debian/$PKG/mt/* debian

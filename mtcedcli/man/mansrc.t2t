@@ -16,7 +16,7 @@ mtCedCLI @APP_VERSION@
 = DESCRIPTION =
 mtCedCLI provides spreadsheet functionality via a Command Line
 Interface (CLI). It offers exactly the same functions as the GUI based
-mtCellEdit, but instead uses text commands. 
+mtCellEdit, but instead uses text commands.
 
 
 = OPTIONS =
@@ -33,7 +33,7 @@ cedutils(1)
 
 
 = HOMEPAGE =
-http://mtcelledit.sourceforge.net/
+http://ced.marktyler.org/
 
 
 = AUTHOR =

@@ -1,0 +1,15 @@
+well add path ../..
+
+butt add name bertie_06
+butt add name bertie_06
+butt add buckets 1
+
+butt add name george_15
+butt add buckets 2
+
+butt add name jane_54
+butt add buckets 1
+
+butt add name rosi_06
+butt add buckets 1
+

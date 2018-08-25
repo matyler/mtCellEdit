@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ int LoadPixy::get_first_chunk ()
 	}
 
 	flush_image ();
-	m_image = mtPixy::image_create ( (mtPixy::Image::Type)m_p, m_w, m_h );
+	m_image = mtPixy::Image::create ( (mtPixy::Image::Type)m_p, m_w, m_h );
 	if ( ! m_image )
 	{
 		goto error;
@@ -401,7 +401,7 @@ mtPixy::Image * LoadPixy::open (
 	return take_image ();
 }
 
-mtPixy::Image * mtPixy::image_load_pixy (
+mtPixy::Image * mtPixy::Image::load_pixy (
 	char	const * const	filename
 	)
 {

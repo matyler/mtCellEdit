@@ -6,7 +6,7 @@
 . ./src/build_generic.sh
 
 SUDO=""
-MAKE_ARGS="-j 8"
+#MAKE_ARGS="-j 8"
 
 . ./src/_build_global.txt
 

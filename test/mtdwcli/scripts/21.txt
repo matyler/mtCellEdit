@@ -1,0 +1,35 @@
+butt set name jane_54
+
+# encode but don't encrypt
+soda set mode 1
+
+soda encode d1/000.bin		d2/000.bin.soda
+soda encode d1/001.bin		d2/001.bin.soda
+soda encode d1/002.bin		d2/002.bin.soda
+soda encode d1/003.bin		d2/003.bin.soda
+soda encode d1/004.bin		d2/004.bin.soda
+
+soda encode d1/in.001.txt	d2/in.001.txt.soda
+
+# encode and encrypt
+soda set mode 0
+
+soda encode d1/005.bin		d2/005.bin.soda
+soda encode d1/006.bin		d2/006.bin.soda
+soda encode d1/007.bin		d2/007.bin.soda
+soda encode d1/010.bin		d2/010.bin.soda
+soda encode d1/011.bin		d2/011.bin.soda
+
+tap encode d0/bottle.flac	d2/006.bin.soda d2/bottle.006.soda.flac
+tap encode d0/bottle.png	d2/007.bin.soda d2/bottle.007.soda.png
+
+soda encode d1/in.002.txt	d2/in.002.txt.soda
+
+soda multi encode d1/in.003.txt d2/in.003.txt.soda bertie_06 george_15
+soda multi encode d1/in.004.txt d2/in.004.txt.soda bertie_06 george_15 jane_54
+soda multi encode d1/in.005.txt d2/in.005.txt.soda bertie_06 george_15 jane_54 rosi_06
+soda multi encode d1/in.006.txt d2/in.006.txt.soda george_15 jane_54 rosi_06 bertie_06
+
+tap encode d0/bottle.flac	d2/in.005.txt.soda d2/bottle.in.005.soda.flac
+tap encode d0/bottle.png	d2/in.006.txt.soda d2/bottle.in.006.soda.png
+

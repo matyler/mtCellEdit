@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ void MainWindow::clipboardFlushInternal ()
 {
 	if ( 0 != pprfs->getInt ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) )
 	{
-		QClipboard	* c = QApplication::clipboard ();
+		QClipboard	* const c = QApplication::clipboard ();
 
 
 		if ( c && c->ownsClipboard () )
@@ -51,7 +51,6 @@ void MainWindow::clipboardSetOwner ()
 	}
 
 
-	QClipboard	* c = QApplication::clipboard ();
 	QMimeData	* mime = new QMimeData;
 
 
@@ -81,7 +80,18 @@ void MainWindow::clipboardSetOwner ()
 		mime->setText ( mtQEX::qstringFromC ( cedClipboard->tsv ) );
 	}
 
-	c->setMimeData ( mime );
+	QClipboard	* const c = QApplication::clipboard ();
+
+	if ( c )
+	{
+		c->setMimeData ( mime );
+		mime = NULL;
+	}
+	else
+	{
+		delete mime;
+		mime = NULL;
+	}
 }
 
 int MainWindow::clipboardCopySelection (

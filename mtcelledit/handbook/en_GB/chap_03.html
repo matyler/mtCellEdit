@@ -43,8 +43,8 @@ mtCellEdit then requires various libraries that I have created:
 </TR>
 <TR>
 <TD>libmtKit</TD>
-<TD>zlib</TD>
-<TD>Low level C routines, including strings, UTF-8, ZIP file handling, preferences, trees.</TD>
+<TD>zlib, libsqlite3</TD>
+<TD>Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases.</TD>
 </TR>
 <TR>
 <TD>libmtcelledit</TD>
@@ -53,7 +53,7 @@ mtCellEdit then requires various libraries that I have created:
 </TR>
 <TR>
 <TD>libmtPixy</TD>
-<TD>libmtKit, zlib, libpng, libjpeg, giflib, FreeType, Pango, Cairo</TD>
+<TD>libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo</TD>
 <TD>The core pixel engine, including all file handling and general operations.</TD>
 </TR>
 <TR>
@@ -79,6 +79,11 @@ The other optional parts of the suite have these dependencies:
 <TD><B>Description</B></TD>
 </TR>
 <TR>
+<TD>libmtDataWell</TD>
+<TD>libmtKit, libmtPixy, libsqlite3, libsndfile</TD>
+<TD>Crypto library</TD>
+</TR>
+<TR>
 <TD>libmtPixyUI</TD>
 <TD>libmtKit, libmtPixy</TD>
 <TD>Toolkit agnostic UI code, e.g. undo stack</TD>
@@ -92,6 +97,11 @@ The other optional parts of the suite have these dependencies:
 <TD>mtCedUtils</TD>
 <TD>libmtKit, libmtcelledit</TD>
 <TD>Command line text tools, mtNetLog, mtRDC</TD>
+</TR>
+<TR>
+<TD>mtDWCLI</TD>
+<TD>libmtKit, libmtDataWell</TD>
+<TD>Command line crypto app</TD>
 </TR>
 <TR>
 <TD>mtPixy</TD>

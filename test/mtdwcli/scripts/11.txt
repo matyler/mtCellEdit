@@ -1,0 +1,10 @@
+well save file 1	d1/001.bin
+well save file 2	d1/002.bin
+well save file 3	d1/003.bin
+well save file 11	d1/004.bin
+well save file 127	d1/005.bin
+well save file 128	d1/006.bin
+well save file 129	d1/007.bin
+well save file 1000000	d1/010.bin
+well save file 11000000	d1/011.bin
+

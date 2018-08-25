@@ -15,7 +15,6 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <time.h>

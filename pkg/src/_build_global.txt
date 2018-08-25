@@ -15,6 +15,7 @@ MT_STARTUP()
 	PKG_LIST=
 	PRECONF=
 	REMOVE=
+	FLUSH_BUILD=
 
 	cd ..
 
@@ -73,11 +74,22 @@ MT_PARSE_ARGS()
 	while [ "$1" != "" ]
 	do
 		case "$1" in
+		"all" )
+			PKG_LIST=$(cat $CWD/etc/apps_list.tsv |
+				awk -F "\t" '{ print $1 }' )
+			;;
+
+		"clean" )
+			FLUSH_BUILD="Y"
+			;;
+
 		"flush" )
 			echo Flushing directories.
 			echo
 
 			MT_flush_func
+
+			MT_REMOVE_BCFILE
 
 			exit
 			;;
@@ -134,6 +146,12 @@ MT_CREATE_BCFILE()
 }
 
 
+MT_REMOVE_BCFILE()
+{
+	rm -vrf $CWD/bcfile.txt
+}
+
+
 MT_DISPLAY_INFO()
 {
 	cd $CWD
@@ -169,6 +187,13 @@ MT_ACTION_BUILD()
 	if [ "$REMOVE" != "" ]
 	then
 		MT_remove_func
+
+		if [ "$FLUSH_BUILD" != "" ]
+		then
+			MT_flush_func
+			MT_REMOVE_BCFILE
+		fi
+
 		return
 	fi
 
@@ -190,6 +215,11 @@ MT_ACTION_BUILD()
 
 #		Caller uses: PKG, CONF, SRC_DIR, SRC_VER
 		MT_build_app_func
+
+		if [ "$FLUSH_BUILD" != "" ]
+		then
+			MT_flush_func
+		fi
 	done
 }
 

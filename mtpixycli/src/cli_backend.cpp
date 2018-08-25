@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -149,126 +149,126 @@ int Backend::command_line (
 	return 0;			// Continue program
 }
 
-int Backend::init_table ()
+static int init_table ( mtKit::CliTab &clitab )
 {
 	if (	0
-		|| m_clitab.add_item ( "canvas flip_h", jtf_canvas_flip_h )
-		|| m_clitab.add_item ( "canvas flip_v", jtf_canvas_flip_v )
-		|| m_clitab.add_item ( "canvas indexed", jtf_canvas_indexed,
+		|| clitab.add_item ( "canvas flip_h", jtf_canvas_flip_h )
+		|| clitab.add_item ( "canvas flip_v", jtf_canvas_flip_v )
+		|| clitab.add_item ( "canvas indexed", jtf_canvas_indexed,
 			1, 1, "<DITHER none | basic | floyd>" )
-		|| m_clitab.add_item ( "canvas rgb", jtf_canvas_rgb )
-		|| m_clitab.add_item ( "canvas rotate_a", jtf_canvas_rotate_a )
-		|| m_clitab.add_item ( "canvas rotate_c", jtf_canvas_rotate_c )
-		|| m_clitab.add_item ( "clip flip_h", jtf_clip_flip_h )
-		|| m_clitab.add_item ( "clip flip_v", jtf_clip_flip_v )
-		|| m_clitab.add_item ( "clip load", jtf_clip_load, 1, 1,
+		|| clitab.add_item ( "canvas rgb", jtf_canvas_rgb )
+		|| clitab.add_item ( "canvas rotate_a", jtf_canvas_rotate_a )
+		|| clitab.add_item ( "canvas rotate_c", jtf_canvas_rotate_c )
+		|| clitab.add_item ( "clip flip_h", jtf_clip_flip_h )
+		|| clitab.add_item ( "clip flip_v", jtf_clip_flip_v )
+		|| clitab.add_item ( "clip load", jtf_clip_load, 1, 1,
 			"<1..12>" )
-		|| m_clitab.add_item ( "clip rotate_a", jtf_clip_rotate_a )
-		|| m_clitab.add_item ( "clip rotate_c", jtf_clip_rotate_c )
-		|| m_clitab.add_item ( "clip save", jtf_clip_save, 1, 1,
+		|| clitab.add_item ( "clip rotate_a", jtf_clip_rotate_a )
+		|| clitab.add_item ( "clip rotate_c", jtf_clip_rotate_c )
+		|| clitab.add_item ( "clip save", jtf_clip_save, 1, 1,
 			"<1..12>" )
-		|| m_clitab.add_item ( "copy", jtf_copy )
-		|| m_clitab.add_item ( "crop", jtf_crop )
-		|| m_clitab.add_item ( "cut", jtf_cut )
-		|| m_clitab.add_item ( "delete alpha", jtf_delete_alpha )
-		|| m_clitab.add_item ( "effect bacteria", jtf_effect_bacteria,
+		|| clitab.add_item ( "copy", jtf_copy )
+		|| clitab.add_item ( "crop", jtf_crop )
+		|| clitab.add_item ( "cut", jtf_cut )
+		|| clitab.add_item ( "delete alpha", jtf_delete_alpha )
+		|| clitab.add_item ( "effect bacteria", jtf_effect_bacteria,
 			1, 1, "<STRENGTH 1..100>" )
-		|| m_clitab.add_item ( "effect edge_detect",
+		|| clitab.add_item ( "effect edge_detect",
 			jtf_effect_edge_detect )
-		|| m_clitab.add_item ( "effect emboss", jtf_effect_emboss )
-		|| m_clitab.add_item ( "effect invert", jtf_effect_invert )
-		|| m_clitab.add_item ( "effect sharpen", jtf_effect_sharpen,
+		|| clitab.add_item ( "effect emboss", jtf_effect_emboss )
+		|| clitab.add_item ( "effect invert", jtf_effect_invert )
+		|| clitab.add_item ( "effect sharpen", jtf_effect_sharpen,
 			1, 1, "<STRENGTH 1..100>" )
-		|| m_clitab.add_item ( "effect soften", jtf_effect_soften, 1, 1,
+		|| clitab.add_item ( "effect soften", jtf_effect_soften, 1, 1,
 			"<STRENGTH 1..100>" )
-		|| m_clitab.add_item ( "effect trans_color",
+		|| clitab.add_item ( "effect trans_color",
 			jtf_effect_trans_color, 6, 6,
 			"<GAMMA -100..100> <BRIGHTNESS -100..100> "
 			"<CONTRAST -100..100> <SATURATION -100..100> "
 			"<HUE -1529..1529> <POSTERIZE 1..8>" )
-		|| m_clitab.add_item ( "fill", jtf_fill )
-		|| m_clitab.add_item ( "floodfill", jtf_floodfill, 2, 2,
+		|| clitab.add_item ( "fill", jtf_fill )
+		|| clitab.add_item ( "floodfill", jtf_floodfill, 2, 2,
 			"<X 0..> <Y 0..>" )
-		|| m_clitab.add_item ( "help", jtf_help, 0, 100, "[ARG]..." )
-		|| m_clitab.add_item ( "info", jtf_info )
-		|| m_clitab.add_item ( "lasso", jtf_lasso )
-		|| m_clitab.add_item ( "load", jtf_load, 1, 1, "<OS FILENAME>" )
-		|| m_clitab.add_item ( "new", jtf_new, 3, 3,
+		|| clitab.add_item ( "help", jtf_help, 0, 100, "[ARG]..." )
+		|| clitab.add_item ( "info", jtf_info )
+		|| clitab.add_item ( "lasso", jtf_lasso )
+		|| clitab.add_item ( "load", jtf_load, 1, 1, "<OS FILENAME>" )
+		|| clitab.add_item ( "new", jtf_new, 3, 3,
 			"<WIDTH 1..32767> <HEIGHT 1..32767> <rgb | indexed>" )
-		|| m_clitab.add_item ( "outline", jtf_outline )
-		|| m_clitab.add_item ( "paint", jtf_paint, 1, 100,
+		|| clitab.add_item ( "outline", jtf_outline )
+		|| clitab.add_item ( "paint", jtf_paint, 1, 100,
 			"< <X 0..> <Y 0..> >...", 2 )
-		|| m_clitab.add_item ( "palette color", jtf_palette_color, 4, 4,
+		|| clitab.add_item ( "palette color", jtf_palette_color, 4, 4,
 			"<INDEX 0..255> <RED 0..255> <GREEN 0..255> "
 			"<BLUE 0..255>" )
-		|| m_clitab.add_item ( "palette del_unused",
+		|| clitab.add_item ( "palette del_unused",
 			jtf_palette_del_unused )
-		|| m_clitab.add_item ( "palette from_canvas",
+		|| clitab.add_item ( "palette from_canvas",
 			jtf_palette_from_canvas )
-		|| m_clitab.add_item ( "palette gradient", jtf_palette_gradient)
-		|| m_clitab.add_item ( "palette load", jtf_palette_load, 1, 1,
+		|| clitab.add_item ( "palette gradient", jtf_palette_gradient)
+		|| clitab.add_item ( "palette load", jtf_palette_load, 1, 1,
 			"<OS FILENAME>" )
-		|| m_clitab.add_item ( "palette mask all", jtf_palette_mask_all)
-		|| m_clitab.add_item ( "palette mask index",
+		|| clitab.add_item ( "palette mask all", jtf_palette_mask_all)
+		|| clitab.add_item ( "palette mask index",
 			jtf_palette_mask_index, 1, 1, "<0..255>" )
-		|| m_clitab.add_item ( "palette merge_dups",
+		|| clitab.add_item ( "palette merge_dups",
 			jtf_palette_merge_dups )
-		|| m_clitab.add_item ( "palette move", jtf_palette_move, 2, 2,
+		|| clitab.add_item ( "palette move", jtf_palette_move, 2, 2,
 			"<FROM INDEX 0..255> <TO INDEX 0..255>" )
-		|| m_clitab.add_item ( "palette quantize", jtf_palette_quantize)
-		|| m_clitab.add_item ( "palette save", jtf_palette_save, 1, 1,
+		|| clitab.add_item ( "palette quantize", jtf_palette_quantize)
+		|| clitab.add_item ( "palette save", jtf_palette_save, 1, 1,
 			"<OS FILENAME>" )
-		|| m_clitab.add_item ( "palette set", jtf_palette_set, 2, 2,
+		|| clitab.add_item ( "palette set", jtf_palette_set, 2, 2,
 			"<uniform | balanced> <2..6>" )
-		|| m_clitab.add_item ( "palette size", jtf_palette_size, 1, 1,
+		|| clitab.add_item ( "palette size", jtf_palette_size, 1, 1,
 			"<2..255>" )
-		|| m_clitab.add_item ( "palette sort", jtf_palette_sort, 3, 4,
+		|| clitab.add_item ( "palette sort", jtf_palette_sort, 3, 4,
 			"<START 0..255> <FINISH 0..255> <hue | saturation | "
 			"value | min | brightness | red | green | blue | "
 			"frequency > [reverse]" )
-		|| m_clitab.add_item ( "palette unmask all",
+		|| clitab.add_item ( "palette unmask all",
 			jtf_palette_unmask_all )
-		|| m_clitab.add_item ( "palette unmask index",
+		|| clitab.add_item ( "palette unmask index",
 			jtf_palette_unmask_index, 1, 1, "<0..255>" )
-		|| m_clitab.add_item ( "paste", jtf_paste, 2, 2,
+		|| clitab.add_item ( "paste", jtf_paste, 2, 2,
 			"<X -32766..> <Y -32766..>" )
-		|| m_clitab.add_item ( "q", jtf_quit )
-		|| m_clitab.add_item ( "quit", jtf_quit )
-		|| m_clitab.add_item ( "redo", jtf_redo )
-		|| m_clitab.add_item ( "resize", jtf_resize, 4, 4,
+		|| clitab.add_item ( "q", jtf_quit )
+		|| clitab.add_item ( "quit", jtf_quit )
+		|| clitab.add_item ( "redo", jtf_redo )
+		|| clitab.add_item ( "resize", jtf_resize, 4, 4,
 			"<X -32766..32767> <Y -32766..32767> <WIDTH 1..32767> "
 			"<HEIGHT 1..32767>" )
-		|| m_clitab.add_item ( "save", jtf_save )
-		|| m_clitab.add_item ( "save as", jtf_save_as, 1, 3,
+		|| clitab.add_item ( "save", jtf_save )
+		|| clitab.add_item ( "save as", jtf_save_as, 1, 3,
 			"<OS FILENAME> [ <bmp | bp24 | gif | jpeg | pixy | "
 			"png > [COMPRESSION 0..9 | 0..100] ]" )
-		|| m_clitab.add_item ( "save undo", jtf_save_undo, 1, 1,
+		|| clitab.add_item ( "save undo", jtf_save_undo, 1, 1,
 			"<OS FILENAME>" )
-		|| m_clitab.add_item ( "scale", jtf_scale, 2, 3,
+		|| clitab.add_item ( "scale", jtf_scale, 2, 3,
 			"<WIDTH 1..32767> <HEIGHT 1..32767> [smooth]" )
-		|| m_clitab.add_item ( "select all", jtf_select_all )
-		|| m_clitab.add_item ( "select polygon", jtf_select_polygon,
+		|| clitab.add_item ( "select all", jtf_select_all )
+		|| clitab.add_item ( "select polygon", jtf_select_polygon,
 			1, 100, "< <X 0..> <Y 0..> >...", 2 )
-		|| m_clitab.add_item ( "select rectangle", jtf_select_rectangle,
+		|| clitab.add_item ( "select rectangle", jtf_select_rectangle,
 			4, 4, "<X 0..> <Y 0..> <WIDTH 1..> <HEIGHT 1..>" )
-		|| m_clitab.add_item ( "set brush flow", jtf_set_brush_flow,
+		|| clitab.add_item ( "set brush flow", jtf_set_brush_flow,
 			1, 1, "<1..1000>" )
-		|| m_clitab.add_item ( "set brush pattern",
+		|| clitab.add_item ( "set brush pattern",
 			jtf_set_brush_pattern, 1, 1, "<0..>" )
-		|| m_clitab.add_item ( "set brush shape", jtf_set_brush_shape,
+		|| clitab.add_item ( "set brush shape", jtf_set_brush_shape,
 			1, 1, "<0..>" )
-		|| m_clitab.add_item ( "set brush spacing",
+		|| clitab.add_item ( "set brush spacing",
 			jtf_set_brush_spacing, 1, 1, "<0..100>" )
-		|| m_clitab.add_item ( "set color a", jtf_set_color_a, 1, 1,
+		|| clitab.add_item ( "set color a", jtf_set_color_a, 1, 1,
 			"<0..255>" )
-		|| m_clitab.add_item ( "set color b", jtf_set_color_b, 1, 1,
+		|| clitab.add_item ( "set color b", jtf_set_color_b, 1, 1,
 			"<0..255>" )
-		|| m_clitab.add_item ( "set color swap", jtf_set_color_swap )
-		|| m_clitab.add_item ( "set file", jtf_set_file, 1, 1, "<0..4>")
-		|| m_clitab.add_item ( "text", jtf_text, 3, 7, "<STRING> "
+		|| clitab.add_item ( "set color swap", jtf_set_color_swap )
+		|| clitab.add_item ( "set file", jtf_set_file, 1, 1, "<0..4>")
+		|| clitab.add_item ( "text", jtf_text, 3, 7, "<STRING> "
 			"<FONT NAME> <FONT SIZE 1..100> [bold] [italic] "
 			"[underline] [strikethrough]" )
-		|| m_clitab.add_item ( "undo", jtf_undo )
+		|| clitab.add_item ( "undo", jtf_undo )
 		)
 	{
 		return 1;
@@ -279,7 +279,7 @@ int Backend::init_table ()
 
 void Backend::main_loop ()
 {
-	if ( init_table () )
+	if ( init_table ( m_clitab ) )
 	{
 		exit.abort ();
 		exit.set_value ( 1 );

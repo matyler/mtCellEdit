@@ -1,0 +1,23 @@
+soda decode d2/000.bin.soda			d3/000.bin
+soda decode d2/001.bin.soda			d3/001.bin
+soda decode d2/002.bin.soda			d3/002.bin
+soda decode d2/003.bin.soda			d3/003.bin
+soda decode d2/004.bin.soda			d3/004.bin
+
+soda decode d2/in.001.txt.soda			d3/in.001.txt
+
+soda decode d2/005.bin.soda			d3/005.bin
+
+tap decode d2/bottle.006.soda.flac		d3/006.bin
+tap decode d2/bottle.007.soda.png		d3/007.bin
+
+soda decode d2/010.bin.soda			d3/010.bin
+soda decode d2/011.bin.soda			d3/011.bin
+
+soda decode d2/in.002.txt.soda			d3/in.002.txt
+
+soda multi decode d2/in.003.txt.soda		d3/in.003.txt
+soda multi decode d2/in.004.txt.soda		d3/in.004.txt
+
+tap multi decode d2/bottle.in.005.soda.flac	d3/in.005.txt
+tap multi decode d2/bottle.in.006.soda.png	d3/in.006.txt

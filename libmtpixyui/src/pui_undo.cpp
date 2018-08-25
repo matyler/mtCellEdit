@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -239,8 +239,8 @@ void mtPixyUI::UndoStack::set_max_steps (
 	int	const	n
 	)
 {
-	m_max_steps = MAX ( MIN_STEPS, n );
-	m_max_steps = MIN ( MAX_STEPS, m_max_steps );
+	m_max_steps = MAX ( (int)MIN_STEPS, n );
+	m_max_steps = MIN ( (int)MAX_STEPS, m_max_steps );
 }
 
 void mtPixyUI::UndoStack::clear ()

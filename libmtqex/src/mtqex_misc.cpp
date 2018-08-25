@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -251,7 +251,10 @@ mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
 
 	int	const	w = pm->width ();
 	int	const	h = pm->height ();
-	mtPixy::Image	* im = image_create ( mtPixy::Image::TYPE_RGB, w, h );
+
+	mtPixy::Image * const im = mtPixy::Image::create (
+		mtPixy::Image::TYPE_RGB, w, h );
+
 	if ( ! im )
 	{
 		return NULL;

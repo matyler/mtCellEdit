@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
 
 #ifndef MTPIXY_H_
 #define MTPIXY_H_
+
+#include <stdlib.h>
 
 
 
@@ -177,7 +179,7 @@ public:
 		int zs
 		);
 
-private:
+protected:
 	void rebuild_shape_mask ();
 
 /// ----------------------------------------------------------------------------
@@ -273,7 +275,7 @@ public:
 		int po		// Posterize	1..8
 		);
 
-private:
+protected:
 	int		m_color_total;	// COLOR_TOTAL_MIN / MAX
 
 	Color		m_color [ COLOR_TOTAL_MAX ];
@@ -333,6 +335,16 @@ public:
 		int * err = NULL	// Optional result flag 0=Success 1=Fail
 		);
 	~Image ();
+
+	static Image * create ( Type imtype, int w, int h );
+
+	static Image * from_data (
+		Type imtype,
+		int w,
+		int h,
+		unsigned char * canv,
+		unsigned char * alp
+		);
 
 	int create_alpha ();		// Create new empty alpha, destroy old
 
@@ -507,6 +519,16 @@ public:
 
 /// FILE I/O
 
+	static Image * load ( char const * filename,
+		File::Type * newtyp = NULL	// Optional: put file type here
+		);
+	static Image * load_bmp ( char const * filename );
+	static Image * load_bp24 ( char const * filename );
+	static Image * load_gif ( char const * filename );
+	static Image * load_jpeg ( char const * filename );
+	static Image * load_pixy ( char const * filename );
+	static Image * load_png ( char const * filename );
+
 	int save (
 		char const * filename,
 		File::Type filetype,
@@ -531,7 +553,7 @@ public:
 	void set_file_flag ( int n );	// n = Image::FLAG_*
 	int get_file_flag () const;
 
-private:
+protected:
 	enum EffectType
 	{
 		EFFECT_EDGE_DETECT,
@@ -546,7 +568,7 @@ private:
 
 	void destroy_canvas ();		// Resets type to mtPixy::Image::ALPHA
 
-	int flood_fill_internal (	// Args checked by caller
+	void flood_fill_internal (	// Args checked by caller
 		Image * im, int x, int y ) const;
 
 	void paint_flow ( Brush &bru ) const;
@@ -604,8 +626,10 @@ public:
 	int get_width () const;
 	int get_height () const;
 
-private:
+protected:
 	void set_style ();
+
+	Font ( const Font & );		// Disable copy constructor
 
 /// ----------------------------------------------------------------------------
 
@@ -720,24 +744,6 @@ public:
 
 
 
-Image * image_create ( Image::Type imtype, int w, int h );
-Image * image_from_data (
-	Image::Type imtype,
-	int w,
-	int h,
-	unsigned char * canv,
-	unsigned char * alp
-	);
-Image * image_load ( char const * filename,
-	File::Type * newtyp = NULL	// Optional: put file type here
-	);
-Image * image_load_bmp ( char const * filename );
-Image * image_load_bp24 ( char const * filename );
-Image * image_load_gif ( char const * filename );
-Image * image_load_jpeg ( char const * filename );
-Image * image_load_pixy ( char const * filename );
-Image * image_load_png ( char const * filename );
-
 void image_print_geometry ( Image * im, char * buf, size_t buflen );
 
 Image * text_render_preview (
@@ -750,6 +756,7 @@ Image * text_render_preview (
 	Font::StyleUnderline underline,
 	int strikethrough
 	);
+
 Image * text_render_paste (
 	Image::Type type,
 	Brush &bru,

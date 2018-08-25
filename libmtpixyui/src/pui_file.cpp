@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -74,10 +74,7 @@ int mtPixyUI::File::new_image (
 	int		const	pal_num
 	)
 {
-	mtPixy::Image	* ni;
-
-
-	ni = mtPixy::image_create ( imtype, w, h );
+	mtPixy::Image * const ni = mtPixy::Image::create ( imtype, w, h );
 	if ( ! ni )
 	{
 		return 1;
@@ -97,10 +94,8 @@ int mtPixyUI::File::load_image (
 	)
 {
 	mtPixy::File::Type	ft;
-	mtPixy::Image		* ni;
 
-
-	ni = mtPixy::image_load ( fn, &ft );
+	mtPixy::Image * const ni = mtPixy::Image::load ( fn, &ft );
 	if ( ! ni )
 	{
 		return 1;

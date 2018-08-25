@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -158,7 +158,7 @@ static int jpeg_load_rgb (
 	return 0;
 }
 
-mtPixy::Image * mtPixy::image_load_jpeg (
+mtPixy::Image * mtPixy::Image::load_jpeg (
 	char	const	* const	filename
 	)
 {
@@ -191,14 +191,14 @@ mtPixy::Image * mtPixy::image_load_jpeg (
 	switch ( cinfo.out_color_space )
 	{
 	case JCS_GRAYSCALE:
-		image = image_create ( Image::TYPE_INDEXED, w, h );
+		image = create ( TYPE_INDEXED, w, h );
 		if ( ! image )
 		{
 			goto fail;
 		}
 
 		image->get_palette()->set_grey ();
-		image->set_file_flag ( Image::FLAG_PALETTE_LOADED );
+		image->set_file_flag ( FLAG_PALETTE_LOADED );
 
 		if ( jpeg_load_rgb ( image->get_canvas (), w, h,
 			image->get_canvas_bpp (), &cinfo ) )
@@ -208,7 +208,7 @@ mtPixy::Image * mtPixy::image_load_jpeg (
 		break;
 
 	case JCS_RGB:
-		image = image_create ( Image::TYPE_RGB, w, h );
+		image = create ( TYPE_RGB, w, h );
 		if ( ! image )
 		{
 			goto fail;
@@ -223,7 +223,7 @@ mtPixy::Image * mtPixy::image_load_jpeg (
 
 	case JCS_CMYK:
 		// Photoshop writes CMYK data inverted
-		image = image_create ( Image::TYPE_RGB, w, h );
+		image = create ( TYPE_RGB, w, h );
 		if ( ! image )
 		{
 			goto fail;
