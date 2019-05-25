@@ -1,16 +1,9 @@
-PIXYRESIZE
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixyresize - resize an image
+@BIN_NAME@ - resize an image
 
 
 = SYNOPSIS =
-**pixyresize** [OPTION]...
+**@BIN_NAME@** [OPTION]...
 
 
 = DESCRIPTION =
@@ -44,11 +37,3 @@ Create a resized image according to given geometry.
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

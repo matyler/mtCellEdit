@@ -1,23 +1,17 @@
 include		../_conf.txt
 
-LIB_SONAME	= $(LIB_NAME).1
-HEADER		= mtcedui.h
-OBJS		=		\
-		cui_clip.o	\
-		cui_dup.o	\
-		cui_file.o	\
-		cui_graph.o	\
-		cui_prefs.o	\
-		cui_render.o	\
-		cui_undo.o	\
-
+HEADER		:= mtcedui.h
+OBJS		:= $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(LIB_SONAME)
 
+
 $(LIB_SONAME):	$(OBJS)
-		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
 $(OBJS):	*.h
 
@@ -37,4 +31,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f *.o $(LIB_SONAME)
+		rm -f *.o *.so.$(LIB_SONUM)

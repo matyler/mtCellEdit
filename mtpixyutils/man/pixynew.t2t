@@ -1,16 +1,9 @@
-PIXYNEW
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixynew - create new image
+@BIN_NAME@ - create new image
 
 
 = SYNOPSIS =
-**pixynew** [ **OPTION** ]...
+**@BIN_NAME@** [ **OPTION** ]...
 
 
 = DESCRIPTION =
@@ -40,11 +33,3 @@ Creates a new image according to given geometry and type.
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

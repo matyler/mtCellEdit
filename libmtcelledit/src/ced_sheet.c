@@ -978,10 +978,12 @@ int ced_sheet_set_column_width_list (
 	int		* const	width_list
 	)
 {
-	if (	! sheet ||
-		col < 1 ||
-		coltot < 1 ||
-		(col + coltot - 1) > CED_MAX_COLUMN ||
+	if (	! sheet					||
+		col < 1					||
+		col > CED_MAX_COLUMN			||
+		coltot < 1				||
+		coltot > CED_MAX_COLUMN			||
+		(col + coltot - 1) > CED_MAX_COLUMN	||
 		! width_list
 		)
 	{

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -504,6 +504,11 @@ mtPixy::Color::Color (
 	blue = b;
 }
 
+mtPixy::Color::Color ( int const rgb )
+{
+	set ( rgb );
+}
+
 mtPixy::Color::Color ()
 {
 	red = 0;
@@ -513,5 +518,12 @@ mtPixy::Color::Color ()
 
 mtPixy::Color::~Color ()
 {
+}
+
+void mtPixy::Color::set ( int const i )
+{
+	red	= (unsigned char)int_2_red ( i );
+	green	= (unsigned char)int_2_green ( i );
+	blue	= (unsigned char)int_2_blue ( i );
 }
 

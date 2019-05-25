@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,12 +19,13 @@
 
 
 
-QString mtQEX::dialogTextLine (
+int mtQEX::dialogTextLine (
 	QWidget		* const	par,
 	QString		const	title,
 	QString		const	label,
 	QString		const	text,
-	int		const	maxLength
+	int		const	maxLength,
+	QString			&result
 	)
 {
 	privDialogText	dialog ( 0, par, title, label, text, maxLength );
@@ -32,17 +33,19 @@ QString mtQEX::dialogTextLine (
 
 	if ( dialog.exec () == QDialog::Accepted )
 	{
-		return dialog.getText ();
+		result = dialog.getText ();
+		return 0;
 	}
 
-	return QString ();
+	return 1;
 }
 
-QString mtQEX::dialogText (
+int mtQEX::dialogText (
 	QWidget		* const	par,
 	QString		const	title,
 	QString		const	label,
-	QString		const	text
+	QString		const	text,
+	QString			&result
 	)
 {
 	privDialogText	dialog ( 1, par, title, label, text );
@@ -50,10 +53,34 @@ QString mtQEX::dialogText (
 
 	if ( dialog.exec () == QDialog::Accepted )
 	{
-		return dialog.getText ();
+		result = dialog.getText ();
+		return 0;
 	}
 
-	return QString ();
+	return 1;
+}
+
+void mtQEX::set_minimum_width (
+	QLineEdit	* const	edit,
+	int		const	length
+	)
+{
+	if ( ! edit )
+	{
+		return;
+	}
+
+	QString txt;
+
+	int const len = MIN ( length, 100 );
+
+	for ( int i = 0; i < len; i++ )
+	{
+		txt.append ('0');
+	}
+
+	QFontMetrics fm = edit->fontMetrics ();
+	edit->setMinimumSize ( fm.boundingRect (txt).width (), 0 );
 }
 
 privDialogText::privDialogText (
@@ -86,6 +113,8 @@ privDialogText::privDialogText (
 		{
 			textLineEdit->setMaxLength ( maxLength );
 		}
+
+		mtQEX::set_minimum_width ( textLineEdit, 25 );
 	}
 	else
 	{

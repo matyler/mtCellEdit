@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ class MainWindow : public QWidget
 	Q_OBJECT
 
 public:
-	MainWindow ( Backend * be, QApplication &app );
+	explicit MainWindow ( Backend * be );
 	~MainWindow ();
 
 	int projectSetFont (
@@ -135,7 +135,7 @@ public:
 	void updateViewConfig ();
 
 public slots:
-	void pressGraphRedraw ();
+	void press_GraphRedraw ();
 
 protected:
 	void closeEvent ( QCloseEvent * ev );
@@ -161,89 +161,90 @@ private slots:
 	void pressTabCellText ( int t );
 	void pressArrowCellText ( int r );
 
-	void pressFileNew ();
-	void pressFileOpen ();
-	void pressFileImport ();
-	void pressFileSave ();
-	void pressFileSaveAs ();
-	void pressFileRecent ( int i );
-	void pressFileQuit ();
+	void press_FileNew ();
+	void press_FileOpen ();
+	void press_FileImport ();
+	void press_FileSave ();
+	void press_FileSaveAs ();
+	void press_FileRecent ( int i );
+	void press_FileQuit ();
 
-	void pressEditUndo ();
-	void pressEditRedo ();
-	void pressEditCut ();
-	void pressEditCopy ();
-	void pressEditCopyVal ();
-	void pressEditCopyOutput ();
-	void pressEditTransformTrans ();
-	void pressEditTransformFlipH ();
-	void pressEditTransformFlipV ();
-	void pressEditTransformRotClock ();
-	void pressEditTransformRotAnti ();
-	void pressEditUseSystemClipboard ();
-	void pressEditPaste ();
-	void pressEditPasteContent ();
-	void pressEditPastePrefs ();
-	void pressEditClear ();
-	void pressEditClearContent ();
-	void pressEditClearPrefs ();
-	void pressEditFixYears ();
-	void pressEditSelectAll ();
+	void press_EditUndo ();
+	void press_EditRedo ();
+	void press_EditCut ();
+	void press_EditCopy ();
+	void press_EditCopyVal ();
+	void press_EditCopyOutput ();
+	void press_EditTransformTrans ();
+	void press_EditTransformFlipH ();
+	void press_EditTransformFlipV ();
+	void press_EditTransformRotClock ();
+	void press_EditTransformRotAnti ();
+	void press_EditUseSystemClipboard ();
+	void press_EditPaste ();
+	void press_EditPasteContent ();
+	void press_EditPastePrefs ();
+	void press_EditClear ();
+	void press_EditClearContent ();
+	void press_EditClearPrefs ();
+	void press_EditFixYears ();
+	void press_EditSelectAll ();
 
-	void pressSheetNew ();
-	void pressSheetDuplicate ();
-	void pressSheetRename ();
-	void pressSheetDelete ();
-	void pressSheetExport ();
-	void pressSheetExportOutput ();
-	void pressSheetFreezePanes ();
-	void pressSheetLock ();
-	void pressSheetPrevious ();
-	void pressSheetNext ();
-	void pressSheetRecalcBook ();
-	void pressSheetRecalc ();
+	void press_SheetNew ();
+	void press_SheetDuplicate ();
+	void press_SheetRename ();
+	void press_SheetDelete ();
+	void press_SheetExport ();
+	void press_SheetExportOutput ();
+	void press_SheetFreezePanes ();
+	void press_SheetLock ();
+	void press_SheetPrevious ();
+	void press_SheetNext ();
+	void press_SheetRecalcBook ();
+	void press_SheetRecalc ();
 
-	void pressRowInsert ();
-	void pressRowInsertPasteHeight ();
-	void pressRowDelete ();
-	void pressRowSort ();
+	void press_RowInsert ();
+	void press_RowInsertPasteHeight ();
+	void press_RowDelete ();
+	void press_RowSort ();
 
-	void pressColumnInsert ();
-	void pressColumnInsertPasteWidth ();
-	void pressColumnDelete ();
-	void pressColumnSort ();
-	void pressColumnSetWidth ();
-	void pressColumnSetWidthAuto ();
+	void press_ColumnInsert ();
+	void press_ColumnInsertPasteWidth ();
+	void press_ColumnDelete ();
+	void press_ColumnSort ();
+	void press_ColumnSetWidth ();
+	void press_ColumnSetWidthAuto ();
 
-	void pressOptionsFullScreen ();
-	void pressOptionsFind ();
-	void pressOptionsGraph ();
-	void pressOptionsView ();
-	void pressOptionsEditCell ();
-	void pressOptionsCellPrefs ();
-	void pressOptionsBookPrefs ();
-	void pressOptionsProgramPrefs ();
-	void pressOptionsTextStyle ( int i );
-	void pressOptionsBackgroundColor ();
-	void pressOptionsForegroundColor ();
-	void pressOptionsBorderColor ();
-	void pressOptionsBorder ( int i );
-	void pressOptionsHelp ();
-	void pressOptionsAboutQt ();
-	void pressOptionsAbout ();
+	void press_OptionsFullScreen ();
+	void press_OptionsFind ();
+	void press_OptionsGraph ();
+	void press_OptionsView ();
+	void press_OptionsEditCell ();
+	void press_OptionsCellPrefs ();
+	void press_OptionsBookPrefs ();
+	void press_OptionsProgramPrefs ();
+	void press_OptionsTextStyle ( int i );
+	void press_OptionsBackgroundColor ();
+	void press_OptionsForegroundColor ();
+	void press_OptionsBorderColor ();
+	void press_OptionsBorder ( int i );
 
-	void pressFind ();
-	void pressFindWildcards ();
-	void pressFindCase ();
-	void pressFindValue ();
-	void pressFindSheets ();
+	void press_HelpHelp ();
+	void press_HelpAboutQt ();
+	void press_HelpAbout ();
 
-	void pressGraphNew ();
-	void pressGraphDuplicate ();
-	void pressGraphRename ();
-	void pressGraphDelete ();
-	void pressGraphExport ();
-	void pressGraphSClipboard ();
+	void press_Find ();
+	void press_FindWildcards ();
+	void press_FindCase ();
+	void press_FindValue ();
+	void press_FindSheets ();
+
+	void press_GraphNew ();
+	void press_GraphDuplicate ();
+	void press_GraphRename ();
+	void press_GraphDelete ();
+	void press_GraphExport ();
+	void press_GraphSClipboard ();
 
 	void pressRightSplitTab ( int index );
 
@@ -275,13 +276,6 @@ private:
 		int * col
 		);
 		// 0 = Success
-
-	void menuInit (
-		QAction ** action,
-		char const * text,
-		char const * shortcut,
-		char const * icon
-		);
 
 	int okToLoseChanges ();
 			// 0 = Changes and user doesn't consent to losing them
@@ -323,29 +317,29 @@ private:
 	mtKit::Prefs	* const pprfs;
 
 	QAction
-			* actFileRecentSeparator,
-			* actFileRecent [ RECENT_MENU_TOTAL ],
-			* actFileQuit,
+			* act_FileRecentSeparator,
+			* act_FileRecent [ RECENT_MENU_TOTAL ],
+			* act_FileQuit,
 
-			* actEditUndo,
-			* actEditRedo,
+			* act_EditUndo,
+			* act_EditRedo,
 
-			* actSheetFreezePanes,
-			* actSheetLock,
+			* act_SheetFreezePanes,
+			* act_SheetLock,
 
-			* actEditUseSystemClipboard,
+			* act_EditUseSystemClipboard,
 
-			* actFindWildcards,
-			* actFindCase,
-			* actFindValue,
-			* actFindSheets,
+			* act_FindWildcards,
+			* act_FindCase,
+			* act_FindValue,
+			* act_FindSheets,
 
-			* actGraphDuplicate,
-			* actGraphRename,
-			* actGraphDelete,
-			* actGraphRedraw,
-			* actGraphExport,
-			* actGraphSClipboard
+			* act_GraphDuplicate,
+			* act_GraphRename,
+			* act_GraphDelete,
+			* act_GraphRedraw,
+			* act_GraphExport,
+			* act_GraphSClipboard
 			;
 
 	QWidget		* rightSplit;

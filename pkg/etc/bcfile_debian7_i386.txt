@@ -1,16 +1,16 @@
-libmtkit	./configure debugold --libdir=/usr/lib/i386-linux-gnu
-libmtcelledit	./configure debugold --libdir=/usr/lib/i386-linux-gnu
-libmtpixy	./configure debugold --libdir=/usr/lib/i386-linux-gnu
-libmtcedui	./configure debugold --libdir=/usr/lib/i386-linux-gnu
-libmtpixyui	./configure debugold --libdir=/usr/lib/i386-linux-gnu
-mtutils	./configure debugold
-mtcedutils	./configure debugold
-mtcedcli	./configure debugold
-mtpixyutils	./configure debugold
-mtpixycli	./configure debugold
-libmtqex4	./configure debugold --use-qt4 --libdir=/usr/lib/i386-linux-gnu
-mtcelledit-qt4	./configure debugold --use-qt4
-mtraft-qt4	./configure debugold --use-qt4
-mtpixy-qt4	./configure debugold --use-qt4
-libmtdatawell	./configure debugold --libdir=/usr/lib/i386-linux-gnu
-mtdwcli	./configure debugold
+libmtkit	./configure --libdir=/usr/lib/i386-linux-gnu
+libmtcelledit	./configure --libdir=/usr/lib/i386-linux-gnu
+libmtpixy	./configure --libdir=/usr/lib/i386-linux-gnu
+libmtcedui	./configure --libdir=/usr/lib/i386-linux-gnu
+mtutils	./configure
+mtcedutils	./configure
+mtcedcli	./configure
+libmtdatawell	./configure --libdir=/usr/lib/i386-linux-gnu
+mtdwcli	./configure
+mtpixyutils	./configure
+mtpixycli	./configure
+libmtqex4	./configure --use-qt4 --libdir=/usr/lib/i386-linux-gnu
+mtcelledit-qt4	./configure --use-qt4
+mtdatawell-qt4	./configure --use-qt4
+mtraft-qt4	./configure --use-qt4
+mtpixy-qt4	./configure --use-qt4

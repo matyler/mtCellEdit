@@ -1,26 +1,36 @@
 ----------- scripts/01.txt -----------
 
+
+Checking error table ...
+Error table is valid: 66 items
+
 mtDWCLI > well add path ../..
 mtDWCLI > 
-mtDWCLI > butt add name bertie_06
-mtDWCLI > butt add name bertie_06
-Butt already exists.
-Error running command 'butt add name bertie_06'
-
-mtDWCLI > butt add buckets 1
-mtDWCLI > 
-mtDWCLI > butt add name george_15
+mtDWCLI > butt add otp bertie_06
+Butt OTP already exists
+mtDWCLI > butt add otp bertie_06
+Butt OTP already exists
 mtDWCLI > butt add buckets 2
 mtDWCLI > 
-mtDWCLI > butt add name jane_54
-mtDWCLI > butt add buckets 1
+mtDWCLI > butt add otp george_15
+Butt OTP already exists
+mtDWCLI > butt add buckets 3
 mtDWCLI > 
-mtDWCLI > butt add name rosi_06
-mtDWCLI > butt add buckets 1
+mtDWCLI > butt add otp jane_54
+Butt OTP already exists
+mtDWCLI > butt add buckets 2
+mtDWCLI > 
+mtDWCLI > butt add otp rosi_06
+Butt OTP already exists
+mtDWCLI > butt add buckets 2
 mtDWCLI > 
 mtDWCLI > 
 
 ----------- scripts/11.txt -----------
+
+
+Checking error table ...
+Error table is valid: 66 items
 
 mtDWCLI > well save file 1      d1/001.bin
 mtDWCLI > well save file 2      d1/002.bin
@@ -36,7 +46,11 @@ mtDWCLI >
 
 ----------- scripts/21.txt -----------
 
-mtDWCLI > butt set name jane_54
+
+Checking error table ...
+Error table is valid: 66 items
+
+mtDWCLI > butt set otp jane_54
 mtDWCLI > 
 mtDWCLI > # encode but don't encrypt
 mtDWCLI > soda set mode 1
@@ -74,6 +88,10 @@ mtDWCLI >
 mtDWCLI > 
 
 ----------- scripts/31.txt -----------
+
+
+Checking error table ...
+Error table is valid: 66 items
 
 mtDWCLI > soda decode d2/000.bin.soda                   d3/000.bin
 mtDWCLI > soda decode d2/001.bin.soda                   d3/001.bin

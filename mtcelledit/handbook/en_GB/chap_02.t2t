@@ -86,6 +86,7 @@ An important decision I have taken is to release it as free software using the G
 | 2017-2-24  | 3.0         | C code converted to C++.  mtPixy, mtPixyCLI, mtPixyUtils, libmtPixy, libmtPixyUI added. All GTK+2 code removed. |
 | 2018-2-25  | 3.1         | General improvements. mtEleana removed. |
 | 2018-8-25  | 3.2         | libmtdatawell, mtDWCLI added. |
+| 2019-5-25  | 3.3         | libmtPixyUI merged into libmtPixy. mtDataWell added. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

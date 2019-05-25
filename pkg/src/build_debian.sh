@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Package up parts of mtcelledit distribution into Debian .deb files
 # by Mark Tyler, 2012-11-17
 

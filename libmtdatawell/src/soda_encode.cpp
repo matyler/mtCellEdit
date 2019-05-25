@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,7 +27,8 @@ public:
 		root = mtkit_utree_new_root ();
 		if ( root )
 		{
-			soda = mtkit_utree_new_element ( root, UTREE_ROOT_NAME);
+			soda = mtkit_utree_new_element ( root,
+				SODA_UTREE_ROOT_NAME );
 		}
 	}
 
@@ -78,44 +79,49 @@ private:
 
 
 
-int mtDW::SodaOp::encode (
+int mtDW::Soda::Op::encode (
 	Butt		* const	butt,
 	char	const * const	input,
 	char	const * const	output
 	) const
 {
+	if ( ! input || ! output )
+	{
+		return report_error ( ERROR_SODA_ENCODE_INSANITY );
+	}
+
 	mtKit::ChunkFile::Save file_out;
 
-	if ( file_out.open ( output, FILE_ID ) )
+	if ( file_out.open ( output, SODA_FILE_ID ) )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_OPEN_OUTPUT );
 	}
 
 	mtKit::ByteFileRead file_in;
 
 	if ( file_in.open ( input, 0 ) )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_OPEN_INPUT );
 	}
 
 	UtreeNew utree;
 	if ( ! utree.soda )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_UTREE_ALLOC );
 	}
 
 	// HEADER - encoding mode
 	int const mode_raw = (NULL == butt || encode_raw ()) ? 1 : 0;
-	utree.set ( HEADER_ITEM_MODE, mode_raw );
+	utree.set ( SODA_HEADER_ITEM_MODE, mode_raw );
 
 	// HEADER - filesize
 	struct stat st;
 	if ( stat ( input, &st ) )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_OPEN_INFO );
 	}
 	uint64_t const filesize = (uint64_t)st.st_size;
-	utree.set ( HEADER_ITEM_SIZE, filesize );
+	utree.set ( SODA_HEADER_ITEM_SIZE, filesize );
 
 	int bucket_pos = 0;
 	int bucket = 0;
@@ -125,18 +131,18 @@ int mtDW::SodaOp::encode (
 	if ( ! mode_raw )
 	{
 		bucket_pos = butt->get_bucket_position ();
-		utree.set ( HEADER_ITEM_POS, bucket_pos );
+		utree.set ( SODA_HEADER_ITEM_POS, bucket_pos );
 
 		bucket = butt->get_bucket_used ();
-		utree.set ( HEADER_ITEM_BUCKET, bucket );
+		utree.set ( SODA_HEADER_ITEM_BUCKET, bucket );
 
-		butt_name = butt->get_name ();
-		utree.set ( HEADER_ITEM_BUTT, butt_name.c_str () );
+		butt_name = butt->get_otp_name ();
+		utree.set ( SODA_HEADER_ITEM_BUTT, butt_name.c_str () );
 	}
 
 	if ( utree.err )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_UTREE_ALLOC );
 	}
 
 	// HEADER - dump to the chunkfile
@@ -146,26 +152,31 @@ int mtDW::SodaOp::encode (
 
 	if ( mtkit_file_get_mem ( utree.file, &mem, &mem_len ) )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_UTREE_ALLOC );
 	}
 
 	if ( file_out.put_chunk ( (uint8_t *)mem, (uint32_t)mem_len,
-		FILE_CHUNK_ID )
+		SODA_FILE_CHUNK_ID )
 		)
 	{
-		return 1;
+		return report_error ( ERROR_SODA_OPEN_OUTPUT );
 	}
+
+	ButtSaveState bss ( butt );
 
 	try
 	{
-		mtKit::ByteBuf	buf ( CHUNK_SIZE );
-		mtKit::ByteBuf	otp ( CHUNK_SIZE );
+		ByteBuf	buf ( SODA_CHUNK_SIZE );
+		ByteBuf	otp ( SODA_CHUNK_SIZE );
 		uint64_t grand = 0;
+
+		uint8_t * const dest = buf.get_buf ();
+		uint8_t * const src = otp.get_buf ();
+		size_t	const	destlen = buf.get_size ();
 
 		while ( 1 )
 		{
-			size_t const tot = file_in.read ( buf.array,
-				buf.array_len );
+			size_t const tot = file_in.read ( dest,	destlen );
 
 			grand += (uint64_t)tot;
 
@@ -175,35 +186,33 @@ int mtDW::SodaOp::encode (
 
 				if ( grand != filesize )
 				{
-					std::cerr << "Filesize not matched.\n";
+					return report_error (
+						ERROR_SODA_ENCODE_SIZE );
 				}
 
-				break;
+				break;		// Success, all done
 			}
 
 			if ( ! mode_raw )
 			{
-				if ( butt->otp_get_data ( otp.array, tot ) )
-				{
-					throw 123;
-				}
+				RETURN_ON_ERROR( butt->get_otp_data( src, tot ))
 
 				for ( size_t i = 0; i < tot; i++ )
 				{
-					buf.array[i] ^= otp.array[i];
+					dest[i] ^= src[i];
 				}
 			}
 
-			if ( file_out.put_chunk ( buf.array, (uint32_t)tot,
-				FILE_CHUNK_ID ) )
+			if ( file_out.put_chunk ( dest, (uint32_t)tot,
+				SODA_FILE_CHUNK_ID ) )
 			{
-				throw 123;
+				return report_error ( ERROR_SODA_ENCODE_WRITE );
 			}
 		}
 	}
 	catch ( ... )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_ENCODE_EXCEPTION );
 	}
 
 	db_add_encode ( input, filesize, mode_raw, butt_name, bucket,
@@ -212,19 +221,24 @@ int mtDW::SodaOp::encode (
 	return 0;
 }
 
-int mtDW::SodaOp::multi_encode (
+int mtDW::Soda::Op::multi_encode (
 	Butt			* const	butt,
 	char		const * const	input,
 	char		const * const	output,
-	char	const * const * const	butt_names
+	char	const * const * const	otp_names
 	) const
 {
+	if ( ! input || ! output || ! otp_names )
+	{
+		return report_error ( ERROR_SODA_ENCODE_INSANITY );
+	}
+
 	mtKit::SqliteTransaction trans ( m_db );
 	FilenameSwap	name ( output );
 
 	if ( butt )
 	{
-		name.m_res = butt->set_name ( butt_names[0] );
+		name.m_res = butt->set_otp ( otp_names[0] );
 	}
 
 	if ( 0 == name.m_res )
@@ -234,11 +248,11 @@ int mtDW::SodaOp::multi_encode (
 
 	if ( 0 == name.m_res )
 	{
-		for ( int i = 1; butt_names[i]; i++ )
+		for ( int i = 1; otp_names[i]; i++ )
 		{
 			if ( butt )
 			{
-				name.m_res = butt->set_name ( butt_names[i] );
+				name.m_res = butt->set_otp ( otp_names[i] );
 			}
 
 			if ( 0 == name.m_res )

@@ -1,7 +1,7 @@
 Name:			libmtdatawell
 Version:		@MT_VERSION@
 Release:		@MT_RELVER@%{?dist}
-Summary:		MT Crypto routines
+Summary:		MT Crypto and random data routines
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
 BuildRequires:		libmtkit libmtpixy sqlite3-devel libsndfile-devel

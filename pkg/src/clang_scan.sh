@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Build script for all packages using clang's static analyzer.
 # Mark Tyler 2012-5-19
 
@@ -45,7 +45,7 @@ echo
 for PKG in $APPS_DIR_ALL
 do
 	cd $PKG
-	$BIN ./configure debugold
+	$BIN ./configure
 	$BIN make
 	cd ..
 done

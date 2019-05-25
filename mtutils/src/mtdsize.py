@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#	Copyright (C) 2017 Mark Tyler
+#	Copyright (C) 2017-2018 Mark Tyler
 #
 #	This program is free software; you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -87,24 +87,30 @@ def print_titles ( tot ):
 
 
 def path_recurse ( path, tot ):
-	for name in os.listdir ( path ):
-		fullname = os.path.join ( path, name )
-		st = os.lstat ( fullname )
-		mode = st.st_mode
+	try:
+		for name in os.listdir ( path ):
+			fullname = os.path.join ( path, name )
+			st = os.lstat ( fullname )
+			mode = st.st_mode
 
-		if stat.S_ISDIR ( mode ):
-			path_recurse ( fullname, tot )
-			tot.subdirs += 1
+			if stat.S_ISDIR ( mode ):
+				path_recurse ( fullname, tot )
+				tot.subdirs += 1
 
-		elif stat.S_ISLNK ( mode ) or not stat.S_ISREG ( mode ):
-			tot.other += 1
+			elif stat.S_ISLNK ( mode ) or not stat.S_ISREG ( mode ):
+				tot.other += 1
 
-		else:
-			tot.files += 1
-			tot.bytes += st.st_size
+			else:
+				tot.files += 1
+				tot.bytes += st.st_size
 
-			if not tot.summarize:
-				print_file_info ( st, fullname[tot.path_len:] )
+				if not tot.summarize:
+					print_file_info ( st, fullname[tot.path_len:] )
+	except IOError:
+		return
+
+	except PermissionError:
+		return
 
 
 def scan_path ( path, summarize ):

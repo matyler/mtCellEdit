@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2016 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -122,5 +122,36 @@ int mtQEX::message_file_overwrite (
 
 	// No or cancel, so caller cannot overwrite the existing file
 	return 1;
+}
+
+void mtQEX::set_multi_directories ( QFileDialog &dialog )
+{
+	dialog.setOption ( QFileDialog::DontUseNativeDialog );
+	dialog.setOption ( QFileDialog::ShowDirsOnly );
+	dialog.setFileMode ( QFileDialog::Directory );
+
+	QListView * l = dialog.findChild<QListView *> ( "listView" );
+	if ( l )
+	{
+		l->setSelectionMode ( QAbstractItemView::MultiSelection );
+	}
+
+	QTreeView * t = dialog.findChild<QTreeView *>();
+	if ( t )
+	{
+		t->setSelectionMode ( QAbstractItemView::MultiSelection );
+	}
+}
+
+QString mtQEX::get_filename ( QFileDialog &dialog )
+{
+	QStringList const files = dialog.selectedFiles ();
+
+	if ( files.size () < 1 )
+	{
+		return "";
+	}
+
+	return files.at (0);
 }
 

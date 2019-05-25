@@ -4,17 +4,18 @@ libmtpixy	libmtpixy	1
 libmtcedui	libmtcedui	1
 libmtqex5	libmtqex	1
 mtcelledit-qt5	mtcelledit	1
-mtutils	mtutils
-mtcedutils	mtcedutils
-mtcedcli	mtcedcli
-libmtdatawell	libmtdatawell
-mtdwcli	mtdwcli
-mtraft-qt5	mtraft
-libmtpixyui	libmtpixyui
-mtpixy-qt5	mtpixy
-mtpixyutils	mtpixyutils
-mtpixycli	mtpixycli
+mtutils	mtutils	1
+mtcedutils	mtcedutils	1
+mtcedcli	mtcedcli	1
+libmtdatawell	libmtdatawell	1
+mtdatawell-qt5	mtdatawell	1
+mtdwcli	mtdwcli	1
+mtraft-qt5	mtraft	1
+mtpixy-qt5	mtpixy	1
+mtpixyutils	mtpixyutils	1
+mtpixycli	mtpixycli	1
 libmtqex4	libmtqex
 mtcelledit-qt4	mtcelledit
+mtdatawell-qt4	mtdatawell
 mtraft-qt4	mtraft
 mtpixy-qt4	mtpixy

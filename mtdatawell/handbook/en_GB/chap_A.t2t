@@ -1,0 +1,76 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>mtDataWell Handbook - Appendix A - Miscellaneous</TITLE>\1'
+
+
+[Previous chap_07.html] | [Contents chap_00.html] | [Next chap_B.html]
+-------------------------------------------------
+
+=Appendix A - Miscellaneous=
+
+
+
+=A.1 Mathematical Randomness=[SEC1]
+
+Randomness can be many things, but for work relating to mtDataWell I define it as a combination of 3 things:
+
+ - **Statistical randomness**
+   - In the long run, probabilities of bits & bytes should tend to their average. e.g. 50% 0 bits, 50% 1 bits; 1/256 bytes should be 0x00, 1/256 bytes should be 0x01, etc.  This can be achieved by a PRNG using a linear congruential formula.
+
+ - **Unpredictable randomness**
+   - No mathematical formula or algorithm should be able to work out what comes next in a sequence of random data.  This is achieved using real world entropy via user data files that are mixed with PRNG data.
+
+ - **Unique randomness**
+   - Properly prepared data should never exist anywhere else, other than your secure device(s).  This is an absolute requirement for private cryptographic work, and requires a competent agent to handle and prepare the data.  This part can never be automated or delegated to a machine.  **Hints**: don't use a network enabled device to prepare or host the data; don't use hardware or software from which an adversary can snoop; feel free to wrap data inside multiple layers of encryption;
+
+
+If these steps are followed then mtDataWell will create very high quality random
+data.
+
+
+
+==A.1.1 Judging Random Quality==[SEC11]
+
+As with all computer programs, and data processing,
+**"garbage in, garbage out"**.
+The quality of the files you put into the Well will affect the "Unpredictable
+randomness" item above.  For example, poorer quality input would be such as:
+- Multiple copies of the same file.
+- Files which have large repeated sections within them.
+- Files that have been created by a PRNG, or any other mathematical algorithm.
+
+
+When preparing you input data, try to avoid any of these as it will potentially
+degrade the quality of the results due to lower levels of information entropy.
+
+Measuring input file "quality" is difficult.  However, you can do various
+analyses to ensure that the output is statistically random.
+See [4.3.3 chap_04.html#SEC33] for how to anaylse Butt data statistically to
+confirm that your OTP's are good enough.
+
+In order to avoid repetition through cycling in the Well input file data, always
+ensure that there is far more data in the input files compared to the output
+buckets.
+For example if you want 1GB of buckets, ensure you have well over 1.5GB of input
+data (input data is always deflated, so more is always required than you may
+expect).
+
+To increase the quality of input files, try and take as much data from the real
+world such as first generation photos, or videos (i.e. that have not been edited
+or recoded).
+
+
+
+=A.2 Soda OTP Logs=[SEC2]
+
+Soda encode transaction logs are kept in the database here:
+```
+~/.config/libmtDataWell/soda/log.sqlite
+```
+
+You can browse these using the sqlite command line tools or the sqlitebrowser
+GUI tool.
+
+
+
+-------------------------------------------------
+[Previous chap_07.html] | [Contents chap_00.html] | [Next chap_B.html]

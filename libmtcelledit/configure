@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
 
 
 APP_NAME="libmtcelledit"
-LIB_NAME="libmtcelledit.so"
+LIB_NAME="libmtcelledit"
 
 MTCF_INIT
 MTCF_PARSE_ARGS "$@"

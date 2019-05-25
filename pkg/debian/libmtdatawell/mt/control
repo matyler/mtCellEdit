@@ -9,5 +9,5 @@ Homepage: http://ced.marktyler.org/
 Package: libmtdatawell
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: MT Crypto routines
+Description: MT Crypto and random data routines
  .

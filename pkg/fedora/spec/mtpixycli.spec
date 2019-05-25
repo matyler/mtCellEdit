@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Pixel CLI
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy libmtpixyui readline-devel
-Requires:		libmtkit libmtpixy libmtpixyui readline
+BuildRequires:		libmtkit libmtpixy readline-devel
+Requires:		libmtkit libmtpixy readline
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

@@ -1,16 +1,16 @@
 include		../_conf.txt
 
 
-ICONDIR		= $(DESTDIR)$(DATA_INSTALL)/icons/hicolor
-MTDESK		= $(BIN_NAME).desktop
+ICONDIR		:= $(DESTDIR)$(DATA_INSTALL)/icons/hicolor
+MTDESK		:= $(BIN_NAME).desktop
 
 
 .PHONY:		all install uninstall clean
 
 all:		$(MTDESK)
 
-$(MTDESK):	mtraft.desktop.txt
-		./builddesktop.sh "mtraft.desktop.txt" "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" > $(MTDESK)
+$(MTDESK):	mtraft.desktop.txt svg.svg
+		./builddesktop.sh $< "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" > $@
 
 install:
 		install -d $(DESTDIR)$(DATA_INSTALL)/applications
@@ -34,4 +34,4 @@ uninstall:
 		rm $(ICONDIR)/*/apps/$(BIN_NAME).svg
 
 clean:
-		rm -rf *.desktop
+		rm -rf *.desktop *.png

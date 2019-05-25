@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
@@ -19,15 +19,15 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 MTCF_PRE_CONF
 
-MTCF_CHECK_LIBS mtkit mtpixy mtpixyui stdc++
+MTCF_CHECK_LIBS mtkit mtpixy stdc++
 
 MTCF_ENABLE_QT_QEX
 MTCF_VERSION_BIN_NAME
 
 DATA_NAME=$BIN_NAME
 
-I_EX="$I_EX -DDATA_INSTALL=\"\\\"$DATA_INSTALL\"\\\""
-I_EX="$I_EX -DDATA_NAME=\"\\\"$DATA_NAME\"\\\""
+MTCF_ADD_APPIMAGE_DATA
+MTCF_ADD_DATA_NAME
 
 MTCF_MAKE_DIRS_ADD "data"
 

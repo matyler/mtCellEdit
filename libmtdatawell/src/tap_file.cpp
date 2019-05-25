@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 mtDW::TapFile::TapFile ()
 	:
-	op		( new TapFileOp () )
+	op		( new TapFile::Op () )
 {
 }
 
@@ -32,7 +32,10 @@ mtDW::TapFile::~TapFile ()
 	delete op;
 }
 
-int mtDW::TapFile::open_info ( char const * const filename )
+int mtDW::TapFile::open_info (
+	char	const * const	filename,
+	int			& type
+	)
 {
 	op->m_capacity = 0;
 	op->m_image.reset ( mtPixy::Image::load ( filename ) );
@@ -44,7 +47,7 @@ int mtDW::TapFile::open_info ( char const * const filename )
 		{
 			op->m_image.reset ( NULL );
 
-			return TYPE_INVALID;
+			return report_error ( ERROR_IMAGE_INVALID_BOTTLE );
 		}
 
 		size_t const w = (size_t)image->get_width ();
@@ -52,7 +55,8 @@ int mtDW::TapFile::open_info ( char const * const filename )
 
 		op->m_capacity = (w * h) * 3 / 8;
 
-		return TYPE_RGB;
+		type = TYPE_RGB;
+		return 0;
 	}
 
 	try
@@ -64,7 +68,8 @@ int mtDW::TapFile::open_info ( char const * const filename )
 		{
 			op->m_capacity =(size_t)audio->get_read_capacity ();
 
-			return TYPE_SND;
+			type = TYPE_SND;
+			return 0;
 		}
 	}
 	catch ( ... )
@@ -75,52 +80,65 @@ int mtDW::TapFile::open_info ( char const * const filename )
 
 	// Future additions go here
 
-	return TYPE_INVALID;
+	return report_error ( ERROR_TAP_UNKNOWN_BOTTLE );
 }
 
-int mtDW::TapFile::open_soda ( char const * const filename )
+int mtDW::TapFile::open_soda (
+	char	const * const	filename,
+	int			& type
+	)
 {
+	if ( ! filename )
+	{
+		return report_error ( ERROR_TAP_OPEN_SODA_INSANITY );
+	}
+
 	std::string		tmp_file;
 
-	get_temp_filename ( tmp_file, filename );
+	mtDW::get_temp_filename ( tmp_file, filename );
 
-	switch ( open_info ( filename ) )
+	RETURN_ON_ERROR ( open_info ( filename, type ) )
+
+	switch ( type )
 	{
 	case TYPE_RGB:
 		{
-			int const res = TapOp::decode_image ( op->m_image.get(),
-				tmp_file.c_str () );
+			RETURN_ON_ERROR( Tap::Op::decode_image (
+				op->m_image.get (), tmp_file.c_str (), type ) )
 
-			if ( TYPE_INVALID == res )
+			if ( TYPE_RGB == type )
 			{
-				return TYPE_RGB;
+				// Empty bottle (no Soda)
+				return 0;
 			}
 
 			op->set_soda_filename ( tmp_file );
 
-			return res;
+			return 0;
 		}
 
 	case TYPE_SND:
 		{
-			int const res = TapOp::decode_audio ( filename,
-				tmp_file.c_str () );
+			RETURN_ON_ERROR ( Tap::Op::decode_audio ( filename,
+				tmp_file.c_str (), type ) )
 
-			if ( TYPE_INVALID == res )
+			if ( TYPE_SND == type )
 			{
-				return TYPE_SND;
+				// Empty bottle (no Soda)
+				return 0;
 			}
 
 			op->set_soda_filename ( tmp_file );
 
-			return res;
+			return 0;
 		}
 
 	// Future additions go here
 
 	}
 
-	return TYPE_INVALID;
+	// Shouldn't ever get here if open_info() type matches switch above
+	return report_error ( ERROR_TAP_UNKNOWN_BOTTLE );
 }
 
 size_t mtDW::TapFile::get_capacity () const

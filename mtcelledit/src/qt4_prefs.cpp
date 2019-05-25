@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ int MainWindow::projectSetFont (
 	int		const	sz
 	)
 {
-	mtPixy::Font * newfont = new mtPixy::Font ( name, sz );
+	mtPixy::Font * const newfont = new mtPixy::Font ( name, sz );
 
 	if ( ! newfont )
 	{
@@ -49,13 +49,9 @@ void pref_change_font (
 	void		* const	callback_ptr
 	)
 {
-	char	const	* name;
-	int		size;
-	mtKit::Prefs	* prefs = (mtKit::Prefs *)callback_ptr;
-
-
-	name = prefs->getString ( GUI_INIFILE_FONT_PANGO_NAME );
-	size = prefs->getInt ( GUI_INIFILE_FONT_SIZE );
+	mtKit::Prefs * const prefs = (mtKit::Prefs *)callback_ptr;
+	char const * const  name = prefs->getString(GUI_INIFILE_FONT_PANGO_NAME);
+	int const size = prefs->getInt ( GUI_INIFILE_FONT_SIZE );
 
 	if ( mainwindow->projectSetFont ( name, size ) )
 	{
@@ -78,7 +74,7 @@ void pref_change_graph_scale (
 	void		* const	ARG_UNUSED ( callback_ptr )
 	)
 {
-	mainwindow->pressGraphRedraw ();
+	mainwindow->press_GraphRedraw ();
 }
 
 void pref_change_recent_filename_len (
@@ -94,10 +90,8 @@ mtPrefs * Backend::load_pref_window_prefs (
 	mtPrefTable	const * const	table
 	)
 {
-	mtPrefs		* mtpr;
+	mtPrefs * const mtpr = mtkit_prefs_new ( table );
 
-
-	mtpr = mtkit_prefs_new ( table );
 	mtKit::prefsInitWindowPrefs ( mtpr );
 
 	if ( mtKit::prefsWindowMirrorPrefs ( mtpr, preferences.getPrefsMem() ))
@@ -120,16 +114,13 @@ void fe_commit_prefs_set (
 	void		* const	ARG_UNUSED ( callback_ptr )
 	)
 {
-	CedSheet	* const sheet = mainwindow->projectGetSheet ();
-	int		res;
-
-
+	CedSheet * const sheet = mainwindow->projectGetSheet ();
 	if ( ! sheet )
 	{
 		return;
 	}
 
-	res = be_commit_prefs_set ( sheet,
+	int const res = be_commit_prefs_set ( sheet,
 		mainwindow->projectGetCedFile ()->cubook,
 		pref_id, pref_num, pref_charp );
 
@@ -143,10 +134,9 @@ void fe_commit_prefs_set (
 	mainwindow->updateChangesChores ( 1, 1 );
 }
 
-void MainWindow::pressOptionsCellPrefs ()
+void MainWindow::press_OptionsCellPrefs ()
 {
-	CedSheet	* sheet = projectGetSheet ();
-	mtPrefs		* mtpr;
+	CedSheet * const sheet = projectGetSheet ();
 
 
 	if ( projectReportUpdates ( cui_check_sheet_lock ( sheet ) ) )
@@ -154,7 +144,7 @@ void MainWindow::pressOptionsCellPrefs ()
 		return;
 	}
 
-	mtpr = backend->cellpref_init ( sheet, be_cellpref_changed,
+	mtPrefs * mtpr = backend->cellpref_init ( sheet, be_cellpref_changed,
 		(void *)this );
 	if ( ! mtpr )
 	{
@@ -174,9 +164,9 @@ void MainWindow::pressOptionsCellPrefs ()
 	updateView ();
 }
 
-void MainWindow::pressOptionsBookPrefs ()
+void MainWindow::press_OptionsBookPrefs ()
 {
-	mtPrefs * mtpr = backend->book_prefs_init ( cedFile->cubook->book );
+	mtPrefs * const mtpr = backend->book_prefs_init( cedFile->cubook->book);
 
 
 	mtQEX::PrefsWindow ( mtpr, "Book Preferences" );
@@ -189,24 +179,21 @@ void MainWindow::pressOptionsBookPrefs ()
 	mtkit_prefs_destroy ( mtpr );
 }
 
-void MainWindow::pressOptionsProgramPrefs ()
+void MainWindow::press_OptionsProgramPrefs ()
 {
 	mtQEX::PrefsWindow ( pprfs->getPrefsMem (), "Preferences" );
 }
 
-void MainWindow::pressOptionsTextStyle (
+void MainWindow::press_OptionsTextStyle (
 	int	const	i
 	)
 {
-	int		res;
-
-
 	if ( be_prepare_prefs_set ( projectGetSheet () ) )
 	{
 		return;
 	}
 
-	res = cui_cellprefs_text_style ( cedFile, i );
+	int const res = cui_cellprefs_text_style ( cedFile, i );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -233,7 +220,7 @@ static void swFunc (
 
 
 	SwatchDialog	dialog ( title, prefs );
-	int		col = dialog.getColor ();
+	int	const	col = dialog.getColor ();
 
 
 	if ( col >= 0 )
@@ -244,34 +231,31 @@ static void swFunc (
 	be_cellpref_cleanup ( mainwindow->projectGetSheet () );
 }
 
-void MainWindow::pressOptionsBackgroundColor ()
+void MainWindow::press_OptionsBackgroundColor ()
 {
 	swFunc ( "Background Colour", CUI_CELLPREFS_color_background, pprfs );
 }
 
-void MainWindow::pressOptionsForegroundColor ()
+void MainWindow::press_OptionsForegroundColor ()
 {
 	swFunc ( "Foreground Colour", CUI_CELLPREFS_color_foreground, pprfs );
 }
 
-void MainWindow::pressOptionsBorderColor ()
+void MainWindow::press_OptionsBorderColor ()
 {
 	swFunc ( "Border Colour", CUI_CELLPREFS_border_color, pprfs );
 }
 
-void MainWindow::pressOptionsBorder (
+void MainWindow::press_OptionsBorder (
 	int	const	i
 	)
 {
-	int		res;
-
-
 	if ( be_prepare_prefs_set ( projectGetSheet () ) )
 	{
 		return;
 	}
 
-	res = cui_cellprefs_border ( cedFile, i );
+	int const res = cui_cellprefs_border ( cedFile, i );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES

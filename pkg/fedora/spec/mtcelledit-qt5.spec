@@ -4,7 +4,7 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt5 Spreadsheet GUI
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit libmtpixy libmtcedui libmtqex5 qt5-qtbase-devel
+BuildRequires:		libmtkit libmtcelledit libmtpixy libmtcedui libmtqex5 qt5-qtbase-devel inkscape
 Requires:		libmtkit libmtcelledit libmtpixy libmtcedui libmtqex5 qt5-qtbase
 
 %global debug_package %{nil}

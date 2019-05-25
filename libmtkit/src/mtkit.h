@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -468,19 +468,42 @@ int mtkit_file_get_mem (
 	int64_t		* buf_len	// Put buffer length here (NULL = don't)
 	);
 
-int mtkit_file_header_gz (			// Is this a .gz file header?
-	unsigned char	const	* mem,		// 31, 139
-	int			mem_size	// > 20
+int mtkit_file_header_gz (		// Is this a .gz file header?
+	unsigned char	const	* mem,	// 31, 139
+	int			mem_size// > 20
 	);
 	// 0 = No
 	// 1 = Yes
 
-int mtkit_file_header_zip (			// Is this a .zip file header?
-	unsigned char	const	* mem,		// 0x50, 0x4b, 0x03, 0x04
-	int			mem_size	// > 30
+int mtkit_file_header_zip (		// Is this a .zip file header?
+	unsigned char	const	* mem,	// 0x50, 0x4b, 0x03, 0x04
+	int			mem_size// > 30
 	);
 	// 0 = No
 	// 1 = Yes
+
+int mtkit_file_lock (			// Open/create file & set lock
+	char	const *	filename,
+	int	*	file_id
+	);
+
+void mtkit_file_unlock (		// Release lock, close file
+	int	*	file_id
+	);
+
+int mtkit_file_copy (
+	char	const *	filename_dest,
+	char	const *	filename_src
+	);
+
+int64_t mtkit_file_size (
+	char	const *	filename
+	);
+	// -2 = System error (use errno to get details)
+	// -1 = Arg error
+	// Otherwise it returns the file size in bytes
+
+void mtkit_mkdir ( char const * path );	// Using (S_IRWXU | S_IRWXG | S_IRWXO)
 
 int mtkit_snip_filename (
 	char	const	* txt,
@@ -1123,6 +1146,19 @@ int mtkit_arg_string_boundary_check (
 	// 0  = Valid string
 	// 1  = Invalid string, reported error to stderr
 
+int mtkit_int_bound (
+	int		num,
+	int		min,
+	int		max
+	);
+	// Return num within bounds
+
+double mtkit_double_bound (
+	double		num,
+	double		min,
+	double		max
+	);
+	// Return num within bounds
 
 /*
 The following code is a simple implementation of the ZIP file format.
@@ -1250,7 +1286,17 @@ void mtkit_int32_pack (			// Pack integer into little endian
 namespace mtKit
 {
 
+void get_binary_dir ( std::string & path );
+	// After function, path = "" or "/some/dir/to/binary/"
+
+void get_data_dir ( std::string & path, char const * data );
+	// If data[0]='.' path=/binary/dir/data, else path=data
+
+int get_user_name ( std::string & name );
+	// Gets user's real name or username if it isn't defined.
+
 std::string realpath ( std::string const & path );
+std::string basename ( std::string const & path );
 
 int string_from_data (
 	std::string	& str,	// Push data + '\0' into here
@@ -1258,17 +1304,24 @@ int string_from_data (
 	size_t		size
 	);
 
+int string_strip_extension (		// Case insensitive
+	std::string	&filename,	// Will never return "" if filename>""
+	char	const	* extension	// e.g. "png", "flac"
+	);
+	// 0 = No change
+	// 1 = ".extension" removed from the end of "filename"
+
 
 
 class BitPackRead;
 class BitPackWrite;
 class BitShifter;
-class ByteBuf;
 class ByteFileRead;
 class ByteFileWrite;
 class CliItem;
 class CliTab;
 class Exit;
+class FileLock;
 class Prefs;
 class Random;
 class RecentFile;
@@ -1277,6 +1330,15 @@ namespace ByteCube {}
 namespace ChunkFile {}
 
 template <typename T> class unique_ptr;
+
+typedef struct CharInt		CharInt;
+
+typedef int (* CliFunc) (
+	char const * const * args	// NULL terminated argument list
+	);
+	// 0 = Success
+	// 1 = Fail (CliTab::parse reports error)
+	// 2 = Fail (this function reports error)
 
 
 
@@ -1294,17 +1356,6 @@ public:
 private:
 	T * m_ptr;
 };
-
-
-
-typedef struct CharInt		CharInt;
-
-typedef int (* CliFunc) (
-	char const * const * args	// NULL terminated argument list
-	);
-	// 0 = Success
-	// 1 = Fail (CliTab::parse reports error)
-	// 2 = Fail (this function reports error)
 
 
 
@@ -1443,12 +1494,12 @@ public:
 
 	int init_prefs ( mtKit::Prefs * pr );
 
-	char const * get_filename ( int idx );
-	void set_filename ( char const * name );
+	char const * get_filename ( int idx ) const;
+	void set_filename ( char const * name ) const;
 
 private:
-	void set_filename_idx ( int idx, char const * name );
-	char * create_key ( int idx );
+	void set_filename_idx ( int idx, char const * name ) const;
+	char * create_key ( int idx ) const;
 
 /// ----------------------------------------------------------------------------
 
@@ -1473,6 +1524,13 @@ int cli_parse_int (
 	int		&output,
 	int		min,		// If max < min don't check bounds
 	int		max
+	);
+
+int cli_parse_double (
+	char	const *	input,
+	double		&output,
+	double		min,		// If max < min don't check bounds
+	double		max
 	);
 
 int cli_parse_charint (
@@ -1604,7 +1662,7 @@ private:
 
 
 
-}		// namespace ChunkFile
+}	// namespace ChunkFile
 
 
 
@@ -1711,9 +1769,11 @@ public:
 
 	int open ( char const * filename, uint64_t pos );
 	void close ();
-	size_t read ( void * mem, size_t len ) const;	// = bytes read
+	size_t read ( void * mem, size_t len );	// = bytes read
 
-	inline bool is_open () const { return NULL != m_fp; };
+	inline bool is_open () const { return NULL != m_fp; }
+
+	inline uint64_t get_pos () const { return m_pos; }
 
 private:
 	void set_file ( FILE * fp );
@@ -1721,6 +1781,7 @@ private:
 /// ----------------------------------------------------------------------------
 
 	FILE		* m_fp;
+	uint64_t	m_pos;
 };
 
 
@@ -1745,59 +1806,10 @@ private:
 
 
 
-class ByteBuf
-{
-public:
-	inline ByteBuf ()
-		:
-		array (),
-		array_len (0),
-		tot (0),
-		pos (0)
-	{}
-
-	inline explicit ByteBuf ( size_t const size )
-		:
-		array ( (uint8_t *)calloc ( size, sizeof(uint8_t) ) ),
-		array_len ( size ),
-		tot (0),
-		pos (0)
-	{
-		if ( ! array )
-		{
-			throw 123;
-		}
-	}
-
-	inline ~ByteBuf () { set ( NULL, 0 ); }
-
-	inline void set ( uint8_t * const buf, size_t const len )
-	{
-		free ( array );
-		array = buf;
-		array_len = len;
-		tot = 0;
-		pos = 0;
-	}
-
-	int save ( std::string const &filename );
-	void load ( std::string const &filename );
-
-/// ----------------------------------------------------------------------------
-
-	uint8_t		* array;
-	size_t		array_len;
-	size_t		tot;		// Current items in array
-	size_t		pos;		// Current position in array
-};
-
-
-
 class Random
 {
 public:
-	inline Random () : m_seed (0) {}
-	inline ~Random () {}
+	Random ();
 
 	inline void set_seed ( uint64_t seed )	{ m_seed = seed; }
 	inline uint64_t get_seed () const	{ return m_seed; }
@@ -1811,6 +1823,25 @@ public:
 
 protected:
 	uint64_t	m_seed;
+};
+
+
+
+class FileLock
+{
+public:
+	FileLock ();
+	~FileLock ();
+
+	// Create/Open a file and lock it. On unset, destructor, or another set
+	// the file is deleted.
+	int set ( std::string const &filename );
+
+	void unset ();
+
+private:
+	int		m_id;
+	std::string	m_filename;
 };
 
 
@@ -1849,6 +1880,11 @@ public:
 	int empty_table ( std::string const & table ) const;
 	int count_rows ( std::string const & table ) const;
 
+	int get_version () const;
+	void set_version ( int version );
+
+	void archive_table ( char const * table, int suffix );
+
 protected:
 	sqlite3		* m_db;
 };
@@ -1873,6 +1909,8 @@ private:
 	SqliteAddRecordOp * const op;
 
 	SqliteAddRecord ( const SqliteAddRecord & ); // Disable copy constructor
+	SqliteAddRecord & operator = (const SqliteAddRecord &);
+		// Disable = operator
 };
 
 
@@ -1971,8 +2009,19 @@ public:
 
 	int next ();
 
-	void		blob_string ( int arg, std::string & str );
-	sqlite3_int64	integer ( int arg );
+	int get_type ( int arg );
+		// = SQLITE_< INTEGER | FLOAT | TEXT | BLOB | NULL >
+
+	/* The following functions all return:
+		0 = Success
+		1 = NULL
+		2 = Other type mismatch
+	*/
+	int get_blob ( int arg, std::string & res );	// Also gets TEXT
+	int get_text ( int arg, std::string & res );
+	int get_int ( int arg, int & res );
+	int get_int64 ( int arg, int64_t & res );
+	int get_double ( int arg, double & res );
 
 /// ----------------------------------------------------------------------------
 

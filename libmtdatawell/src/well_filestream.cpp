@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,66 +25,59 @@
 
 mtDW::FileStream::FileStream ( FileDB & db )
 	:
-	buf_file	( BUFSIZE_RAW ),
-	m_zlib		(),
-	m_zlib_len	( 0 ),
-	m_zlib_pos	( 0 ),
-	m_pos		( 0 ),
-	m_fp		(),
+	m_buf_file	( BUFSIZE_RAW ),
+	m_buf_zlib	(),
 	m_file_db	( db )
 {
 }
 
-mtDW::FileStream::~FileStream ()
+int mtDW::FileStream::read ( ByteBuf & buf )
 {
-	free_zlib ();
-	set_file ( NULL );
-}
+	buf.set_tot ( 0 );
+	buf.set_pos ( 0 );
 
-int mtDW::FileStream::read ( mtKit::ByteBuf & buf )
-{
-	buf.tot = 0;
-	buf.pos = 0;
-
-	while ( buf.tot < buf.array_len )
+	while ( buf.get_tot () < buf.get_size () )
 	{
-		if ( m_zlib_pos < m_zlib_len )
+		size_t const z_pos = m_buf_zlib.get_pos ();
+		size_t const z_len = m_buf_zlib.get_size ();
+
+		if ( z_pos < z_len )
 		{
-			size_t const dest_len = buf.array_len - buf.tot;
-			size_t const src_len = m_zlib_len - m_zlib_pos;
+			size_t const dest_len = buf.get_size () - buf.get_tot();
+			size_t const src_len = z_len - z_pos;
 			size_t const len = MIN ( dest_len, src_len );
 
-			memcpy( buf.array + buf.tot, m_zlib + m_zlib_pos, len );
+			memcpy ( buf.get_buf () + buf.get_tot (),
+				m_buf_zlib.get_buf () + z_pos, len );
 
-			buf.tot += len;
-			m_zlib_pos += len;
+			buf.set_tot ( buf.get_tot () + len );
+			m_buf_zlib.set_pos ( z_pos + len );
 
 			continue;	// Finish or load more file data
 		}
 
-		buf_file.tot = 0;
-		buf_file.pos = 0;
+		m_buf_file.set_tot ( 0 );
+		m_buf_file.set_pos ( 0 );
 
-		while ( buf_file.tot < buf_file.array_len )
+		while ( m_buf_file.get_tot () < m_buf_file.get_size () )
 		{
-			if ( ! m_fp )
+			if ( ! m_file.is_open () )
 			{
 				if ( open () )
 				{
 					return 1;	// Not filled
 				}
-
-				m_pos = 0;
 			}
 
-			size_t const len = buf_file.array_len - buf_file.tot;
+			size_t const len = m_buf_file.get_size () -
+				m_buf_file.get_tot ();
 
-			size_t const loaded = fread ( buf_file.array +
-				buf_file.tot, 1, len, m_fp );
+			size_t const loaded = m_file.read ( m_buf_file.get_buf()
+				+ m_buf_file.get_tot (), len );
 
 			if ( 0 == loaded )
 			{
-				if ( 0 == m_pos )
+				if ( 0 == m_file.get_pos () )
 				{
 					/* IMPORTANT! - if after opening a file
 					it yields 0 bytes, remove it! If we
@@ -98,48 +91,32 @@ int mtDW::FileStream::read ( mtKit::ByteBuf & buf )
 				}
 
 				// EOF reached, get next file
-				set_file ( NULL );
+				m_file.close ();
 
 				m_file_db.increment_file_id ();
 
 				continue;
 			}
 
-			m_pos += loaded;
-			buf_file.tot += loaded;
+			m_buf_file.set_tot ( m_buf_file.get_tot () + loaded );
 		}
 
-		free_zlib ();
+		unsigned char * zlib;
+		size_t zlib_len;
 
-		if ( mtkit_mem_deflate ( (unsigned char *)buf_file.array,
-			buf_file.array_len, &m_zlib, &m_zlib_len,
+		if ( mtkit_mem_deflate ( (unsigned char *)m_buf_file.get_buf (),
+			m_buf_file.get_size (), &zlib, &zlib_len,
 			MTKIT_DEFLATE_LEVEL_DEFAULT,
 			MTKIT_DEFLATE_MODEL_DEFAULT )
 			)
 		{
 			return 1;	// Not filled
 		}
+
+		m_buf_zlib.set ( zlib, zlib_len );
 	}
 
 	return 0;			// Filled
-}
-
-void mtDW::FileStream::set_file ( FILE * const fp )
-{
-	if ( NULL != m_fp )
-	{
-		fclose ( m_fp );
-	}
-
-	m_fp = fp;
-}
-
-void mtDW::FileStream::free_zlib ()
-{
-	free ( m_zlib );
-	m_zlib = NULL;
-	m_zlib_len = 0;
-	m_zlib_pos = 0;
 }
 
 int mtDW::FileStream::open ( uint64_t pos )
@@ -158,24 +135,9 @@ int mtDW::FileStream::open ( uint64_t pos )
 				return 1;
 			}
 
-			FILE * fp = fopen ( filename.c_str (), "rb" );
-			if ( fp )
+			if ( 0 == m_file.open ( filename.c_str (), pos ) )
 			{
-				// Successfully opened this file
-
-				if (	0 == pos ||
-					0 == fseek ( fp, (long)pos, SEEK_SET )
-					)
-				{
-					m_pos = pos;
-
-					set_file ( fp );
-
-					return 0;
-				}
-
-				fclose ( fp );
-				fp = NULL;
+				return 0;
 			}
 
 			// Failed to open (or seek) so remove it from the list

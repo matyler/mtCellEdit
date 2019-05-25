@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,9 +15,91 @@
 	along with this program in the file COPYING.
 */
 
+#include <sys/time.h>
 #include "private.h"
 
 
+
+void mtKit::get_binary_dir ( std::string & path )
+{
+	path = "";
+
+	char dest[PATH_MAX] = {0};
+
+	if ( -1 == readlink ( "/proc/self/exe", dest, sizeof(dest) ) )
+	{
+		return;
+	}
+
+	char * ch = strrchr ( dest, MTKIT_DIR_SEP );
+	if ( ch )
+	{
+		// Extract path, lose binary name
+		ch[1] = 0;
+		path += dest;
+	}
+	else
+	{
+		// No MTKIT_DIR_SEP separator so no path
+	}
+}
+
+void mtKit::get_data_dir (
+	std::string		& path,
+	char	const * const	data
+	)
+{
+	path = "";
+
+	if ( data && data[0] == '.' )
+	{
+		// Relative path is being used so get binary path as a base
+		get_binary_dir ( path );
+	}
+
+	path += data;
+}
+
+int mtKit::get_user_name ( std::string &name )
+{
+	name.clear ();
+
+	try
+	{
+		struct passwd	* p;
+
+		p = getpwuid ( getuid () );
+		if ( p )
+		{
+			if ( p->pw_gecos && p->pw_gecos[0] )
+			{
+				name = p->pw_gecos;
+			}
+			else if ( p->pw_name && p->pw_name[0] )
+			{
+				name = p->pw_name;
+			}
+		}
+
+		size_t const comma = name.find ( "," );
+
+		if ( comma != std::string::npos )
+		{
+			name.resize ( comma );
+		}
+
+		if ( name.size () < 1 )
+		{
+			throw 123;
+		}
+	}
+	catch ( ... )
+	{
+		return 1;
+	}
+
+	return 0;
+}
 
 std::string mtKit::realpath ( std::string const & path )
 {
@@ -41,12 +123,26 @@ std::string mtKit::realpath ( std::string const & path )
 	return res;
 }
 
+std::string mtKit::basename ( std::string const &path )
+{
+	size_t const found = path.find_last_of ( MTKIT_DIR_SEP );
+
+	if ( found == std::string::npos )
+	{
+		return path;
+	}
+
+	return path.substr ( found + 1 );
+}
+
 int mtKit::string_from_data (
 	std::string		& str,
 	void	const * const	data,
 	size_t		const	size
 	)
 {
+	str.clear ();
+
 	if ( ! data )
 	{
 		return 1;
@@ -80,46 +176,52 @@ int mtKit::string_from_data (
 	return res;
 }
 
-void mtKit::ByteBuf::load ( std::string const &filename )
+int mtKit::string_strip_extension (
+	std::string		&filename,
+	char	const * const	extension
+	)
 {
-	FILE * fp = fopen ( filename.c_str (), "rb" );
-	if ( ! fp )
+	std::string scan ("*.");
+	scan += extension;
+
+	int const len = (int)filename.length ();
+	int const pos = mtkit_strmatch ( filename.c_str (), scan.c_str (), 0 );
+
+	if ( pos > 0 )
 	{
-		tot = 0;
-		return;
+		if ( len > pos )
+		{
+			filename.resize ( (size_t)pos );
+			return 1;
+		}
 	}
 
-	tot = fread ( array, 1, array_len, fp );
-
-	fclose ( fp );
-	fp = NULL;
+	return 0;
 }
 
-int mtKit::ByteBuf::save ( std::string const &filename )
+mtKit::Random::Random ()
+	:
+	m_seed (0)
 {
-	FILE * fp = fopen ( filename.c_str (), "wb" );
-	if ( ! fp )
-	{
-		return 1;
-	}
-
-	int const res = ( array_len == fwrite ( array, 1, array_len, fp )
-			? 0 : 1 );
-
-	fclose ( fp );
-	fp = NULL;
-
-	return res;
+	set_seed_by_time ();
 }
 
 void mtKit::Random::set_seed_by_time ()
 {
-	m_seed = (uint64_t)time ( NULL );
+	struct timeval tv;
+
+	gettimeofday ( &tv, NULL );
+
+	m_seed = 1000000 * (uint64_t)tv.tv_sec + (uint64_t)tv.tv_usec;
+
+	get_int ();
+	get_int ();
 }
 
 int mtKit::Random::get_int ()
 {
-	m_seed = m_seed * 6364136223846793005ULL + 1442695040888963407;
+	m_seed = m_seed * ((uint64_t)6364136223846793005) +
+		(uint64_t)1442695040888963407;
 
 	return (int)(m_seed >> 32);
 }
@@ -158,6 +260,42 @@ void mtKit::Random::get_data (
 	for ( uint8_t * dest = buf; dest < end; dest++ )
 	{
 		dest[0] = (uint8_t)get_int ();
+	}
+}
+
+mtKit::FileLock::FileLock ()
+	:
+	m_id		( -1 )
+{
+}
+
+mtKit::FileLock::~FileLock ()
+{
+	unset ();
+}
+
+int mtKit::FileLock::set ( std::string const &filename )
+{
+	unset ();
+
+	if ( mtkit_file_lock ( filename.c_str (), &m_id ) )
+	{
+		std::cerr << "Unable to lock file '" << filename << "'\n";
+		return 1;
+	}
+
+	m_filename = filename;
+
+	return 0;
+}
+
+void mtKit::FileLock::unset ()
+{
+	if ( -1 != m_id )
+	{
+		mtkit_file_unlock ( &m_id );
+		remove ( m_filename.c_str () );
+		m_filename = "";
 	}
 }
 
@@ -274,5 +412,32 @@ uint8_t mtKit::BitShifter::get_byte ( uint8_t const input )
 	m_salt ^= input;
 
 	return (uint8_t)( ( (input << s) | (input >> (8 - s)) ) ^ t );
+}
+
+
+
+#include <iostream>
+#include <fstream>
+
+
+
+int mtkit_file_copy (
+	char	const * const	filename_dest,
+	char	const * const	filename_src
+	)
+{
+	try
+	{
+		std::ifstream src ( filename_src, std::ios::binary );
+		std::ofstream dest ( filename_dest, std::ios::binary );
+
+		dest << src.rdbuf ();
+	}
+	catch ( ... )
+	{
+		return 1;
+	}
+
+	return 0;
 }
 

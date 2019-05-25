@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -276,11 +276,7 @@ void CanvasView::update_canvas (
 	int	const	zs = get_zoom_scale ();
 
 
-	if ( zs > 0 )
-	{
-		update ( xx * zs, yy * zs, w * zs, h * zs );
-	}
-	else	// zoom < 0
+	if ( zs < 0 )
 	{
 		int	const	ax = xx / -zs;
 		int	const	ay = yy / -zs;
@@ -289,6 +285,10 @@ void CanvasView::update_canvas (
 
 
 		update ( ax, ay, bx - ax + 1, by - ay + 1 );
+	}
+	else	// zoom >= 0
+	{
+		update ( xx * zs, yy * zs, w * zs, h * zs );
 	}
 }
 

@@ -1,7 +1,7 @@
 Name:			mtdwcli
 Version:		@MT_VERSION@
 Release:		@MT_RELVER@%{?dist}
-Summary:		Crypto CLI
+Summary:		Crypto and random data CLI
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
 BuildRequires:		libmtkit libmtdatawell readline-devel

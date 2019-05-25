@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
@@ -15,7 +15,7 @@ MTCF_PRINT_HELP
 MTCF_PRE_CONF
 MTCF_CHECK_LIBS mtkit mtdatawell readline history
 
-I_EX="$I_EX -DAPP_NAME=\"\\\"$APP_NAME\"\\\""
+MTCF_ADD_APP_NAME
 
 MTCF_VERSION_BIN_NAME
 MTCF_POST_CONF

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 mtDW::Tap::Tap ()
 	:
-	op	( new TapOp () )
+	op	( new Tap::Op () )
 {
 }
 
@@ -36,14 +36,19 @@ int mtDW::Tap::decode (
 	char	const * const	file_out
 	)
 {
-	TapFile tap;
-
-	tap.open_soda ( bottle_in );
-
-	if ( 1 > tap.get_soda_filename ().size () )
+	if ( ! bottle_in || ! file_out )
 	{
-		std::cerr << "Error: Bottle does not contain any Soda.";
-		return 1;
+		return report_error ( ERROR_TAP_DECODE_INSANITY );
+	}
+
+	TapFile	tap;
+	int	type;
+
+	RETURN_ON_ERROR ( tap.open_soda ( bottle_in, type ) )
+
+	if ( tap.get_soda_filename ().size () < 1 )
+	{
+		return report_error ( ERROR_TAP_BOTTLE_INVALID );
 	}
 
 	return mtDW::Soda::multi_decode ( butt,
@@ -56,104 +61,89 @@ int mtDW::Tap::multi_decode (
 	char	const * const	file_out
 	)
 {
+	if ( ! bottle_in || ! file_out )
+	{
+		return report_error ( ERROR_TAP_DECODE_INSANITY );
+	}
+
 	FilenameSwap	name ( file_out );
-	int		tot = 0;
-	TapFile		tap;
 
-	tap.open_soda ( bottle_in );
-
-	if ( 1 > tap.get_soda_filename ().size () )
+	name.m_res = Tap::decode ( butt, bottle_in, file_out );
+	if ( name.m_res )
 	{
-		std::cerr << "Error: Bottle does not contain any Soda.";
-		return 1;
+		// We must decode at least once (and remove rogue output temp)
+		return name.m_res;
 	}
 
-	name.m_res = mtDW::Soda::multi_decode ( butt,
-		tap.get_soda_filename ().c_str (), name.f1 );
+	// Some errors are not really errors in this context
+	mtDW::set_stderr_less ();
 
-	tap.op->delete_soda_filename ();
-
-	if ( 0 == name.m_res )
+	do
 	{
-		tot ++;
+		name.m_res = Tap::decode ( butt, name.f1, name.f2 );
+		name.swap ();
 
-		while ( 1 )
-		{
-			tap.open_soda ( name.f1 );
+	} while ( 0 == name.m_res );
 
-			if ( 1 > tap.get_soda_filename ().size () )
-			{
-				// Bottle does not contain any Soda.
-				// The last extracted file becomes file_out.
-				name.swap ();
-				break;
-			}
+	mtDW::set_stderr_more ();
 
-			name.m_res = mtDW::Soda::multi_decode ( butt,
-				tap.get_soda_filename ().c_str (), name.f2 );
-
-			tap.op->delete_soda_filename ();
-
-			name.swap ();
-
-			if ( name.m_res )
-			{
-				// Error in Soda decoding
-				break;
-			}
-		}
+	// Certain failures are allowed, i.e. we have extracted the input file
+	// which will NOT have a valid Soda header or be another USED bottle.
+	switch ( name.m_res )
+	{
+	case ERROR_TAP_BOTTLE_INVALID:	// Original file is PNG/FLAC
+	case ERROR_TAP_UNKNOWN_BOTTLE:	// Original file is NOT PNG/FLAC
+		name.m_res = 0;		// Keep output file
+		return 0;
 	}
 
-	if ( tot > 0 )
-	{
-		name.m_res = 0;
-	}
-	else
-	{
-		name.m_res = 1;
-	}
-
-	return name.m_res;
+//	Report any error as it was suppressed earlier on
+	return report_error ( name.m_res );
 }
 
 int mtDW::Tap::encode (
+	Well		* const	well,
 	Butt		* const	butt,
+	Soda		* const	soda,
 	char	const * const	bottle_in,
 	char	const * const	file_in,
 	char	const * const	bottle_out
 	) const
 {
+	if ( ! soda || ! bottle_in || ! file_in || ! bottle_out )
 	{
-		SodaFile soda;
-
-		if ( soda.open ( file_in ) )
-		{
-			std::cerr << "Input file must be a Soda format.\n";
-			return 1;
-		}
+		return report_error ( ERROR_TAP_ENCODE_INSANITY );
 	}
 
-	TapFile tap;
+	TapFile		tap;
+	std::string	temp_file;
 
-	int const res = tap.open_info ( bottle_in );
+	mtDW::get_temp_filename ( temp_file, bottle_out );
 
-	switch ( res )
+	// Get tap to delete this file after use
+	tap.op->set_soda_filename ( temp_file );
+
+	RETURN_ON_ERROR ( soda->encode ( butt, file_in, temp_file.c_str () ) )
+
+	int type;
+
+	RETURN_ON_ERROR ( tap.open_info ( bottle_in, type ) );
+
+	WellSaveState wss ( well );
+
+	switch ( type )
 	{
 	case TapFile::TYPE_RGB:
 	case TapFile::TYPE_RGB_1:
 		{
 			mtPixy::Image * const image = tap.op->m_image.get();
 
-			if ( op->encode_image ( butt, image, file_in ) )
-			{
-				return 1;
-			}
+			RETURN_ON_ERROR ( op->encode_image ( well, image,
+				temp_file.c_str () ) )
 
 			if ( image->save_png ( bottle_out, 6 ) )
 			{
-				std::cerr <<
-					"Unable to save output PNG bottle.\n";
-				return 1;
+				return report_error (ERROR_TAP_ENCODE_SAVE_PNG);
 			}
 
 			break;
@@ -162,13 +152,9 @@ int mtDW::Tap::encode (
 	case TapFile::TYPE_SND:
 	case TapFile::TYPE_SND_1:
 		{
-			if ( op->encode_audio ( tap.op->m_audio.get (), butt,
-				file_in, bottle_out ) )
-			{
-				std::cerr <<
-					"Unable to save output FLAC bottle.\n";
-				return 1;
-			}
+			RETURN_ON_ERROR ( op->encode_audio (
+				tap.op->m_audio.get (), well, temp_file.c_str(),
+				bottle_out ) )
 
 			break;
 		}
@@ -176,8 +162,7 @@ int mtDW::Tap::encode (
 	// Future additions go here
 
 	default:
-		std::cerr << "Bottle file not valid.\n";
-		return 1;
+		return report_error ( ERROR_TAP_ENCODE_BAD_BOTTLE );
 	}
 
 	return 0;

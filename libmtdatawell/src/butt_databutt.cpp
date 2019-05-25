@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,11 +20,10 @@
 
 
 mtDW::Butt::Butt (
-	mtKit::Random	&	random,
 	char	const * const	path
 	)
 	:
-	op		( new ButtOp ( random, path ) )
+	op		( new Butt::Op ( path ) )
 {
 }
 
@@ -38,128 +37,131 @@ int mtDW::Butt::add_buckets (
 	int	const	tot
 	) const
 {
-	return op->add_buckets ( well, tot );
+	return op->m_active_otp.add_buckets ( well, tot );
+}
+
+int mtDW::Butt::empty_buckets () const
+{
+	return op->m_active_otp.empty_buckets ();
+}
+
+bool mtDW::Butt::is_read_only () const
+{
+	return op->m_active_otp.is_read_only ();
+}
+
+void mtDW::Butt::set_read_only () const
+{
+	op->m_active_otp.set_read_only ();
+}
+
+void mtDW::Butt::set_read_write () const
+{
+	op->m_active_otp.set_read_write ();
 }
 
 int mtDW::Butt::get_bucket_total () const
 {
-	return op->get_write_next ();
+	return op->m_active_otp.get_write_next ();
 }
 
 int mtDW::Butt::get_bucket_used () const
 {
-	return op->get_otp_bucket ();
+	return op->m_active_otp.get_bucket ();
 }
 
 int mtDW::Butt::get_bucket_position () const
 {
-	return op->get_otp_position ();
+	return op->m_active_otp.get_position ();
 }
 
-std::string const & mtDW::Butt::get_path () const
+std::string const & mtDW::Butt::get_otp_name () const
 {
-	return op->get_path ();
+	return op->m_active_otp.get_name ();
 }
 
-std::string const & mtDW::Butt::get_name () const
+int mtDW::Butt::add_otp ( std::string const & name ) const
 {
-	return op->get_name ();
+	return op->m_active_otp.add_otp ( name );
 }
 
-int mtDW::Butt::add_name ( std::string const & name ) const
+int mtDW::Butt::set_otp ( std::string const & name ) const
 {
-	return op->add_name ( name );
+	return op->m_active_otp.set_otp ( name );
 }
 
-int mtDW::Butt::set_name ( std::string const & name ) const
+int mtDW::Butt::import_otp ( std::string const & path ) const
 {
-	return op->set_name ( name );
+	return op->m_active_otp.import_otp ( path );
 }
 
-static int name_cmp (
-	void	const * const	k1,
-	void	const * const	k2
-	)
+int mtDW::Butt::delete_otp ( std::string const & name ) const
 {
-	return strcmp ( (char const *)k1, (char const *)k2 );
+	return op->m_active_otp.delete_otp ( name );
 }
 
-static void name_del (
-	mtTreeNode	* const	node
-	)
+void mtDW::Butt::get_new_name (
+	Well	const * const	well,
+	std::string		&result
+	) const
 {
-	free ( node->key );
-	node->key = NULL;
-}
+	AppPassword body ( true, true, true, "" );
 
-mtTree * mtDW::Butt::get_name_list () const
-{
-	std::string const & root = op->get_butt_root ();
-	mtDW::OpenDir dir ( root );
+	static int const BODY_LEN = 5;
 
-	if ( ! dir.dp )
+	// Bound attempts to avoid an infinite loop.
+	for ( int i = 0; i < 5; i++ )
 	{
-		return NULL;
-	}
+		std::string tmp;
 
-	mtTree * const tree = mtkit_tree_new ( name_cmp, name_del );
-	if ( ! tree )
-	{
-		return NULL;
-	}
+		result.clear ();
 
-	struct dirent * ep;
+		body.get_password ( well, BODY_LEN, tmp );
+		result += tmp;
 
-	while ( (ep = readdir(dir.dp)) )
-	{
-		if (	! strcmp ( ep->d_name, "." ) ||
-			! strcmp ( ep->d_name, ".." )
-			)
+		for ( int j = 0; j < 2; j++ )
 		{
-			// Quietly ignore "." and ".." directories
-			continue;
+			result += '_';
+
+			body.get_password ( well, BODY_LEN, tmp );
+			result += tmp;
 		}
 
-		std::string const tmp = root + ep->d_name;
-		struct stat buf;
+		std::string const path = op->m_butt_root + result;
 
-		if ( lstat ( tmp.c_str (), &buf ) )	// Get file details
+		if ( ! mtkit_file_directory_exists ( path.c_str () ) )
 		{
-			// Unable to access
-			continue;
-		}
-
-		if ( S_ISDIR ( buf.st_mode ) )
-		{
-			char * st = strdup ( ep->d_name );
-			if ( ! st )
-			{
-				continue;
-			}
-
-			if ( 0 == mtkit_tree_node_add ( tree, st, NULL ) )
-			{
-				free ( st );
-				st = NULL;
-			}
+			// This named butt doesn't exist yet so its valid
+			break;
 		}
 	}
-
-	return tree;
 }
 
-int mtDW::Butt::validate_butt_name ( std::string const & name )
+int mtDW::Butt::set_comment ( std::string const & comment ) const
 {
-	if ( name.size () < 1 )
+	return op->m_active_otp.set_comment ( comment );
+}
+
+char const * mtDW::Butt::get_comment () const
+{
+	return op->m_active_otp.get_comment ();
+}
+
+void mtDW::Butt::get_otp_list ( std::vector<OTPinfo> &list ) const
+{
+	op->m_active_otp.get_otp_list ( list );
+}
+
+int mtDW::Butt::validate_otp_name ( std::string const & name )
+{
+	if ( name.size () < OTP_NAME_LEN_MIN )
 	{
-		std::cerr << "Name '" << name << "' has too few characters.\n";
-		return 1;
+		return report_error ( ERROR_OTP_NAME_TOO_SMALL );
 	}
 
-	if ( name.size () > 16 )
+	if ( name.size () > OTP_NAME_LEN_MAX )
 	{
-		std::cerr << "Name '" << name << "' has too many characters.\n";
-		return 1;
+		return report_error ( ERROR_OTP_NAME_TOO_LARGE );
 	}
 
 	char const * const str = name.c_str ();
@@ -171,39 +173,35 @@ int mtDW::Butt::validate_butt_name ( std::string const & name )
 			&& ! (str[i] >= 'A' && str[i] <= 'Z')
 			&& str[i] != '_'
 			&& str[i] != '.'
+			&& str[i] != '-'
 			)
 		{
-			std::cerr << "Name '" << name
-				<< "' contains an illegal character.\n";
-			return 1;
+			return report_error ( ERROR_OTP_NAME_ILLEGAL );
 		}
 	}
 
 	return 0;
 }
 
-int mtDW::Butt::otp_get_int ( int & res ) const
+int mtDW::Butt::get_otp_data ( uint8_t * buf, size_t buflen ) const
 {
-	return op->otp_get_int ( res );
+	return op->m_active_otp.get_data ( buf, buflen );
 }
 
-int mtDW::Butt::otp_get_int ( int modulo, int & res ) const
-{
-	return op->otp_get_int ( modulo, res );
-}
-
-int mtDW::Butt::otp_get_data ( uint8_t * buf, size_t buflen ) const
-{
-	return op->otp_get_data ( buf, buflen );
-}
-
-int mtDW::Butt::read_set_butt (
+int mtDW::Butt::read_set_otp (
 	std::string	const & name,
 	int		const	bucket,
 	int		const	pos
 	) const
 {
-	return op->read_set_butt ( name, bucket, pos );
+	op->m_read_otp.set_path ( name );
+
+	return op->m_read_otp.open_bucket ( bucket, pos );
+}
+
+int64_t mtDW::Butt::read_get_bucket_size () const
+{
+	return op->m_read_otp.get_bucket_size ();
 }
 
 int mtDW::Butt::read_get_data (
@@ -211,6 +209,11 @@ int mtDW::Butt::read_get_data (
 	size_t		const	buflen
 	) const
 {
-	return op->read_get_data ( buf, buflen );
+	return op->m_read_otp.read ( buf, buflen );
+}
+
+void mtDW::Butt::save_state () const
+{
+	op->m_active_otp.save_state ();
 }
 

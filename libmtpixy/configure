@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
 
 
 APP_NAME="libmtpixy"
-LIB_NAME="libmtpixy.so"
+LIB_NAME="libmtpixy"
 
 MTCF_INIT
 MTCF_PARSE_ARGS "$@"
@@ -15,6 +15,7 @@ MTCF_PRE_CONF
 MTCF_CHECK_LIBS mtkit gif jpeg
 MTCF_PKGCONFIG "cairo pangoft2 libpng"
 
+MTCF_ADD_APP_NAME
 MTCF_VERSION_BIN_NAME
 
 MTCF_POST_CONF

@@ -1,3 +1,7 @@
+3.3	2019-5-25
+
+	* App icon slightly changed to be simpler and cleaner.
+
 3.1	2018-2-25
 
 	* When using "Save As" dialog the correct file extension is automatically used.

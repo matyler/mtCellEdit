@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ static void analyse_data_single (
 	{
 		for ( int col = 0; col < 8; col ++ )
 		{
-			double perc = 100.0 * (double)(bytes_used[ byte ]) /
+			double const perc = 100.0 * (double)(bytes_used[byte]) /
 					(double)size;
 
 			printf ( "by_%03i\t%.6f\n", byte, perc );
@@ -145,16 +145,14 @@ static void analyse_data_double (
 	int			const	size
 	)
 {
-	int	const	pairs = size / 2;
-	int	const	pairtot = pairs * 2; // Don't bother with final odd byte
 	int	tot[256][256];
 
 	memset ( tot, 0, sizeof(tot) );
 
-	for ( int i = 0; i < pairtot; )
+	for ( int i = 0; i < (size - 1); i++ )
 	{
-		int r = data[ i++ ];
-		int c = data[ i++ ];
+		int const r = data[ i ];
+		int const c = data[ i+1 ];
 
 		tot[r][c]++;
 	}

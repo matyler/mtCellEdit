@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -31,7 +31,10 @@ public:
 	~TapAudioRead ();
 
 	int open ( char const * filename );
+		// Returns error code.  Interpret via get_error_text()
+
 	int read ( short ** buf, size_t * buflen );
+		// Returns error code.  Interpret via get_error_text()
 
 	int64_t get_read_capacity () const;
 
@@ -42,7 +45,9 @@ public:
 private:
 	void close ();
 	void free_buf ();
+
 	int alloc_buf ();
+		// Returns error code.  Interpret via get_error_text()
 
 /// ----------------------------------------------------------------------------
 
@@ -62,7 +67,10 @@ public:
 	~TapAudioWrite ();
 
 	int open ( SF_INFO const * src_info, char const * filename );
+		// Returns error code.  Interpret via get_error_text()
+
 	int write ( short const * buf, size_t buflen );
+		// Returns error code.  Interpret via get_error_text()
 
 private:
 	void close ();
@@ -75,47 +83,53 @@ private:
 
 
 
-class TapOp
+class Tap::Op
 {
 public:
-	TapOp ();
-	~TapOp ();
+	Op ();
+	~Op ();
 
 	static int encode_image (
-		Butt * butt,
+		Well * well,
 		mtPixy::Image * image,
 		char const * input	// Soda file
 		);
+		// Returns error code.  Interpret via get_error_text()
 
 	static int decode_image (
 		mtPixy::Image * image,
-		char const * output	// Soda file
+		char const * output,	// Soda file
+		int &type
 		);
-		// = TYPE_RGB_1 (op->filename = Soda file)
-		// = TYPE_INVALID
+		// Returns error code.  Interpret via get_error_text()
+		// type = TYPE_RGB_1 (op->filename = Soda file)
+		// type = TYPE_INVALID (empty image)
 
 	static int encode_audio (
 		TapAudioRead * audio_in,
-		Butt * butt,
+		Well * well,
 		char const * input,	// Soda file
 		char const * output	// FLAC file
 		);
+		// Returns error code.  Interpret via get_error_text()
 
 	static int decode_audio (
 		char const * input,	// Bottle file
-		char const * output	// Soda file
+		char const * output,	// Soda file
+		int &type
 		);
-		// = TYPE_SND_1 (op->filename = Soda file)
-		// = TYPE_INVALID
+		// Returns error code.  Interpret via get_error_text()
+		// type = TYPE_SND_1 (op->filename = Soda file)
+		// type = TYPE_INVALID (empty audio)
 };
 
 
 
-class TapFileOp
+class TapFile::Op
 {
 public:
-	TapFileOp ();
-	~TapFileOp ();
+	Op ();
+	~Op ();
 
 	void delete_soda_filename ();
 	void set_soda_filename ( std::string const & filename );

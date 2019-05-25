@@ -1,8 +1,7 @@
 include		../_conf.txt
 
-SRC		= mansrc.t2t
-OBJ		= $(BIN_NAME).1
-
+SRC		:= *.t2t
+OBJ		:= $(BIN_NAME).1
 
 .PHONY:		all install uninstall clean
 
@@ -18,10 +17,11 @@ install:
 		install -d $(DESTDIR)$(MAN_INSTALL)
 		install -m 644 $(OBJ) $(DESTDIR)$(MAN_INSTALL)
 		cd $(DESTDIR)$(MAN_INSTALL); for FILE in $(OBJ);	\
-			do gzip $$FILE; done
+			do gzip -f $$FILE; done
 
 uninstall:
 		cd $(DESTDIR)$(MAN_INSTALL); for FILE in $(OBJ);	\
 			do rm $$FILE.gz; done
 
 clean:
+		rm -f *.1

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,86 +20,93 @@
 
 
 static int decode_buf (
-	short			*	mem,
-	size_t			const	len,
-	mtKit::ByteBuf		* const	buf,
-	mtKit::ByteFileWrite	* const	file
+	mtKit::ByteFileWrite	&file,
+	short	const * const	src_mem,
+	size_t		const	src_len
 	)
 {
-	size_t const bytes = len / 8;
+	uint8_t		buf[8192];
+	size_t	const	buflen = sizeof(buf);
+	short	const	* src = src_mem;
 
-	for ( size_t i = 0; i < bytes; i++ )
+	for ( size_t j = 0; j < src_len; )
 	{
-		buf->array[ i ] = (uint8_t)(
-			((mem[0] & 1) << 0) |
-			((mem[1] & 1) << 1) |
-			((mem[2] & 1) << 2) |
-			((mem[3] & 1) << 3) |
-			((mem[4] & 1) << 4) |
-			((mem[5] & 1) << 5) |
-			((mem[6] & 1) << 6) |
-			((mem[7] & 1) << 7) );
+		size_t	const	remaining = src_len - j;
+		size_t	const	tot = MIN ( buflen, remaining / 8 );
 
-		mem += 8;
-	}
+		if ( tot < 1 )
+		{
+			break;
+		}
 
-	if ( bytes > 0 )
-	{
-		return file->write ( buf->array, bytes );
+		for ( size_t i = 0; i < tot; i++ )
+		{
+			buf[ i ] = (uint8_t)(
+				((src[0] & 1) << 0) |
+				((src[1] & 1) << 1) |
+				((src[2] & 1) << 2) |
+				((src[3] & 1) << 3) |
+				((src[4] & 1) << 4) |
+				((src[5] & 1) << 5) |
+				((src[6] & 1) << 6) |
+				((src[7] & 1) << 7) );
+
+			src += 8;
+		}
+
+		if ( file.write ( buf, tot ) )
+		{
+			return 1;
+		}
+
+		j += tot * 8;
 	}
 
 	return 0;
 }
 
-int mtDW::TapOp::decode_audio (
+int mtDW::Tap::Op::decode_audio (
 	char	const * const	input,
-	char	const * const	output
+	char	const * const	output,
+	int			& type
 	)
 {
 	if ( ! input || ! output )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_DECODE_INSANITY );
 	}
 
 	try
 	{
 		TapAudioRead audio_in;
-		if ( audio_in.open ( input ) )
+
+		RETURN_ON_ERROR ( audio_in.open ( input ) )
+
+		SF_INFO const * const info = audio_in.get_info ();
+
+		int const channels = info->channels;
+		if ( channels < 1 )
 		{
-			throw 123;
+			return report_error ( ERROR_AUDIO_BAD_CHANNELS );
 		}
 
 		mtKit::ByteFileWrite file_out;
 		if ( file_out.open ( output ) )
 		{
-			std::cerr << "Unable to open output Soda file.\n";
-			throw 123;
+			return report_error ( ERROR_SODA_OPEN_OUTPUT );
 		}
 
-		SF_INFO const * const info = audio_in.get_info ();
-		if ( ! info )
-		{
-			std::cerr << "Unable to read audio file info.\n";
-			throw 123;
-		}
-
-		int const channels = info->channels;
-		if ( channels < 1 )
-		{
-			std::cerr << "Too few channels in the audio file.\n";
-			throw 123;
-		}
-
-		int	const	tot = channels * TapAudioRead::BUF_FRAMES;
-		mtKit::ByteBuf	buf ( (size_t)tot );
 		short		* audio_buf = NULL;
 		size_t		audio_len = 0;
 
 		while ( 1 )
 		{
-			if ( audio_in.read ( &audio_buf, &audio_len ) )
+			int const roe = audio_in.read ( &audio_buf, &audio_len);
+			if ( roe )
 			{
-				throw 123;
+				remove ( output );
+
+				return roe;
 			}
 
 			if ( audio_len < 1 )
@@ -108,28 +115,32 @@ int mtDW::TapOp::decode_audio (
 				break;
 			}
 
-			if ( decode_buf( audio_buf, audio_len, &buf, &file_out))
+			if ( decode_buf ( file_out, audio_buf, audio_len ) )
 			{
-				throw 123;
+				remove ( output );
+
+				return report_error ( ERROR_AUDIO_WRITE );
 			}
 		}
-
-		file_out.close ();
 
 		SodaFile soda;
 		if ( 0 == soda.open ( output ) )
 		{
-			return TapFile::TYPE_SND_1;
+			type = TapFile::TYPE_SND_1;
+			return 0;
 		}
 
-		// Fall through, removing the temp file
+		// Not a Soda file so remove temp file
+		remove ( output );
+
+		type = TapFile::TYPE_SND;
+		return 0;
 	}
 	catch ( ... )
 	{
+		remove ( output );
 	}
 
-	remove ( output );
-
-	return TapFile::TYPE_INVALID;
+	return report_error ( ERROR_AUDIO_DECODE_EXCEPTION );
 }
 

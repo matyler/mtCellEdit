@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -31,12 +31,12 @@ static char const * get_temp_clip_filename ( void )
 		snprintf ( temp_clip_filename, sizeof ( temp_clip_filename ),
 			"%s/.cache", mtkit_file_home () );
 
-		mkdir ( temp_clip_filename, S_IRWXU | S_IRWXG | S_IRWXO );
+		mtkit_mkdir ( temp_clip_filename );
 
 		mtkit_strnncat ( temp_clip_filename, "/" APP_NAME,
 			sizeof ( temp_clip_filename ) );
 
-		mkdir ( temp_clip_filename, S_IRWXU | S_IRWXG | S_IRWXO );
+		mtkit_mkdir ( temp_clip_filename );
 
 		mtkit_strnncat ( temp_clip_filename, "/clipboard.ledger.zip",
 			sizeof ( temp_clip_filename ) );

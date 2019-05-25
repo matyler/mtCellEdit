@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -26,9 +26,7 @@ int be_titlebar_text (
 	int		const	changed
 	)
 {
-	char	const	* fio;
-	char		* fname = NULL;
-
+	char * fname = NULL;
 
 	if ( file->name )
 	{
@@ -63,6 +61,8 @@ int be_titlebar_text (
 		mtkit_strnncat ( buf, " (Modified)", buflen );
 	}
 
+	char const * fio;
+
 	if ( ! file->name )
 	{
 		fio = " {}";
@@ -87,7 +87,7 @@ int be_titlebar_text (
 
 	if ( fname )
 	{
-		char	* const	tmp = strrchr ( fname, MTKIT_DIR_SEP );
+		char * const tmp = strrchr ( fname, MTKIT_DIR_SEP );
 
 
 		if ( tmp )

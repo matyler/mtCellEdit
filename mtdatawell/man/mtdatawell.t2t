@@ -1,0 +1,30 @@
+= NAME =
+@BIN_NAME@ - GUI random data and crypto tool
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ SODA FILE ]...
+
+
+= DESCRIPTION =
+@BIN_NAME@ provides random data and cryptographic functionality via a
+graphical user interface.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-db** STRING
+	Use this path to store the database files.
+
+**-prefs** STRING
+	Use this file for GUI program preferences (e.g. window position).
+
+
+= FILES =
+~/.config/libmtDataWell/
+	Default path for storing the database files.
+
+~/.config/@BIN_NAME@/prefs.txt
+	Default file used for storing user preferences.

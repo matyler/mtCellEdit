@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -219,7 +219,16 @@ int ced_strtocellref (
 		{
 			/* Check for maximum row/col shorthand - absolute ref */
 			res[i][0] = 0;
-			res[i][1] = (i == 0) ? CED_MAX_ROW : CED_MAX_COLUMN;
+
+			if ( i == 0 )
+			{
+				res[i][1] = CED_MAX_ROW;
+			}
+			else
+			{
+				res[i][1] = CED_MAX_COLUMN;
+			}
+
 			s++;
 		}
 		else if ( s[0] == '[' )

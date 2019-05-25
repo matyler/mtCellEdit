@@ -2,7 +2,7 @@
 %!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Chapter 6 - mtCedCLI</TITLE>\1'
 
 
-[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_07.html]
+[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_A.html]
 -------------------------------------------------
 
 =6. mtCedCLI=
@@ -214,7 +214,7 @@ Because the interface to mtCedCLI is just text, this means that shell scripts ca
 [DOWNLOAD FILE ../shawk/cedsheetbook.sh]
 
 ```
-#!/bin/sh
+#!/bin/bash
 # cedsheetbook.sh - Puts sheet files into a single book file
 # usage: cedsheetbook.sh BOOKFILENAME SHEETFILE... | mtcedcli
 # e.g. cedsheetbook.sh ~/output.zip *.tsv *.csv | mtcedcli
@@ -257,7 +257,7 @@ given directory.
 [DOWNLOAD FILE ../shawk/cedbooksplit.sh]
 
 ```
-#!/bin/sh
+#!/bin/bash
 # cedbooksplit.sh - Extracts the sheets from a book
 # usage: cedbooksplit.sh BOOKFILENAME OUPUTDIRECTORY
 # e.g. cedbooksplit.sh ~/output.zip ~/temp_sheet
@@ -306,4 +306,4 @@ echo
 
 
 -------------------------------------------------
-[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_07.html]
+[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_A.html]

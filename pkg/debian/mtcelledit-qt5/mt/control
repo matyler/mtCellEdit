@@ -2,7 +2,7 @@ Source: mtcelledit-qt5
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, qtbase5-dev, libmtkit, libmtcelledit, libmtpixy, libmtcedui, libmtqex5
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, qtbase5-dev, libmtkit, libmtcelledit, libmtpixy, libmtcedui, libmtqex5, inkscape
 Standards-Version: 3.9.3
 Homepage: http://ced.marktyler.org/
 

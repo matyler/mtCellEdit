@@ -1,35 +1,24 @@
 include		../_conf.txt
 
-LIB_SONAME	= $(LIB_NAME).1
-HEADER		= mtcelledit.h
-PARSER		= ced_parser.c
-PARSER_REPORT	= ced_parser_report.txt
-OBJS		=		\
-		ced_book.o	\
-		ced_cell.o	\
-		ced_file.o	\
-		ced_find.o	\
-		ced_output.o	\
-		ced_parser.o	\
-		ced_paste.o	\
-		ced_sheet.o	\
-		ced_sort.o	\
-		ced_token.o	\
-		ced_transform.o	\
-		ced_utils.o	\
-
+HEADER		:= mtcelledit.h
+PARSER		:= ced_parser.c
+PARSER_REPORT	:= ced_parser_report.txt
+OBJS		:= $(patsubst %.y,%.o,$(wildcard *.y))
+OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(LIB_SONAME)
 
+
 $(LIB_SONAME):	$(OBJS)
-		$(CC) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CC) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
 $(OBJS):	*.h
 
-$(PARSER):	ced_parser.y ced_parser_def.c
-		bison ced_parser.y -W --report=all --report-file=$(PARSER_REPORT) -o $(PARSER)
+$(PARSER):	ced_parser.y
+		bison $< -W --report=all --report-file=$(PARSER_REPORT) -o $@
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule
@@ -47,4 +36,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f *.o $(LIB_SONAME) $(PARSER) $(PARSER_REPORT)
+		rm -f *.o *.so.$(LIB_SONUM) $(PARSER) $(PARSER_REPORT)

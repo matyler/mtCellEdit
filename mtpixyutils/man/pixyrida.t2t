@@ -1,16 +1,9 @@
-PIXYRIDA
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixyrida - image analysis
+@BIN_NAME@ - image analysis
 
 
 = SYNOPSIS =
-**pixyrida** [ [OPTION]... [FILE] ]...
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
 
 
 = DESCRIPTION =
@@ -35,11 +28,3 @@ and B.
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,17 +47,15 @@ int mtKit::RecentFile::init_prefs (
 	m_prefs = pr;
 
 
-	int		i;
-	char		* key;
 	mtPrefTable	prefs_table[] = {
 		{ "", MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
 		{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
 		};
 
 
-	for ( i = 1; i <= m_total; i++ )
+	for ( int i = 1; i <= m_total; i++ )
 	{
-		key = create_key ( i );
+		char * key = create_key ( i );
 
 		prefs_table[0].key = key;
 		m_prefs->addTable ( prefs_table );
@@ -71,7 +69,7 @@ int mtKit::RecentFile::init_prefs (
 
 char * mtKit::RecentFile::create_key (
 	int	const	idx
-	)
+	) const
 {
 	if ( idx < 1 || idx > m_total )
 	{
@@ -79,8 +77,7 @@ char * mtKit::RecentFile::create_key (
 	}
 
 
-	char		cbuf[20];
-
+	char cbuf[20];
 
 	snprintf ( cbuf, sizeof(cbuf), ".%03i", idx );
 
@@ -89,13 +86,11 @@ char * mtKit::RecentFile::create_key (
 
 char const * mtKit::RecentFile::get_filename (
 	int	const	idx
-	)
+	) const
 {
-	char		* const key = create_key ( idx );
-	char	const	*	val;
+	char		* const	key = create_key ( idx );
+	char	const * const	val = m_prefs->getString ( key );
 
-
-	val = m_prefs->getString ( key );
 	free ( key );
 
 	return val;
@@ -103,16 +98,14 @@ char const * mtKit::RecentFile::get_filename (
 
 void mtKit::RecentFile::set_filename (
 	char	const * const	name
-	)
+	) const
 {
-	char	const	* val;
-	int		i;
-
-
 	if ( ! name )
 	{
 		return;
 	}
+
+	int i;
 
 	// Search for a current use of this filename
 	for ( i = 1; i <= m_total; i++ )
@@ -124,7 +117,8 @@ void mtKit::RecentFile::set_filename (
 			return;
 		}
 
-		val = m_prefs->getString ( key );
+		char const * const val = m_prefs->getString ( key );
+
 		free ( key );
 		key = NULL;
 
@@ -156,7 +150,8 @@ void mtKit::RecentFile::set_filename (
 			goto finish;
 		}
 
-		val = m_prefs->getString ( key );
+		char const * const val = m_prefs->getString ( key );
+
 		free ( key );
 		key = NULL;
 
@@ -177,7 +172,7 @@ finish:
 void mtKit::RecentFile::set_filename_idx (
 	int		const	idx,
 	char	const * const	name
-	)
+	) const
 {
 	char * key = create_key ( idx );
 

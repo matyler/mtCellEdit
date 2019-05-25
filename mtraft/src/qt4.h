@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,7 +25,12 @@
 
 
 
+#include "static.h"
 #include "be.h"
+
+
+
+#define TABLE_ID "table_id"
 
 
 
@@ -44,25 +49,31 @@ public:
 
 	void analyse ( char const * path );
 
-	BusyState busy;
-
 protected:
 	virtual void closeEvent ( QCloseEvent * ev );
 
 private slots:
-	void press_button_quit ();
-	void press_button_copy ();
-	void press_tab_next ();
-	void press_tab_previous ();
+	void press_menu_open ();
+	void press_menu_close ();
+	void press_menu_next ();
+	void press_menu_previous ();
+	void press_menu_copy ();
+	void press_menu_quit ();
+
+	void press_help_about_qt ();
+	void press_help_about ();
 
 private:
+	void create_menu ();
+
+/// ----------------------------------------------------------------------------
+
 	mtKit::Prefs	prefs;
 
-	QProgressBar	* m_progress;
+	int		m_tab_id;
 	QTabWidget	* m_tab_widget;
-	QPushButton	* m_button_copy;
 
-	TableAnalysis	* m_table [ MAX_TABS ];		// Owned
+	QMap<int, TableAnalysis*> m_table_map;
 };
 
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Package up parts of mtcelledit distribution into Fedora .rpm files
 # by Mark Tyler, 2013-5-18
 

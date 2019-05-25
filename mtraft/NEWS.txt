@@ -1,3 +1,8 @@
+3.3	2019-5-25
+
+	* App icon slightly changed to be simpler and cleaner.
+	* Menu bar & BusyDialog replaces previous UI elements.
+
 3.1	2018-2-25
 
 	* Copying to clipboard now copies numbers without commas.

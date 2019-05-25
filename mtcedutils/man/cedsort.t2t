@@ -1,16 +1,9 @@
-CEDSORT
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedsort - sort a spreadsheet
+@BIN_NAME@ - sort a spreadsheet
 
 
 = SYNOPSIS =
-**cedsort** [ [ **OPTION** ] [ EXP ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ EXP ] ]...
 
 
 = DESCRIPTION =
@@ -48,11 +41,3 @@ Up to 10 rows or columns may be specified in the expression.
 
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

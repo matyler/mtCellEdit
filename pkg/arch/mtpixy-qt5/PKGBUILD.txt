@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="Qt5 Pixel GUI"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('qt5-base' 'libmtkit' 'libmtpixy' 'libmtpixyui' 'libmtqex5')
+depends=('qt5-base' 'libmtkit' 'libmtpixy' 'libmtqex5')
 install=mtpixy_desktop.install
 source=($pkgname-$pkgver.tar.gz)
 md5sums

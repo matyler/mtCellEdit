@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt4 Pixel GUI
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy libmtpixyui libmtqex4 libqt4-devel
-Requires:		libmtkit libmtpixy libmtpixyui libmtqex4 libqt4
+BuildRequires:		libmtkit libmtpixy libmtqex4 libqt4-devel inkscape
+Requires:		libmtkit libmtpixy libmtqex4 libqt4
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

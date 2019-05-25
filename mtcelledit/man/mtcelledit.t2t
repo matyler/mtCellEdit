@@ -1,0 +1,29 @@
+= NAME =
+@BIN_NAME@ - spreadsheet editor
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ is a lightweight spreadsheet editor which is designed to handle simple day to day spreadsheet tasks.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-csv**
+	All text files loaded or imported assumed to be CSV.
+**-prefs** STRING
+	Use this file for program preferences.
+**-tsv**
+	All text files loaded or imported assumed to be TSV.
+
+
+= FILES =
+~/.cache/libmtCedUI/clipboard.ledger.zip
+	Used for copy and paste between mtCellEdit instances.
+
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.

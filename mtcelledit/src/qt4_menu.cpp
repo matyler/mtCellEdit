@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,219 +19,275 @@
 
 
 
-void MainWindow::menuInit (
-	QAction		** const action,
-	char	const	* const	text,
-	char	const	* const	shortcut,
-	char	const	* const	icon
-	)
-{
-	if ( icon )
-	{
-		action[0] = new QAction ( QIcon::fromTheme ( icon ), text,
-			this );
-		action[0]->setIconVisibleInMenu ( true );
-	}
-	else
-	{
-		action[0] = new QAction ( text, this );
-	}
-
-	if ( shortcut )
-	{
-		action[0]->setShortcut ( QString ( shortcut ) );
-	}
-}
-
 void MainWindow::createMenus ()
 {
-	QAction
-			* actFileNew,
-			* actFileOpen,
-			* actFileImport,
-			* actFileSave,
-			* actFileSaveAs,
 
-			* actEditCut,
-			* actEditCopy,
-			* actEditCopyVal,
-			* actEditCopyOutput,
-			* actEditTransformTrans,
-			* actEditTransformFlipH,
-			* actEditTransformFlipV,
-			* actEditTransformRotClock,
-			* actEditTransformRotAnti,
-			* actEditPaste,
-			* actEditPasteContent,
-			* actEditPastePrefs,
-			* actEditClear,
-			* actEditClearContent,
-			* actEditClearPrefs,
-			* actEditFixYears,
-			* actEditSelectAll,
+/// FILE
 
-			* actSheetNew,
-			* actSheetDuplicate,
-			* actSheetRename,
-			* actSheetDelete,
-			* actSheetExport,
-			* actSheetExportOutput,
-			* actSheetPrevious,
-			* actSheetNext,
-			* actSheetRecalcBook,
-			* actSheetRecalc,
+	QAction * act_FileNew;
+	QAction * act_FileOpen;
+	QAction * act_FileImport;
+	QAction * act_FileSave;
+	QAction * act_FileSaveAs;
 
-			* actRowInsert,
-			* actRowInsertPasteHeight,
-			* actRowDelete,
-			* actRowSort,
-
-			* actColumnInsert,
-			* actColumnInsertPasteWidth,
-			* actColumnDelete,
-			* actColumnSort,
-			* actColumnSetWidth,
-			* actColumnSetWidthAuto,
-
-			* actOptionsFullScreen,
-			* actOptionsFind,
-			* actOptionsGraph,
-			* actOptionsView,
-			* actOptionsEditCell,
-			* actOptionsCellPrefs,
-			* actOptionsBookPrefs,
-			* actOptionsProgramPrefs,
-
-			* actOptionsTextStyle_none,
-			* actOptionsTextStyle_bold,
-			* actOptionsTextStyle_italic,
-			* actOptionsTextStyle_underline,
-			* actOptionsTextStyle_underline_double,
-			* actOptionsTextStyle_underline_wavy,
-			* actOptionsTextStyle_strikethrough,
-
-			* actOptionsBackgroundColor,
-			* actOptionsForegroundColor,
-			* actOptionsBorderColor,
-			* actOptionsBorder [ BORDER_MENU_TOTAL ],
-			* actOptionsHelp,
-			* actOptionsAboutQt,
-			* actOptionsAbout,
-
-			* actGraphNew
-			;
-
-
-#define MENFU( A, B, C, D ) \
-	menuInit ( &act ## A , B, C, D ); \
-	connect ( act ## A, SIGNAL ( triggered () ), this, \
-		SLOT ( press ## A () ) );
-
-
-MENFU ( FileNew,		"New",			"Ctrl+N",	"document-new" )
-MENFU ( FileOpen,		"Open ...",		"Ctrl+O",	"document-open" )
-MENFU ( FileImport,		"Import",		NULL,		NULL )
-MENFU ( FileSave,		"Save",			"Ctrl+S",	"document-save" )
-MENFU ( FileSaveAs,		"Save As ...",		"Shift+Ctrl+S",	"document-save-as" )
-MENFU ( FileQuit,		"Quit",			"Ctrl+Q",	"application-exit" )
-
-MENFU ( EditUndo,		"Undo",			"Ctrl+Z",	"edit-undo" )
-MENFU ( EditRedo,		"Redo",			"Ctrl+Y",	"edit-redo" )
-MENFU ( EditCut,		"Cut",			"Ctrl+X",	"edit-cut" )
-MENFU ( EditCopy,		"Copy",			"Ctrl+C",	"edit-copy" )
-MENFU ( EditCopyVal,		"Copy As Values",	"Shift+Ctrl+C",	NULL )
-MENFU ( EditCopyOutput,		"Copy As Output",	NULL,		NULL )
-MENFU ( EditTransformTrans,	"Transpose",		NULL,		NULL )
-MENFU ( EditTransformFlipH,	"Flip Horizontally",	NULL,		NULL )
-MENFU ( EditTransformFlipV,	"Flip Vertically",	NULL,		NULL )
-MENFU ( EditTransformRotClock,	"Rotate Clockwise",	NULL,		NULL )
-MENFU ( EditTransformRotAnti,	"Rotate Anticlockwise",	NULL,		NULL )
-MENFU ( EditUseSystemClipboard,	"Use System Clipboard",	NULL,		NULL )
-MENFU ( EditPaste,		"Paste",		"Ctrl+V",	"edit-paste" )
-MENFU ( EditPasteContent,	"Paste Content",	"Ctrl+F7",	NULL )
-MENFU ( EditPastePrefs,		"Paste Preferences",	"F7",		NULL )
-MENFU ( EditClear,		"Clear",		"Delete",	"edit-clear" )
-MENFU ( EditClearContent,	"Clear Content",	"Backspace",	NULL )
-MENFU ( EditClearPrefs,		"Clear Preferences",	"Ctrl+Backspace", NULL )
-MENFU ( EditFixYears,		"Fix 2-digit Years",	NULL,		NULL )
-MENFU ( EditSelectAll,		"Select All",		"Ctrl+A",	"edit-select-all" )
-
-MENFU ( SheetNew,		"New",			"Ctrl+T",	"document-new" )
-MENFU ( SheetDuplicate,		"Duplicate",		"Shift+Ctrl+T",	NULL )
-MENFU ( SheetRename,		"Rename ...",		"Ctrl+F2",	NULL )
-MENFU ( SheetDelete,		"Delete",		"Shift+Ctrl+W",	"edit-delete" )
-MENFU ( SheetExport,		"Export ...",		NULL,		NULL )
-MENFU ( SheetExportOutput,	"Export Output ...",	NULL,		NULL )
-MENFU ( SheetFreezePanes,	"Freeze Panes",		NULL,		NULL )
-MENFU ( SheetLock,		"Lock",			"F12",		NULL )
-MENFU ( SheetPrevious,		"Previous",		"Ctrl+Page Up",	NULL )
-MENFU ( SheetNext,		"Next",			"Ctrl+Page Down", NULL )
-MENFU ( SheetRecalcBook,	"Recalculate Book",	"F4",		NULL )
-MENFU ( SheetRecalc,		"Recalculate",		"F5",		"view-refresh" )
-
-MENFU ( RowInsert,		"Insert",			"Shift+Insert",	"list-add" )
-MENFU ( RowInsertPasteHeight,	"Insert Paste Height",		NULL,		NULL )
-MENFU ( RowDelete,		"Delete",			"Shift+Delete",	"list-remove" )
-MENFU ( RowSort,		"Sort ...",			NULL,		"view-sort-ascending" )
-
-MENFU ( ColumnInsert,		"Insert",			"Ctrl+Insert",	"list-add" )
-MENFU ( ColumnInsertPasteWidth, "Insert Paste Width",		NULL,		NULL )
-MENFU ( ColumnDelete,		"Delete",			"Ctrl+Delete",	"list-remove" )
-MENFU ( ColumnSort,		"Sort ...",			NULL,		"view-sort-ascending" )
-MENFU ( ColumnSetWidth,		"Set Width ...",		"F6",		NULL )
-MENFU ( ColumnSetWidthAuto,	"Set Width Automatically",	"Ctrl+F6",	NULL )
-
-MENFU ( OptionsFullScreen,	"Full Screen",			"F11",		"view-fullscreen" )
-MENFU ( OptionsFind,		"Find ...",			"Ctrl+F",	"edit-find" )
-MENFU ( OptionsGraph,		"Graph ...",			"Ctrl+G",	NULL )
-MENFU ( OptionsView,		"View ...",			NULL,		NULL )
-MENFU ( OptionsEditCell,	"Edit Cell",			"F2",		NULL )
-MENFU ( OptionsCellPrefs,	"Cell Preferences ...",		"F3",		NULL )
-MENFU ( OptionsBookPrefs,	"Book Preferences ...",		"Ctrl+F3",	NULL )
-MENFU ( OptionsProgramPrefs,	"Program Preferences ...",	"Ctrl+P",	"preferences-other" )
-
-MENFU ( OptionsBackgroundColor,	"Background Colour ...",	"F8",		NULL )
-MENFU ( OptionsForegroundColor,	"Foreground Colour ...",	"F9",		NULL )
-MENFU ( OptionsBorderColor,	"Border Colour ...",		NULL,		NULL )
-MENFU ( OptionsHelp,		"Help ...",			"F1",		"help-contents" )
-MENFU ( OptionsAboutQt,		"About Qt ...",			NULL,		NULL )
-MENFU ( OptionsAbout,		"About ...",			NULL,		"help-about" )
-
-MENFU ( FindWildcards,		"? * Wildcards",		NULL,		NULL )
-MENFU ( FindCase,		"Case Sensitive",		NULL,		NULL )
-MENFU ( FindValue,		"Match Value",			NULL,		NULL )
-MENFU ( FindSheets,		"All Sheets",			NULL,		NULL )
-
-MENFU ( GraphNew,		"New",				NULL,		"document-new" )
-MENFU ( GraphDuplicate,		"Duplicate",			NULL,		NULL )
-MENFU ( GraphRename,		"Rename ...",			NULL,		NULL )
-MENFU ( GraphDelete,		"Delete ...",			NULL,		"edit-delete" )
-MENFU ( GraphRedraw,		"Redraw",			"Ctrl+F5",	"view-refresh" )
-MENFU ( GraphExport,		"Export ...",			NULL,		NULL )
-MENFU ( GraphSClipboard,	"Sheet Selection to Clipboard",	NULL,		NULL )
+QEX_MENU ( FileNew, "New", "Ctrl+N", "document-new" )
+QEX_MENU ( FileOpen, "Open ...", "Ctrl+O", "document-open" )
+QEX_MENU ( FileImport, "Import", NULL, NULL )
+QEX_MENU ( FileSave, "Save", "Ctrl+S", "document-save" )
+QEX_MENU ( FileSaveAs, "Save As ...", "Shift+Ctrl+S", "document-save-as" )
+QEX_MENU ( FileQuit, "Quit", "Ctrl+Q", "application-exit" )
 
 
 	QSignalMapper * signalMapper = new QSignalMapper ( this );
-	int		i;
 
 
-	for ( i = 0; i < RECENT_MENU_TOTAL; i++ )
+	for ( int i = 0; i < RECENT_MENU_TOTAL; i++ )
 	{
-		actFileRecent[i] = new QAction ( "", this );
+		act_FileRecent[i] = new QAction ( "", this );
 
-		connect ( actFileRecent[i], SIGNAL ( triggered () ),
+		connect ( act_FileRecent[i], SIGNAL ( triggered () ),
 			signalMapper, SLOT ( map () ) );
-		signalMapper->setMapping ( actFileRecent [ i ], i + 1 );
+		signalMapper->setMapping ( act_FileRecent [ i ], i + 1 );
 
 		if ( i < 10 )
 		{
-			actFileRecent[i]->setShortcut (
+			act_FileRecent[i]->setShortcut (
 				QString ( "Ctrl+%1" ).arg ( (i + 1) % 10 ) );
 		}
 	}
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-		this, SLOT ( pressFileRecent ( int ) ) );
+		this, SLOT ( press_FileRecent ( int ) ) );
+
+
+	QMenu * menuFile = menuBar->addMenu ( "&File" );
+	menuFile->setTearOffEnabled ( true );
+	menuFile->addAction ( act_FileNew );
+	menuFile->addAction ( act_FileOpen );
+	menuFile->addSeparator ();
+	menuFile->addAction ( act_FileImport );
+	menuFile->addSeparator ();
+	menuFile->addAction ( act_FileSave );
+	menuFile->addAction ( act_FileSaveAs );
+	act_FileRecentSeparator = menuFile->addSeparator ();
+
+	for ( int i = 0; i < RECENT_MENU_TOTAL; i++ )
+	{
+		menuFile->addAction ( act_FileRecent[i] );
+	}
+
+	menuFile->addSeparator ();
+	menuFile->addAction ( act_FileQuit );
+
+/// EDIT
+
+	QAction * act_EditCut;
+	QAction * act_EditCopy;
+	QAction * act_EditCopyVal;
+	QAction * act_EditCopyOutput;
+	QAction * act_EditTransformTrans;
+	QAction * act_EditTransformFlipH;
+	QAction * act_EditTransformFlipV;
+	QAction * act_EditTransformRotClock;
+	QAction * act_EditTransformRotAnti;
+	QAction * act_EditPaste;
+	QAction * act_EditPasteContent;
+	QAction * act_EditPastePrefs;
+	QAction * act_EditClear;
+	QAction * act_EditClearContent;
+	QAction * act_EditClearPrefs;
+	QAction * act_EditFixYears;
+	QAction * act_EditSelectAll;
+
+QEX_MENU ( EditUndo, "Undo", "Ctrl+Z", "edit-undo" )
+QEX_MENU ( EditRedo, "Redo", "Ctrl+Y", "edit-redo" )
+QEX_MENU ( EditCut, "Cut", "Ctrl+X", "edit-cut" )
+QEX_MENU ( EditCopy, "Copy", "Ctrl+C", "edit-copy" )
+QEX_MENU ( EditCopyVal, "Copy As Values", "Shift+Ctrl+C", NULL )
+QEX_MENU ( EditCopyOutput, "Copy As Output", NULL, NULL )
+QEX_MENU ( EditTransformTrans, "Transpose", NULL, NULL )
+QEX_MENU ( EditTransformFlipH, "Flip Horizontally", NULL, NULL )
+QEX_MENU ( EditTransformFlipV, "Flip Vertically", NULL, NULL )
+QEX_MENU ( EditTransformRotClock, "Rotate Clockwise", NULL, NULL )
+QEX_MENU ( EditTransformRotAnti, "Rotate Anticlockwise", NULL, NULL )
+QEX_MENU ( EditUseSystemClipboard, "Use System Clipboard", NULL, NULL )
+QEX_MENU ( EditPaste, "Paste", "Ctrl+V", "edit-paste" )
+QEX_MENU ( EditPasteContent, "Paste Content", "Ctrl+F7",	NULL )
+QEX_MENU ( EditPastePrefs, "Paste Preferences", "F7", NULL )
+QEX_MENU ( EditClear, "Clear", "Delete", "edit-clear" )
+QEX_MENU ( EditClearContent, "Clear Content", "Backspace", NULL )
+QEX_MENU ( EditClearPrefs, "Clear Preferences", "Ctrl+Backspace", NULL )
+QEX_MENU ( EditFixYears, "Fix 2-digit Years", NULL, NULL )
+QEX_MENU ( EditSelectAll, "Select All", "Ctrl+A", "edit-select-all" )
+
+	QMenu * menuEdit = menuBar->addMenu ( "&Edit" );
+	menuEdit->setTearOffEnabled ( true );
+
+	menuEdit->addAction ( act_EditUndo );
+	menuEdit->addAction ( act_EditRedo );
+	menuEdit->addSeparator ();
+	menuEdit->addAction ( act_EditCut );
+	menuEdit->addAction ( act_EditCopy );
+	menuEdit->addAction ( act_EditCopyVal );
+	menuEdit->addAction ( act_EditCopyOutput );
+	menuEdit->addSeparator ();
+
+	QMenu * menuEditTransform = menuEdit->addMenu ( "Transform Clipboard" );
+	menuEditTransform->setTearOffEnabled ( true );
+	menuEditTransform->addAction ( act_EditTransformTrans );
+
+	menuEditTransform->addAction ( act_EditTransformFlipH );
+	menuEditTransform->addAction ( act_EditTransformFlipV );
+	menuEditTransform->addAction ( act_EditTransformRotClock );
+	menuEditTransform->addAction ( act_EditTransformRotAnti );
+
+	menuEdit->addAction ( act_EditUseSystemClipboard );
+
+	menuEdit->addSeparator ();
+	menuEdit->addAction ( act_EditPaste );
+	menuEdit->addAction ( act_EditPasteContent );
+	menuEdit->addAction ( act_EditPastePrefs );
+	menuEdit->addSeparator ();
+	menuEdit->addAction ( act_EditClear );
+	menuEdit->addAction ( act_EditClearContent );
+	menuEdit->addAction ( act_EditClearPrefs );
+	menuEdit->addSeparator ();
+	menuEdit->addAction ( act_EditFixYears );
+	menuEdit->addAction ( act_EditSelectAll );
+
+	act_EditUseSystemClipboard->setCheckable ( true );
+	act_EditUseSystemClipboard->setChecked ( pprfs->getInt (
+		GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) == 0 ? false : true );
+
+
+/// SHEET
+
+	QAction * act_SheetNew;
+	QAction * act_SheetDuplicate;
+	QAction * act_SheetRename;
+	QAction * act_SheetDelete;
+	QAction * act_SheetExport;
+	QAction * act_SheetExportOutput;
+	QAction * act_SheetPrevious;
+	QAction * act_SheetNext;
+	QAction * act_SheetRecalcBook;
+	QAction * act_SheetRecalc;
+
+QEX_MENU ( SheetNew, "New", "Ctrl+T", "document-new" )
+QEX_MENU ( SheetDuplicate, "Duplicate", "Shift+Ctrl+T", NULL )
+QEX_MENU ( SheetRename, "Rename ...", "Ctrl+F2", NULL )
+QEX_MENU ( SheetDelete, "Delete", "Shift+Ctrl+W", "edit-delete" )
+QEX_MENU ( SheetExport, "Export ...", NULL, NULL )
+QEX_MENU ( SheetExportOutput, "Export Output ...", NULL, NULL )
+QEX_MENU ( SheetFreezePanes, "Freeze Panes", NULL, NULL )
+QEX_MENU ( SheetLock, "Lock", "F12", NULL )
+QEX_MENU ( SheetPrevious, "Previous", "Ctrl+Page Up", NULL )
+QEX_MENU ( SheetNext, "Next", "Ctrl+Page Down", NULL )
+QEX_MENU ( SheetRecalcBook, "Recalculate Book", "F4", NULL )
+QEX_MENU ( SheetRecalc, "Recalculate", "F5", "view-refresh" )
+
+	QMenu * menuSheet = menuBar->addMenu ( "&Sheet" );
+	menuSheet->setTearOffEnabled ( true );
+	menuSheet->addAction ( act_SheetNew );
+	menuSheet->addAction ( act_SheetDuplicate );
+	menuSheet->addSeparator ();
+	menuSheet->addAction ( act_SheetRename );
+	menuSheet->addAction ( act_SheetDelete );
+	menuSheet->addSeparator ();
+	menuSheet->addAction ( act_SheetExport );
+	menuSheet->addAction ( act_SheetExportOutput );
+	menuSheet->addSeparator ();
+	menuSheet->addAction ( act_SheetFreezePanes );
+	menuSheet->addAction ( act_SheetLock );
+	menuSheet->addSeparator ();
+	menuSheet->addAction ( act_SheetPrevious );
+	menuSheet->addAction ( act_SheetNext );
+	menuSheet->addSeparator ();
+	menuSheet->addAction ( act_SheetRecalcBook );
+	menuSheet->addAction ( act_SheetRecalc );
+
+/// ROW
+
+	QAction * act_RowInsert;
+	QAction * act_RowInsertPasteHeight;
+	QAction * act_RowDelete;
+	QAction * act_RowSort;
+
+QEX_MENU ( RowInsert, "Insert", "Shift+Insert",	"list-add" )
+QEX_MENU ( RowInsertPasteHeight, "Insert Paste Height", NULL, NULL )
+QEX_MENU ( RowDelete, "Delete", "Shift+Delete", "list-remove" )
+QEX_MENU ( RowSort, "Sort ...", NULL, "view-sort-ascending" )
+
+	QMenu * menuRow = menuBar->addMenu ( "&Row" );
+	menuRow->setTearOffEnabled ( true );
+	menuRow->addAction ( act_RowInsert );
+	menuRow->addAction ( act_RowInsertPasteHeight );
+	menuRow->addSeparator ();
+	menuRow->addAction ( act_RowDelete );
+	menuRow->addSeparator ();
+	menuRow->addAction ( act_RowSort );
+
+/// COLUMN
+
+	QAction * act_ColumnInsert;
+	QAction * act_ColumnInsertPasteWidth;
+	QAction * act_ColumnDelete;
+	QAction * act_ColumnSort;
+	QAction * act_ColumnSetWidth;
+	QAction * act_ColumnSetWidthAuto;
+
+QEX_MENU ( ColumnInsert, "Insert", "Ctrl+Insert", "list-add" )
+QEX_MENU ( ColumnInsertPasteWidth, "Insert Paste Width", NULL, NULL )
+QEX_MENU ( ColumnDelete, "Delete", "Ctrl+Delete", "list-remove" )
+QEX_MENU ( ColumnSort, "Sort ...", NULL, "view-sort-ascending" )
+QEX_MENU ( ColumnSetWidth, "Set Width ...", "F6", NULL )
+QEX_MENU ( ColumnSetWidthAuto, "Set Width Automatically", "Ctrl+F6", NULL )
+
+	QMenu * menuColumn = menuBar->addMenu ( "&Column" );
+	menuColumn->setTearOffEnabled ( true );
+	menuColumn->addAction ( act_ColumnInsert );
+	menuColumn->addAction ( act_ColumnInsertPasteWidth );
+	menuColumn->addSeparator ();
+	menuColumn->addAction ( act_ColumnDelete );
+	menuColumn->addSeparator ();
+	menuColumn->addAction ( act_ColumnSort );
+	menuColumn->addSeparator ();
+	menuColumn->addAction ( act_ColumnSetWidth );
+	menuColumn->addAction ( act_ColumnSetWidthAuto );
+
+/// OPTIONS
+
+	QAction * act_OptionsFullScreen;
+	QAction * act_OptionsFind;
+	QAction * act_OptionsGraph;
+	QAction * act_OptionsView;
+	QAction * act_OptionsEditCell;
+	QAction * act_OptionsCellPrefs;
+	QAction * act_OptionsBookPrefs;
+	QAction * act_OptionsProgramPrefs;
+	QAction * act_OptionsTextStyle_none;
+	QAction * act_OptionsTextStyle_bold;
+	QAction * act_OptionsTextStyle_italic;
+	QAction * act_OptionsTextStyle_underline;
+	QAction * act_OptionsTextStyle_underline_double;
+	QAction * act_OptionsTextStyle_underline_wavy;
+	QAction * act_OptionsTextStyle_strikethrough;
+	QAction * act_OptionsBackgroundColor;
+	QAction * act_OptionsForegroundColor;
+	QAction * act_OptionsBorderColor;
+	QAction * act_OptionsBorder [ BORDER_MENU_TOTAL ];
+
+QEX_MENU ( OptionsFullScreen, "Full Screen", "F11", "view-fullscreen" )
+QEX_MENU ( OptionsFind, "Find ...", "Ctrl+F", "edit-find" )
+QEX_MENU ( OptionsGraph, "Graph ...", "Ctrl+G", NULL )
+QEX_MENU ( OptionsView, "View ...", NULL, NULL )
+QEX_MENU ( OptionsEditCell, "Edit Cell", "F2", NULL )
+QEX_MENU ( OptionsCellPrefs, "Cell Preferences ...", "F3", NULL )
+QEX_MENU ( OptionsBookPrefs, "Book Preferences ...", "Ctrl+F3", NULL )
+QEX_MENU ( OptionsProgramPrefs,	"Program Preferences ...", "Ctrl+P", "preferences-other" )
+QEX_MENU ( OptionsBackgroundColor, "Background Colour ...", "F8", NULL )
+QEX_MENU ( OptionsForegroundColor, "Foreground Colour ...", "F9", NULL )
+QEX_MENU ( OptionsBorderColor, "Border Colour ...", NULL, NULL )
 
 
 typedef struct
@@ -280,259 +336,186 @@ typedef struct
 
 	signalMapper = new QSignalMapper ( this );
 
-	for ( i = 0; i < BORDER_MENU_TOTAL; i++ )
+	for ( int i = 0; i < BORDER_MENU_TOTAL; i++ )
 	{
-		actOptionsBorder[i] = new QAction ( bp[i].text, this );
+		act_OptionsBorder[i] = new QAction ( bp[i].text, this );
 
-		connect ( actOptionsBorder[i], SIGNAL ( triggered () ),
+		connect ( act_OptionsBorder[i], SIGNAL ( triggered () ),
 			signalMapper, SLOT ( map () ) );
-		signalMapper->setMapping ( actOptionsBorder[i], bp[i].num );
+		signalMapper->setMapping ( act_OptionsBorder[i], bp[i].num );
 	}
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-		this, SLOT ( pressOptionsBorder ( int ) ) );
+		this, SLOT ( press_OptionsBorder ( int ) ) );
 
 
 
 #define MENTS( A, B, C, D, E ) \
-	menuInit ( &actOptionsTextStyle_ ## A , B, C, D ); \
-	connect ( actOptionsTextStyle_ ## A, SIGNAL ( triggered () ), signalMapper, \
-		SLOT ( map () ) ); \
-	signalMapper->setMapping ( actOptionsTextStyle_ ## A, E );
+	act_OptionsTextStyle_ ## A = mtQEX::menu_init ( this, B, C, D ); \
+	connect ( act_OptionsTextStyle_ ## A, SIGNAL ( triggered () ), \
+		signalMapper, SLOT ( map () ) ); \
+	signalMapper->setMapping ( act_OptionsTextStyle_ ## A, E );
 
 
 
 	signalMapper = new QSignalMapper ( this );
 
-MENTS ( none,		"None",			NULL,		NULL,		CED_TEXT_STYLE_CLEAR )
-MENTS ( bold,		"Bold",			"Ctrl+B",	"format-text-bold", CED_TEXT_STYLE_BOLD )
-MENTS ( italic,		"Italic",		"Ctrl+I",	"format-text-italic", CED_TEXT_STYLE_ITALIC )
-MENTS ( underline,	"Underline",		"Ctrl+U",	"format-text-underline", CED_TEXT_STYLE_UNDERLINE_SINGLE )
-MENTS ( underline_double, "Underline Double",	NULL,		NULL,		CED_TEXT_STYLE_UNDERLINE_DOUBLE )
-MENTS ( underline_wavy, "Underline Wavy",	NULL,		NULL,		CED_TEXT_STYLE_UNDERLINE_WAVY )
-MENTS ( strikethrough,	"Strikethrough",	NULL,		NULL,		CED_TEXT_STYLE_STRIKETHROUGH )
+MENTS ( none, "None", NULL, NULL, CED_TEXT_STYLE_CLEAR )
+MENTS ( bold, "Bold", "Ctrl+B",	"format-text-bold", CED_TEXT_STYLE_BOLD )
+MENTS ( italic, "Italic", "Ctrl+I", "format-text-italic", CED_TEXT_STYLE_ITALIC )
+MENTS ( underline, "Underline", "Ctrl+U", "format-text-underline", CED_TEXT_STYLE_UNDERLINE_SINGLE )
+MENTS ( underline_double, "Underline Double", NULL, NULL, CED_TEXT_STYLE_UNDERLINE_DOUBLE )
+MENTS ( underline_wavy, "Underline Wavy", NULL, NULL, CED_TEXT_STYLE_UNDERLINE_WAVY )
+MENTS ( strikethrough,	"Strikethrough", NULL, NULL, CED_TEXT_STYLE_STRIKETHROUGH )
 
 	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-		this, SLOT ( pressOptionsTextStyle ( int ) ) );
+		this, SLOT ( press_OptionsTextStyle ( int ) ) );
 
-
-
-
-	actEditUseSystemClipboard->setCheckable ( true );
-	actEditUseSystemClipboard->setChecked ( pprfs->getInt (
-		GUI_INIFILE_CLIPBOARD_USE_SYSTEM ) == 0 ? false : true );
-
-	actFindWildcards->setCheckable ( true );
-	actFindWildcards->setChecked ( pprfs->getInt (
-		GUI_INIFILE_FIND_WILDCARDS ) == 0 ? false : true );
-
-	actFindCase->setCheckable ( true );
-	actFindCase->setChecked ( pprfs->getInt (
-		GUI_INIFILE_FIND_CASE_SENSITIVE ) == 0 ? false : true );
-
-	actFindValue->setCheckable ( true );
-	actFindValue->setChecked ( pprfs->getInt (
-		GUI_INIFILE_FIND_VALUE ) == 0 ? false : true );
-
-	actFindSheets->setCheckable ( true );
-	actFindSheets->setChecked ( pprfs->getInt (
-		GUI_INIFILE_FIND_ALL_SHEETS ) == 0 ? false : true );
-
-
-	QMenu * menuFile = menuBar->addMenu ( "&File" );
-	menuFile->setTearOffEnabled ( true );
-	menuFile->addAction ( actFileNew );
-	menuFile->addAction ( actFileOpen );
-	menuFile->addSeparator ();
-	menuFile->addAction ( actFileImport );
-	menuFile->addSeparator ();
-	menuFile->addAction ( actFileSave );
-	menuFile->addAction ( actFileSaveAs );
-	actFileRecentSeparator = menuFile->addSeparator ();
-
-	for ( i = 0; i < RECENT_MENU_TOTAL; i++ )
-	{
-		menuFile->addAction ( actFileRecent[i] );
-	}
-
-	menuFile->addSeparator ();
-	menuFile->addAction ( actFileQuit );
-
-	QMenu * menuEdit = menuBar->addMenu ( "&Edit" );
-	menuEdit->setTearOffEnabled ( true );
-
-	menuEdit->addAction ( actEditUndo );
-	menuEdit->addAction ( actEditRedo );
-	menuEdit->addSeparator ();
-	menuEdit->addAction ( actEditCut );
-	menuEdit->addAction ( actEditCopy );
-	menuEdit->addAction ( actEditCopyVal );
-	menuEdit->addAction ( actEditCopyOutput );
-	menuEdit->addSeparator ();
-
-	QMenu * menuEditTransform = menuEdit->addMenu ( "Transform Clipboard" );
-	menuEditTransform->setTearOffEnabled ( true );
-	menuEditTransform->addAction ( actEditTransformTrans );
-
-	menuEditTransform->addAction ( actEditTransformFlipH );
-	menuEditTransform->addAction ( actEditTransformFlipV );
-	menuEditTransform->addAction ( actEditTransformRotClock );
-	menuEditTransform->addAction ( actEditTransformRotAnti );
-
-	menuEdit->addAction ( actEditUseSystemClipboard );
-
-	menuEdit->addSeparator ();
-	menuEdit->addAction ( actEditPaste );
-	menuEdit->addAction ( actEditPasteContent );
-	menuEdit->addAction ( actEditPastePrefs );
-	menuEdit->addSeparator ();
-	menuEdit->addAction ( actEditClear );
-	menuEdit->addAction ( actEditClearContent );
-	menuEdit->addAction ( actEditClearPrefs );
-	menuEdit->addSeparator ();
-	menuEdit->addAction ( actEditFixYears );
-	menuEdit->addAction ( actEditSelectAll );
-
-	QMenu * menuSheet = menuBar->addMenu ( "&Sheet" );
-	menuSheet->setTearOffEnabled ( true );
-	menuSheet->addAction ( actSheetNew );
-	menuSheet->addAction ( actSheetDuplicate );
-	menuSheet->addSeparator ();
-	menuSheet->addAction ( actSheetRename );
-	menuSheet->addAction ( actSheetDelete );
-	menuSheet->addSeparator ();
-	menuSheet->addAction ( actSheetExport );
-	menuSheet->addAction ( actSheetExportOutput );
-	menuSheet->addSeparator ();
-	menuSheet->addAction ( actSheetFreezePanes );
-	menuSheet->addAction ( actSheetLock );
-	menuSheet->addSeparator ();
-	menuSheet->addAction ( actSheetPrevious );
-	menuSheet->addAction ( actSheetNext );
-	menuSheet->addSeparator ();
-	menuSheet->addAction ( actSheetRecalcBook );
-	menuSheet->addAction ( actSheetRecalc );
-
-	QMenu * menuRow = menuBar->addMenu ( "&Row" );
-	menuRow->setTearOffEnabled ( true );
-	menuRow->addAction ( actRowInsert );
-	menuRow->addAction ( actRowInsertPasteHeight );
-	menuRow->addSeparator ();
-	menuRow->addAction ( actRowDelete );
-	menuRow->addSeparator ();
-	menuRow->addAction ( actRowSort );
-
-	QMenu * menuColumn = menuBar->addMenu ( "&Column" );
-	menuColumn->setTearOffEnabled ( true );
-	menuColumn->addAction ( actColumnInsert );
-	menuColumn->addAction ( actColumnInsertPasteWidth );
-	menuColumn->addSeparator ();
-	menuColumn->addAction ( actColumnDelete );
-	menuColumn->addSeparator ();
-	menuColumn->addAction ( actColumnSort );
-	menuColumn->addSeparator ();
-	menuColumn->addAction ( actColumnSetWidth );
-	menuColumn->addAction ( actColumnSetWidthAuto );
 
 	QMenu * menuOptions = menuBar->addMenu ( "&Options" );
 	menuOptions->setTearOffEnabled ( true );
-	menuOptions->addAction ( actOptionsFullScreen );
-	menuOptions->addAction ( actOptionsFind );
-	menuOptions->addAction ( actOptionsGraph );
-	menuOptions->addAction ( actOptionsView );
+	menuOptions->addAction ( act_OptionsFullScreen );
+	menuOptions->addAction ( act_OptionsFind );
+	menuOptions->addAction ( act_OptionsGraph );
+	menuOptions->addAction ( act_OptionsView );
 	menuOptions->addSeparator ();
-	menuOptions->addAction ( actOptionsEditCell );
-	menuOptions->addAction ( actOptionsCellPrefs );
-	menuOptions->addAction ( actOptionsBookPrefs );
-	menuOptions->addAction ( actOptionsProgramPrefs );
+	menuOptions->addAction ( act_OptionsEditCell );
+	menuOptions->addAction ( act_OptionsCellPrefs );
+	menuOptions->addAction ( act_OptionsBookPrefs );
+	menuOptions->addAction ( act_OptionsProgramPrefs );
 	menuOptions->addSeparator ();
 
 	QMenu * menuOptionTextStyle = menuOptions->addMenu ( "Text Style" );
 	menuOptionTextStyle->setTearOffEnabled ( true );
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_none );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_none );
 	menuOptionTextStyle->addSeparator ();
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_bold );
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_italic );
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_underline );
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_underline_double );
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_underline_wavy );
-	menuOptionTextStyle->addAction ( actOptionsTextStyle_strikethrough );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_bold );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_italic );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_underline );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_underline_double );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_underline_wavy );
+	menuOptionTextStyle->addAction ( act_OptionsTextStyle_strikethrough );
 
-	menuOptions->addAction ( actOptionsBackgroundColor );
-	menuOptions->addAction ( actOptionsForegroundColor );
-	menuOptions->addAction ( actOptionsBorderColor );
+	menuOptions->addAction ( act_OptionsBackgroundColor );
+	menuOptions->addAction ( act_OptionsForegroundColor );
+	menuOptions->addAction ( act_OptionsBorderColor );
 
 	QMenu * menuOptionBorderType = menuOptions->addMenu ( "Border Type" );
 	menuOptionBorderType->setTearOffEnabled ( true );
-	menuOptionBorderType->addAction ( actOptionsBorder [ 0 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 0 ] );
 	menuOptionBorderType->addSeparator ();
-	menuOptionBorderType->addAction ( actOptionsBorder [ 1 ] );
-	menuOptionBorderType->addAction ( actOptionsBorder [ 2 ] );
-	menuOptionBorderType->addAction ( actOptionsBorder [ 3 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 1 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 2 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 3 ] );
 	menuOptionBorderType->addSeparator ();
-	menuOptionBorderType->addAction ( actOptionsBorder [ 4 ] );
-	menuOptionBorderType->addAction ( actOptionsBorder [ 5 ] );
-	menuOptionBorderType->addAction ( actOptionsBorder [ 6 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 4 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 5 ] );
+	menuOptionBorderType->addAction ( act_OptionsBorder [ 6 ] );
 	menuOptionBorderType->addSeparator ();
 
 	QMenu * menuBorderTypeH = menuOptionBorderType->addMenu ("Horizontal" );
 	menuBorderTypeH->setTearOffEnabled ( true );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 7 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 8 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 9 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 7 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 8 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 9 ] );
 	menuBorderTypeH->addSeparator ();
-	menuBorderTypeH->addAction ( actOptionsBorder [ 10 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 11 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 12 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 10 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 11 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 12 ] );
 	menuBorderTypeH->addSeparator ();
-	menuBorderTypeH->addAction ( actOptionsBorder [ 13 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 14 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 15 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 13 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 14 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 15 ] );
 	menuBorderTypeH->addSeparator ();
-	menuBorderTypeH->addAction ( actOptionsBorder [ 16 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 17 ] );
-	menuBorderTypeH->addAction ( actOptionsBorder [ 18 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 16 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 17 ] );
+	menuBorderTypeH->addAction ( act_OptionsBorder [ 18 ] );
 
 	QMenu * menuBorderTypeV = menuOptionBorderType->addMenu ( "Vertical" );
 	menuBorderTypeV->setTearOffEnabled ( true );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 19 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 20 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 21 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 19 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 20 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 21 ] );
 	menuBorderTypeV->addSeparator ();
-	menuBorderTypeV->addAction ( actOptionsBorder [ 22 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 23 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 24 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 22 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 23 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 24 ] );
 	menuBorderTypeV->addSeparator ();
-	menuBorderTypeV->addAction ( actOptionsBorder [ 25 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 26 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 27 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 25 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 26 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 27 ] );
 	menuBorderTypeV->addSeparator ();
-	menuBorderTypeV->addAction ( actOptionsBorder [ 28 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 29 ] );
-	menuBorderTypeV->addAction ( actOptionsBorder [ 30 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 28 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 29 ] );
+	menuBorderTypeV->addAction ( act_OptionsBorder [ 30 ] );
+
+/// HELP
+
+	QAction * act_HelpHelp;
+	QAction * act_HelpAboutQt;
+	QAction * act_HelpAbout;
+
+QEX_MENU ( HelpHelp, "Help ...", "F1", "help-contents" )
+QEX_MENU ( HelpAboutQt, "About Qt ...", NULL, NULL )
+QEX_MENU ( HelpAbout, "About ...", NULL, "help-about" )
 
 	QMenu * menuHelp = menuBar->addMenu ( "&Help" );
 	menuHelp->setTearOffEnabled ( true );
-	menuHelp->addAction ( actOptionsHelp );
-	menuHelp->addAction ( actOptionsAboutQt );
-	menuHelp->addAction ( actOptionsAbout );
+	menuHelp->addAction ( act_HelpHelp );
+	menuHelp->addAction ( act_HelpAboutQt );
+	menuHelp->addAction ( act_HelpAbout );
+
+/// FIND
+
+QEX_MENU ( FindWildcards, "? * Wildcards", NULL, NULL )
+QEX_MENU ( FindCase, "Case Sensitive", NULL, NULL )
+QEX_MENU ( FindValue, "Match Value", NULL, NULL )
+QEX_MENU ( FindSheets, "All Sheets", NULL, NULL )
+
+	act_FindWildcards->setCheckable ( true );
+	act_FindWildcards->setChecked ( pprfs->getInt (
+		GUI_INIFILE_FIND_WILDCARDS ) == 0 ? false : true );
+
+	act_FindCase->setCheckable ( true );
+	act_FindCase->setChecked ( pprfs->getInt (
+		GUI_INIFILE_FIND_CASE_SENSITIVE ) == 0 ? false : true );
+
+	act_FindValue->setCheckable ( true );
+	act_FindValue->setChecked ( pprfs->getInt (
+		GUI_INIFILE_FIND_VALUE ) == 0 ? false : true );
+
+	act_FindSheets->setCheckable ( true );
+	act_FindSheets->setChecked ( pprfs->getInt (
+		GUI_INIFILE_FIND_ALL_SHEETS ) == 0 ? false : true );
 
 	QMenu * menuFind = findMenuBar->addMenu ( "Options" );
-	menuFind->addAction ( actFindWildcards );
-	menuFind->addAction ( actFindCase );
-	menuFind->addAction ( actFindValue );
-	menuFind->addAction ( actFindSheets );
+	menuFind->addAction ( act_FindWildcards );
+	menuFind->addAction ( act_FindCase );
+	menuFind->addAction ( act_FindValue );
+	menuFind->addAction ( act_FindSheets );
+
+/// GRAPH
+
+	QAction * act_GraphNew;
+
+QEX_MENU ( GraphNew, "New", NULL, "document-new" )
+QEX_MENU ( GraphDuplicate, "Duplicate", NULL, NULL )
+QEX_MENU ( GraphRename, "Rename ...", NULL, NULL )
+QEX_MENU ( GraphDelete, "Delete ...", NULL, "edit-delete" )
+QEX_MENU ( GraphRedraw, "Redraw", "Ctrl+F5", "view-refresh" )
+QEX_MENU ( GraphExport, "Export ...", NULL, NULL )
+QEX_MENU ( GraphSClipboard, "Sheet Selection to Clipboard", NULL, NULL )
 
 	QMenu * menuGraph = graphMenuBar->addMenu ( "&Graph" );
 	menuGraph->setTearOffEnabled ( true );
-	menuGraph->addAction ( actGraphNew );
-	menuGraph->addAction ( actGraphDuplicate );
+	menuGraph->addAction ( act_GraphNew );
+	menuGraph->addAction ( act_GraphDuplicate );
 	menuGraph->addSeparator ();
-	menuGraph->addAction ( actGraphRename );
-	menuGraph->addAction ( actGraphDelete );
+	menuGraph->addAction ( act_GraphRename );
+	menuGraph->addAction ( act_GraphDelete );
 	menuGraph->addSeparator ();
-	menuGraph->addAction ( actGraphRedraw );
-	menuGraph->addAction ( actGraphExport );
-	menuGraph->addAction ( actGraphSClipboard );
+	menuGraph->addAction ( act_GraphRedraw );
+	menuGraph->addAction ( act_GraphExport );
+	menuGraph->addAction ( act_GraphSClipboard );
 }
 

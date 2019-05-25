@@ -46,6 +46,34 @@ int mtKit::cli_parse_int (
 	return 0;
 }
 
+int mtKit::cli_parse_double (
+	char	const * const	input,
+	double			&output,
+	double		const	min,
+	double		const	max
+	)
+{
+	if ( mtkit_strtod ( input, &output, NULL, 1 ) )
+	{
+		fprintf ( stderr, "Bad Double (%s)\n", input );
+
+		return 1;
+	}
+
+	if (	max >= min &&
+		(	isnan(output) || isinf(output) ||
+			output > max || output < min )
+		)
+	{
+		fprintf ( stderr, "Double %f out of bounds (%f to %f)\n",
+			output, min, max );
+
+		return 1;
+	}
+
+	return 0;
+}
+
 int mtKit::cli_parse_charint (
 	char	const * const	input,
 	CharInt	const * const	chint,

@@ -1,20 +1,13 @@
-MTRDC
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-mtrdc - random data creator
+@BIN_NAME@ - random data creator
 
 
 = SYNOPSIS =
-**mtrdc** [ **OPTIONS** ]
+**@BIN_NAME@** [ **OPTIONS** ]
 
 
 = DESCRIPTION =
-mtRDC is a command line program that offers various tools for creating random
+@BIN_NAME@ is a command line program that offers various tools for creating random
 data.
 
 
@@ -58,11 +51,3 @@ data.
 	Analyse the input file statistically.
 **-seed** INTEGER
 	Set PRNG seed (default=time).
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

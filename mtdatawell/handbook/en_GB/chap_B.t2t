@@ -1,0 +1,17 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>mtDataWell Handbook - Appendix B - The History of this Document</TITLE>\1'
+
+
+[Previous chap_A.html] | [Contents chap_00.html]
+-------------------------------------------------
+
+=Appendix B - The History of this Document=
+
+
+| **Date**         | **Edition** | **Notes** |
+| 2019-5-25        | 3.3         | First Edition |
+
+
+
+-------------------------------------------------
+[Previous chap_A.html] | [Contents chap_00.html]

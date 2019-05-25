@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 
 
 
-mtDW::TapOp::TapOp ()
+mtDW::Tap::Op::Op ()
 {
 }
 
-mtDW::TapOp::~TapOp ()
+mtDW::Tap::Op::~Op ()
 {
 }
 
@@ -33,19 +33,19 @@ mtDW::TapOp::~TapOp ()
 
 
 
-mtDW::TapFileOp::TapFileOp ()
+mtDW::TapFile::Op::Op ()
 	:
 	m_capacity (0)
 {
 }
 
-mtDW::TapFileOp::~TapFileOp ()
+mtDW::TapFile::Op::~Op ()
 {
 }
 
-void mtDW::TapFileOp::delete_soda_filename ()
+void mtDW::TapFile::Op::delete_soda_filename ()
 {
-	if ( m_soda_file.size () > 0 )
+	if ( m_soda_file.length () > 0 )
 	{
 		// Delete temp file if it exists
 		remove ( m_soda_file.c_str () );
@@ -53,7 +53,7 @@ void mtDW::TapFileOp::delete_soda_filename ()
 	}
 }
 
-void mtDW::TapFileOp::set_soda_filename ( std::string const & filename )
+void mtDW::TapFile::Op::set_soda_filename ( std::string const & filename )
 {
 	delete_soda_filename ();
 	m_soda_file = filename;

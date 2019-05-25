@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,73 +22,181 @@
 namespace mtDW
 {
 
+class OTP;
+class OTPread;
+class OTPactive;
 
 
-class ButtOp
+
+class OTP
 {
 public:
-	ButtOp ( mtKit::Random & random, char const * path );
-	~ButtOp ();
+	explicit OTP ( Butt::Op & op );
 
-	int add_name ( std::string const & name );	// Dir must NOT exist
-	int set_name ( std::string const & name );	// Dir must exist
-
-	int add_buckets ( Well const * well, int const tot );
-
-	inline int get_write_next () const	{ return m_write_next; }
-	inline int get_otp_bucket () const	{ return m_otp_bucket; }
-	inline int get_otp_position () const	{ return m_otp_position; }
 	inline std::string const & get_path () const { return m_path; }
-	inline std::string const & get_butt_root () const { return m_butt_root;}
 	inline std::string const & get_name () const { return m_name; }
+	inline int get_bucket () const		{ return m_bucket; }
+	inline int get_position () const	{ return m_position; }
 
-	// Encoding (changes internal OTP bookkeeping)
+	void set_path ( std::string const & name );
 
-	int otp_get_int ( int & res );			// res=INT_MIN..INT_MAX
-	int otp_get_int ( int modulo, int & res );	// res=0..(modulo - 1)
-	int otp_get_data ( uint8_t * buf, size_t buflen );
+	int open_bucket ( int bucket, int pos );
+		// Returns error code.  Interpret via get_error_text()
 
-	// Decoding
+	int read ( uint8_t * buf, size_t buflen );
+		// Returns error code.  Interpret via get_error_text()
 
-	int read_set_butt ( std::string const & name, int bucket, int pos );
-	int read_get_data ( uint8_t * buf, size_t buflen );
+	int64_t get_bucket_size () const;
 
-private:
-	void new_local_prefs ();
-	void store_butt_prefs ();
-	void create_butt_name ( std::string & str );
-
-	int otp_open_bucket ();
-
-	static std::string get_butt_num_text ( int num );
-	std::string get_butt_filename ( int num ) const;
-	std::string get_read_filename ( int num ) const;
-
-	int init_butt_path ( std::string const & name, int exists );
+protected:
+	std::string get_bucket_filename ( int num ) const;
 
 /// ----------------------------------------------------------------------------
 
-	int			m_write_next;
-	int			m_otp_bucket;
-	int			m_otp_position;
+	Butt::Op		& m_op;
 
-	std::string	const	m_path;
-	std::string	const	m_butt_root;	// <m_path> / butt /
-	std::string		m_butt_path;	// <m_butt_root> / <m_name> /
+	mtKit::ByteFileRead	m_file;
+
+	std::string		m_path;		// <m_butt_root> / <m_name> /
 	std::string		m_name;
 
-	mtKit::Random	&	m_random;
+	int			m_bucket;
+	int			m_position;
+};
+
+
+
+class OTPactive : public OTP
+{
+public:
+	enum
+	{
+		STATUS_READ_ONLY = 1
+	};
+
+
+	explicit OTPactive ( Butt::Op & op );
+	~OTPactive ();
+
+	int add_otp ( std::string const & name );	// Dir must NOT exist
+		// Returns error code.  Interpret via get_error_text()
+
+	int set_otp ( std::string const & name );	// Dir must exist
+		// Returns error code.  Interpret via get_error_text()
+
+	int import_otp ( std::string const & path );
+		// Returns error code.  Interpret via get_error_text()
+
+	int delete_otp ( std::string const & name ) const;
+		// Returns error code.  Interpret via get_error_text()
+
+	int set_comment ( std::string const & comment );
+		// Returns error code.  Interpret via get_error_text()
+
+	char const * get_comment () const;
+
+	int add_buckets ( Well const * well, int const tot );
+		// Returns error code.  Interpret via get_error_text()
+
+	int empty_buckets ();
+		// Returns error code.  Interpret via get_error_text()
+
+	inline bool is_read_only() const{ return (m_status & STATUS_READ_ONLY);}
+	void set_read_only ();
+	void set_read_write ();
+
+	inline int get_write_next () const	{ return m_write_next; }
+
+	void get_otp_list ( std::vector<OTPinfo> &list ) const;
+
+	void save_state ();			// Save state to disk
+
+///	Encoding (changes internal OTP bookkeeping)
+
+	int get_data ( uint8_t * buf, size_t buflen );
+		// Returns error code.  Interpret via get_error_text()
+
+private:
+	static mtKit::Prefs * create_otp_prefs ();
+	void new_otp_prefs ();
+	void store_otp_state ();
+	void restore_otp_state ();
+
+	int init_otp_path ( std::string const & name, int exists );
+		// Returns error code.  Interpret via get_error_text()
+
+	int check_read_only () const;
+		// Returns error code.  Interpret via get_error_text()
+
+/// ----------------------------------------------------------------------------
+
+	// Butt prefs
+	mtKit::unique_ptr<mtKit::Prefs> m_prefs_butt;
+	int			m_write_next;
+	int			m_status;
+};
+
+
+
+class Butt::Op
+{
+public:
+	explicit Op ( char const * path );
+	~Op ();
+
+	void save_state ();			// Save state to disk
+
+/// ----------------------------------------------------------------------------
+
+	OTPactive		m_active_otp;
+	OTP			m_read_otp;
+
+	std::string	const	m_butt_root;	// <DB path> / butt /
+
+private:
+	static void create_otp_name ( mtKit::Random &random, std::string & str);
+
+/// ----------------------------------------------------------------------------
+
+	mtKit::FileLock		m_lock;
 	mtKit::Prefs		m_prefs;
+};
 
-	mtKit::unique_ptr<mtKit::Prefs> m_prefs_local;
 
-	mtKit::ByteFileRead	m_file_otp;
 
-/// READ -----------------------------------------------------------------------
+class OTPanalysis::Op
+{
+public:
+	explicit Op ( Butt &b );
+	~Op ();
 
-	mtKit::ByteFileRead	m_read_file;
-	int			m_read_bucket;
-	std::string		m_read_path;
+	void clear_tables ();
+	int analyse_bucket ( int bucket );
+	int analyse_all_buckets ();
+	int analyse_finish (
+		mtPixy::Image * image_8bit,
+		mtPixy::Image * image_16bit
+		);
+
+/// ----------------------------------------------------------------------------
+
+	Butt		&butt;
+
+	int64_t		m_bucket_size;
+
+	double		m_bit_1;		// % 0.0 - 1.0
+	double		m_bit_list[8];		// % 0.0 - 1.0
+
+	double	const	m_byte_mean;
+	double		m_byte_list[256];	// % 0.0 - 1.0
+
+private:
+	int64_t		m_bit_count[8];
+	int64_t		m_1byte_count[256];
+	int64_t		m_2byte_count[256][256];
+
+	bool		m_old_byte;
+	uint8_t		m_old_byte_value;
 };
 
 

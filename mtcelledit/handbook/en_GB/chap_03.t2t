@@ -13,6 +13,8 @@ In order to compile and run mtCellEdit you must have several packages already pr
 
 - A GNU toolchain (gcc, make, gawk, etc).
 - Qt version 5.
+- txt2tags.
+- Inkscape (to build the GUI app icons)
 - Cairo (version 1.6 or later).
 - Pango (version 1.22 or later).
 
@@ -32,16 +34,16 @@ mtCellEdit then requires various libraries that I have created:
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtDataWell | libmtKit, libmtPixy, libsqlite3, libsndfile | Crypto library |
-| libmtPixyUI   | libmtKit, libmtPixy | Toolkit agnostic UI code, e.g. undo stack |
-| mtCedCLI      | libmtKit, libmtcelledit, libmtCedUI, readline | Command line spreadsheet |
-| mtCedUtils    | libmtKit, libmtcelledit | Command line text tools, mtNetLog, mtRDC |
-| mtDWCLI       | libmtKit, libmtDataWell | Command line crypto app |
-| mtPixy        | libmtKit, libmtPixy, libmtPixyUI, libmtQEX, Qt5 | Pixel image editor |
-| mtPixyCLI     | libmtKit, libmtPixy, libmtPixyUI, readline | Command line pixel image editor |
-| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools |
-| mtRaft        | libmtKit, libmtcelledit, libmtQEX, Qt5 | Directory analysis |
-| mtUtils       | libmtKit | Command line low level utilities |
+| libmtDataWell | libmtKit, libmtPixy, libsqlite3, libsndfile | Crypto and random data library. |
+| mtDataWell    | libmtKit, libmtPixy, libmtDataWell, libmtQEX, Qt5 | Crypto and random data app. |
+| mtCedCLI      | libmtKit, libmtcelledit, libmtCedUI, readline | Command line spreadsheet. |
+| mtCedUtils    | libmtKit, libmtcelledit | Command line text tools, mtNetLog, mtRDC. |
+| mtDWCLI       | libmtKit, libmtDataWell | Command line crypto and random data app. |
+| mtPixy        | libmtKit, libmtPixy, libmtQEX, Qt5 | Pixel image editor. |
+| mtPixyCLI     | libmtKit, libmtPixy, readline | Command line pixel image editor. |
+| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools. |
+| mtRaft        | libmtKit, libmtcelledit, libmtQEX, Qt5 | Directory analysis. |
+| mtUtils       | libmtKit | Command line low level utilities. |
 
 
 

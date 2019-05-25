@@ -1,6 +1,6 @@
 include		../_conf.txt
 
-APPS		=		\
+APPS		:=		\
 		cedappend	\
 		cedclear	\
 		cedcut		\
@@ -17,41 +17,28 @@ APPS		=		\
 		cedsort		\
 		cedtranspose	\
 
-OBJS_CED	=		\
-		ced_diff.o	\
-		ced_fuzzmap.o	\
-		ced_main.o	\
-		ced_misc.o	\
-		ced_sort.o	\
-
-OBJS_RDC	=		\
-		rdc_analysis.o	\
-		rdc_main.o	\
-		rdc_matrix.o	\
-		rdc_pad.o	\
-		rdc_password.o	\
-		rdc_prng.o	\
-		rdc_shuffle.o	\
-		rdc_xor.o	\
-
-BINS		= cedutils mtrdc mtnetlog
+OBJS_CED	:= $(sort $(patsubst %.c,%.o,$(wildcard ced*.c)))
+OBJS_RDC	:= $(sort $(patsubst %.c,%.o,$(wildcard rdc*.c)))
+BINS		:= cedutils mtrdc mtnetlog
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(BINS)
 
+
 cedutils:	$(OBJS_CED)
-		$(CC) $(OBJS_CED) -o $@ $(LDFLAGS)
+		$(CC) $^ -o $@ $(LDFLAGS)
 
 $(OBJS_CED):	ced.h ced_fuzzmap.h
 
 mtrdc:		$(OBJS_RDC)
-		$(CC) $(OBJS_RDC) -o $@ $(LDFLAGS)
+		$(CC) $^ -o $@ $(LDFLAGS)
 
 $(OBJS_RDC):	rdc.h
 
 mtnetlog:	mtnetlog.o
-		$(CC) mtnetlog.o -o $@ $(LDFLAGS)
+		$(CC) $^ -o $@ $(LDFLAGS)
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule

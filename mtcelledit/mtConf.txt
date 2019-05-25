@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # THIS FILE IS A COPIED TEMPLATE! - Only edit in /pkg/src/
 # Configure script helper functions
 # M.Tyler 2013-2-9
@@ -7,6 +7,7 @@
 APP_NAME=
 BIN_NAME=
 LIB_NAME=
+LIB_SONUM="1"
 DATA_NAME=
 MAKE_DIRS="src"
 
@@ -146,6 +147,8 @@ MTCF_PARSE_ARG1()
 			BIN_SUFFIX="-qt5"
 			;;
 
+	"" )		;;
+
 	* )		echo ERROR - Unknown command \"$A\"
 			exit 1
 			;;
@@ -179,7 +182,7 @@ Options:
 
 flush ........... Flush directories to initial state
 debug ........... Include debugging info in binary c11 c++17
-debugold ........ Include debugging info in binary c11 c++11
+debugold ........ Include debugging info in binary c99 c++03
 wc .............. Count size of source files
 
 --prefix=DIR .......... DIR = prefix location of all installs (default=/usr)
@@ -242,23 +245,30 @@ MTCF_PRE_CONF()
 		if [ "$ENABLE_TK" = "qt5" ]
 		then
 			# Qt5 requires a modern compiler
-			CFLAGS="$CFLAGS -std=gnu11"
-			CXXFLAGS="$CXXFLAGS -std=gnu++11"
+			CFLAGS+=" -std=gnu11"
+			CXXFLAGS+=" -std=gnu++11"
 		fi
 		;;
 	"YES" )
 		I_EX="-fsanitize=undefined $DEBUG_I_EX"
 		L_EX="-fsanitize=undefined -lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS="$CFLAGS -std=gnu11"
-		CFLAGS="$CFLAGS -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
-		CXXFLAGS="$CXXFLAGS -std=gnu++17"
+		CFLAGS+=" -std=gnu11"
+		CFLAGS+=" -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
+		CXXFLAGS+=" -std=gnu++17"
 		;;
 	"OLD" )
 		I_EX="$DEBUG_I_EX"
 		L_EX="-lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS="$CFLAGS -std=gnu11"
-		CFLAGS="$CFLAGS -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
-		CXXFLAGS="$CXXFLAGS -std=gnu++11"
+		CFLAGS+=" -std=gnu99"
+		CFLAGS+=" -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
+		CXXFLAGS+=" -std=c++03"
+
+		if [ "$ENABLE_TK" = "qt5" ]
+		then
+			# Qt5 requires a modern compiler
+			CFLAGS+=" -std=gnu11"
+			CXXFLAGS+=" -std=gnu++11"
+		fi
 		;;
 	esac
 
@@ -273,7 +283,7 @@ MTCF_CHECK_LIBS()
 {
 	while [ "$1" != "" ]
 	do
-		L_EX="$L_EX -l$1"
+		L_EX+=" -l$1"
 
 		shift
 	done
@@ -320,29 +330,53 @@ MTCF_HANDBOOK()
 
 MTCF_MAKE_DIRS_ADD()
 {
-	MAKE_DIRS="$MAKE_DIRS $1"
+	MAKE_DIRS+=" $@"
 }
 
 
 MTCF_VERSION_BIN_NAME()
 {
-	I_EX="$I_EX -DVERSION=\"\\\"$MT_VERSION\"\\\""
+	I_EX+=" -DVERSION=\"\\\"$MT_VERSION\"\\\""
 
 	if [ "$BIN_NAME" != "" ]
 	then
-		I_EX="$I_EX -DBIN_NAME=\"\\\"$BIN_NAME\"\\\""
+		I_EX+=" -DBIN_NAME=\"\\\"$BIN_NAME\"\\\""
 	fi
 
 	if [ "$LIB_NAME" != "" ]
 	then
-		I_EX="$I_EX -DVERNUM=\"\\\"$VERNUM\"\\\""
+		I_EX+=" -DVERNUM=\"\\\"$VERNUM\"\\\""
 	fi
+}
+
+
+MTCF_ADD_BIN_FLAGS()
+{
+	BIN_FLAGS+=" $@"
+}
+
+
+MTCF_ADD_APP_NAME()
+{
+	I_EX+=" -DAPP_NAME=\"\\\"$APP_NAME\"\\\""
+}
+
+
+MTCF_ADD_APPIMAGE_DATA()
+{
+	I_EX+=" -DDATA_INSTALL=\"\\\"$APPIMAGE_PREFIX$DATA_INSTALL\"\\\""
+}
+
+
+MTCF_ADD_DATA_NAME()
+{
+	I_EX+=" -DDATA_NAME=\"\\\"$DATA_NAME\"\\\""
 }
 
 
 MTCF_PKGCONFIG()
 {
-	PKGCONFIG="$PKGCONFIG $1"
+	PKGCONFIG+=" $@"
 }
 
 
@@ -353,20 +387,20 @@ MTCF_POST_CONF()
 	case "$ENABLE_TK" in
 	qt4 )
 		MTCF_PKGCONFIG "QtGui"
-		I_EX="$I_EX -DU_TK_QT4"
+		I_EX+=" -DU_TK_QT4"
 		MT_GET_MOC_4
 		;;
 	qt5 )
 		MTCF_PKGCONFIG "Qt5Widgets"
-		I_EX="$I_EX -DU_TK_QT5"
+		I_EX+=" -DU_TK_QT5"
 		MT_GET_MOC_5
 		;;
 	esac
 
 	if [ "$PKGCONFIG" != "" ]
 	then
-		I_EX="$I_EX $(pkg-config $PKGCONFIG --cflags)"
-		L_EX="$L_EX $(pkg-config $PKGCONFIG --libs)"
+		I_EX+=" $(pkg-config $PKGCONFIG --cflags)"
+		L_EX+=" $(pkg-config $PKGCONFIG --libs)"
 	fi
 
 	F_C="$BIN_FLAGS $CFLAGS -I$HEAD_INSTALL $I_EX"
@@ -383,9 +417,11 @@ MTCF_POST_CONF()
 
 	if [ "$LIB_NAME" != "" ]
 	then
-		echo "LIB_NAME      = $LIB_NAME"	>> $CONF_FILE
-		echo "LIB_INSTALL   = $LIB_INSTALL"	>> $CONF_FILE
-		echo "HEAD_INSTALL  = $HEAD_INSTALL"	>> $CONF_FILE
+		echo "LIB_SONUM     = $LIB_SONUM"		>> $CONF_FILE
+		echo "LIB_NAME      = $LIB_NAME.so"		>> $CONF_FILE
+		echo "LIB_SONAME    = $LIB_NAME.so.$LIB_SONUM"	>> $CONF_FILE
+		echo "LIB_INSTALL   = $LIB_INSTALL"		>> $CONF_FILE
+		echo "HEAD_INSTALL  = $HEAD_INSTALL"		>> $CONF_FILE
 	fi
 
 	if [ "$BIN_NAME" != "" ]

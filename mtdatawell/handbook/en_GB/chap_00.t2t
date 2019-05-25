@@ -1,0 +1,69 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>mtDataWell Handbook - Contents</TITLE>\1'
+
+[Previous index.html] | [Next chap_01.html]
+
+-------------------------------------------------
+=The mtDataWell Handbook=
+-------------------------------------------------
+
+
+- [1. Legal chap_01.html]
+
+- [2. Introduction chap_02.html]
+  - [2.1 Life Before mtDataWell chap_02.html#SEC1]
+  - [2.2 Project Genesis chap_02.html#SEC2]
+  - [2.3 General Philosophy chap_02.html#SEC3]
+  - [2.4 Development Timeline chap_02.html#SEC4]
+
+- [3. System Administrator Notes chap_03.html]
+  - [3.1 Dependencies chap_03.html#SEC1]
+  - [3.2 Compilation chap_03.html#SEC2]
+  - [3.3 Installation chap_03.html#SEC3]
+    - [3.3.1 Program man Pages chap_03.html#SEC31]
+  - [3.4 Uninstalling chap_03.html#SEC4]
+  - [3.5 Package Management chap_03.html#SEC5]
+    - [3.5.1 Local Installation chap_03.html#SEC51]
+  - [3.6 Qt Port chap_03.html#SEC6]
+
+- [4. User Notes chap_04.html]
+  - [4.1 Basic Concepts chap_04.html#SEC1]
+    - [4.1.1 The Database chap_04.html#SEC11]
+    - [4.1.2 The Well chap_04.html#SEC12]
+    - [4.1.3 The Butt chap_04.html#SEC13]
+    - [4.1.4 The Soda chap_04.html#SEC14]
+    - [4.1.5 The Tap chap_04.html#SEC15]
+  - [4.2 Running mtDataWell for the first time chap_04.html#SEC2]
+    - [4.2.1 Program Preferences chap_04.html#SEC21]
+  - [4.3 User Interface chap_04.html#SEC3]
+    - [4.3.1 Database Menu chap_04.html#SEC31]
+    - [4.3.2 Well Menu chap_04.html#SEC32]
+    - [4.3.3 Butt Menu chap_04.html#SEC33]
+    - [4.3.4 Soda Menu chap_04.html#SEC34]
+    - [4.3.5 Tap Menu chap_04.html#SEC35]
+    - [4.3.6 App Menu chap_04.html#SEC36]
+  - [4.4 Example OTP Scenarios chap_04.html#SEC4]
+    - [4.4.1 Simple - 2 People chap_04.html#SEC41]
+    - [4.4.2 Complex - 5 People chap_04.html#SEC42]
+
+- [5. Developer Notes chap_05.html]
+  - [5.1 Example Programs chap_05.html#SEC1]
+  - [5.2 Porting and Hacking mtDataWell chap_05.html#SEC2]
+
+- [6. mtDWCLI chap_06.html]
+  - [6.1 Commands chap_06.html#SEC1]
+  - [6.2 Examples chap_06.html#SEC2]
+    - [6.2.1 Setting up a Well chap_06.html#SEC21]
+    - [6.2.2 Managing the Butt chap_06.html#SEC22]
+    - [6.2.3 Creating Soda chap_06.html#SEC23]
+    - [6.2.4 Using a Tap chap_06.html#SEC24]
+
+- [A. Miscellaneous chap_A.html]
+  - [A.1 Mathematical Randomness chap_A.html#SEC1]
+    - [A.1.1 Judging Random Quality chap_A.html#SEC11]
+  - [A.2 Soda OTP Logs chap_A.html#SEC2]
+
+- [B. The History of this Document chap_B.html]
+
+-------------------------------------------------
+[Previous index.html] | [Next chap_01.html]

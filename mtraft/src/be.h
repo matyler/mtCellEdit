@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2017 Mark Tyler
+	Copyright (C) 2004-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,35 +27,6 @@
 
 
 
-class BusyState;
-
-
-
-class BusyState
-{
-public:
-	enum Status
-	{
-		IDLE,
-		WORKING,
-		STOPPED
-	};
-
-
-	BusyState () : status ( IDLE )	{};
-
-	void set_working ()		{ status = WORKING;	};
-	void set_stopped ()		{ status = STOPPED;	};
-	void set_idle ()		{ status = IDLE;	};
-
-	Status get_status () const	{ return status;	};
-
-private:
-	Status status;
-};
-
-
-
 enum	// Column numbers for each field in results sheet
 {
 	RAFT_COL_NAME		= 1,
@@ -68,11 +39,6 @@ enum	// Column numbers for each field in results sheet
 	RAFT_COL_OTHER		= 8,
 
 	RAFT_COL_TOTAL		= 9
-};
-
-enum
-{
-	MAX_TABS		= 10
 };
 
 

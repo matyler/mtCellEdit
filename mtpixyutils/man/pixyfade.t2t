@@ -1,0 +1,41 @@
+= NAME =
+@BIN_NAME@ - create a fade between 2 images
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Create a sequence of output files with a pixel fade between the 2 input files.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-comp_jpeg** INTEGER
+	Set compression level for JPEG files. Default=85
+**-comp_png** INTEGER
+	Set compression level for PNG files. Default=6
+**-fps** INTEGER
+	Set the frames per second. Default=60
+**-frame0** INTEGER
+	Set the start frame. Default=0
+**-dir** STRING
+	Save frames to this directory. Default=""
+**-otype** STRING
+	Output format of file (use 'list' to list types, default=none).
+**-prefix** STRING
+	Output file prefix.  Default=""
+**-seconds** INTEGER
+	Set the fade duration. Default=1
+**-v**
+	Verbose.
+
+
+= EXAMPLE =
+**@BIN_NAME@** -dir /some/directory/ -fps 30 -frame0 1000 -otype png -prefix "f_" in_a.bmp in_b.png
+
+
+= SEE ALSO =
+pixyutils(1)

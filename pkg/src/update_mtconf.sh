@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Update core files to each package
 # Mark Tyler 2013-2-8
 

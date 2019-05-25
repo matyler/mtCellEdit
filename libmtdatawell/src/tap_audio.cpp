@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -53,18 +53,16 @@ int mtDW::TapAudioRead::alloc_buf ()
 
 	if ( m_buflen < (size_t)BUF_FRAMES )
 	{
-		std::cerr << "Error allocating audio buffer (bad channels).\n";
 		free_buf ();
-		return 1;
+		return report_error ( ERROR_AUDIO_BAD_CHANNELS );
 	}
 
 	m_buf = (short *)calloc ( sizeof(*m_buf), m_buflen );
 
 	if ( ! m_buf )
 	{
-		std::cerr <<"Error allocating audio buffer (heap exhausted).\n";
 		free_buf ();
-		return 1;
+		return report_error ( ERROR_HEAP_EMPTY );
 	}
 
 	return 0;
@@ -80,13 +78,16 @@ int mtDW::TapAudioRead::open (
 
 	if ( ! m_file )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_OPEN_INPUT );
 	}
 
-	if ( alloc_buf () )
+	int const res = alloc_buf ();
+
+	if ( res )
 	{
 		close ();
-		return 1;
+
+		return res;
 	}
 
 	return 0;
@@ -99,7 +100,7 @@ int mtDW::TapAudioRead::read (
 {
 	if ( ! buf || ! buflen || ! m_file || m_info.channels < 1 )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_READ );
 	}
 
 	sf_count_t const frames = sf_readf_short ( m_file, m_buf, BUF_FRAMES );
@@ -162,8 +163,7 @@ int mtDW::TapAudioWrite::open (
 
 	if ( ! m_file )
 	{
-		std::cerr << "Error opening output audio file.\n";
-		return 1;
+		return report_error ( ERROR_AUDIO_OPEN_OUTPUT );
 	}
 
 	return 0;
@@ -176,7 +176,7 @@ int mtDW::TapAudioWrite::write (
 {
 	if ( ! buf || ! m_file || m_info.channels < 1 )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_WRITE_INSANITY );
 	}
 
 	size_t const chans = (size_t)m_info.channels;
@@ -184,8 +184,7 @@ int mtDW::TapAudioWrite::write (
 
 	if ( frames != sf_writef_short ( m_file, buf, frames ) )
 	{
-		std::cerr << "Error writing to audio file.\n";
-		return 1;
+		return report_error ( ERROR_AUDIO_WRITE );
 	}
 
 	return 0;

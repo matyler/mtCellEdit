@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 
 
 
-void MainWindow::pressFindWildcards ()
+void MainWindow::press_FindWildcards ()
 {
-	if ( actFindWildcards->isChecked () )
+	if ( act_FindWildcards->isChecked () )
 	{
 		pprfs->set ( GUI_INIFILE_FIND_WILDCARDS, 1 );
 	}
@@ -31,9 +31,9 @@ void MainWindow::pressFindWildcards ()
 	}
 }
 
-void MainWindow::pressFindCase ()
+void MainWindow::press_FindCase ()
 {
-	if ( actFindCase->isChecked () )
+	if ( act_FindCase->isChecked () )
 	{
 		pprfs->set ( GUI_INIFILE_FIND_CASE_SENSITIVE, 1 );
 	}
@@ -43,9 +43,9 @@ void MainWindow::pressFindCase ()
 	}
 }
 
-void MainWindow::pressFindValue ()
+void MainWindow::press_FindValue ()
 {
-	if ( actFindValue->isChecked () )
+	if ( act_FindValue->isChecked () )
 	{
 		pprfs->set ( GUI_INIFILE_FIND_VALUE, 1 );
 	}
@@ -55,9 +55,9 @@ void MainWindow::pressFindValue ()
 	}
 }
 
-void MainWindow::pressFindSheets ()
+void MainWindow::press_FindSheets ()
 {
-	if ( actFindSheets->isChecked () )
+	if ( act_FindSheets->isChecked () )
 	{
 		pprfs->set ( GUI_INIFILE_FIND_ALL_SHEETS, 1 );
 	}
@@ -150,7 +150,7 @@ static int be_find_cb (
 	return 0;
 }
 
-void MainWindow::pressFind ()
+void MainWindow::press_Find ()
 {
 	CedSheet * const sheet = projectGetSheet ();
 
@@ -260,7 +260,7 @@ void MainWindow::findCellChanged (
 	findTable->setFocus ( Qt::OtherFocusReason );
 }
 
-void MainWindow::pressOptionsFind ()
+void MainWindow::press_OptionsFind ()
 {
 	if ( editFindText->hasFocus () )
 	{
@@ -276,7 +276,7 @@ void MainWindow::pressOptionsFind ()
 	}
 }
 
-void MainWindow::pressOptionsView ()
+void MainWindow::press_OptionsView ()
 {
 	if ( viewTab->hasFocus () )
 	{

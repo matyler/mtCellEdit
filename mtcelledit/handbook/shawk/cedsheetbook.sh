@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # cedsheetbook.sh - Puts sheet files into a single book file
 # usage: cedsheetbook.sh BOOKFILENAME SHEETFILE... | mtcedcli
 # e.g. cedsheetbook.sh ~/output.zip *.tsv *.csv | mtcedcli

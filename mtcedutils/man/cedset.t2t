@@ -1,16 +1,9 @@
-CEDSET
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedset - set spreadsheet cell
+@BIN_NAME@ - set spreadsheet cell
 
 
 = SYNOPSIS =
-**cedset** [ [ **OPTION** ] [ EXP ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ EXP ] ]...
 
 
 = DESCRIPTION =
@@ -37,11 +30,3 @@ Expression "r5c5 'Hello" sets 'Hello as the contents of cell r5c5.
 
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

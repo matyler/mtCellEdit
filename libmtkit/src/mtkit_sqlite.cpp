@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -81,18 +81,48 @@ int mtKit::Sqlite::count_rows ( std::string const & table ) const
 {
 	int count = 0;
 
-	try
-	{
-		std::string const sql = "SELECT COUNT(*) FROM " + table;
+	std::string const sql = "SELECT COUNT(*) FROM " + table;
 
-		sqlite3_exec ( m_db, sql.c_str (), count_rows_callback, &count,
-			NULL );
-	}
-	catch ( ... )
-	{
-	}
+	sqlite3_exec ( m_db, sql.c_str (), count_rows_callback, &count, NULL );
 
 	return count;
+}
+
+int mtKit::Sqlite::get_version () const
+{
+	int version = 0;
+
+	sqlite3_exec ( m_db, "PRAGMA user_version", count_rows_callback,
+		&version, NULL );
+
+	return version;
+}
+
+void mtKit::Sqlite::set_version ( int const version )
+{
+	char buf[64];
+
+	snprintf ( buf, sizeof(buf), "PRAGMA user_version = %i", version );
+
+	exec_sql ( buf );
+}
+
+void mtKit::Sqlite::archive_table (
+	char	const * const	table,
+	int		const	suffix
+	)
+{
+	char buf[32];
+
+	snprintf ( buf, sizeof(buf), "_%i", suffix );
+
+	std::string sql = "ALTER TABLE ";
+	sql += table;
+	sql += " RENAME TO ";
+	sql += table;
+	sql += buf;
+
+	exec_sql ( sql.c_str () );
 }
 
 
@@ -207,6 +237,9 @@ private:
 	size_t			m_size;
 	size_t			m_array_tot;	// Allocated items in m_array
 	T		**	m_array;
+
+	ArrayList ( const ArrayList & );	// Disable copy constructor
+	ArrayList & operator = (const ArrayList &);	// Disable = operator
 };
 
 
@@ -380,22 +413,130 @@ int mtKit::SqliteGetRecord::next ()
 	return 1;
 }
 
-void mtKit::SqliteGetRecord::blob_string (
+int mtKit::SqliteGetRecord::get_type ( int const arg )
+{
+	return sqlite3_column_type ( stmt.stmt, arg );
+}
+
+int mtKit::SqliteGetRecord::get_blob (
 	int	const	arg,
-	std::string	& str
+	std::string	& res
 	)
 {
+	switch ( get_type ( arg ) )
+	{
+	case SQLITE_BLOB:
+	case SQLITE_TEXT:
+		// Valid
+		break;
+
+	case SQLITE_NULL:
+		return 1;	// NULL
+
+	default:
+		return 2;	// Mismatched type
+	}
+
 	int const size = sqlite3_column_bytes ( stmt.stmt, arg );
 	void const * const data = sqlite3_column_blob ( stmt.stmt, arg );
 
-	if ( size > 0 )
-	{
-		mtKit::string_from_data ( str, data, (size_t)size );
-	}
+	mtKit::string_from_data ( res, data, (size_t)size );
+
+	return 0;
 }
 
-sqlite3_int64 mtKit::SqliteGetRecord::integer ( int const arg )
+int mtKit::SqliteGetRecord::get_text (
+	int	const	arg,
+	std::string	& res
+	)
 {
-	return sqlite3_column_int64 ( stmt.stmt, arg );
+	switch ( get_type ( arg ) )
+	{
+	case SQLITE_TEXT:
+		// Valid
+		break;
+
+	case SQLITE_NULL:
+		return 1;	// NULL
+
+	default:
+		return 2;	// Mismatched type
+	}
+
+	int const size = sqlite3_column_bytes ( stmt.stmt, arg );
+	void const * const data = sqlite3_column_blob ( stmt.stmt, arg );
+
+	mtKit::string_from_data ( res, data, (size_t)size );
+
+	return 0;
+}
+
+int mtKit::SqliteGetRecord::get_int (
+	int	const	arg,
+	int		& res
+	)
+{
+	switch ( get_type ( arg ) )
+	{
+	case SQLITE_INTEGER:
+		// Valid
+		break;
+
+	case SQLITE_NULL:
+		return 1;	// NULL
+
+	default:
+		return 2;	// Mismatched type
+	}
+
+	res = (int)sqlite3_column_int64 ( stmt.stmt, arg );
+
+	return 0;
+}
+
+int mtKit::SqliteGetRecord::get_int64 (
+	int	const	arg,
+	int64_t		& res
+	)
+{
+	switch ( get_type ( arg ) )
+	{
+	case SQLITE_INTEGER:
+		// Valid
+		break;
+
+	case SQLITE_NULL:
+		return 1;	// NULL
+
+	default:
+		return 2;	// Mismatched type
+	}
+
+	res = (int64_t)sqlite3_column_int64 ( stmt.stmt, arg );
+
+	return 0;
+}
+
+int mtKit::SqliteGetRecord::get_double (
+	int	const	arg,
+	double		& res
+	)
+{
+	switch ( get_type ( arg ) )
+	{
+	case SQLITE_FLOAT:
+		// Valid
+		break;
+
+	case SQLITE_NULL:
+		return 1;	// NULL
+
+	default:
+		return 2;	// Mismatched type
+	}
+
+	res = sqlite3_column_double ( stmt.stmt, arg );
+
+	return 0;
 }
 

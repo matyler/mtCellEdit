@@ -9,5 +9,5 @@ Homepage: http://ced.marktyler.org/
 Package: mtdwcli
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Crypto CLI
+Description: Crypto and random data CLI
  .

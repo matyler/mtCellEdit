@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-void MainWindow::pressOptionsGraph ()
+void MainWindow::press_OptionsGraph ()
 {
 	if ( graphTextEdit->hasFocus () )
 	{
@@ -65,7 +65,7 @@ void MainWindow::projectGraphStoreChanges ()
 	}
 
 
-	size_t		len = strlen ( txt );
+	size_t	const	len = strlen ( txt );
 
 
 	if ( len > INT_MAX )
@@ -134,7 +134,7 @@ void MainWindow::graphChanged (
 	projectGraphRedraw ();		// Draw the new graph
 }
 
-void MainWindow::pressGraphNew ()
+void MainWindow::press_GraphNew ()
 {
 	char	const	* newname;
 
@@ -156,7 +156,7 @@ void MainWindow::pressGraphNew ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow::pressGraphDuplicate ()
+void MainWindow::press_GraphDuplicate ()
 {
 	projectGraphStoreChanges ();
 
@@ -228,7 +228,7 @@ int MainWindow::projectRenameGraph (
 	return 0;			// Success
 }
 
-void MainWindow::pressGraphRename ()
+void MainWindow::press_GraphRename ()
 {
 	char	const	* old_name;
 
@@ -264,7 +264,7 @@ void MainWindow::pressGraphRename ()
 	}
 }
 
-void MainWindow::pressGraphDelete ()
+void MainWindow::press_GraphDelete ()
 {
 	int		res,
 			gnum;
@@ -331,13 +331,13 @@ void MainWindow::projectGraphRedraw ()
 	}
 }
 
-void MainWindow::pressGraphRedraw ()
+void MainWindow::press_GraphRedraw ()
 {
 	projectGraphStoreChanges ();
 	projectGraphRedraw ();
 }
 
-void MainWindow::pressGraphExport ()
+void MainWindow::press_GraphExport ()
 {
 	char const * const graphname= cedFile->cubook->book->prefs.active_graph;
 
@@ -369,48 +369,49 @@ void MainWindow::pressGraphExport ()
 
 	while ( dialog.exec () )
 	{
-		QStringList	fileList = dialog.selectedFiles ();
-		QString		filename = fileList.at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
-		if ( ! filename.isEmpty () )
+		if ( filename.isEmpty () )
 		{
-			lastExportGraphType = dialog.getFormat ();
-
-			char * correct = cui_get_correct_graph_filename (
-				filename.toUtf8().data(), lastExportGraphType );
-
-			if ( correct )
-			{
-				filename = correct;
-				free ( correct );
-				correct = NULL;
-			}
-
-			if ( mtQEX::message_file_overwrite ( this, filename ) )
-			{
-				continue;
-			}
-
-			if ( cui_graph_render_file ( cedFile->cubook->book,
-				graphname, filename.toUtf8 ().data (),
-				lastExportGraphType, NULL,
-				pprfs->getDouble ( GUI_INIFILE_GRAPH_SCALE ) )
-				)
-			{
-				QMessageBox::critical ( this, "Error",
-					"Unable to export graph." );
-
-				continue;
-			}
-
-			backend->remember_last_dir( filename.toUtf8 ().data() );
-
 			break;
 		}
+
+		lastExportGraphType = dialog.getFormat ();
+
+		char * correct = cui_get_correct_graph_filename (
+			filename.toUtf8().data(), lastExportGraphType );
+
+		if ( correct )
+		{
+			filename = correct;
+			free ( correct );
+			correct = NULL;
+		}
+
+		if ( mtQEX::message_file_overwrite ( this, filename ) )
+		{
+			continue;
+		}
+
+		if ( cui_graph_render_file ( cedFile->cubook->book,
+			graphname, filename.toUtf8 ().data (),
+			lastExportGraphType, NULL,
+			pprfs->getDouble ( GUI_INIFILE_GRAPH_SCALE ) )
+			)
+		{
+			QMessageBox::critical ( this, "Error",
+				"Unable to export graph." );
+
+			continue;
+		}
+
+		backend->remember_last_dir( filename.toUtf8 ().data() );
+
+		break;
 	}
 }
 
-void MainWindow::pressGraphSClipboard ()
+void MainWindow::press_GraphSClipboard ()
 {
 	QClipboard * const c = QApplication::clipboard ();
 

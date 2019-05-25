@@ -1,10 +1,3 @@
-@BIN_UPPER@
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
 @BIN_NAME@ - command line graphics program
 
@@ -14,7 +7,7 @@ mtPixyUtils @APP_VERSION@
 
 
 = DESCRIPTION =
-mtCedUtils is a collection of command line functions for manipulating image files.  These functions can be executed using **pixyutils** or the function names directly as listed in the **SEE ALSO** section.
+mtPixyUtils is a collection of command line functions for manipulating image files.  These functions can be executed using **pixyutils** or the function names directly as listed in the **SEE ALSO** section.
 
 
 = OPTIONS =
@@ -27,6 +20,12 @@ mtCedUtils is a collection of command line functions for manipulating image file
 	Set compression level for JPEG files. Default=85
 **-comp_png** INTEGER
 	Set compression level for PNG files. Default=6
+**-dir** STRING
+	Save frames to this directory.
+**-fps** INTEGER
+	Set the frames per second. Default=30
+**-frame0** INTEGER
+	Set the start frame. Default=0
 **-height** INTEGER
 	Set new image width.
 **-i** STRING
@@ -37,8 +36,12 @@ mtCedUtils is a collection of command line functions for manipulating image file
 	Save current image to this file (immediately).
 **-otype** STRING
 	Output format of file (use 'list' to list types, default=none).
+**-prefix** STRING
+	Output file prefix.  Default=""
 **-scale_blocky**
 	With RGB images use the blocky scale method.
+**-seconds** INTEGER
+	Set the fade duration. Default=1
 **-v**
 	Verbose.
 **-width** INTEGER
@@ -50,12 +53,14 @@ mtCedUtils is a collection of command line functions for manipulating image file
 
 
 = SEE ALSO =
-pixydelta(1), pixyls(1), pixynew(1), pixyresize(1), pixypica(1), pixyresize(1), pixyriba(1), pixyrida(1), pixyrisa(1), pixyscale(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler
+pixydelta(1),
+pixyfade(1),
+pixyls(1),
+pixynew(1),
+pixypica(1),
+pixyresize(1),
+pixyresize(1),
+pixyriba(1),
+pixyrida(1),
+pixyrisa(1),
+pixyscale(1)

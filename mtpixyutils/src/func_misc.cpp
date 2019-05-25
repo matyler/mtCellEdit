@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,99 +19,57 @@
 
 
 
-int pixyut_delta ()
+int pixyut_cmp ()
 {
-	static char const * file_a = NULL;
-	static char const * file_b = NULL;
-
-	if ( ! file_a )
+	if ( global.image_pair.open_file ( global.s_arg ) )
 	{
-		file_a = global.s_arg;
 		return 0;
 	}
 
-	file_b = global.s_arg;
+	mtPixy::Image * const image_a = global.image_pair.get_image_a ();
+	mtPixy::Image * const image_b = global.image_pair.get_image_b ();
 
-	mtPixy::File::Type	ft;
-	mtPixy::Image		* image_a = mtPixy::Image::load ( file_a, &ft );
+	unsigned char const * const mem_a = image_a->get_canvas ();
+	unsigned char const * const mem_b = image_b->get_canvas ();
 
-	if ( ! image_a )
-	{
-		printf ( "Unable to load '%s'\n", file_a );
-
-		return 0;
-	}
-
-	global.i_ftype_in = (int)ft;
-
-	mtPixy::Image * image_b = mtPixy::Image::load ( file_b, NULL );
-	if ( ! image_b )
-	{
-		delete ( image_a );
-		image_a = NULL;
-
-		printf ( "Unable to load '%s'\n", file_b );
-
-		return 0;
-	}
-
-	// Ensure images are the same size & type
-	if (	image_a->get_width ()	!= image_b->get_width ()	||
-		image_a->get_height ()	!= image_b->get_height ()	||
-		image_a->get_type ()	!= image_b->get_type ()		||
-		! image_a->get_canvas ()				||
-		! image_b->get_canvas ()
-		)
-	{
-		printf ( "Images do not share the same geometry.\n" );
-
-		delete ( image_a );
-		image_a = NULL;
-
-		delete ( image_b );
-		image_b = NULL;
-
-		return 0;
-	}
-
-	mtPixy::Image * image_out = image_a->duplicate ();
-	if ( ! image_out )
-	{
-		printf ( "Unable to duplicate image.\n" );
-
-		delete ( image_a );
-		image_a = NULL;
-
-		delete ( image_b );
-		image_b = NULL;
-
-		return ERROR_LIBMTPIXY; // Fail: caller tells user of failure
-	}
-
-	unsigned char * mem_a = image_a->get_canvas ();
-	unsigned char * mem_b = image_b->get_canvas ();
-	unsigned char * mem_out = image_out->get_canvas ();
-	unsigned char * mem_end = mem_out + image_a->get_canvas_bpp () *
+	int64_t const pixels = image_a->get_canvas_bpp () *
 		(image_a->get_width () * image_a->get_height ());
 
-	for ( ; mem_out < mem_end; mem_out++, mem_a++, mem_b++ )
+	for ( int64_t p = 0; p < pixels; p++ )
 	{
-		mem_out[0] = (unsigned char)(128 + (mem_a[0] - mem_b[0]));
+		if ( mem_a[p] != mem_b[p] )
+		{
+			std::cerr << "Images not identical\n";
+			global.i_error = 1;	// Bail out
+
+			return 0;
+		}
 	}
 
-	delete ( image_a );
-	image_a = NULL;
+	return 0;
+}
 
-	delete ( image_b );
-	image_b = NULL;
+int pixyut_delta ()
+{
+	if ( global.image_pair.open_file ( global.s_arg ) )
+	{
+		return 0;
+	}
 
-	/* Successully done, so allow daisy chaining, e.g.
-	pixydelta in1.png in2.png -o out1.png in3.png -o out2.png
-	*/
+	mtPixy::Image * const image_a = global.image_pair.get_image_a ();
+	mtPixy::Image * const image_b = global.image_pair.get_image_b ();
 
-	file_a = file_b;
+	unsigned char const * const mem_a = image_a->get_canvas ();
+	unsigned char const * const mem_b = image_b->get_canvas ();
+	unsigned char * const dest = global.image->get_canvas ();
 
-	global.set_image ( image_out );
+	int64_t const pixels = image_a->get_canvas_bpp () *
+		(image_a->get_width () * image_a->get_height ());
+
+	for ( int64_t p = 0; p < pixels; p++ )
+	{
+		dest[p] = (unsigned char)(128 + mem_a[p] - mem_b[p]);
+	}
 
 	return 0;
 }

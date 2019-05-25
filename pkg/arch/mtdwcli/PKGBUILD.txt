@@ -2,7 +2,7 @@
 pkgname=mtdwcli
 pkgver
 pkgrel=@MT_RELVER@
-pkgdesc="Crypto CLI"
+pkgdesc="Crypto and random data CLI"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
 depends=('readline' 'libmtkit' 'libmtdatawell')

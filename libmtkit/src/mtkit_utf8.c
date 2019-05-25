@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007-2017 Mark Tyler
+	Copyright (C) 2007-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -118,14 +118,13 @@ static int mtkit_utf8_is_legal (
 	)
 	// 1 = legal
 {
-	unsigned char		a;
-	unsigned char	const * srcptr = src + bytes;
-
-
 	if ( ! src )
 	{
 		return 0;
 	}
+
+	unsigned char		a;
+	unsigned char	const * srcptr = src + bytes;
 
 	switch ( bytes )
 	{
@@ -134,10 +133,11 @@ static int mtkit_utf8_is_legal (
 
 		case 4: if ((a = (*--srcptr)) < 0x80 || a > 0xBF) return 0;
 			// fallthrough
+
 		case 3: if ((a = (*--srcptr)) < 0x80 || a > 0xBF) return 0;
 			// fallthrough
+
 		case 2: if ((a = (*--srcptr)) > 0xBF) return 0;
-			// fallthrough
 
 		switch ( src[0] )
 		{
@@ -148,6 +148,7 @@ static int mtkit_utf8_is_legal (
 			case 0xF4: if (a > 0x8F) return 0; break;
 			default:   if (a < 0x80) return 0; break;
 		}
+			// fallthrough
 
 		case 1:
 			if ( src[0] >= 0x80 && src[0] < 0xC2 )

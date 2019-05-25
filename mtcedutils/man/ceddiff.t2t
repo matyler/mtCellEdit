@@ -1,16 +1,9 @@
-CEDDIFF
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-ceddiff - compare spreadsheet cells
+@BIN_NAME@ - compare spreadsheet cells
 
 
 = SYNOPSIS =
-**ceddiff** [ [ **OPTION** ] [ FILE ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ FILE ] ]...
 
 
 = DESCRIPTION =
@@ -28,11 +21,3 @@ Compare spreadsheet files cell by cell.
 
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

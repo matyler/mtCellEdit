@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Build and install script for all packages to install locally.
 # Mark Tyler 2011-12-7 & 2017-9-18
 

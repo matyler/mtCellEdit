@@ -2,7 +2,7 @@
 %!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Appendix A - Miscellaneous</TITLE>\1'
 
 
-[Previous chap_07.html] | [Contents chap_00.html] | [Next chap_B.html]
+[Previous chap_06.html] | [Contents chap_00.html] | [Next chap_B.html]
 -------------------------------------------------
 
 =Appendix A - Miscellaneous=
@@ -595,4 +595,4 @@ In mtCellEdit and mtCedCLI, when saving a file to disk a temporary file is used 
 
 
 -------------------------------------------------
-[Previous chap_07.html] | [Contents chap_00.html] | [Next chap_B.html]
+[Previous chap_06.html] | [Contents chap_00.html] | [Next chap_B.html]

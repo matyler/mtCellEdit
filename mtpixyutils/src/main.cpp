@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -46,7 +46,9 @@ static utComRec const	* comrec;	// Current command record
 
 
 static utComRec const	comtab[] = {
+	{ "cmp",	pixyut_cmp },
 	{ "delta",	pixyut_delta },
+	{ "fade",	pixyut_fade },
 	{ "ls",		pixyut_ls },
 	{ "new",	pixyut_new },
 	{ "pica",	pixyut_pica },
@@ -253,17 +255,22 @@ Global::Global (
 	i_comp_png	( 6 ),
 	i_comp_jpeg	( 85 ),
 	i_error		( 0 ),
+	i_fps		( 60 ),
+	i_frame0	( 0 ),
 	i_ftype_in	( mtPixy::File::TYPE_BMP ),
 	i_ftype_out	( mtPixy::File::TYPE_NONE ),
 	i_height	( 100 ),
 	i_image_type	( mtPixy::Image::TYPE_INDEXED ),
 	i_palette	( 0 ),
 	i_scale		( 0 ),
+	i_seconds	( 1 ),
 	i_tmp		( 0 ),
 	i_verbose	( 0 ),
 	i_width		( 100 ),
 	i_x		( 0 ),
 	i_y		( 0 ),
+	s_dir		( "" ),
+	s_prefix	( "" ),
 	s_arg		(),
 	image		()
 {
@@ -511,13 +518,18 @@ int main (
 		{ "com", MTKIT_ARG_STRING, &global.s_arg, 1, argcb_com },
 		{ "comp_png", MTKIT_ARG_INT, &global.i_comp_png, 0, NULL },
 		{ "comp_jpeg", MTKIT_ARG_INT, &global.i_comp_jpeg, 0, NULL },
+		{ "dir", MTKIT_ARG_STRING, &global.s_dir, 0, NULL },
+		{ "fps", MTKIT_ARG_INT, &global.i_fps, 0, NULL },
+		{ "frame0", MTKIT_ARG_INT, &global.i_frame0, 0, NULL },
 		{ "height", MTKIT_ARG_INT, &global.i_height, 0, NULL },
 		{ "i", MTKIT_ARG_STRING, &global.s_arg, 0, argcb_i },
 		{ "imtype", MTKIT_ARG_STRING, &global.s_arg, 0, argcb_imtype },
 		{ "o", MTKIT_ARG_STRING, &global.s_arg, 0, argcb_o },
 		{ "otype", MTKIT_ARG_STRING, &global.s_arg, 0, argcb_otype },
 		{ "palette", MTKIT_ARG_INT, &global.i_palette, 0, NULL },
+		{ "prefix", MTKIT_ARG_STRING, &global.s_prefix, 0, NULL },
 		{ "scale_blocky", MTKIT_ARG_SWITCH, &global.i_scale, 1, NULL },
+		{ "seconds", MTKIT_ARG_INT, &global.i_seconds, 0, NULL },
 		{ "v", MTKIT_ARG_SWITCH, &global.i_verbose, 1, NULL },
 		{ "width", MTKIT_ARG_INT, &global.i_width, 0, NULL },
 		{ "x", MTKIT_ARG_INT, &global.i_x, 0, NULL },

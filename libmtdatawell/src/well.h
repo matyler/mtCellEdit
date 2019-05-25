@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ class FileStream;
 
 
 
-class FileDB : public mtKit::Sqlite
+class FileDB
 {
 public:
 	FileDB ();
@@ -40,11 +40,15 @@ public:
 	void remove_todo_filename ();
 
 	int count_files () const;
-	void remove_all_files () const;
+	void remove_all_files ();
 
 	inline int get_file_id () const { return (int)m_file_id; }
 	inline void set_file_id ( int id ) { m_file_id = (uint32_t)id; }
 	inline void increment_file_id () { m_file_id++; }
+
+/// ----------------------------------------------------------------------------
+
+	mtKit::Sqlite	m_db;
 
 private:
 	std::string const get_todo_filename_internal ();
@@ -65,50 +69,50 @@ class FileStream
 {
 public:
 	explicit FileStream ( FileDB & db );
-	~FileStream ();
 
 	int open ( uint64_t pos = 0 );		// Open next file from the db
 		// 0 = open, ready for reading
 		// 1 = no files available
 
-	int read ( mtKit::ByteBuf & buf );	// Fills whole buffer
+	int read ( ByteBuf & buf );		// Fills whole buffer
 		// 0 = filled
 		// 1 = not filled
 
-	inline uint64_t get_pos () const { return m_pos; }
+	inline uint64_t get_pos () const { return m_file.get_pos (); }
+
+	inline ByteBuf &get_zlib () { return m_buf_zlib; }
 
 private:
-	void set_file ( FILE * fp );
-	void free_zlib ();
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::ByteBuf	buf_file;	// Raw from files
+	ByteBuf			m_buf_file;	// Raw from files
+	ByteBuf			m_buf_zlib;	// Deflated m_buf_file
 
-	unsigned char	* m_zlib;	// Deflated buf_file
-	size_t		m_zlib_len;
-	size_t		m_zlib_pos;
+	mtKit::ByteFileRead	m_file;
 
-	uint64_t	m_pos;		// m_fp file position
-	FILE		* m_fp;
-
-	FileDB		& m_file_db;
+	FileDB			&m_file_db;
 };
 
 
 
-class WellOp
+class Well::Op
 {
 public:
-	explicit WellOp ( char const * path );
-	~WellOp ();
+	explicit Op ( char const * path );
+	~Op ();
 
 	int save_file ( int const bytes, char const * filename );
-
-	inline std::string const & get_path () const { return m_path; }
+		// Returns error code.  Interpret via get_error_text()
 
 	int count_files_done () const;
 	int count_files_todo () const;
+
+	int get_int ();			// = INT_MIN..INT_MAX
+	int get_int ( int modulo );	// = 0..(modulo - 1)
+	void get_data ( uint8_t * buf, size_t buflen );	// buf != NULL
+
+	void save_state ();
 
 /// ----------------------------------------------------------------------------
 
@@ -118,14 +122,35 @@ public:
 	FileDB			m_file_db;
 
 private:
-	std::string		m_path;
+	mtKit::Prefs * create_well_prefs ();
+	void new_well_prefs ();
+	void store_well_state ();
+	void restore_well_state ();
 
-	mtKit::Prefs		m_prefs;
+/// ----------------------------------------------------------------------------
+
+	mtKit::FileLock		m_lock;
+
+	std::string	const	m_well_root;	// <m_path> / well /
+
+	mtKit::unique_ptr<mtKit::Prefs> m_prefs_well;
 
 	FileStream		m_file;
 
-	mtKit::ByteBuf		m_file_buffer;
-	mtKit::ByteBuf		m_prng_buffer;
+	ByteBuf			m_file_buffer;
+	ByteBuf			m_prng_buffer;
+};
+
+
+
+class WellOpSaveState
+{
+public:
+	inline explicit WellOpSaveState ( Well::Op * op ) : m_op ( op ) {}
+	inline ~WellOpSaveState () { if ( m_op ) m_op->save_state (); }
+
+private:
+	Well::Op	* const m_op;
 };
 
 
@@ -134,7 +159,6 @@ class FileScan
 {
 public:
 	FileScan ( FileDB & db, std::string const & path );
-	~FileScan ();
 
 private:
 	void path_recurse ( std::string const & path );

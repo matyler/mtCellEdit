@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 */
 
 #include "qt4.h"
-#include "icon.xpm"
 
 
 
@@ -140,11 +139,11 @@ void MainWindow::createRightSplit (
 	editFindText->setSizePolicy ( QSizePolicy ( QSizePolicy::Expanding,
 		QSizePolicy::Preferred ) );
 	connect ( editFindText, SIGNAL ( returnPressed () ), this,
-		SLOT ( pressFind () ) );
+		SLOT ( press_Find () ) );
 
 	QPushButton * button = new QPushButton ( "Find" );
 	row->addWidget ( button );
-	connect ( button, SIGNAL ( clicked () ), this, SLOT ( pressFind () ) );
+	connect ( button, SIGNAL ( clicked () ), this, SLOT ( press_Find () ) );
 
 	findMenuBar = new QMenuBar;
 	row->addWidget ( findMenuBar );
@@ -249,8 +248,7 @@ void MainWindow::initGraphSplit ()
 }
 
 MainWindow::MainWindow (
-	Backend		* const be,
-	QApplication	&app
+	Backend		* const be
 	)
 	:
 	backend		( be ),
@@ -289,7 +287,11 @@ MainWindow::MainWindow (
 	// Widgets
 
 	setWindowTitle ( VERSION );
-	setWindowIcon ( QPixmap ( icon_xpm ) );
+
+	std::string path;
+	mtKit::get_data_dir ( path, DATA_INSTALL "/icons/hicolor/256x256/apps/"
+		BIN_NAME ".png" );
+	setWindowIcon ( QIcon ( path.c_str () ) );
 
 	QVBoxLayout * layv = new QVBoxLayout ( this );
 	layv->setMargin ( 0 );
@@ -326,7 +328,8 @@ MainWindow::MainWindow (
 
 	viewMain->setFocus ();
 
-	app.processEvents ();	// Create and show UI before loading a file
+	// Create and show UI before loading a file
+	mtQEX::process_qt_pending ();
 
 	// This is needed to stop visual corruption of the graph area widgets
 	tabWidget->setCurrentIndex ( TAB_VIEW );
@@ -406,13 +409,13 @@ int main (
 	}
 
 	// I don't want Qt snooping or changing my command line.
-	int		dummy_argc	= 1;
-	char		dummy_str[1]	= { 0 },
-			* dummy_argv	= dummy_str;
+	int	dummy_argc	= 1;
+	char	dummy_str[1]	= { 0 };
+	char	* dummy_argv	= dummy_str;
 
 
 	QApplication	app ( dummy_argc, &dummy_argv );
-	MainWindow	window ( &backend, app );
+	MainWindow	window ( &backend );
 
 	return app.exec ();
 }

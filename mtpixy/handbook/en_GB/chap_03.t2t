@@ -13,6 +13,7 @@ In order to compile and run mtPixy you must have several packages already presen
 
 - A GNU toolchain (gcc, make, gawk, etc).
 - Qt version 5.
+- txt2tags.
 - Cairo (version 1.6 or later).
 - Pango (version 1.22 or later).
 - libpng (version 1.2 or later).
@@ -25,13 +26,12 @@ mtPixy then requires various libraries that I have created:
 | **Package**   | **Dependencies** | **Description** |
 | libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
 | libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
-| libmtPixyUI   | libmtKit, libmtPixy | Toolkit agnostic UI code, e.g. undo. |
 | libmtQEX      | libmtKit, Qt5    | Various Qt function utilities including preferences editor. |
 
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
-| mtPixyCLI     | libmtKit, libmtPixy, libmtPixyUI, readline | Command line pixel editor |
+| mtPixyCLI     | libmtKit, libmtPixy, readline | Command line pixel editor |
 | mtPixyUtils   | libmtKit, libmtPixy | Command line pixel tools |
 
 
@@ -41,7 +41,6 @@ As outlined above you must build and install the packages in this order:
 
 - libmtKit
 - libmtPixy
-- libmtPixyUI
 - libmtQEX
 - mtPixy
 

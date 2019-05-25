@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 2016.08.20 by M.Tyler
 # Create a bunch of partial files
 

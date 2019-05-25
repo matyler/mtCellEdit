@@ -1,16 +1,9 @@
-PIXYRISA
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixyrisa - image analysis
+@BIN_NAME@ - image analysis
 
 
 = SYNOPSIS =
-**pixyrisa** [ [OPTION]... [FILE] ]...
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
 
 
 = DESCRIPTION =
@@ -35,11 +28,3 @@ cube.  RISA is Rgb Image Slice Analysis.
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

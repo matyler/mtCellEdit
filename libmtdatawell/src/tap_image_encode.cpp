@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -40,15 +40,15 @@ static void encode_rgb (
 	}
 }
 
-int mtDW::TapOp::encode_image (
-	Butt		* const	butt,
+int mtDW::Tap::Op::encode_image (
+	Well		* const	well,
 	mtPixy::Image	* const	image,
 	char	const * const	input
 	)
 {
 	if ( ! image || ! input )
 	{
-		return 1;
+		return report_error ( ERROR_IMAGE_ENCODE_INSANITY );
 	}
 
 	int tot;
@@ -56,42 +56,26 @@ int mtDW::TapOp::encode_image (
 
 	if ( ! mem )
 	{
-		std::cerr << "Unable to load flavour file.\n";
-		return 1;
+		return report_error ( ERROR_LOAD_INPUT );
 	}
 
-	mtKit::ByteBuf buf;
-	buf.array = (uint8_t *)mem;
-	buf.array_len = (uint32_t)tot;
+	ByteBuf buf;
+
+	buf.set ( (uint8_t *)mem, (size_t)tot );
 
 	uint64_t const pixels = (uint64_t)(image->get_width () *
 					image->get_height ());
-	uint64_t const done = buf.array_len * (24 / 3);
+	uint64_t const done = buf.get_size () * (24 / 3);
 	uint64_t const todo = pixels * 3 - done;
 
 	if ( done > (pixels * 3) )
 	{
-		std::cerr << "Bottle is too small.\n";
-		return 1;
+		return report_error ( ERROR_IMAGE_TOO_SMALL );
 	}
 
-	encode_rgb ( image->get_canvas (), buf.array, tot );
+	encode_rgb ( image->get_canvas (), buf.get_buf (), tot );
 
-	// This stops Twitter mangling a PNG into a JPEG
-	if ( ! image->get_alpha () )
-	{
-		image->create_alpha ();
-		unsigned char * const alpha = image->get_alpha ();
-
-		if ( alpha )
-		{
-			memset ( alpha, 255, (size_t)pixels );
-
-			alpha[0] ^= 1;
-		}
-	}
-
-	if ( todo < 1 || ! butt )
+	if ( todo < 1 || ! well )
 	{
 		return 0;
 	}
@@ -100,22 +84,17 @@ int mtDW::TapOp::encode_image (
 	uint64_t const minor = todo % 8;
 	uint64_t const bytes = major + MIN ( minor, 1 );
 
-	free ( buf.array );
-	buf.array = (uint8_t *)malloc ( (size_t)bytes );
-	if ( ! buf.array )
+	buf.set ( (uint8_t *)malloc ( (size_t)bytes ), (size_t)bytes );
+
+	if ( ! buf.get_buf () )
 	{
-		// No memory so can't fill
-		return 0;
+		return report_error ( ERROR_HEAP_EMPTY );
 	}
 
-	if ( butt->otp_get_data ( buf.array, (size_t)bytes ) )
-	{
-		// No OTP data so can't fill
-		return 0;
-	}
+	well->get_data ( buf.get_buf (), (size_t)bytes );
 
 	uint8_t * dst = image->get_canvas () + done;
-	uint8_t const * const src = buf.array;
+	uint8_t const * const src = buf.get_buf ();
 
 	if ( major > 0 )
 	{

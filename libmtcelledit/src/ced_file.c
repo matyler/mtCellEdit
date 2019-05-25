@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -740,8 +740,8 @@ static int tsv_save_cb (
 		}
 		else
 		{
-			snprintf ( state->txt_buf, TEXT_LEN, CED_PRINTF_NUM,
-				cell->value );
+			snprintf ( state->txt_buf, sizeof(state->txt_buf),
+				CED_PRINTF_NUM, cell->value );
 
 			if ( mtkit_file_write_string ( state->mtfp,
 				state->txt_buf ) )
@@ -837,7 +837,7 @@ static int ledger_save_cb (
 		return 0;
 	}
 
-	snprintf ( state->txt_buf, TEXT_LEN, "%i\t%i\t", row, col );
+	snprintf( state->txt_buf, sizeof(state->txt_buf), "%i\t%i\t", row, col);
 
 	if ( mtkit_file_write_string ( state->mtfp, state->txt_buf ) )
 	{
@@ -865,8 +865,8 @@ static int ledger_save_cb (
 	}
 	else
 	{
-		snprintf ( state->txt_buf, TEXT_LEN, CED_PRINTF_NUM"\n",
-			cell->value );
+		snprintf ( state->txt_buf, sizeof(state->txt_buf),
+			CED_PRINTF_NUM"\n", cell->value );
 
 		if ( mtkit_file_write_string ( state->mtfp, state->txt_buf ) )
 		{
@@ -1065,8 +1065,9 @@ static int html_borders (
 			continue;
 		};
 
-		snprintf ( state->txt_buf, TEXT_LEN, "border-%s:%s #%06x;",
-			pos[i], type, (unsigned int)cell->prefs->border_color );
+		snprintf ( state->txt_buf, sizeof(state->txt_buf),
+			"border-%s:%s #%06x;", pos[i], type,
+			(unsigned int)cell->prefs->border_color );
 
 		if ( mtkit_file_write_string ( state->mtfp, state->txt_buf ) )
 		{
@@ -1172,7 +1173,7 @@ static int export_html_output_cb (
 
 		if ( cell->prefs->color_background != 16777215 )
 		{
-			snprintf ( state->txt_buf, TEXT_LEN,
+			snprintf ( state->txt_buf, sizeof(state->txt_buf),
 				"background: #%06x;",
 				(unsigned int)cell->prefs->color_background
 				);
@@ -1211,7 +1212,7 @@ static int export_html_output_cb (
 	{
 		if ( cell->prefs->color_foreground != 0 )
 		{
-			snprintf ( state->txt_buf, TEXT_LEN,
+			snprintf ( state->txt_buf, sizeof(state->txt_buf),
 				"<FONT COLOR=\"#%06x\">",
 				(unsigned int)cell->prefs->color_foreground
 				);
@@ -1370,7 +1371,7 @@ static int export_html (
 			"</HTML>\n"
 			;
 
-	char		txt_time[TEXT_LEN] = {0},
+	char		txt_time[32] = {0},
 			* txt_sheet_name
 			;
 	int		res;
@@ -1405,8 +1406,8 @@ static int export_html (
 	}
 
 	// Add header
-	snprintf ( state->txt_buf, TEXT_LEN, html_header, txt_sheet_name,
-		VERSION, txt_time );
+	snprintf ( state->txt_buf, sizeof(state->txt_buf), html_header,
+		txt_sheet_name, VERSION, txt_time );
 
 	if ( mtkit_file_write_string ( state->mtfp, state->txt_buf ) )
 	{

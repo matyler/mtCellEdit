@@ -1,7 +1,4 @@
 
-
-
-
 %!postproc: '(?i)(</head>)' '<TITLE>The mtPixy Handbook - Contents</TITLE>\1'
 
 [Previous index.html] | [Next chap_01.html]

@@ -9,8 +9,8 @@ set x+
 for i in $(seq -w 1 10)
 do
 	FILE=$i.png
-	DPI=$(echo "$i * 90" | bc)
+	HEIGHT=$((96 * 10#$i))
 
-	inkscape -z -e $FILE --export-dpi=$DPI default.svg
+	inkscape -z -e $FILE --export-height=$HEIGHT default.svg
 done
 

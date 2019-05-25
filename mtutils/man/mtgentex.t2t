@@ -1,20 +1,13 @@
-MTGENTEX
-mtUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-mtgentex - generate text
+@BIN_NAME@ - generate text
 
 
 = SYNOPSIS =
-**mtgentex** [ **OPTIONS** ] FILENAME
+**@BIN_NAME@** [ **OPTIONS** ] FILENAME
 
 
 = DESCRIPTION =
-mtGenTex prints out text as per the input file.  This is useful for generating
+@BIN_NAME@ prints out text as per the input file.  This is useful for generating
 large sequences for soak testing.
 
 
@@ -27,11 +20,3 @@ large sequences for soak testing.
 See the source code for an example in ./test/mtcedcli/mtgentex.txt
 
 mtgentex mtgentex.txt > output.txt
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

@@ -1,16 +1,9 @@
-CEDROTATE
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedrotate - rotate a spreadsheet
+@BIN_NAME@ - rotate a spreadsheet
 
 
 = SYNOPSIS =
-**cedrotate** [ [ **OPTION** ] [ FILE ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ FILE ] ]...
 
 
 = DESCRIPTION =
@@ -39,11 +32,3 @@ If FILE=="" then use the current sheet in memory.
 
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

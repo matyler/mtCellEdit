@@ -1,38 +1,31 @@
 include		../_conf.txt
 
-LIB_SONAME	= $(LIB_NAME).1
-HEADER		= $(HEADER_NAME)
-OBJS		=		\
-		$(TK_OBJ)	\
-		moc_private.o	\
-		mtqex_bmenu.o	\
-		mtqex_dialog.o	\
-		mtqex_file.o	\
-		mtqex_image.o	\
-		mtqex_misc.o	\
-		mtqex_prefwin.o	\
-
+HEADER		:= $(HEADER_NAME)
+OBJS		:= $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+OBJS		:= $(sort $(TK_OBJ) moc_private.o $(OBJS))
 
 .PHONY:		all install uninstall clean
+.SECONDARY:
+
 
 all:		$(LIB_SONAME)
 
-$(LIB_SONAME):	$(OBJS)
-		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
 
-$(OBJS):	*.h
+$(LIB_SONAME):	$(OBJS)
+		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
+
+$(OBJS):	$(HEADER) private.h
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule
 
-moc_mtqex4.cpp:
-		$(MOC) mtqex4.h -o $@
+# Pass 1 checks target .h validity, pass 2 creates .h file
+mtqex%.h:	mtqex.h
+		./build_header.sh $@ < $< > /dev/null
+		./build_header.sh $@ < $< > $@
 
-moc_mtqex5.cpp:
-		$(MOC) mtqex5.h -o $@
-
-moc_private.cpp:
-		$(MOC) private.h -o $@
+moc_%.cpp:	%.h
+		$(MOC) $< -o $@
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)
@@ -47,4 +40,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f moc_*.cpp *.o $(LIB_SONAME)
+		rm -f moc_*.cpp *.o *.so.$(LIB_SONUM) mtqex4.h mtqex5.h

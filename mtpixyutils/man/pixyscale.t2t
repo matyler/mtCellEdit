@@ -1,16 +1,9 @@
-PIXYSCALE
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixyscale - scale an image
+@BIN_NAME@ - scale an image
 
 
 = SYNOPSIS =
-**pixyscale** [OPTION]...
+**@BIN_NAME@** [OPTION]...
 
 
 = DESCRIPTION =
@@ -42,11 +35,3 @@ Creates a scaled image.
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

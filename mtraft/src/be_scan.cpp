@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2017 Mark Tyler
+	Copyright (C) 2004-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -372,6 +372,11 @@ char * raft_path_check (
 	if ( ! path || path[0] == 0 )
 	{
 		return NULL;		// Argument error
+	}
+
+	if ( 0 == mtkit_file_directory_exists ( path ) )
+	{
+		return NULL;		// Doesn't exist
 	}
 
 	size_t plen = strlen ( path );

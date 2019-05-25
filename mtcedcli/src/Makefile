@@ -1,23 +1,15 @@
 include		../_conf.txt
 
-OBJS		=			\
-		cli_backend.o		\
-		cli_jtf_clipboard.o	\
-		cli_jtf_edit.o		\
-		cli_jtf_file.o		\
-		cli_jtf_misc.o		\
-		cli_jtf_prefs.o		\
-		cli_jtf_sheet.o		\
-		cli_jtf_sort.o		\
-		cli_main.o		\
-
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(BIN_NAME)
 
+
 $(BIN_NAME):	$(OBJS)
-		$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS):	*.h
 

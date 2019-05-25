@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,10 @@
 
 
 
-mtKit::ByteFileRead::ByteFileRead () : m_fp ()
+mtKit::ByteFileRead::ByteFileRead ()
+	:
+	m_fp	(),
+	m_pos	( 0 )
 {
 }
 
@@ -37,6 +40,11 @@ int mtKit::ByteFileRead::open (
 	uint64_t	const	pos
 	)
 {
+	if ( ! filename )
+	{
+		return 1;
+	}
+
 	FILE * fp = fopen ( filename, "rb" );
 
 	if ( ! fp )
@@ -52,6 +60,7 @@ int mtKit::ByteFileRead::open (
 	}
 
 	set_file ( fp );
+	m_pos = pos;
 
 	return 0;
 }
@@ -59,11 +68,26 @@ int mtKit::ByteFileRead::open (
 void mtKit::ByteFileRead::close ()
 {
 	set_file ( NULL );
+	m_pos = 0;
 }
 
-size_t mtKit::ByteFileRead::read ( void * const mem, size_t const len ) const
+size_t mtKit::ByteFileRead::read ( void * const mem, size_t const len )
 {
-	return fread ( mem, 1, len, m_fp );
+	if ( ! m_fp || ! mem || len < 1 )
+	{
+		return 0;
+	}
+
+	size_t const res = fread ( mem, 1, len, m_fp );
+
+	if ( res < 1 )
+	{
+		close ();
+	}
+
+	m_pos += res;
+
+	return res;
 }
 
 void mtKit::ByteFileRead::set_file ( FILE * const fp )
@@ -93,6 +117,11 @@ mtKit::ByteFileWrite::~ByteFileWrite ()
 
 int mtKit::ByteFileWrite::open ( char const * const filename )
 {
+	if ( ! filename )
+	{
+		return 1;
+	}
+
 	FILE * fp = fopen ( filename, "wb" );
 
 	if ( ! fp )
@@ -115,10 +144,17 @@ int mtKit::ByteFileWrite::write (
 	size_t	const	len
 	)
 {
+	if ( ! m_fp || ! mem || len < 1 )
+	{
+		return 1;
+	}
+
 	if ( len == fwrite ( mem, 1, len, m_fp ) )
 	{
 		return 0;
 	}
+
+	close ();
 
 	return 1;
 }

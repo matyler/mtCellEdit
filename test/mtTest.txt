@@ -116,6 +116,20 @@ run_sh_cli_init()
 	> $LOGFILE
 }
 
+run_sh_valg()
+{
+	run_sh_head $VALG_LOGFILE
+	$PROGPREFIX $CLICOM < $1 >> $VALG_LOGFILE 2>&1
+	run_sh_tail $VALG_LOGFILE
+}
+
+run_sh_normal()
+{
+	run_sh_head $LOGFILE
+	$CLICOM < $1 >> $LOGFILE 2>&1
+	run_sh_tail $LOGFILE
+}
+
 run_sh_cli()
 {
 	while [ -n "$1" ]
@@ -126,15 +140,11 @@ run_sh_cli()
 		"T" )
 			;&
 		"Y" )
-			run_sh_head $VALG_LOGFILE
-			$PROGPREFIX $CLICOM < $FILE_SH >> $VALG_LOGFILE 2>&1
-			run_sh_tail $VALG_LOGFILE
+			run_sh_valg $FILE_SH
 			;;
 		esac
 
-		run_sh_head $LOGFILE
-		$CLICOM < $FILE_SH >> $LOGFILE 2>&1
-		run_sh_tail $LOGFILE
+		run_sh_normal $FILE_SH
 
 		shift
 	done

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,18 +21,18 @@
 
 void Mainwindow::press_palette_load ()
 {
-	QString filename = QFileDialog::getOpenFileName ( this,
+	QString const filename = QFileDialog::getOpenFileName ( this,
 		"Load Palette File", mtQEX::qstringFromC ( prefs.getString (
 			PREFS_FILE_RECENT_IMAGE ".001" ) ),
 		NULL, NULL, QFileDialog::DontUseNativeDialog );
 
-
-	if ( ! filename.isEmpty () )
+	if ( filename.isEmpty () )
 	{
-		operation_update ( backend.file.palette_load (
-			filename.toUtf8 ().data () ), "Palette Load",
-			UPDATE_ALL );
+		return;
 	}
+
+	operation_update ( backend.file.palette_load (filename.toUtf8().data()),
+		"Palette Load", UPDATE_ALL );
 }
 
 void Mainwindow::press_palette_save_as ()
@@ -53,44 +53,38 @@ void Mainwindow::press_palette_save_as ()
 
 	while ( dialog.exec () )
 	{
-		QStringList	fileList = dialog.selectedFiles ();
-		QString		filename = fileList.at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
 
-		if ( ! filename.isEmpty () )
-		{
-			char * correct = mtPixyUI::File::get_correct_filename (
-				filename.toUtf8().data(),
-				mtPixy::File::TYPE_GPL );
-
-			if ( correct )
-			{
-				filename = correct;
-				free ( correct );
-				correct = NULL;
-			}
-
-			if ( mtQEX::message_file_overwrite ( this, filename ) )
-			{
-				continue;
-			}
-
-			if ( backend.file.palette_save (
-				filename.toUtf8 ().data () ) )
-			{
-				QMessageBox::critical ( this, "Error",
-					QString ( "Operation 'Palette Save' was"
-					" unsuccessful." ) );
-			}
-			else
-			{
-				break;
-			}
-		}
-		else
+		if ( filename.isEmpty () )
 		{
 			break;
 		}
+
+		char * correct = mtPixyUI::File::get_correct_filename (
+			filename.toUtf8().data(),
+			mtPixy::File::TYPE_GPL );
+
+		if ( correct )
+		{
+			filename = correct;
+			free ( correct );
+			correct = NULL;
+		}
+
+		if ( mtQEX::message_file_overwrite ( this, filename ) )
+		{
+			continue;
+		}
+
+		if ( 0 == backend.file.palette_save (
+			filename.toUtf8 ().data () ) )
+		{
+			break;
+		}
+
+		QMessageBox::critical ( this, "Error",
+			"Operation 'Palette Save' was unsuccessful." );
 	}
 }
 

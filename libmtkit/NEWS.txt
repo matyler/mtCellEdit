@@ -1,3 +1,8 @@
+3.3	2019-5-25
+
+	* mtkit_file_*lock() added.
+	* BUGFIX - mtkit_set_filename_extension() finds last . after last /
+
 3.2	2018-8-25
 
 	* BUGFIX - mtkit_tree_duplicate() - introduced 2009-8-13 before v1.0.
@@ -34,9 +39,6 @@
 	* mtkit_strncpy0 -> mtkit_strnncpy and hardened.
 	* Hardening: sprintf -> snprintf, mtkit_strnncat.
 	* mtKit renamed to libmtKit.
-
-2.3	2014-2-22
-
 
 2.3	2014-2-22
 

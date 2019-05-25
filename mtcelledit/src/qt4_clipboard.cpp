@@ -158,7 +158,7 @@ int MainWindow::clipboardClearSelection (
 	return 0;			// Success
 }
 
-void MainWindow::pressEditCut ()
+void MainWindow::press_EditCut ()
 {
 	if ( clipboardCopySelection ( 0 ) )
 	{
@@ -183,17 +183,17 @@ void MainWindow::clipboardCopyRouter (
 	viewMain->setBell ();
 }
 
-void MainWindow::pressEditCopy ()
+void MainWindow::press_EditCopy ()
 {
 	clipboardCopyRouter ( 0 );
 }
 
-void MainWindow::pressEditCopyVal ()
+void MainWindow::press_EditCopyVal ()
 {
 	clipboardCopyRouter ( 1 );
 }
 
-void MainWindow::pressEditCopyOutput ()
+void MainWindow::press_EditCopyOutput ()
 {
 	clipboardCopyRouter ( 2 );
 }
@@ -232,27 +232,27 @@ error:
 		"Unable to transform clipboard." );
 }
 
-void MainWindow::pressEditTransformTrans ()
+void MainWindow::press_EditTransformTrans ()
 {
 	clipboardTransform ( 0 );
 }
 
-void MainWindow::pressEditTransformFlipH ()
+void MainWindow::press_EditTransformFlipH ()
 {
 	clipboardTransform ( 1 );
 }
 
-void MainWindow::pressEditTransformFlipV ()
+void MainWindow::press_EditTransformFlipV ()
 {
 	clipboardTransform ( 2 );
 }
 
-void MainWindow::pressEditTransformRotClock ()
+void MainWindow::press_EditTransformRotClock ()
 {
 	clipboardTransform ( 3 );
 }
 
-void MainWindow::pressEditTransformRotAnti ()
+void MainWindow::press_EditTransformRotAnti ()
 {
 	clipboardTransform ( 4 );
 }
@@ -386,22 +386,22 @@ int MainWindow::clipboardPasteAtCursor (
 	return 0;			// Paste committed
 }
 
-void MainWindow::pressEditPaste ()
+void MainWindow::press_EditPaste ()
 {
 	clipboardPasteAtCursor ( 0 );
 }
 
-void MainWindow::pressEditPasteContent ()
+void MainWindow::press_EditPasteContent ()
 {
 	clipboardPasteAtCursor ( CED_PASTE_CONTENT );
 }
 
-void MainWindow::pressEditPastePrefs ()
+void MainWindow::press_EditPastePrefs ()
 {
 	clipboardPasteAtCursor ( CED_PASTE_PREFS );
 }
 
-void MainWindow::pressEditClear ()
+void MainWindow::press_EditClear ()
 {
 	if ( clipboardClearSelection ( 0 ) )
 	{
@@ -409,7 +409,7 @@ void MainWindow::pressEditClear ()
 	}
 }
 
-void MainWindow::pressEditClearContent ()
+void MainWindow::press_EditClearContent ()
 {
 	if ( clipboardClearSelection ( CED_PASTE_CONTENT ) )
 	{
@@ -417,7 +417,7 @@ void MainWindow::pressEditClearContent ()
 	}
 }
 
-void MainWindow::pressEditClearPrefs ()
+void MainWindow::press_EditClearPrefs ()
 {
 	if ( clipboardClearSelection ( CED_PASTE_PREFS ) )
 	{
@@ -425,9 +425,9 @@ void MainWindow::pressEditClearPrefs ()
 	}
 }
 
-void MainWindow::pressEditUseSystemClipboard ()
+void MainWindow::press_EditUseSystemClipboard ()
 {
-	if ( actEditUseSystemClipboard->isChecked () )
+	if ( act_EditUseSystemClipboard->isChecked () )
 	{
 		pprfs->set ( GUI_INIFILE_CLIPBOARD_USE_SYSTEM, 1 );
 	}

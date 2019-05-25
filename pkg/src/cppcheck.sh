@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Build script for all packages using cppcheck static analyzer.
 # Mark Tyler 2013-2-1
 

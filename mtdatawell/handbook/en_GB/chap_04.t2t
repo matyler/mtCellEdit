@@ -1,0 +1,376 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>mtDataWell Handbook - Chapter 4 - User Notes</TITLE>\1'
+
+
+[Previous chap_03.html] | [Contents chap_00.html] | [Next chap_05.html]
+-------------------------------------------------
+
+=4 User Notes=
+
+==4.1 Basic Concepts==[SEC1]
+
+mtDataWell is a program that provides random data and cryptographic functionality via a Graphical User Interface (GUI).  It offers features in 5 parts:
+
+- Random data creation.
+- One time pad (OTP) creation and management.
+- Encoding, decoding, encryption, and decryption of user files.
+- Storing data within image and audio files using steganography.
+- Applications of random data, such as password and pin number creation.
+
+
+To make operations easier to understand I have employed a simple metaphor:
+	**Random data is water**.
+
+- A Well is the source of water.
+- A Butt holds water taken from the Well.
+- Soda is created by mixing water from the Butt with flavour.
+- A Tap is used to funnel Soda into a Bottle.
+
+
+
+===4.1.1 The Database===[SEC11]
+
+The database is the top level structure, and is a container for the other items
+such as the Well, Butt, Soda and Tap.
+It is stored in a location on the filesystem and contains various subdirectories
+and data files.
+
+The default location for the database is here:
+
+```
+~/.config/libmtDataWell/
+```
+
+mtDataWell can open different databases at different times which allows the user
+to segment workflows according to need.  For example someone could use these
+databases in their daily work:
+
+```
+~/.config/libmtDataWell/
+~/dw/mfi/
+~/dw/aef/
+```
+
+The first default item would be for general use, especially the apps (e.g. for
+creating passwords).
+The second could be for managing cryptographic data for MFI related work.
+The third could be for managing cryptographic data for AEF related work.
+This separation ensures that data flows are kept separate, unique, and makes
+user mistakes less likely.
+
+
+===4.1.2 The Well===[SEC12]
+
+Each database has a Well which is user configured to produce random data on
+demand.
+This random data is created using a pseudo random number generator (PRNG), and
+user provided real world entropy (files).
+Due to the mathematical processes involved, a properly configured Well produces
+random data that is cryptographically secure.
+See [A.1 chap_A.html#SEC1] for more details.
+
+
+===4.1.3 The Butt===[SEC13]
+
+Each database has a Butt which contains a number of OTP names which are used to
+hold OTP data.  The Butt maintains all of the OTP accounting information to
+ensure that data is only ever used once to encode Soda files.
+
+
+===4.1.4 The Soda===[SEC14]
+
+Soda files are created when an input file is mixed with Butt OTP data.
+The original file can be extracted by reversing the process.
+
+
+===4.1.5 The Tap===[SEC15]
+
+The Tap creates FLAC or PNG Bottle files which hold Soda files.
+This is a reversible process so the original data can also be extracted from a
+FLAC or PNG Bottle file.
+
+
+==4.2 Running mtDataWell for the first time==[SEC2]
+
+When you run mtDataWell for the first time you should take the time to prepare
+the database policies you plan to use later on.
+
+For example, you may decide that the default database located at
+~/.config/libmtDataWell/
+is going to be used for the apps **only**, in which case you will need to choose files
+for the Well that will always be present on your filesystem.
+Also, you must only have a single, empty, read only Butt so that a user doesn't
+accidentally use this database for OTP activity.
+
+The other databases that you create will have read write Butts available.
+However, in contrast to the files used for the default Well, they must only be
+temporary and used when the Butt buckets are created.
+After this process is finished the original files must be destroyed and the Well
+file database must be emptied.
+These are basic requirements for a secure and truly random OTP.
+See [A.1 chap_A.html#SEC1] for more details.
+
+In practical terms, here is an example scenario for how to prepare Butt OTP
+data:
+- Create some large video file(s) using a suitable camera device.
+- Move the video file(s) onto the secure PC that you are using.
+- Add the video file(s) to the Well.
+- Create as many buckets as you will require for the tasks you plan.
+- Once finished you must destroy the original video files to ensure that nobody
+else can discover what you are doing and possibly re-create your OTP.
+
+
+===4.2.1 Program Preferences===[SEC21]
+
+Whenever you change the size and position of the main window these details are
+recalled for next time you use them.
+These preferences are usually stored in the file
+~/.config/mtdatawell-qt5/prefs.txt -
+However this can be changed on startup by using:
+
+```
+mkdir -p ~/.config/mtdatawell
+mtdatawell-qt5 -prefs ~/.config/mtdatawell/prefs_profile_A.txt
+```
+
+This is a useful way of having different profiles for different jobs, such as
+dealing with a different set of databases as they will appear in the recently
+used list.
+
+
+==4.3 User Interface==[SEC3]
+
+The main areas of the GUI are two file lists:
+- Input files.
+- Bottle files.
+
+
+Above the lists is the output path.  Each of these can be populated using the
+buttons, or you can drag and drop a file from a file browser such as Thunar.
+
+The status bar at the bottom of the UI is as follows:
+- The currently open Database is on the left.
+- The currently active Butt OTP is in the middle.
+- The current Soda mode is on the right.
+
+
+==4.3.1 Database Menu==[SEC31]
+
+You can use the Database menu to open or create a new database on the PC
+filesystem.  You can also pick a database from the recently used list to quickly
+load it back into mtDataWell.
+
+
+==4.3.2 Well Menu==[SEC32]
+
+The Well menu allows you to view and edit the current Well.  By pressing the
+"Reset" button you will:
+- Empty the currently chosen file list.
+- Create a new seed and set of shifts according to your PC's current time
+settings.
+
+
+For more detailed settings press the "Information" button to reveal the current
+state of the Well, and various options to:
+- Add files or empty the list.
+- Reset the seed or shifts.
+
+
+
+==4.3.3 Butt Menu==[SEC33]
+
+The Butt menu enables you to study and edit the active OTP, as well as
+having an overview of all the OTP's currently in the database.
+
+To add more buckets to the active OTP, or to change the current comment,
+use the "Active" tab.
+The comment is a useful way of identifying what the purpose of this OTP is.
+This information, or any other private information, should not be put in the OTP
+name because the OTP name is kept in the Soda file and is not encrypted.
+
+To add new OTP's, import some OTP data from another agent, or to delete an OTP
+you use the "Overview" tab.
+When creating a new OTP you are presented with a randomly created name.
+Its usually a good idea to accept this, but if you want to change this for any
+reason you can do this after pressing the "New" button.
+
+A comment is also created automatically including the date, time, and user name.
+If your organisation has any other policy requirements that need to be kept then
+they should be put here, e.g. "Alice -> Bob EOL 2019-12" may mean that Alice
+uses this OTP to encode, and Bob uses it to decode (with destruction of the OTP
+planned for December 2019).
+
+Once the data has been created, you can analyse the data to ensure it is
+statistically random.  Press the button **"Butt->Analysis ..."** to do this.
+
+
+
+==4.3.4 Soda Menu==[SEC34]
+
+The Soda menu enables you to encode and decode data files that you want to keep
+private using OTP encryption.
+
+To encode new file(s), firstly put the input filename(s) into the input
+files listed in the main GUI window (drag and drop from a file browser or use
+the "Open" button to manually select them).
+After encoding using **"Soda->Create File(s)"** these new files will be dumped
+into the output directory.
+
+Remember to ensure the following when encoding:
+- The output directory must be read/write.
+- Try to keep the output directory empty so you don't accidentally delete any
+important data.
+
+
+The decoding process is similar to encoding, i.e. you put the encoded files
+in the left hand "Input Files" list and then simply use the
+**"Soda->Extract File(s)"** menu option to extract the original file(s) into the
+output directory.
+
+
+
+
+==4.3.5 Tap Menu==[SEC35]
+
+The Tap menu enables you to encode and decode Bottle files (PNG or FLAC
+formats).  These Bottles are used to conceal Soda data that holds a file that
+you want to remain private.
+
+To encode new Bottle file(s), firstly put the input filename(s) into the input
+files listed in the main GUI window (drag and drop from a file browser or use
+the "Open" button to manually select them).
+Then select the same number of Bottle files on the right hand list.
+Finally select the output directory.
+After encoding using **"Tap->Create Bottle(s)"** these new files will be dumped
+into the output directory.
+
+Remember to ensure the following when encoding:
+- The number of input files must match the number Bottle files.
+- The output directory must be read/write as must the directory holding the
+Bottle file(s).
+- Try to keep the output directory empty so you don't accidentally delete any
+important data.
+
+
+The decoding process is similar to encoding, except you put the input Bottles
+in the left hand "Input Files" list and then simply use the
+**"Tap->Extract File(s)"** menu option to extract the original file(s) into the
+output directory.
+
+
+
+
+==4.3.6 App Menu==[SEC36]
+
+Each of the applets in the App menu get their random data directly from the
+Well.
+
+If you want to use the data created in another program such as a text editor or
+spreadsheet:
+- Select the text you want.
+- Press Ctrl+C.
+- Go to the other program and press Ctrl+V.
+
+
+
+==4.4 Example OTP Scenarios==[SEC4]
+
+In the following examples, people need to communicate securely over an insecure
+internet connection.
+To do this safely, a secure PC (not connected to the internet) is used to create
+the Butt OTP data.
+This secure PC is used to create the encrypted Soda files which will then be
+transferred to an internet connected PC to be emailed to somebody else who can
+safely decode it on their secure PC.
+
+
+==4.4.1 Simple - 2 People==[SEC41]
+
+- People: Alice, Bob.
+
+
+Alice and Bob each create a new Database called "alice_bob_6".
+Alice creates 100 buckets of OTP in Butt name "a_964".
+Bob creates 100 buckets of OTP in Butt name "b_541".
+This data is securely exchanged and copied to each others database that they
+will use to encode and decode the files that will be transmitted later on.
+
+| **Person** | **Encoding Butt (read/write)** | **Decoding Butt (read only)** |
+| Alice  | a_964                      | b_541                     |
+| Bob    | b_541                      | a_964                     |
+
+Bob then leaves and travels to his new location ready to start his work.
+As long as both continue to have secure PC's then nobody else can get the OTP
+data and decode their communication.
+
+
+==4.4.2 Complex - 5 People==[SEC42]
+
+- People: Aga, Carol, Grady, Polson, Skaggs.
+- Organisations: MFI (Aga, Carol, Grady), AEF (Aga, Polson, Skaggs).
+
+
+Aga, Carol, Grady each create a new database called MFI.
+
+Aga creates a Butt OTP called "ac_478" and "ag_478" in the MFI database to
+encode data to send to Carol and Grady.
+
+Carol creates "ca_556" and "cg_556".
+
+Grady creates "ga_983" and "gc_983".
+
+Please note that I have chosen these names to make it easier to understand
+what is going on.
+In the real world you would use randomly created names in order to
+avoid indicating to a snooper who the sender or the receiver is.
+By default mtDataWell offers you a randomly created Butt name.
+
+The three people in the MFI organisation exchange each others named Butt OTP
+data so they can decode any files they receive later.
+
+| **Person** | **Encoding OTP (read/write)** | **Decoding OTP (read only)** |
+| Aga    | ac_478 - To Carol         | ca_556 - From Carol      |
+| Aga    | ag_478 - To Grady         | ga_983 - From Grady      |
+| Carol  | ca_556 - To Aga           | ac_478 - From Aga        |
+| Carol  | cg_556 - To Grady         | gc_983 - From Grady      |
+| Grady  | ga_983 - To Aga           | ag_478 - From Aga        |
+| Grady  | gc_983 - To Carol         | cg_556 - From Carol      |
+
+Each person has a different OTP for each target just in case that person
+becomes untrustworthy or their data becomes compromised.
+For example if Aga is discovered to be an untrustworthy mole, this won't affect
+the communication between Carol and Grady as Aga was never given their OTP
+data:
+
+| **Person** | **Encoding OTP (read/write)** | **Decoding OTP (read only)** |
+| Carol  | cg_556                | gc_983   |
+| Grady  | gc_983                | cg_556   |
+
+If each person had used a single encoding Butt name, then this recovery scenario
+would not be possible.
+
+Aga, Polson, Skaggs each create a new database called AEF:
+- Aga creates a_478.
+- Polson creats p_369.
+- Skaggs creates s_571.
+
+
+The three people in the MFI organisation exchange each others named Butt OTP
+data.
+
+| **Person** | **Encoding OTP (read/write)** | **Decoding OTP (read only)** |
+| Aga        | a_478 - To Polson & Skaggs     | p_369 & s_571     |
+| Polson     | p_369 - To Aga & Skaggs        | a_478 & s_571     |
+| Skaggs     | s_571 - To Aga & Polson        | a_478 & p_369     |
+
+
+The MFI organisation is rather more shoddy than the AEF, so they lazily only
+created a single OTP Butt for each person.  Following from the earlier example
+Aga is discovered to be a mole and as a result she has gained **ALL** of the OTP
+data for the organisation which exposes everybody to having their communications
+snooped on.
+
+
+
+-------------------------------------------------
+[Previous chap_03.html] | [Contents chap_00.html] | [Next chap_05.html]

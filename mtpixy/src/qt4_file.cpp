@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ void Mainwindow::press_file_save_as ()
 	// Loop until successful save or user cancel
 	while ( dialog.exec () )
 	{
-		QString filename = dialog.selectedFiles ().at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
 		if ( filename.isEmpty () )
 		{
@@ -205,32 +205,26 @@ void Mainwindow::press_file_export_undo ()
 	if ( ! backend.file.get_filename () )
 	{
 		dialog.setDirectory ( mtQEX::qstringFromC ( prefs.getString (
-			PREFS_FILE_RECENT_IMAGE ) ) );
+			PREFS_FILE_RECENT_IMAGE ".001" ) ) );
 	}
 
 	while ( dialog.exec () )
 	{
-		QStringList	fileList = dialog.selectedFiles ();
-		QString		filename = fileList.at ( 0 );
+		QString const filename = mtQEX::get_filename ( dialog );
 
-
-		if ( ! filename.isEmpty () )
-		{
-			if ( 0 == backend.file.export_undo_images (
-				filename.toUtf8 ().data () ) )
-			{
-				break;
-			}
-			else
-			{
-				QMessageBox::critical ( this, "Error",
-					QString("Unable to save undo images."));
-			}
-		}
-		else
+		if ( filename.isEmpty () )
 		{
 			break;
 		}
+
+		if ( 0 == backend.file.export_undo_images (
+			filename.toUtf8 ().data () ) )
+		{
+			break;
+		}
+
+		QMessageBox::critical ( this, "Error",
+			"Unable to save undo images." );
 	}
 }
 
@@ -252,48 +246,41 @@ void Mainwindow::press_file_export_colormap ()
 
 	while ( dialog.exec () )
 	{
-		QStringList	fileList = dialog.selectedFiles ();
-		QString		filename = fileList.at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
 
-		if ( ! filename.isEmpty () )
-		{
-			char * correct = mtPixyUI::File::get_correct_filename (
-				filename.toUtf8().data(),
-				mtPixy::File::TYPE_BP24 );
-
-			if ( correct )
-			{
-				filename = correct;
-				free ( correct );
-				correct = NULL;
-			}
-
-			if ( mtQEX::message_file_overwrite ( this, filename ) )
-			{
-				continue;
-			}
-
-			int const comp = prefs.getInt(PREFS_FILE_COMPRESSION_PNG
-				);
-
-			if ( backend.file.export_colormap (
-				filename.toUtf8 ().data (), comp ) )
-			{
-				QMessageBox::critical ( this, "Error",
-					QString ( "Operation 'Export"
-						" ColourmapPalette' was"
-						" unsuccessful." ) );
-			}
-			else
-			{
-				break;
-			}
-		}
-		else
+		if ( filename.isEmpty () )
 		{
 			break;
 		}
+
+		char * correct = mtPixyUI::File::get_correct_filename (
+			filename.toUtf8().data(),
+			mtPixy::File::TYPE_BP24 );
+
+		if ( correct )
+		{
+			filename = correct;
+			free ( correct );
+			correct = NULL;
+		}
+
+		if ( mtQEX::message_file_overwrite ( this, filename ) )
+		{
+			continue;
+		}
+
+		int const comp = prefs.getInt ( PREFS_FILE_COMPRESSION_PNG );
+
+		if ( 0 == backend.file.export_colormap (
+			filename.toUtf8 ().data (), comp ) )
+		{
+			break;
+		}
+
+		QMessageBox::critical ( this, "Error",
+			"Operation 'Export ColourmapPalette' was unsuccessful."
+			);
 	}
 }
 

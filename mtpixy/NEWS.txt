@@ -1,3 +1,7 @@
+3.3	2019-5-25
+
+	* App icon slightly changed to be simpler and cleaner.
+
 3.1	2018-2-25
 
 	* "Save As" for images and palettes now automatically uses correct extension for the file type.

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,54 +22,61 @@
 namespace mtDW
 {
 
-#define HEADER_ITEM_MODE	"mode"
-#define HEADER_ITEM_SIZE	"size"
-#define HEADER_ITEM_BUCKET	"bucket"
-#define HEADER_ITEM_POS		"pos"
-#define HEADER_ITEM_BUTT	"butt"
+#define SODA_HEADER_ITEM_MODE	"mode"
+#define SODA_HEADER_ITEM_SIZE	"size"
+#define SODA_HEADER_ITEM_BUCKET	"bucket"
+#define SODA_HEADER_ITEM_POS	"pos"
+#define SODA_HEADER_ITEM_BUTT	"butt"
 
-#define UTREE_ROOT_NAME		"Jug"
+#define SODA_UTREE_ROOT_NAME	"Jug"
 
-#define FILE_ID			"Soda"
-#define FILE_CHUNK_ID		"Jug0"
+#define SODA_FILE_ID		"Soda"
+#define SODA_FILE_CHUNK_ID	"Jug0"
 
-#define CHUNK_SIZE		65536
+#define SODA_CHUNK_SIZE		65536
 
 
 
-class SodaOp
+class Soda::Op
 {
 public:
-	explicit SodaOp ( char const * path = NULL );
-	~SodaOp ();
+	explicit Op ( char const * path = NULL );
 
 	static int decode (
 		Butt * butt,
 		char const * input,
 		char const * output
 		);
+		// Returns error code.  Interpret via get_error_text()
 
 	int encode (
 		Butt * butt,
 		char const * input,
 		char const * output
 		) const;
+		// Returns error code.  Interpret via get_error_text()
 
 	static int multi_decode (
 		Butt * butt,
 		char const * input,
 		char const * output
 		);
+		// Returns error code.  Interpret via get_error_text()
 
 	int multi_encode (
 		Butt * butt,
 		char const * input,
 		char const * output,
-		char const * const * butt_names
+		char const * const * otp_names
 		) const;
+		// Returns error code.  Interpret via get_error_text()
 
 	inline void set_mode ( int m )	{ m_mode = m; }
 	inline int get_mode () const	{ return m_mode; }
+
+/// ----------------------------------------------------------------------------
+
+	mtKit::Sqlite		m_db;
 
 private:
 	int encode_raw () const;
@@ -77,16 +84,30 @@ private:
 		char const * filename,
 		uint64_t filesize,
 		int mode,
-		std::string const & bucket_name,
-		int butt_bucket,
+		std::string const & otp_name,
+		int otp_bucket,
 		int bucket_position
 		) const;
 
 /// ----------------------------------------------------------------------------
 
-	int			m_mode;
+	mtKit::FileLock		m_lock;
 
-	mtKit::Sqlite		m_db;
+	int			m_mode;
+};
+
+
+
+class SodaTransaction::Op
+{
+public:
+	mtKit::SqliteTransaction trans;
+
+	inline explicit Op ( mtKit::Sqlite & db )
+		:
+		trans ( db )
+	{
+	}
 };
 
 

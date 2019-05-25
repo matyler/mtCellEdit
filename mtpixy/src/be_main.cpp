@@ -28,16 +28,20 @@ Backend::Backend ()
 	m_cline_filename(),
 	m_prefs_filename()
 {
-	if ( file.brush.load_shapes ( DATA_INSTALL "/" DATA_NAME
-		"/shapes/default.png" )
-		)
+	std::string path;
+
+	mtKit::get_data_dir ( path, DATA_INSTALL "/" DATA_NAME
+		"/shapes/default.png" );
+
+	if ( file.brush.load_shapes ( path.c_str () ) )
 	{
 		fprintf ( stderr, "Backend Error: Unable to load shapes\n" );
 	}
 
-	if ( file.brush.load_patterns ( DATA_INSTALL "/" DATA_NAME
-		"/patterns/default.png" )
-		)
+	mtKit::get_data_dir ( path, DATA_INSTALL "/" DATA_NAME
+		"/patterns/default.png" );
+
+	if ( file.brush.load_patterns ( path.c_str () ) )
 	{
 		fprintf ( stderr, "Backend Error: Unable to load patterns\n" );
 	}

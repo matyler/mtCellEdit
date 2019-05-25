@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ public:
 		CLIPBOARD_MENU_TOTAL	= 12
 	};
 
-	Mainwindow ( QApplication &app, Backend &be );
+	explicit Mainwindow ( Backend &be );
 	~Mainwindow ();
 
 	void create_icons ();
@@ -349,13 +349,6 @@ private:
 	bool is_split_visible ();
 
 	void main_view_moved ();
-
-	void menu_init (
-		QAction ** act,
-		char const * txt,
-		char const * shcut,
-		char const * icn
-		);
 
 	mtPixy::Image * get_screenshot ();
 

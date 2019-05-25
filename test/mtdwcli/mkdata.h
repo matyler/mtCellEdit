@@ -87,6 +87,9 @@ private:
 	void create_audio_file ();
 	void fill_buffer ();
 
+	CreateFLAC ( const CreateFLAC & );	// Disable copy constructor
+	CreateFLAC & operator = (const CreateFLAC &);	// Disable = operator
+
 /// ----------------------------------------------------------------------------
 
 	static size_t	const	AUDIO_SECS = 60;

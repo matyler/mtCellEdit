@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Build system helper functions
 # M.Tyler 2013-5-16
 

@@ -1,0 +1,24 @@
+= NAME =
+@BIN_NAME@ - image editor
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ is a lightweight pixel image editor which is designed to handle simple day to day tasks such as viewing or editing pixel art PNG files.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-prefs** STRING
+	Use this file for program preferences.
+**-s**
+	Grab a screenshot on startup.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.

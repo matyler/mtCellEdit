@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
@@ -24,7 +24,7 @@ MTCF_CHECK_LIBS mtkit mtcelledit mtcedui mtpixy stdc++
 MTCF_ENABLE_QT_QEX
 MTCF_VERSION_BIN_NAME
 
-I_EX="$I_EX -DDATA_INSTALL=\"\\\"$DATA_INSTALL\"\\\""
+MTCF_ADD_APPIMAGE_DATA
 
 MTCF_POST_CONF
 MTCF_PRINT_CONF

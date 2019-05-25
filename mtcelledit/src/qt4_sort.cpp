@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -408,12 +408,12 @@ void SortDialog::pressSort ()
 	close ();
 }
 
-void MainWindow::pressColumnSort ()
+void MainWindow::press_ColumnSort ()
 {
 	SortDialog	dialog ( SORT_COLUMNS, this );
 }
 
-void MainWindow::pressRowSort ()
+void MainWindow::press_RowSort ()
 {
 	SortDialog	dialog ( SORT_ROWS, this );
 }

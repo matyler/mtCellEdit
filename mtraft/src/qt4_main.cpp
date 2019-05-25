@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,57 +16,30 @@
 */
 
 #include "qt4.h"
-#include "icon_xpm.xpm"
 
 
 
 MainWindow::MainWindow ()
 	:
-	m_progress	(),
-	m_tab_widget	(),
-	m_button_copy	(),
-	m_table		()
+	m_tab_id	( 0 ),
+	m_tab_widget	()
 {
 	setWindowTitle ( VERSION );
-	setWindowIcon ( QPixmap ( icon_xpm ) );
+
+	std::string path;
+	mtKit::get_data_dir ( path, DATA_INSTALL "/icons/hicolor/256x256/apps/"
+		BIN_NAME ".png" );
+	setWindowIcon ( QIcon ( path.c_str () ) );
 
 	QWidget * widget = new QWidget;
 	setCentralWidget ( widget );
 
-	QShortcut * shortcut = new QShortcut ( QKeySequence (
-		Qt::CTRL + Qt::Key_PageUp ), this );
-	connect ( shortcut, SIGNAL ( activated () ), this,
-		SLOT ( press_tab_next () ) );
-
-	shortcut = new QShortcut ( QKeySequence ( Qt::CTRL +
-		Qt::Key_PageDown ), this );
-	connect ( shortcut, SIGNAL ( activated () ), this,
-		SLOT ( press_tab_previous () ) );
-
-	QPushButton * button_quit = new QPushButton ( "Quit" );
-	button_quit->setShortcut ( Qt::CTRL + Qt::Key_Q );
-	connect ( button_quit, SIGNAL ( clicked () ), this,
-		SLOT ( press_button_quit () ) );
-
-	m_progress = new QProgressBar;
-	m_progress->setMinimum ( 0 );
-
-	m_button_copy = new QPushButton ( "Copy To Clipboard" );
-	m_button_copy->setShortcut ( Qt::CTRL + Qt::Key_C );
-	connect ( m_button_copy, SIGNAL ( clicked () ), this,
-		SLOT ( press_button_copy () ) );
-	m_button_copy->setEnabled ( false );
-
-	QHBoxLayout * top_row = new QHBoxLayout ();
-	top_row->addWidget ( button_quit );
-	top_row->addWidget ( m_progress );
-	top_row->addWidget ( m_button_copy );
-
-	m_tab_widget = new QTabWidget;
+	create_menu ();
 
 	QVBoxLayout * vbox = new QVBoxLayout;
 	vbox->setMargin ( 5 );
-	vbox->addLayout ( top_row );
+
+	m_tab_widget = new QTabWidget;
 	vbox->addWidget ( m_tab_widget );
 
 	widget->setLayout ( vbox );
@@ -98,31 +71,56 @@ MainWindow::~MainWindow ()
 	prefs.set ( PREFS_WINDOW_Y, geometry().y () );
 	prefs.set ( PREFS_WINDOW_W, geometry().width () );
 	prefs.set ( PREFS_WINDOW_H, geometry().height () );
-
-	for ( int i = 0; i < MAX_TABS; i++ )
-	{
-		if ( m_table[i] == NULL )
-		{
-			continue;
-		}
-
-		delete m_table[i];
-		m_table[i] = NULL;
-	}
 }
+
+
+
+// Forward declaration
+static int raftScan ( void * user_data );
+
+
+
+class workerThread : public QThread
+{
+public:
+	workerThread ( mtQEX::BusyDialog &busy, char const * const path )
+		:
+		m_sheet	( NULL ),
+		m_busy	( busy ),
+		m_path	( path )
+	{
+	}
+
+	~workerThread ()
+	{
+	}
+
+	void run ()
+	{
+		if ( raft_scan_sheet ( m_path, &m_sheet, raftScan, this ) )
+		{
+			// Fail
+		}
+	}
+
+/// ----------------------------------------------------------------------------
+
+	CedSheet		* m_sheet;
+	mtQEX::BusyDialog	&m_busy;
+
+private:
+	char	const * const	m_path;
+};
+
+
 
 static int raftScan (
 	void	* const	user_data
 	)
 {
-	while ( QCoreApplication::hasPendingEvents () )
-	{
-		QCoreApplication::processEvents ();
-	}
+	workerThread * const worker = static_cast<workerThread *>(user_data);
 
-	MainWindow * const main = static_cast<MainWindow *>(user_data);
-
-	if ( BusyState::WORKING != main->busy.get_status () )
+	if ( worker->m_busy.aborted () )
 	{
 		return 1;		// User wants to stop
 	}
@@ -134,133 +132,53 @@ void MainWindow::analyse (
 	char	const * const	path
 	)
 {
-	int const tab_tot = m_tab_widget->count ();
-	int const tab_current = m_tab_widget->currentIndex ();
-
-	if (	tab_tot < 0		||
-		tab_tot >= MAX_TABS	||
-		m_table[ tab_tot ] != NULL
-		)
-	{
-		// Should never happen, so silently fail
-
-		return;
-	}
-
 	char * new_path = raft_path_check ( path );
 	if ( ! new_path )
 	{
 		return;
 	}
 
-	m_tab_widget->setEnabled ( false );
-	busy.set_working ();
-	m_progress->setMaximum ( 0 );
+	mtQEX::BusyDialog busy ( this );
+	busy.show_abort ();
 
-	CedSheet * sheet;
+	workerThread work ( busy, new_path );
+	work.start ();
 
-	if ( raft_scan_sheet ( new_path, &sheet, raftScan, this ) )
+	busy.wait_for_thread ( work );
+
+	if ( work.m_sheet )
 	{
-		// Fail
-	}
-	else
-	{
+		m_tab_id++;
+
 		QWidget * widget = new QWidget;
-		m_tab_widget->addTab( widget, QString ("%1").arg( tab_tot + 1));
+		m_tab_widget->addTab( widget, QString ("%1").arg (m_tab_id) );
 		m_tab_widget->setCurrentWidget ( widget );
+
+		widget->setProperty ( TABLE_ID, m_tab_id );
 
 		QVBoxLayout * vbox = new QVBoxLayout;
 		vbox->setMargin ( 0 );
 		widget->setLayout ( vbox );
 
-		m_table[ tab_tot ] = new TableAnalysis ( sheet, new_path, *this,
-			vbox );
+		TableAnalysis * const tab = new TableAnalysis ( work.m_sheet,
+			new_path, *this, vbox );
 
-		m_button_copy->setEnabled ( true );
-	}
+		m_table_map.insert ( m_tab_id, tab );
 
-	m_tab_widget->setEnabled ( true );
-	busy.set_idle ();
-	m_progress->setMaximum ( 1 );
+		mtQEX::process_qt_pending ();
 
-	if (	tab_current >= 0	&&
-		tab_current < MAX_TABS	&&
-		m_table[ tab_current ]
-		)
-	{
-		/*
-		This hack is required because:
-
-		After successfully creating a new tab, stop focus on the old tab
-		moving to the QLineEdit widget.
-
-		Keep the table selected when there is a failure resulting from
-		trying to scan the <.> or <TOTAL> rows.
-		*/
-
-		m_table[ tab_current ]->setFocus ();
-	}
-
-	if ( m_table[ tab_tot ] )
-	{
-		m_table[ tab_tot ]->setFocus ();
+		tab->setFocus ();
 	}
 
 	free ( new_path );
 	new_path = NULL;
 }
 
-void MainWindow::press_button_quit ()
-{
-	if ( busy.get_status () != BusyState::IDLE )
-	{
-		// We are analysing so stop
-		busy.set_stopped ();
-
-		return;
-	}
-
-	close ();
-}
-
-void MainWindow::press_button_copy ()
-{
-	int const tab_num = m_tab_widget->currentIndex ();
-
-	if (	tab_num >= 0		&&
-		tab_num < MAX_TABS	&&
-		m_table[ tab_num ] != NULL
-		)
-	{
-		m_table[ tab_num ]->copy_to_clipboard ();
-	}
-}
-
-void MainWindow::press_tab_next ()
-{
-	m_tab_widget->setCurrentIndex ( m_tab_widget->currentIndex () - 1 );
-}
-
-void MainWindow::press_tab_previous ()
-{
-	m_tab_widget->setCurrentIndex ( m_tab_widget->currentIndex () + 1 );
-}
-
 void MainWindow::closeEvent (
 	QCloseEvent	* const	ev
 	)
 {
-	if ( busy.get_status () != BusyState::IDLE )
-	{
-		// Program is busy so we can't stop yet, but signal a stop
-		busy.set_stopped ();
-		ev->ignore ();
-	}
-	else
-	{
-		// Program is idle so accept closure
-		ev->accept ();
-	}
+	ev->accept ();
 }
 
 int main (
@@ -277,9 +195,9 @@ int main (
 
 
 	// I don't want Qt snooping or changing my command line.
-	int		dummy_argc	= 1;
-	char		dummy_str[1]	= { 0 },
-			* dummy_argv	= dummy_str;
+	int	dummy_argc	= 1;
+	char	dummy_str[1]	= { 0 };
+	char	* dummy_argv	= dummy_str;
 
 
 	QApplication	app ( dummy_argc, &dummy_argv );

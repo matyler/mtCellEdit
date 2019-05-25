@@ -1,0 +1,24 @@
+= NAME =
+@BIN_NAME@ - compare 2 images
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Compare the 2 input files and see if they are the same type and have the same
+geometry.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+
+= EXAMPLE =
+**@BIN_NAME@** in_a.bmp in_b.png
+
+
+= SEE ALSO =
+pixyutils(1)

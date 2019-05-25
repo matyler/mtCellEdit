@@ -1,16 +1,9 @@
-CEDCUT
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedcut - cut spreadsheet rows or columns
+@BIN_NAME@ - cut spreadsheet rows or columns
 
 
 = SYNOPSIS =
-**cedcut** [ [ **OPTION** ] [ FILE ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ FILE ] ]...
 
 
 = DESCRIPTION =
@@ -41,14 +34,5 @@ If FILE=="" then use the current sheet in memory.
 	The following input file is TSV (default).
 
 
-
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

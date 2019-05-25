@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -464,10 +464,10 @@ static int winget_string (
 		mtkit_strtok_num ( piv->opt, "\t", 0, &maxLen );
 	}
 
-	QString text = mtQEX::dialogTextLine ( win, "Edit Text", piv->key,
-		piv->value, (int)maxLen );
+	QString text;
 
-	if ( ! text.isEmpty () )
+	if ( 0 == mtQEX::dialogTextLine ( win, "Edit Text", piv->key,
+		piv->value, (int)maxLen, text ) )
 	{
 		mtkit_prefs_set_str ( prefs, piv->key, text.toUtf8 ().data () );
 
@@ -483,11 +483,10 @@ static int winget_string_multi (
 	mtPrefValue	* const	piv
 	)
 {
-	QString text = mtQEX::dialogText ( win, "Edit Text", piv->key,
-		piv->value );
+	QString text;
 
-
-	if ( ! text.isEmpty () )
+	if ( 0 == mtQEX::dialogText ( win, "Edit Text", piv->key, piv->value,
+		text ) )
 	{
 		mtkit_prefs_set_str ( prefs, piv->key, text.toUtf8 ().data () );
 

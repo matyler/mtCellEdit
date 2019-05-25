@@ -1,3 +1,7 @@
+3.3	2019-5-25
+
+	* cmp, fade added
+
 3.1	2018-2-25
 
 	* delta, pica, riba, rida, risa, twit, utils added

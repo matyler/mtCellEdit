@@ -6,13 +6,21 @@ include		../_conf.txt
 
 # NOTE: - at the beginning of the instruction to ignore errors
 
+TMP_DIR		= output tmp
+TMP_FILES	= valg_log.txt log.txt
+PREPARE		= mkdir -p $(TMP_DIR)
+
+
 all:
+		$(PREPARE)
 		-$(SUITE)
 
 valg:
+		$(PREPARE)
 		-VALG=Y $(SUITE)
 
 time:
+		$(PREPARE)
 		-VALG=T $(SUITE)
 
 
@@ -25,4 +33,5 @@ install:
 uninstall:
 
 clean:
-		rm -f output/* tmp/* valg_log.txt log.txt
+		rm -rf $(TMP_DIR) $(TMP_FILES)
+

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Package up parts of mtcelledit distribution into Arch XZ files
 # by Mark Tyler, 2011-9-22
 

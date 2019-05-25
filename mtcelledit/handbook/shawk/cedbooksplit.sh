@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # cedbooksplit.sh - Extracts the sheets from a book
 # usage: cedbooksplit.sh BOOKFILENAME OUPUTDIRECTORY
 # e.g. cedbooksplit.sh ~/output.zip ~/temp_sheet

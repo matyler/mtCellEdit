@@ -5,6 +5,9 @@ include		../_conf.txt
 
 
 BIN_ALL		= tcreadst tcreadmt tcwritest tcwritemt
+TMP_DIR		= tmp
+TMP_FILES	= valg_log.txt log.txt $(BIN_ALL) *.o *.tsv
+PREPARE		= mkdir -p $(TMP_DIR)
 
 TCREADST_OBJ	=			\
 		thrd_build.o		\
@@ -24,12 +27,15 @@ TCWRITEMT_OBJ	=			\
 
 
 all:		$(BIN_ALL)
+		$(PREPARE)
 		$(SUITE)
 
 valg:		$(BIN_ALL)
+		$(PREPARE)
 		VALG=Y $(SUITE)
 
 time:		$(BIN_ALL)
+		$(PREPARE)
 		VALG=T $(SUITE)
 
 build:		$(BIN_ALL)
@@ -62,4 +68,5 @@ install:
 uninstall:
 
 clean:
-		rm -f *.o *.tsv valg*.txt log.txt tmp/* $(BIN_ALL)
+		rm -rf $(TMP_DIR) $(TMP_FILES)
+

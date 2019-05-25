@@ -97,7 +97,7 @@ In order to place an image on the clipboard you must:
 
 If you wish to keep several images handy for later use you can use Ctrl+F1 (to F12) to save this clipboard to a temporary file, and then Shift+F1 (to F12) to retrieve it.  This file is typically stored here:
 
-~/.cache/libmtPixyUI/
+~/.cache/libmtpixy/
 
 This system also allows you to share clipboards between different mtPixy instances as they will all access the same temporary files.
 

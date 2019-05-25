@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -35,5 +35,33 @@ void mtkit_int32_pack (
 	mem[1] = (unsigned char)(num >> 8);
 	mem[2] = (unsigned char)(num >> 16);
 	mem[3] = (unsigned char)(num >> 24);
+}
+
+int mtkit_int_bound (
+	int	const	num,
+	int	const	min,
+	int	const	max
+	)
+{
+	return MAX( MIN( num, max ), min );
+}
+
+double mtkit_double_bound (
+	double	const	num,
+	double	const	min,
+	double	const	max
+	)
+{
+	if ( isnan ( num ) )
+	{
+		return 0.0;
+	}
+
+	if ( isinf ( num ) )
+	{
+		return 0.0;
+	}
+
+	return MAX( MIN( num, max ), min );
 }
 

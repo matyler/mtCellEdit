@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -230,18 +230,16 @@ void Mainwindow::create_toolbar ()
 
 void Mainwindow::create_icons ()
 {
-	int	const	ui = backend.get_ui_scale ();
-	int	const	sz = 24 * ui;
-	QString		fname ( DATA_INSTALL "/" DATA_NAME "/icons/" );
-	char		buf[10];
-	bool		res;
+	std::string path;
+	mtKit::get_data_dir ( path, DATA_INSTALL "/" DATA_NAME "/icons/" );
 
-
+	char buf[10];
+	int const ui = backend.get_ui_scale ();
 	snprintf ( buf, sizeof(buf), "%02i.png", ui );
-	fname.append ( buf );
+	path += buf;
 
-	QPixmap		pm;
-	res = pm.load ( fname );
+	QPixmap pm;
+	bool const res = pm.load ( path.c_str () );
 
 	if ( false == res )
 	{
@@ -250,7 +248,7 @@ void Mainwindow::create_icons ()
 		return;
 	}
 
-	setWindowIcon ( pm.copy ( 0, 0, 2*sz, 2*sz ) );
+	int const sz = 24 * ui;
 	m_toolbar->setIconSize ( QSize ( sz, sz ) );
 
 	tb_paint->setIcon		( pm.copy ( 0*sz, 3*sz, sz, sz ) );

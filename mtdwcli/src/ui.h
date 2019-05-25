@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -36,8 +36,7 @@ extern Backend backend;		// Singleton global backend instance
 class Backend
 {
 public:
-	Backend ();
-	~Backend ();
+	inline Backend () : m_db_path () {}
 
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running (start UI)
@@ -47,40 +46,47 @@ public:
 
 	int get_help ( char const * const * argv ) const;
 
-	inline mtDW::Well * get_well () { return m_well.get (); }
-	inline mtDW::Butt * get_butt () { return m_butt.get (); }
-	inline mtDW::Soda * get_soda () { return m_soda.get (); }
-	inline mtDW::Tap * get_tap () { return m_tap.get (); }
-
 /// ----------------------------------------------------------------------------
 
-	mtKit::Exit		exit;
+	mtDW::Database	db;
+	mtKit::Exit	exit;
 
 private:
 	void main_loop ();
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::unique_ptr<mtDW::Well>	m_well;
-	mtKit::unique_ptr<mtDW::Butt>	m_butt;
-	mtKit::unique_ptr<mtDW::Soda>	m_soda;
-	mtKit::unique_ptr<mtDW::Tap>	m_tap;
-
-	char		const *	m_conf_path;
+	char		const *	m_db_path;
 
 	mtKit::CliTab		m_clitab;
-	mtKit::Random		m_random;
 };
 
 
 
 int jtf_about			( char const * const * );
+int jtf_app_cardshuff		( char const * const * );
+int jtf_app_cointoss		( char const * const * );
+int jtf_app_declist		( char const * const * );
+int jtf_app_diceroll		( char const * const * );
+int jtf_app_intlist		( char const * const * );
+int jtf_app_numshuff		( char const * const * );
+int jtf_app_password		( char const * const * );
+int jtf_app_pins		( char const * const * );
 int jtf_butt_add_buckets	( char const * const * );
-int jtf_butt_add_name		( char const * const * );
+int jtf_butt_add_otp		( char const * const * );
+int jtf_butt_add_random_otp	( char const * const * );
+int jtf_butt_delete_otp		( char const * const * );
+int jtf_butt_empty		( char const * const * );
+int jtf_butt_import_otp		( char const * const * );
 int jtf_butt_info		( char const * const * );
 int jtf_butt_list		( char const * const * );
-int jtf_butt_set_name		( char const * const * );
+int jtf_butt_set_comment	( char const * const * );
+int jtf_butt_set_otp		( char const * const * );
+int jtf_butt_set_read_only	( char const * const * );
+int jtf_butt_set_read_write	( char const * const * );
+int jtf_db			( char const * const * );
 int jtf_help			( char const * const * );
+int jtf_info			( char const * const * );
 int jtf_quit			( char const * const * );
 int jtf_soda_decode		( char const * const * );
 int jtf_soda_encode		( char const * const * );
@@ -96,6 +102,7 @@ int jtf_tap_multi_decode	( char const * const * );
 int jtf_well_add_path		( char const * const * );
 int jtf_well_empty		( char const * const * );
 int jtf_well_info		( char const * const * );
+int jtf_well_reset_shifts	( char const * const * );
 int jtf_well_save_file		( char const * const * );
 int jtf_well_seed		( char const * const * );
 int jtf_well_seed_int		( char const * const * );

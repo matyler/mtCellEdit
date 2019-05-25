@@ -1,3 +1,7 @@
+3.3	2019-5-25
+
+	* libmtPixyUI merged into libmtPixy.
+
 3.1	2018-2-25
 
 	* libjpeg, libpng, giflib are now hard dependencies.
@@ -13,7 +17,7 @@
 
 	* libmtpixy started from scratch, much work from libmtimg below:
 
-2.7	2016-???
+2.7	2016-5-14
 
 	* Pango now used for font rendering (older engines removed).
 	* PNG file load now uses Cairo.  Other file code removed.

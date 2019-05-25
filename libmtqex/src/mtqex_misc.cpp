@@ -294,3 +294,38 @@ mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
 	return im;
 }
 
+QAction * mtQEX::menu_init (
+	QObject		* const	parent,
+	char	const	* const	txt,
+	char	const	* const	shcut,
+	char	const	* const	icon
+	)
+{
+	QAction * act;
+
+	if ( icon )
+	{
+		act = new QAction ( QIcon::fromTheme ( icon ), txt, parent );
+		act->setIconVisibleInMenu ( true );
+	}
+	else
+	{
+		act = new QAction ( txt, parent );
+	}
+
+	if ( shcut )
+	{
+		act->setShortcut ( QString ( shcut ) );
+	}
+
+	return act;
+}
+
+void mtQEX::process_qt_pending ()
+{
+	while ( QCoreApplication::hasPendingEvents () )
+	{
+		QCoreApplication::processEvents ();
+	}
+}
+

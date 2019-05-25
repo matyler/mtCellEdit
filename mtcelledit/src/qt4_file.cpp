@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-void MainWindow::pressFileNew ()
+void MainWindow::press_FileNew ()
 {
 	if ( okToLoseChanges () )
 	{
@@ -27,7 +27,7 @@ void MainWindow::pressFileNew ()
 	}
 }
 
-void MainWindow::pressFileOpen ()
+void MainWindow::press_FileOpen ()
 {
 	if ( okToLoseChanges () )
 	{
@@ -45,7 +45,7 @@ void MainWindow::pressFileOpen ()
 	}
 }
 
-void MainWindow::pressFileImport ()
+void MainWindow::press_FileImport ()
 {
 	QString filename = QFileDialog::getOpenFileName ( this,
 		"Import Project File",
@@ -60,11 +60,11 @@ void MainWindow::pressFileImport ()
 	}
 }
 
-void MainWindow::pressFileSave ()
+void MainWindow::press_FileSave ()
 {
 	if ( ! cedFile->name || 0 == cedFile->name[0] )
 	{
-		pressFileSaveAs ();
+		press_FileSaveAs ();
 	}
 	else
 	{
@@ -72,7 +72,7 @@ void MainWindow::pressFileSave ()
 	}
 }
 
-void MainWindow::pressFileSaveAs ()
+void MainWindow::press_FileSaveAs ()
 {
 	QStringList	typelist = getFileExportTypes ();
 	mtQEX::SaveFileDialog dialog ( this, "Save Project File", typelist,
@@ -88,7 +88,7 @@ void MainWindow::pressFileSaveAs ()
 
 	while ( dialog.exec () )
 	{
-		QString filename = dialog.selectedFiles ().at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
 		if ( filename.isEmpty () )
 		{
@@ -118,7 +118,7 @@ void MainWindow::pressFileSaveAs ()
 	}
 }
 
-void MainWindow::pressFileRecent (
+void MainWindow::press_FileRecent (
 	int	const	i
 	)
 {
@@ -128,7 +128,7 @@ void MainWindow::pressFileRecent (
 	}
 }
 
-void MainWindow::pressFileQuit ()
+void MainWindow::press_FileQuit ()
 {
 	close ();
 }

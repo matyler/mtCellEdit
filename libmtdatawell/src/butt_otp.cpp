@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,67 +19,29 @@
 
 
 
-int mtDW::ButtOp::otp_get_int ( int & res )
+mtDW::OTP::OTP ( Butt::Op & op )
+	:
+	m_op		(op),
+	m_bucket	(0),
+	m_position	(0)
 {
-	uint8_t		buf[4] = {0};
-
-	if ( otp_get_data ( buf, sizeof(buf) ) )
-	{
-		return 1;
-	}
-
-	res = (int)(	buf[0]
-			| (buf[1] << 8)
-			| (buf[2] << 16)
-			| (buf[3] << 24)
-			);
-
-	return 0;
 }
 
-int mtDW::ButtOp::otp_get_int (
-	int	const	modulo,
-	int	&	res
-	)
-{
-	if ( modulo < 2 )
-	{
-		return 1;
-	}
 
-	int const floor = ((INT_MAX - modulo) + 1) % modulo;
 
-	res = 0;
-
-	do
-	{
-		// Lose negative int's
-		if ( otp_get_int ( res ) )
-		{
-			return 1;
-		}
-
-		res = res & INT_MAX;
-
-	} while ( res < floor );
-
-	res = res % modulo;
-
-	return 0;
-}
-
-int mtDW::ButtOp::otp_get_data (
+int mtDW::OTP::read (
 	uint8_t		* const	buf,
 	size_t		const	buflen
 	)
 {
-	if ( ! m_file_otp.is_open () )
+	if ( ! buf )
 	{
-		if ( otp_open_bucket () )
-		{
-			std::cerr << "Butt unable to open bucket\n";
-			return 1;
-		}
+		return report_error ( ERROR_BUTT_OTP_READ_BUFFER );
+	}
+
+	if ( ! m_file.is_open () )
+	{
+		RETURN_ON_ERROR ( open_bucket ( m_bucket, m_position ) )
 	}
 
 	uint8_t * dest = buf;
@@ -87,35 +49,61 @@ int mtDW::ButtOp::otp_get_data (
 
 	while ( todo > 0 )
 	{
-		size_t const done = m_file_otp.read ( dest, todo );
+		size_t const done = m_file.read ( dest, todo );
 
 		if ( done < 1 )
 		{
-			m_otp_bucket++;
-			m_otp_position = 0;
-
-			if (	m_otp_bucket >= m_write_next
-				|| otp_open_bucket ()
-				)
-			{
-				std::cerr << "Butt data exhausted\n";
-				return 1;
-			}
+			RETURN_ON_ERROR ( open_bucket ( m_bucket + 1, 0 ) )
 
 			continue;
 		}
 
-		m_otp_position = (int)((size_t)m_otp_position + done);
+		m_position = (int)((size_t)m_position + done);
 		todo -= done;
 	}
 
 	return 0;
 }
 
-int mtDW::ButtOp::otp_open_bucket ()
+void mtDW::OTP::set_path ( std::string const & name )
 {
-	std::string const butt_file = get_butt_filename ( m_otp_bucket );
+	m_file.close ();
+	m_path = m_op.m_butt_root + name + MTKIT_DIR_SEP;
+	m_name = name;
+}
 
-	return m_file_otp.open ( butt_file.c_str (), 0 );
+int mtDW::OTP::open_bucket (
+	int	const	bucket,
+	int	const	pos
+	)
+{
+	std::string const filename = get_bucket_filename ( bucket );
+
+	if ( m_file.open ( filename.c_str (), (uint64_t)pos ) )
+	{
+		std::cerr << "Bucket " << bucket << " at " << pos << "\n";
+		return report_error ( ERROR_BUTT_OTP_OPEN_BUCKET );
+	}
+
+	m_bucket = bucket;
+	m_position = pos;
+
+	return 0;
+}
+
+std::string mtDW::OTP::get_bucket_filename ( int const num ) const
+{
+	char txt[16];
+
+	snprintf ( txt, sizeof(txt), "%06i", num );
+
+	return std::string ( m_path + txt );
+}
+
+int64_t mtDW::OTP::get_bucket_size () const
+{
+	std::string const filename = get_bucket_filename ( m_bucket );
+
+	return mtkit_file_size ( filename.c_str () );
 }
 

@@ -25,7 +25,6 @@
 
 #include <mtkit.h>
 #include <mtpixy.h>
-#include <mtpixyui.h>
 
 #include "static.h"
 

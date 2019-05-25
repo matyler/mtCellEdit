@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt5 Pixel GUI
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy libmtpixyui libmtqex5 qt5-qtbase-devel
-Requires:		libmtkit libmtpixy libmtpixyui libmtqex5 qt5-qtbase
+BuildRequires:		libmtkit libmtpixy libmtqex5 qt5-qtbase-devel inkscape
+Requires:		libmtkit libmtpixy libmtqex5 qt5-qtbase
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

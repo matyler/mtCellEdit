@@ -1,4 +1,4 @@
-butt set name jane_54
+butt set otp jane_54
 
 # encode but don't encrypt
 soda set mode 1

@@ -2,7 +2,7 @@ Source: mtpixy-qt4
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, libqt4-dev, libmtkit, libmtpixy, libmtpixyui, libmtqex4
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libqt4-dev, libmtkit, libmtpixy, libmtqex4, inkscape
 Standards-Version: 3.9.3
 Homepage: http://ced.marktyler.org/
 

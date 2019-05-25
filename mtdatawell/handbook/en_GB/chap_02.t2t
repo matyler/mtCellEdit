@@ -1,0 +1,66 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>mtDataWell Handbook - Chapter 2 - Introduction</TITLE>\1'
+
+
+[Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]
+-------------------------------------------------
+
+=2. Introduction=
+
+mtDataWell is a lightweight crypto and random data program that I created from scratch. It is a small, no frills program which is designed to handle simple day to day tasks. I have put the most important facilities I want into a small customized program which means I can avoid the problems of larger programs such as slow operating speeds and overcomplicated user interfaces.
+
+The core of the program is a shared C++ library which can be used by any C++ program.
+
+mtDataWell is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, ARM_32, and PowerPC_32 hardware platforms.
+
+
+
+==2.1 Life Before mtDataWell==[SEC1]
+
+I first became interested in codes and ciphers in the mid 1980's, and I started writing crypto programs in the early 1990's.  This was just a fun hobby, but it introduced me to many interesting aspects of mathematics, computer programming, and privacy.
+
+
+
+==2.2 Project Genesis==[SEC2]
+
+During the year of 2018 I had been experimenting with some ideas for an Android app, and after that project was finished I decided to write something more heavy duty for my GNU/Linux systems.  I wanted a core library, a command line program for scripting, and a GUI program for quickly doing various different but related tasks:
+
+- Quality random data creation.
+- One time pad database (OTP DB) management.
+- Encoding and decoding files using the OTP DB.
+- Steganography to conceal encoded files in images or audio.
+- Various apps for generating passwords, pin numbers, etc.
+
+
+
+==2.3 General Philosophy==[SEC3]
+
+I have always wanted mtDataWell to be small, light, and reliable as I think these are the qualities which will give me the best tool for my needs:
+
+- **Small** means a codebase with each part being small enough to manage easily.
+
+ - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, e.g. porting to a new widget toolkit.
+
+- **Light** means resource frugal.
+
+ - Less CPU usage than other programs for the same job, which means the job is completed more quickly.
+ - Less user time wasted on navigating rarely used GUI widgets.
+
+- **Reliable** means bug free, and deterministic program behaviour.
+
+ - No nasty shocks for the user due to sloppy coding or poor UI design.
+
+
+An important decision I have taken is to release it as free software using the GNU General Public License, which gives users various freedoms.  If you are not aware of these freedoms and the work of the GNU project, I would strongly encourage you to read about them here:  http://www.gnu.org/
+
+
+
+==2.4 Development Timeline==[SEC4]
+
+| **Date**   | **Version** | **Description** |
+| 2018-5-18  | 0.0         | Project started. |
+| 2018-8-25  | 3.2         | mtDWCLI published. |
+| 2019-5-25  | 3.3         | mtDataWell published. |
+
+-------------------------------------------------
+[Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

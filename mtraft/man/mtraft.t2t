@@ -1,0 +1,22 @@
+= NAME =
+@BIN_NAME@ - file analysis
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ DIRECTORY ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ analyses a given directory and counts the files, subdirectories, links/other files and bytes contained in it.
+
+Double click an item or press ENTER to examine this subdirectory in a new tab.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.

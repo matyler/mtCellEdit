@@ -1,0 +1,199 @@
+
+%!postproc: '(?i)(</head>)' '<TITLE>mtDataWell Handbook - Chapter 6 - mtDWCLI</TITLE>\1'
+
+
+[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_A.html]
+-------------------------------------------------
+
+=6. mtDWCLI=
+
+mtDWCLI is a program that provides random data and cryptographic functionality via a Command Line Interface (CLI).  It offers the same features at the GUI based mtDataWell.
+
+
+==6.1 Commands==[SEC1]
+
+mtDWCLI reads instructions from the user via GNU Readline.  This offers useful interactive facilities like using the up and down arrows to access previous commands.
+
+It is also possible to run a script from the command line like these examples:
+
+```
+cat script.txt | mtdwcli
+mtdwcli < script.txt
+mtdwcli < script.txt > log.txt 2>&1
+```
+
+Here is the complete list of commands that mtDWCLI accepts:
+
+| **Command**            | **Arguments**      | **Notes** |
+| about                  |                    | About the program
+| app cardshuff          |                    | Shuffle a pack of cards
+| app cointoss           | <INTEGER>          | Toss this number of coins
+| app declist            | <INTEGER> <DECIMAL MIN> <DECIMAL MAX> | List this number of random decimal numbers between this minimum and maximum
+| app diceroll           | <INTEGER> <INTEGER FACES> | Roll this number of dice with the given number of faces
+| app intlist            | <INTEGER> <INTEGER MIN> <INTEGER RANGE> | List this number of random integers from the minimum over the set range
+| app numshuff           | <INTEGER>          | Shuffle the integers from 0 to the given number minus 1
+| app password           | <INTEGER> <INTEGER CHARS> [lower] [upper] [num] [other] [STRING] | List this number of passwords, with this number of characters, with the given properties
+| app pins               | <INTEGER> <INTEGER DIGITS> | List this number of pin numbers with the given number of digits
+| butt add buckets       | <INTEGER>          | Add buckets to the current OTP
+| butt add otp           | <STRING>           | Create a new named OTP
+| butt add random otp    |                    | Create a new randomly named OTP
+| butt delete otp        | <STRING>           | Delete the named OTP
+| butt empty             |                    | Empty the current OTP
+| butt import otp        | <PATH>             | Import an OTP from the filesystem
+| butt info              |                    | Print info about the Butt
+| butt list              |                    | List all of the OTP names
+| butt set otp           | <STRING>           | Change the current OTP
+| butt set read_only     |                    | Disable OTP actions
+| butt set read_write    |                    | Enable OTP actions
+| db                     | <PATH>             | Open a database (or create it)
+| help                   | [ARG]...           | Display help on this command
+| info                   |                    | Display Well, Butt and Soda info
+| q                      |                    | Quit the program
+| quit                   |                    | Quit the program
+| soda decode            | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a Soda file
+| soda encode            | <INPUT FILENAME> <OUTPUT FILENAME> | Create a Soda file
+| soda file info         | <FILENAME>         | Print information about a Soda file
+| soda info              |                    | Print information about the current Soda settings
+| soda multi decode      | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a nested Soda file
+| soda multi encode      | <INPUT FILENAME> <OUTPUT FILENAME> <BUTT NAME>... | Create a nested Soda file
+| soda set mode          | <INTEGER>          | Set the Soda mode. 0=Encrypt using the butt; 1=Don't encrypt, store as raw data
+| tap decode             | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a Bottle file to the original file stored inside the Soda
+| tap encode             | <INPUT BOTTLE> <INPUT FILE> <OUTPUT BOTTLE> | Create a Bottle file using a PNG/FLAC Bottle and a Soda input file
+| tap file info          | <FILENAME>         | Print information about this Bottle file
+| tap multi decode       | <INPUT FILENAME> <OUTPUT FILENAME> | Decode a nested Bottle file (e.g. a PNG stored inside a FLAC)
+| well add path          | <PATH>             | Add the filenames inside this path to the Well database
+| well empty             |                    | Remove all filenames from the Well database
+| well info              |                    | Print information about the Well
+| well reset shifts      |                    | Reset the Well shifts
+| well save file         | <BYTES> <FILENAME> | Create a file of random data using the Well
+| well seed              |                    | Re-seed the Well PRNG using the current time
+| well seed int          | <INTEGER>          | Re-seed the Well PRNG using this integer
+
+
+
+==6.2 Examples==[SEC2]
+
+
+==6.2.1 Setting up a Well==[SEC21]
+
+The first time you use mtDWCLI you will need to set up the Well in order to
+create high quality random data.  This is done by passing some files to the Well
+as a source of real world entropy:
+
+```
+well add path /some/directory/location/001
+well add path /some/directory/location/002
+well add path /some/directory/location/003
+```
+
+To find out the current state of the Well:
+
+```
+well info
+```
+
+Once the Well is set up you can use it to create arbitrary files of random data
+like this:
+
+```
+well save file 11 /some/directory/location/004.bin
+well save file 127 /some/directory/location/005.bin
+well save file 128 /some/directory/location/006.bin
+well save file 129 /some/directory/location/007.bin
+well save file 1000000 /some/directory/location/010.bin
+```
+
+
+
+==6.2.2 Managing the Butt==[SEC22]
+
+The first time you use mtDWCLI you will need to set up the Butt to use a one time pad (OTP). By default a random OTP name is created for you.
+
+You must then put some Well data into the Butt using the Well as a source:
+
+```
+butt add buckets 25
+```
+
+Each bucket is 16 megabytes.
+
+You can create as many OTP's as you like, such as:
+
+```
+butt add otp bertie_06
+butt add otp jane_54
+butt add otp george_15
+butt add otp rosi_06
+```
+
+To switch to using a different OTP for encryption, and to see its current state use these commands:
+
+```
+butt set otp jane_54
+butt info
+```
+
+
+
+
+==6.2.3 Creating Soda==[SEC23]
+To encode a user file using encryption with data from the current Butt you could do this:
+
+```
+# encode and encrypt
+soda set mode 0
+
+soda encode input.txt output.soda
+```
+
+Sometimes you may not want to encrypt something. For example if you wanted to store some data in a PNG or FLAC file later using a Tap, you may not want to encrypt.  In this case to encode a Soda file you would use:
+
+```
+# encode but don't encrypt
+soda set mode 1
+
+soda encode input.txt output.soda
+```
+
+You can also encode multiple times using different Butts as follows:
+
+```
+soda multi encode input.txt output.soda george_15 jane_54 rosi_06 bertie_06
+```
+
+To decode a single or multiple nested Soda files you would use:
+
+```
+soda multi decode output.soda input.txt
+```
+
+
+
+
+==6.2.4 Using a Tap==[SEC24]
+If you want to conceal a file inside a PNG or FLAC file you would do this:
+
+```
+tap encode bottle.flac input.txt bottle.flac
+```
+
+The output file is still a valid audio file and can be used as such.  However it also contains the input.txt file which can be extracted by using:
+
+```
+tap decode bottle.flac input.txt
+```
+
+It is possible to nest several Soda levels in a file, and then place this into a FLAC or PNG file in a kind of Russian doll.  To extract a message buried inside more than one level you could use:
+
+```
+soda multi encode input.txt input.soda butt_1 butt_2 butt_3 butt_4
+tap encode bottle.flac input.soda bottle.soda.flac
+tap multi decode bottle.soda.flac input.txt
+```
+
+
+
+
+
+-------------------------------------------------
+[Previous chap_05.html] | [Contents chap_00.html] | [Next chap_A.html]

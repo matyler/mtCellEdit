@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -118,12 +118,12 @@ void MainWindow::updateGraph (
 		activate = false;
 	}
 
-	actGraphDuplicate->setEnabled ( activate );
-	actGraphRename->setEnabled ( activate );
-	actGraphDelete->setEnabled ( activate );
-	actGraphRedraw->setEnabled ( activate );
-	actGraphExport->setEnabled ( activate );
-	actGraphSClipboard->setEnabled ( activate );
+	act_GraphDuplicate->setEnabled ( activate );
+	act_GraphRename->setEnabled ( activate );
+	act_GraphDelete->setEnabled ( activate );
+	act_GraphRedraw->setEnabled ( activate );
+	act_GraphExport->setEnabled ( activate );
+	act_GraphSClipboard->setEnabled ( activate );
 
 	graphTextEdit->setReadOnly ( ! activate );
 }
@@ -149,35 +149,33 @@ void MainWindow::updateRecentFiles ()
 			)
 		{
 			// Hide if empty
-			actFileRecent[ i ]->setVisible ( false );
+			act_FileRecent[ i ]->setVisible ( false );
 
 			continue;
 		}
 
-		actFileRecent[ i ]->setText (
+		act_FileRecent[ i ]->setText (
 			mtQEX::qstringFromC ( buf ) );
 
-		actFileRecent[ i ]->setVisible ( true );
+		act_FileRecent[ i ]->setVisible ( true );
 	}
 
 	// Hide separator if not needed
 	if ( i > 0 )
 	{
-		actFileRecentSeparator->setVisible ( true );
+		act_FileRecentSeparator->setVisible ( true );
 	}
 	else
 	{
-		actFileRecentSeparator->setVisible ( false );
+		act_FileRecentSeparator->setVisible ( false );
 	}
 }
 
 void MainWindow::updateTitleBar ()
 {
-	char		txt[ 2048 ];
-	int		book;
-
-
-	book = be_titlebar_text ( cedFile, txt, sizeof ( txt ), memChanged );
+	char txt[ 2048 ];
+	int const book = be_titlebar_text ( cedFile, txt, sizeof ( txt ),
+		memChanged );
 
 	setWindowTitle ( mtQEX::qstringFromC ( txt ) );
 
@@ -193,43 +191,40 @@ void MainWindow::updateTitleBar ()
 
 void MainWindow::updateMenus ()
 {
-	CedSheet	* sheet;
-
-
 	if ( ! cedFile->cubook->book )
 	{
 		return;
 	}
 
-	sheet = cui_file_get_sheet ( cedFile );
+	CedSheet * const sheet = cui_file_get_sheet ( cedFile );
 
 	// Enable/disable undo/redo according to their availability
 	if ( cedFile->cubook->undo.undo_step )
 	{
-		actEditUndo->setEnabled ( true );
+		act_EditUndo->setEnabled ( true );
 	}
 	else
 	{
-		actEditUndo->setEnabled ( false );
+		act_EditUndo->setEnabled ( false );
 	}
 
 	if ( cedFile->cubook->undo.redo_step )
 	{
-		actEditRedo->setEnabled ( true );
+		act_EditRedo->setEnabled ( true );
 	}
 	else
 	{
-		actEditRedo->setEnabled ( false );
+		act_EditRedo->setEnabled ( false );
 	}
 
 	// Set the lock/unlock option for the sheet
 	if ( sheet && sheet->prefs.locked )
 	{
-		actSheetLock->setText ( "Unlock" );
+		act_SheetLock->setText ( "Unlock" );
 	}
 	else
 	{
-		actSheetLock->setText ( "Lock" );
+		act_SheetLock->setText ( "Lock" );
 	}
 
 	if (	sheet &&
@@ -237,11 +232,11 @@ void MainWindow::updateMenus ()
 			sheet->prefs.split_c1 != 0)
 		)
 	{
-		actSheetFreezePanes->setText ( "Unfreeze Panes" );
+		act_SheetFreezePanes->setText ( "Unfreeze Panes" );
 	}
 	else
 	{
-		actSheetFreezePanes->setText ( "Freeze Panes" );
+		act_SheetFreezePanes->setText ( "Freeze Panes" );
 	}
 }
 

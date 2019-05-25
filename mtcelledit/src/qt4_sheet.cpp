@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,12 +19,9 @@
 
 
 
-void MainWindow::pressSheetNew ()
+void MainWindow::press_SheetNew ()
 {
-	int		res;
-
-
-	res = cui_file_sheet_add ( cedFile );
+	int const res = cui_file_sheet_add ( cedFile );
 	if ( res == 1 )
 	{
 		QMessageBox::critical ( this, "Error",
@@ -50,19 +47,18 @@ void MainWindow::pressSheetNew ()
 	updateChangesChores ( 1, 1 );
 }
 
-void MainWindow::pressSheetDuplicate ()
+void MainWindow::press_SheetDuplicate ()
 {
-	CedSheet	* sheet = projectGetSheet (),
-			* newsheet;
-	int		res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	if ( ! sheet || ! sheet->book_tnode )
 	{
 		return;
 	}
 
-	res = cui_book_duplicate_sheet ( cedFile->cubook, sheet, &newsheet );
+	CedSheet * newsheet;
+	int res = cui_book_duplicate_sheet ( cedFile->cubook, sheet, &newsheet);
+
 	projectReportUpdates ( res );
 
 	if ( res )
@@ -126,9 +122,9 @@ int MainWindow::projectRenameSheet (
 	return 0;			// Success
 }
 
-void MainWindow::pressSheetRename ()
+void MainWindow::press_SheetRename ()
 {
-	CedSheet	* sheet = projectGetSheet ();
+	CedSheet * const sheet = projectGetSheet ();
 
 
 	if (	! sheet			||
@@ -167,11 +163,9 @@ void MainWindow::pressSheetRename ()
 	}
 }
 
-void MainWindow::pressSheetDelete ()
+void MainWindow::press_SheetDelete ()
 {
-	CedSheet	* sheet = projectGetSheet ();
-	int		page_num, res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	if ( ! sheet || ! sheet->book_tnode )
 	{
@@ -186,9 +180,8 @@ void MainWindow::pressSheetDelete ()
 		return;
 	}
 
-	page_num = buttonSheet->currentIndex ();
-
-	res = cui_book_destroy_sheet ( cedFile->cubook,
+	int page_num = buttonSheet->currentIndex ();
+	int const res = cui_book_destroy_sheet ( cedFile->cubook,
 		(char *)sheet->book_tnode->key );
 
 	// This is needed to replace the stale sheet reference in render
@@ -220,10 +213,8 @@ void MainWindow::pressSheetDelete ()
 QStringList MainWindow::getFileExportTypes ()
 {
 	QStringList	list;
-	int		i;
 
-
-	for (	i = CED_FILE_TYPE_NONE + 1;
+	for (	int i = CED_FILE_TYPE_NONE + 1;
 		i <= CED_FILE_TYPE_LEDGER_VAL_BOOK;
 		i ++
 		)
@@ -234,9 +225,9 @@ QStringList MainWindow::getFileExportTypes ()
 	return list;
 }
 
-void MainWindow::pressSheetExport ()
+void MainWindow::press_SheetExport ()
 {
-	CedSheet	* const sheet = projectGetSheet ();
+	CedSheet * const sheet = projectGetSheet ();
 
 	if ( ! sheet )
 	{
@@ -255,47 +246,46 @@ void MainWindow::pressSheetExport ()
 
 	while ( dialog.exec () )
 	{
-		QStringList	fileList = dialog.selectedFiles ();
-		QString		filename = fileList.at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
-
-		if ( ! filename.isEmpty () )
+		if ( filename.isEmpty () )
 		{
-			int	const	format = dialog.getFormat () + 1;
-			char * correct = cui_get_correct_sheet_filename (
-				filename.toUtf8().data(), format );
-
-			if ( correct )
-			{
-				filename = correct;
-				free ( correct );
-				correct = NULL;
-			}
-
-			if ( mtQEX::message_file_overwrite ( this, filename ) )
-			{
-				continue;
-			}
-
-			if ( be_export_sheet ( sheet,
-				filename.toUtf8 ().data (), format ) )
-			{
-				QMessageBox::critical ( this, "Error",
-					"Unable to export sheet." );
-
-				continue;
-			}
-
-			backend->remember_last_dir( filename.toUtf8 ().data() );
-
 			break;
 		}
+
+		int	const	format = dialog.getFormat () + 1;
+		char * correct = cui_get_correct_sheet_filename (
+			filename.toUtf8().data(), format );
+
+		if ( correct )
+		{
+			filename = correct;
+			free ( correct );
+			correct = NULL;
+		}
+
+		if ( mtQEX::message_file_overwrite ( this, filename ) )
+		{
+			continue;
+		}
+
+		if ( be_export_sheet ( sheet, filename.toUtf8().data(), format))
+		{
+			QMessageBox::critical ( this, "Error",
+				"Unable to export sheet." );
+
+			continue;
+		}
+
+		backend->remember_last_dir ( filename.toUtf8 ().data() );
+
+		break;
 	}
 }
 
-void MainWindow::pressSheetExportOutput ()
+void MainWindow::press_SheetExportOutput ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
+	CedSheet * const sheet = projectGetSheet ();
 
 	if ( ! sheet )
 	{
@@ -326,53 +316,54 @@ void MainWindow::pressSheetExportOutput ()
 
 	while ( dialog.exec () )
 	{
-		QStringList	fileList = dialog.selectedFiles ();
-		QString		filename = fileList.at ( 0 );
+		QString filename = mtQEX::get_filename ( dialog );
 
 
-		if ( ! filename.isEmpty () )
+		if ( filename.isEmpty () )
 		{
-			lastExportSheetType = dialog.getFormat ();
-
-			char * correct = cui_get_correct_export_filename (
-				filename.toUtf8().data(), lastExportSheetType );
-
-			if ( correct )
-			{
-				filename = correct;
-				free ( correct );
-				correct = NULL;
-			}
-
-			if ( mtQEX::message_file_overwrite ( this, filename ) )
-			{
-				continue;
-			}
-
-			if ( cui_export_output ( pprfs->getPrefsMem (), sheet,
-				filename.toUtf8 ().data (),
-				cedFile->name, lastExportSheetType,
-				pprfs->getInt ( GUI_INIFILE_ROW_PAD ),
-				pprfs->getString ( GUI_INIFILE_FONT_PANGO_NAME),
-				pprfs->getInt ( GUI_INIFILE_FONT_SIZE ) )
-				)
-			{
-				QMessageBox::critical ( this, "Error",
-					"Unable to export sheet output." );
-
-				continue;
-			}
-
-			backend->remember_last_dir( filename.toUtf8 ().data ());
-
 			break;
 		}
+
+		lastExportSheetType = dialog.getFormat ();
+
+		char * correct = cui_get_correct_export_filename (
+			filename.toUtf8().data(), lastExportSheetType );
+
+		if ( correct )
+		{
+			filename = correct;
+			free ( correct );
+			correct = NULL;
+		}
+
+		if ( mtQEX::message_file_overwrite ( this, filename ) )
+		{
+			continue;
+		}
+
+		if ( cui_export_output ( pprfs->getPrefsMem (), sheet,
+			filename.toUtf8 ().data (),
+			cedFile->name, lastExportSheetType,
+			pprfs->getInt ( GUI_INIFILE_ROW_PAD ),
+			pprfs->getString ( GUI_INIFILE_FONT_PANGO_NAME),
+			pprfs->getInt ( GUI_INIFILE_FONT_SIZE ) )
+			)
+		{
+			QMessageBox::critical ( this, "Error",
+				"Unable to export sheet output." );
+
+			continue;
+		}
+
+		backend->remember_last_dir( filename.toUtf8 ().data ());
+
+		break;
 	}
 }
 
-void MainWindow::pressSheetFreezePanes ()
+void MainWindow::press_SheetFreezePanes ()
 {
-	CedSheet	* sheet = projectGetSheet ();
+	CedSheet * const sheet = projectGetSheet ();
 	int		r1, c1, r2, c2, srow, scol, set_pos = 0;
 
 
@@ -434,10 +425,9 @@ void MainWindow::pressSheetFreezePanes ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow::pressSheetLock ()
+void MainWindow::press_SheetLock ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-
+	CedSheet * const	sheet = projectGetSheet ();
 
 	if ( ! sheet )
 	{
@@ -450,18 +440,18 @@ void MainWindow::pressSheetLock ()
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow::pressSheetPrevious ()
+void MainWindow::press_SheetPrevious ()
 {
-	int		i = buttonSheet->currentIndex () - 1;
+	int const i = buttonSheet->currentIndex () - 1;
 
 
 	buttonSheet->setCurrentIndex ( MAX ( i, 0 ) );
 }
 
-void MainWindow::pressSheetNext ()
+void MainWindow::press_SheetNext ()
 {
-	int	const	i = buttonSheet->currentIndex () + 1;
-	int	const	max = buttonSheet->count () - 1;
+	int const i = buttonSheet->currentIndex () + 1;
+	int const max = buttonSheet->count () - 1;
 
 
 	buttonSheet->setCurrentIndex ( MIN ( i, max ) );
@@ -475,20 +465,19 @@ void MainWindow::coreRecalcBook ()
 
 void MainWindow::coreRecalcSheet ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	ced_sheet_recalculate ( sheet, NULL, 0 );
 	ced_sheet_recalculate ( sheet, NULL, 1 );
 }
 
-void MainWindow::pressSheetRecalcBook ()
+void MainWindow::press_SheetRecalcBook ()
 {
 	coreRecalcBook ();
 	updateChangesChores ( 0, 1 );
 }
 
-void MainWindow::pressSheetRecalc ()
+void MainWindow::press_SheetRecalc ()
 {
 	coreRecalcSheet ();
 	updateChangesChores ( 0, 1 );
@@ -523,13 +512,9 @@ int MainWindow::getSelectionPosition (
 	return 0;
 }
 
-void MainWindow::pressRowInsert ()
+void MainWindow::press_RowInsert ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	int		row,
-			rowtot,
-			res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	// We check here to tell user action is invalid before wasting any
 	// CPU/user time.
@@ -539,12 +524,15 @@ void MainWindow::pressRowInsert ()
 		return;
 	}
 
+	int row, rowtot;
+
 	if ( be_selection_row_extent ( sheet, &row, &rowtot ) )
 	{
 		return;
 	}
 
-	res = cui_sheet_insert_row ( cedFile->cubook, sheet, row, rowtot );
+	int const res = cui_sheet_insert_row ( cedFile->cubook, sheet, row,
+		rowtot );
 	projectReportUpdates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
@@ -557,25 +545,23 @@ void MainWindow::pressRowInsert ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressRowInsertPasteHeight ()
+void MainWindow::press_RowInsertPasteHeight ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	int		row,
-			res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	if ( projectReportUpdates ( cui_check_sheet_lock ( sheet ) ) )
 	{
 		return;
 	}
 
+	int row;
 	if (	getSelectionPosition ( sheet, &row, NULL ) ||
 		row < 1 )
 	{
 		return;
 	}
 
-	res = cui_sheet_insert_row ( cedFile->cubook, sheet, row,
+	int const res = cui_sheet_insert_row ( cedFile->cubook, sheet, row,
 		cedClipboard->rows );
 	projectReportUpdates ( res );
 
@@ -589,13 +575,9 @@ void MainWindow::pressRowInsertPasteHeight ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressRowDelete ()
+void MainWindow::press_RowDelete ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	int		row,
-			rowtot,
-			res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	// We check here to tell user action is invalid before wasting any
 	// CPU/user time.
@@ -605,12 +587,14 @@ void MainWindow::pressRowDelete ()
 		return;
 	}
 
+	int row, rowtot;
 	if ( be_selection_row_extent ( sheet, &row, &rowtot ) )
 	{
 		return;
 	}
 
-	res = cui_sheet_delete_row ( cedFile->cubook, sheet, row, rowtot );
+	int const res = cui_sheet_delete_row ( cedFile->cubook, sheet, row,
+		rowtot );
 	projectReportUpdates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
@@ -623,13 +607,9 @@ void MainWindow::pressRowDelete ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressColumnInsert ()
+void MainWindow::press_ColumnInsert ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	int		col,
-			coltot,
-			res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	// We check here to tell user action is invalid before wasting any
 	// CPU/user time.
@@ -639,12 +619,14 @@ void MainWindow::pressColumnInsert ()
 		return;
 	}
 
+	int col, coltot;
 	if ( be_selection_col_extent ( sheet, &col, &coltot ) )
 	{
 		return;
 	}
 
-	res = cui_sheet_insert_column ( cedFile->cubook, sheet, col, coltot );
+	int const res = cui_sheet_insert_column ( cedFile->cubook, sheet, col,
+		coltot );
 	projectReportUpdates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
@@ -658,18 +640,16 @@ void MainWindow::pressColumnInsert ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressColumnInsertPasteWidth ()
+void MainWindow::press_ColumnInsertPasteWidth ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	int		col,
-			res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	if ( projectReportUpdates ( cui_check_sheet_lock ( sheet ) ) )
 	{
 		return;
 	}
 
+	int col;
 	if (	getSelectionPosition ( sheet, NULL, &col ) ||
 		col < 1
 		)
@@ -677,7 +657,7 @@ void MainWindow::pressColumnInsertPasteWidth ()
 		return;
 	}
 
-	res = cui_sheet_insert_column ( cedFile->cubook, sheet, col,
+	int const res = cui_sheet_insert_column ( cedFile->cubook, sheet, col,
 		cedClipboard->cols );
 	projectReportUpdates ( res );
 
@@ -692,13 +672,9 @@ void MainWindow::pressColumnInsertPasteWidth ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressColumnDelete ()
+void MainWindow::press_ColumnDelete ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	int		col,
-			coltot,
-			res;
-
+	CedSheet * const sheet = projectGetSheet ();
 
 	// We check here to tell user action is invalid before wasting any
 	// CPU/user time.
@@ -708,12 +684,14 @@ void MainWindow::pressColumnDelete ()
 		return;
 	}
 
+	int col, coltot;
 	if ( be_selection_col_extent ( sheet, &col, &coltot ) )
 	{
 		return;
 	}
 
-	res = cui_sheet_delete_column ( cedFile->cubook, sheet, col, coltot );
+	int const res = cui_sheet_delete_column ( cedFile->cubook, sheet, col,
+		coltot );
 	projectReportUpdates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
@@ -727,13 +705,9 @@ void MainWindow::pressColumnDelete ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressColumnSetWidth ()
+void MainWindow::press_ColumnSetWidth ()
 {
-	CedSheet	* const	sheet = projectGetSheet ();
-	CedCell		* cell;
-	int		w;
-
-
+	CedSheet * const sheet = projectGetSheet ();
 	if ( ! sheet )
 	{
 		return;
@@ -747,7 +721,9 @@ void MainWindow::pressColumnSetWidth ()
 		return;
 	}
 
-	cell = ced_sheet_get_cell ( sheet, 0, sheet->prefs.cursor_c1 );
+	int w;
+	CedCell * const cell = ced_sheet_get_cell ( sheet, 0,
+		sheet->prefs.cursor_c1 );
 
 	if ( cell && cell->prefs )
 	{
@@ -768,13 +744,13 @@ void MainWindow::pressColumnSetWidth ()
 		return;
 	}
 
-	int c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
+	int const c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
 
-	int ctot = MAX ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 )
+	int const ctot = MAX ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 )
 		- c + 1;
 
-	int res = cui_sheet_set_column_width ( cedFile->cubook, sheet, c, ctot,
-		w );
+	int const res = cui_sheet_set_column_width ( cedFile->cubook, sheet, c,
+		ctot, w );
 
 	projectReportUpdates ( res );
 
@@ -789,24 +765,19 @@ void MainWindow::pressColumnSetWidth ()
 	updateChangesChores ( 1, 1 );
 }
 
-void MainWindow::pressColumnSetWidthAuto ()
+void MainWindow::press_ColumnSetWidthAuto ()
 {
-	int		res,
-			c,
-			ctot;
-	CedSheet	* const	sheet = projectGetSheet ();
-
-
+	CedSheet * const sheet = projectGetSheet ();
 	if ( ! sheet )
 	{
 		return;
 	}
 
-	c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
-	ctot = MAX ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 ) - c + 1;
-
-	res = cui_sheet_set_column_width_auto ( cedFile->cubook, sheet, c,
-		ctot );
+	int const c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
+	int const ctot = MAX ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 )
+		- c + 1;
+	int const res = cui_sheet_set_column_width_auto ( cedFile->cubook,
+		sheet, c, ctot );
 
 	projectReportUpdates ( res );
 

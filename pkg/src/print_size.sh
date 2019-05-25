@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Report size of codebase
 # Mark Tyler 2013-2-8
 

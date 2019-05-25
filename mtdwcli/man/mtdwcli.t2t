@@ -1,0 +1,34 @@
+= NAME =
+@BIN_NAME@ - CLI random data and crypto tool
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [OPTION]...
+
+
+= DESCRIPTION =
+@BIN_NAME@ provides various random data and cryptographic tools via a Command
+Line Interface (CLI):
+
+* Quality random data generation via a PRNG and user provided entropy.
+
+* Database of one time pads (OTP).
+
+* Encoding of files (using the OTP database) into a "soda" file.
+
+* Steganography: infuse soda files into PNG images.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-db** STRING
+	Use this path to store the database files. By default this
+	is ~/.config/libmtDataWell/
+
+**-q**
+	Quiet - Don't show 'about' info on startup.
+
+**-t**
+	Interpret TAB as text.

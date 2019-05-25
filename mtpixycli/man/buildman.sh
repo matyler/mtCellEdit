@@ -1,11 +1,41 @@
-#!/bin/sh
+#!/bin/bash
 # THIS FILE IS A COPIED TEMPLATE! - Only edit in /pkg/src/
 
 
-BIN_UPPER=$(echo "$3" | tr '[a-z]' '[A-Z]')
+if [ "$3" = "" ]
+then
+	BIN_NAME=$(echo "$1" | sed 's/\.t2t$//')
+else
+	BIN_NAME="$3"
+fi
 
 
-cat "$1" |
-	awk -v CF="$2" '{ gsub ("@APP_VERSION@", CF, $0); print }'	|
-	awk -v CF="$3" '{ gsub ("@BIN_NAME@", CF, $0); print }'		|
-	awk -v CF="$BIN_UPPER" '{ gsub ("@BIN_UPPER@", CF, $0); print }'
+BIN_UPPER=$(echo "$BIN_NAME" | tr '[a-z]' '[A-Z]')
+
+
+# HEADER
+cat << EOF
+$BIN_UPPER
+Version $2
+%%date(%Y-%m-%d)
+
+%!encoding: utf-8
+
+EOF
+
+
+# BODY
+cat "$1" | awk -v CF="$BIN_NAME" '{ gsub ("@BIN_NAME@", CF, $0); print }'
+
+
+# FOOTER
+cat << EOF
+
+= HOMEPAGE =
+http://ced.marktyler.org/
+
+
+= AUTHOR =
+Mark Tyler
+
+EOF

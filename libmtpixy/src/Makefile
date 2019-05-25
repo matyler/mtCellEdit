@@ -1,40 +1,16 @@
 include		../_conf.txt
 
-LIB_SONAME	= $(LIB_NAME).1
-HEADER		= mtpixy.h
-OBJS		=			\
-		px_blit.o		\
-		px_brush.o		\
-		px_convert.o		\
-		px_effects.o		\
-		px_file.o		\
-		px_file_bmp.o		\
-		px_file_bp24.o		\
-		px_file_gif.o		\
-		px_file_jpeg.o		\
-		px_file_pixy_load.o	\
-		px_file_pixy_save.o	\
-		px_file_png.o		\
-		px_floodfill.o		\
-		px_font.o		\
-		px_image.o		\
-		px_impal.o		\
-		px_overlay.o		\
-		px_paint.o		\
-		px_palette.o		\
-		px_paste.o		\
-		px_polygon.o		\
-		px_quantize.o		\
-		px_scale.o		\
-		px_text.o		\
-
+HEADER		:= mtpixy.h
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(LIB_SONAME)
 
+
 $(LIB_SONAME):	$(OBJS)
-		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
 $(OBJS):	*.h
 
@@ -54,4 +30,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f *.o $(LIB_SONAME)
+		rm -f *.o *.so.$(LIB_SONUM)

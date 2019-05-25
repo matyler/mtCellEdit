@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
 
 
 APP_NAME="libmtDataWell"
-LIB_NAME="libmtdatawell.so"
+LIB_NAME="libmtdatawell"
 
 MTCF_INIT
 MTCF_PARSE_ARGS "$@"
@@ -15,7 +15,7 @@ MTCF_PRE_CONF
 MTCF_CHECK_LIBS mtkit mtpixy
 MTCF_PKGCONFIG "sqlite3 sndfile"
 
-I_EX="$I_EX -DAPP_NAME=\"\\\"$APP_NAME\"\\\""
+MTCF_ADD_APP_NAME
 
 MTCF_POST_CONF
 MTCF_PRINT_CONF

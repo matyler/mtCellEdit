@@ -1,39 +1,17 @@
 include		../_conf.txt
 
-LIB_SONAME	= $(LIB_NAME).1
-HEADER		= mtkit.h
-OBJS		=			\
-		mtkit_arg.o		\
-		mtkit_bitpack.o		\
-		mtkit_bytecube.o	\
-		mtkit_bytefile.o	\
-		mtkit_chunk.o		\
-		mtkit_cli.o		\
-		mtkit_cliitem.o		\
-		mtkit_clitab.o		\
-		mtkit_file.o		\
-		mtkit_misc.o		\
-		mtkit_mtstring.o	\
-		mtkit_num.o		\
-		mtkit_prefs.o		\
-		mtkit_recent.o		\
-		mtkit_sqlite.o		\
-		mtkit_string.o		\
-		mtkit_time.o		\
-		mtkit_tree.o		\
-		mtkit_tree_dup.o	\
-		mtkit_tree_scan.o	\
-		mtkit_utf8.o		\
-		mtkit_utree.o		\
-		mtkit_zip.o		\
-
+HEADER		:= mtkit.h
+OBJS		:= $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(LIB_SONAME)
 
+
 $(LIB_SONAME):	$(OBJS)
-		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
 $(OBJS):	*.h
 
@@ -53,4 +31,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f *.o $(LIB_SONAME)
+		rm -f *.o *.so.$(LIB_SONUM)

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,10 +28,6 @@ mtDW::SodaFile::SodaFile ()
 {
 }
 
-mtDW::SodaFile::~SodaFile ()
-{
-}
-
 
 
 struct UtreeLoad
@@ -43,7 +39,7 @@ struct UtreeLoad
 	{
 		m_root = mtkit_utree_load_mem ( NULL, (char *)mem, size, NULL );
 
-		m_soda = mtkit_utree_get_node ( m_root, UTREE_ROOT_NAME,
+		m_soda = mtkit_utree_get_node ( m_root, SODA_UTREE_ROOT_NAME,
 			MTKIT_UTREE_NODE_TYPE_ELEMENT );
 
 		free ( mem );
@@ -90,17 +86,21 @@ struct UtreeLoad
 
 int mtDW::SodaFile::open ( char const * const filename )
 {
+	if ( ! filename )
+	{
+		return report_error ( ERROR_SODA_OPEN_INSANITY );
+	}
+
 	char id[ mtKit::ChunkFile::CHUNK_HEADER_SIZE ] = {0};
 
 	if ( m_chunk.open ( filename, id ) )
 	{
-		return -1;
+		return report_error ( ERROR_SODA_OPEN_INPUT );
 	}
 
-	if ( 0 != memcmp ( id, FILE_ID, sizeof(id) ) )
+	if ( 0 != memcmp ( id, SODA_FILE_ID, sizeof(id) ) )
 	{
-		std::cerr << "Invalid Soda file ID.\n";
-		return 1;
+		return report_error ( ERROR_SODA_FILE_ID );
 	}
 
 	uint8_t * buf;
@@ -108,31 +108,28 @@ int mtDW::SodaFile::open ( char const * const filename )
 
 	if ( m_chunk.get_chunk ( &buf, &buflen, id, NULL ) )
 	{
-		std::cerr << "Unable to read first chunk.\n";
-		return 1;
+		return report_error ( ERROR_SODA_FILE_CHUNK_1 );
 	}
 
-	if ( 0 != memcmp ( id, FILE_CHUNK_ID, sizeof(id) ) )
+	if ( 0 != memcmp ( id, SODA_FILE_CHUNK_ID, sizeof(id) ) )
 	{
-		std::cerr << "Invalid Soda file header chunk ID.\n";
-		return 1;
+		return report_error ( ERROR_SODA_BAD_HEADER_ID );
 	}
 
 	UtreeLoad utree ( buf, buflen );
 	if ( ! utree.m_soda )
 	{
-		std::cerr << "Unable to find Soda header.\n";
-		return 1;
+		return report_error ( ERROR_SODA_BAD_HEADER );
 	}
 
-	utree.get_int ( m_mode_raw, HEADER_ITEM_MODE );
-	utree.get_uint64 ( m_filesize, HEADER_ITEM_SIZE );
+	utree.get_int ( m_mode_raw, SODA_HEADER_ITEM_MODE );
+	utree.get_uint64 ( m_filesize, SODA_HEADER_ITEM_SIZE );
 
 	if ( ! m_mode_raw )
 	{
-		utree.get_int ( m_bucket_pos, HEADER_ITEM_POS );
-		utree.get_int ( m_bucket, HEADER_ITEM_BUCKET );
-		utree.get_string ( m_butt_name, HEADER_ITEM_BUTT );
+		utree.get_int ( m_bucket_pos, SODA_HEADER_ITEM_POS );
+		utree.get_int ( m_bucket, SODA_HEADER_ITEM_BUCKET );
+		utree.get_string ( m_otp_name, SODA_HEADER_ITEM_BUTT );
 	}
 
 	return 0;

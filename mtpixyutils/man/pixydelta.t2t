@@ -1,16 +1,9 @@
-PIXYDELTA
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixydelta - get pixel delta's between 2 images
+@BIN_NAME@ - get pixel delta's between 2 images
 
 
 = SYNOPSIS =
-**pixydelta** [ [OPTION]... [FILE] ]...
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
 
 
 = DESCRIPTION =
@@ -31,16 +24,8 @@ Create an output file with the pixel differences between the 2 input files.
 
 
 = EXAMPLE =
-**pixydelta** in_a.bmp in_b.png -otype png -o out.png
+**@BIN_NAME@** in_a.bmp in_b.png -otype png -o out.png
 
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

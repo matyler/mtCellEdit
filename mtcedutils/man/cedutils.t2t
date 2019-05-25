@@ -1,20 +1,13 @@
-CEDUTILS
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedutils - spreadsheet utilities
+@BIN_NAME@ - spreadsheet utilities
 
 
 = SYNOPSIS =
-**cedutils** [ **OPTION** ]...
+**@BIN_NAME@** [ **OPTION** ]...
 
 
 = DESCRIPTION =
-mtCedUtils is a collection of command line functions for manipulating TSV or CSV spreadsheet text.  These functions can be executed using **cedutils** or the function names directly as listed in the **SEE ALSO** section.
+mtCedUtils is a collection of command line functions for manipulating TSV or CSV spreadsheet text.  These functions can be executed using **@BIN_NAME@** or the function names directly as listed in the **SEE ALSO** section.
 
 
 = OPTIONS =
@@ -108,11 +101,3 @@ cedrotate(1),
 cedset(1),
 cedsort(1),
 cedtranspose(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

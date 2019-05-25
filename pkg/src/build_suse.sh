@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Package up parts of mtcelledit distribution into Suse .rpm files
 # by Mark Tyler, 2017-9-18
 

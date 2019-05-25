@@ -1,7 +1,8 @@
 include		../_conf.txt
 
-APPS		=		\
+APPS		:=		\
 		pixydelta	\
+		pixyfade	\
 		pixyls		\
 		pixynew		\
 		pixypica	\
@@ -11,22 +12,16 @@ APPS		=		\
 		pixyscale	\
 		pixytwit	\
 
-OBJS		=		\
-		func_misc.o	\
-		func_pica.o	\
-		func_riba.o	\
-		func_rida.o	\
-		func_risa.o	\
-		func_twit.o	\
-		main.o		\
-
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 .PHONY:		all install uninstall clean
 
+
 all:		$(BIN_NAME)
 
+
 $(BIN_NAME):	$(OBJS)
-		$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS):	*.h
 

@@ -1,16 +1,9 @@
-CEDCLEAR
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedclear - clear spreadsheet cells
+@BIN_NAME@ - clear spreadsheet cells
 
 
 = SYNOPSIS =
-**cedclear** [ [ **OPTION** ] [ FILE ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ FILE ] ]...
 
 
 = DESCRIPTION =
@@ -36,11 +29,3 @@ Clear cells in a spreadsheet.  If FILE=="" then use the current sheet in memory.
 
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

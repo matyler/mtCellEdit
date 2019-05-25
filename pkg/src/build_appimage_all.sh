@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Build script to create AppImages for all GUI apps.
 # Mark Tyler 2018-3-23
 
@@ -7,10 +7,8 @@ wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous
 chmod a+x linuxdeployqt*.AppImage
 
 
-MODULES="mtcelledit-qt4"
 
-
-for PKG in $MODULES
+for PKG in "mtcelledit-qt4" "mtdatawell-qt4" "mtpixy-qt4" "mtraft-qt4"
 do
 	echo	./build_appimage.sh $PKG
 		./build_appimage.sh $PKG

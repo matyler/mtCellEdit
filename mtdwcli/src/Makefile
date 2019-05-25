@@ -1,17 +1,15 @@
 include		../_conf.txt
 
-OBJS		=			\
-		ui_jtf.o		\
-		ui_main.o		\
-
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 .PHONY:		all install uninstall clean
 
 
 all:		$(BIN_NAME)
 
+
 $(BIN_NAME):	$(OBJS)
-		$(CXX) $(OBJS) -o $(BIN_NAME) $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS):	*.h
 

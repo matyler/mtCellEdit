@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2017 Mark Tyler
+	Copyright (C) 2009-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1024,8 +1024,7 @@ int mtKit::Prefs::load (
 			return 1;
 		}
 
-		mkdir ( mtkit_string_get_buf ( str ),
-			S_IRWXU | S_IRWXG | S_IRWXO );
+		mtkit_mkdir ( mtkit_string_get_buf ( str ) );
 
 		if (	mtkit_string_append ( str, "/" ) ||
 			mtkit_string_append ( str, bin_name )
@@ -1036,8 +1035,7 @@ int mtKit::Prefs::load (
 			return 1;
 		}
 
-		mkdir ( mtkit_string_get_buf ( str ),
-			S_IRWXU | S_IRWXG | S_IRWXO );
+		mtkit_mkdir ( mtkit_string_get_buf ( str ) );
 
 		if ( mtkit_string_append ( str, "/prefs.txt" ) )
 		{

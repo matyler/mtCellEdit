@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -247,52 +247,24 @@ void Mainwindow::update_recent_files ()
 	}
 }
 
-void Mainwindow::menu_init (
-	QAction		** const act,
-	char	const	* const	txt,
-	char	const	* const	shcut,
-	char	const	* const	icn
-	)
-{
-	if ( icn )
-	{
-		act[0] = new QAction ( QIcon::fromTheme ( icn ), txt, this );
-		act[0]->setIconVisibleInMenu ( true );
-	}
-	else
-	{
-		act[0] = new QAction ( txt, this );
-	}
-
-	if ( shcut )
-	{
-		act[0]->setShortcut ( QString ( shcut ) );
-	}
-}
-
 void Mainwindow::create_menu ()
 {
-
-#define MENFU( A, B, C, D ) \
-	menu_init ( &act_ ## A , B, C, D ); \
-	connect ( act_ ## A, SIGNAL ( triggered () ), this, \
-		SLOT ( press_ ## A () ) );
-
 	QAction * act_file_new;
 	QAction * act_file_open;
 	QAction * act_file_save;
 	QAction * act_file_save_as;
 	QAction * act_file_quit;
 
-	MENFU ( file_new, "New ...", "Ctrl+N", "document-new" )
-	MENFU ( file_open, "Open ...", "Ctrl+O", "document-open" )
-	MENFU ( file_save, "Save", "Ctrl+S", "document-save" )
-	MENFU ( file_save_as, "Save As ...", "Shift+Ctrl+S", "document-save-as")
-	MENFU ( file_export_undo, "Export Undo Images ...", NULL,
+	QEX_MENU ( file_new, "New ...", "Ctrl+N", "document-new" )
+	QEX_MENU ( file_open, "Open ...", "Ctrl+O", "document-open" )
+	QEX_MENU ( file_save, "Save", "Ctrl+S", "document-save" )
+	QEX_MENU ( file_save_as, "Save As ...", "Shift+Ctrl+S",
+		"document-save-as")
+	QEX_MENU ( file_export_undo, "Export Undo Images ...", NULL,
 		"document-save-as" )
-	MENFU ( file_export_colormap, "Export Colourmap ...", NULL,
+	QEX_MENU ( file_export_colormap, "Export Colourmap ...", NULL,
 		"document-save-as" )
-	MENFU ( file_quit, "Quit", "Ctrl+Q", "application-exit" )
+	QEX_MENU ( file_quit, "Quit", "Ctrl+Q", "application-exit" )
 
 	QMenu * file_menu = menuBar ()->addMenu ( "&File" );
 	file_menu->setTearOffEnabled ( true );
@@ -332,13 +304,13 @@ void Mainwindow::create_menu ()
 
 	QAction * act_edit_paste_text;
 
-	MENFU ( edit_undo, "Undo", "Ctrl+Z", "edit-undo" )
-	MENFU ( edit_redo, "Redo", "Ctrl+Y", "edit-redo" )
-	MENFU ( edit_cut, "Cut", "Ctrl+X", "edit-cut" )
-	MENFU ( edit_copy, "Copy", "Ctrl+C", "edit-copy" )
-	MENFU ( edit_paste, "Paste", "Ctrl+K", "edit-paste" )
-	MENFU ( edit_paste_centre, "Paste To Centre", "Ctrl+V", NULL )
-	MENFU ( edit_paste_text, "Paste Text ...", "T", NULL )
+	QEX_MENU ( edit_undo, "Undo", "Ctrl+Z", "edit-undo" )
+	QEX_MENU ( edit_redo, "Redo", "Ctrl+Y", "edit-redo" )
+	QEX_MENU ( edit_cut, "Cut", "Ctrl+X", "edit-cut" )
+	QEX_MENU ( edit_copy, "Copy", "Ctrl+C", "edit-copy" )
+	QEX_MENU ( edit_paste, "Paste", "Ctrl+K", "edit-paste" )
+	QEX_MENU ( edit_paste_centre, "Paste To Centre", "Ctrl+V", NULL )
+	QEX_MENU ( edit_paste_text, "Paste Text ...", "T", NULL )
 
 	QMenu * edit_menu = menuBar ()->addMenu ( "&Edit" );
 	edit_menu->setTearOffEnabled ( true );
@@ -408,21 +380,22 @@ void Mainwindow::create_menu ()
 	QAction * act_image_rotate_anticlockwise;
 	QAction * act_image_information;
 
-	MENFU ( image_to_rgb, "Convert To RGB", NULL, NULL )
-	MENFU ( image_to_indexed, "Convert To Indexed ...", NULL, NULL )
-	MENFU ( image_delete_alpha, "Delete Alpha Channel", NULL, NULL )
-	MENFU ( image_scale, "Scale ...", "Page Up", NULL )
-	MENFU ( image_resize, "Resize ...", "Page Down", NULL )
-	MENFU ( image_crop, "Crop", "Delete", NULL )
-	MENFU ( image_flip_horizontally, "Flip Horizontally", NULL,
+	QEX_MENU ( image_to_rgb, "Convert To RGB", NULL, NULL )
+	QEX_MENU ( image_to_indexed, "Convert To Indexed ...", NULL, NULL )
+	QEX_MENU ( image_delete_alpha, "Delete Alpha Channel", NULL, NULL )
+	QEX_MENU ( image_scale, "Scale ...", "Page Up", NULL )
+	QEX_MENU ( image_resize, "Resize ...", "Page Down", NULL )
+	QEX_MENU ( image_crop, "Crop", "Delete", NULL )
+	QEX_MENU ( image_flip_horizontally, "Flip Horizontally", NULL,
 		"object-flip-horizontal" )
-	MENFU ( image_flip_vertically, "Flip Vertically", NULL,
+	QEX_MENU ( image_flip_vertically, "Flip Vertically", NULL,
 		"object-flip-vertical" )
-	MENFU ( image_rotate_clockwise, "Rotate Clockwise", NULL,
+	QEX_MENU ( image_rotate_clockwise, "Rotate Clockwise", NULL,
 		"object-rotate-right" )
-	MENFU ( image_rotate_anticlockwise, "Rotate Anticlockwise", NULL,
+	QEX_MENU ( image_rotate_anticlockwise, "Rotate Anticlockwise", NULL,
 		"object-rotate-left" )
-	MENFU ( image_information, "Information ...", "Ctrl+I", NULL )
+	QEX_MENU ( image_information, "Information ...", "Ctrl+I",
+		"dialog-information" )
 
 	QMenu * image_menu = menuBar ()->addMenu ( "&Image" );
 	image_menu->setTearOffEnabled ( true );
@@ -441,18 +414,18 @@ void Mainwindow::create_menu ()
 	image_menu->addSeparator ();
 	image_menu->addAction ( act_image_information );
 
-	MENFU ( selection_all, "Select All", "Ctrl+A", NULL )
-	MENFU ( selection_none, "Select None", NULL, NULL )
-	MENFU ( selection_lasso, "Lasso", NULL, NULL )
-	MENFU ( selection_fill, "Fill", NULL, NULL )
-	MENFU ( selection_outline, "Outline", NULL, NULL )
-	MENFU ( selection_flip_h, "Flip Horizontally", NULL,
+	QEX_MENU ( selection_all, "Select All", "Ctrl+A", "edit-select-all" )
+	QEX_MENU ( selection_none, "Select None", NULL, NULL )
+	QEX_MENU ( selection_lasso, "Lasso", NULL, NULL )
+	QEX_MENU ( selection_fill, "Fill", NULL, NULL )
+	QEX_MENU ( selection_outline, "Outline", NULL, NULL )
+	QEX_MENU ( selection_flip_h, "Flip Horizontally", NULL,
 		"object-flip-horizontal" )
-	MENFU ( selection_flip_v, "Flip Vertically", NULL,
+	QEX_MENU ( selection_flip_v, "Flip Vertically", NULL,
 		"object-flip-vertical" )
-	MENFU ( selection_rotate_c, "Rotate Clockwise", NULL,
+	QEX_MENU ( selection_rotate_c, "Rotate Clockwise", NULL,
 		"object-rotate-right" )
-	MENFU ( selection_rotate_a, "Rotate Anticlockwise", NULL,
+	QEX_MENU ( selection_rotate_a, "Rotate Anticlockwise", NULL,
 		"object-rotate-left" )
 
 	QMenu * selection_menu = menuBar ()->addMenu ( "&Selection" );
@@ -482,22 +455,22 @@ void Mainwindow::create_menu ()
 	QAction * act_palette_size;
 	QAction * act_palette_sort;
 
-	MENFU ( palette_new, "New ...", NULL, NULL )
-	MENFU ( palette_size, "Set Palette Size ...", NULL, NULL )
-	MENFU ( palette_load, "Load ...", NULL, NULL )
-	MENFU ( palette_save_as, "Save As ...", NULL, NULL )
-	MENFU ( palette_load_default, "Load Default", NULL, NULL )
-	MENFU ( palette_store, "Store", NULL, NULL )
-	MENFU ( palette_restore, "Restore", NULL, NULL )
-	MENFU ( palette_mask_all, "Mask All", NULL, NULL )
-	MENFU ( palette_mask_none, "Mask None", NULL, NULL )
-	MENFU ( palette_swap_ab, "Swap A && B", "X", NULL )
-	MENFU ( palette_create_gradient, "Create Gradient A to B", NULL, NULL )
-	MENFU ( palette_merge_duplicates, "Merge Duplicate Colours", NULL, NULL)
-	MENFU ( palette_remove_unused, "Remove Unused Colours", NULL, NULL )
-	MENFU ( palette_create_from_canvas, "Create from Canvas", NULL, NULL )
-	MENFU ( palette_quantize_pnn, "Quantize", NULL, NULL )
-	MENFU ( palette_sort, "Sort Colours", NULL, NULL )
+	QEX_MENU ( palette_new, "New ...", NULL, "document-new" )
+	QEX_MENU ( palette_size, "Set Palette Size ...", NULL, NULL )
+	QEX_MENU ( palette_load, "Load ...", NULL, "document-open" )
+	QEX_MENU ( palette_save_as, "Save As ...", NULL, "document-save-as" )
+	QEX_MENU ( palette_load_default, "Load Default", NULL, NULL )
+	QEX_MENU ( palette_store, "Store", NULL, NULL )
+	QEX_MENU ( palette_restore, "Restore", NULL, NULL )
+	QEX_MENU ( palette_mask_all, "Mask All", NULL, NULL )
+	QEX_MENU ( palette_mask_none, "Mask None", NULL, NULL )
+	QEX_MENU ( palette_swap_ab, "Swap A && B", "X", NULL )
+	QEX_MENU ( palette_create_gradient, "Create Gradient A to B", NULL,NULL)
+	QEX_MENU ( palette_merge_duplicates,"Merge Duplicate Colours",NULL,NULL)
+	QEX_MENU ( palette_remove_unused, "Remove Unused Colours", NULL, NULL )
+	QEX_MENU ( palette_create_from_canvas, "Create from Canvas", NULL, NULL)
+	QEX_MENU ( palette_quantize_pnn, "Quantize", NULL, NULL )
+	QEX_MENU ( palette_sort, "Sort Colours", NULL, "view-sort-ascending" )
 
 	QMenu * palette_menu = menuBar ()->addMenu ( "&Palette" );
 	palette_menu->setTearOffEnabled ( true );
@@ -525,14 +498,14 @@ void Mainwindow::create_menu ()
 	QAction * act_effects_transform_color;
 	QAction * act_effects_invert;
 
-	MENFU ( effects_transform_color, "Transform Colour ...", "Insert", NULL )
-	MENFU ( effects_invert, "Invert", NULL, NULL )
-	MENFU ( effects_edge_detect, "Edge Detect", NULL, NULL )
-	MENFU ( effects_sharpen, "Sharpen ...", NULL, NULL )
-	MENFU ( effects_soften, "Soften ...", NULL, NULL )
-	MENFU ( effects_emboss, "Emboss", NULL, NULL )
-	MENFU ( effects_normalize, "Normalize", NULL, NULL )
-	MENFU ( effects_bacteria, "Bacteria ...", NULL, NULL )
+	QEX_MENU ( effects_transform_color,"Transform Colour ...","Insert",NULL)
+	QEX_MENU ( effects_invert, "Invert", NULL, NULL )
+	QEX_MENU ( effects_edge_detect, "Edge Detect", NULL, NULL )
+	QEX_MENU ( effects_sharpen, "Sharpen ...", NULL, NULL )
+	QEX_MENU ( effects_soften, "Soften ...", NULL, NULL )
+	QEX_MENU ( effects_emboss, "Emboss", NULL, NULL )
+	QEX_MENU ( effects_normalize, "Normalize", NULL, NULL )
+	QEX_MENU ( effects_bacteria, "Bacteria ...", NULL, NULL )
 
 	QMenu * effects_menu = menuBar ()->addMenu ( "Effects" );
 	effects_menu->setTearOffEnabled ( true );
@@ -556,25 +529,25 @@ void Mainwindow::create_menu ()
 	QAction * act_options_zoom_main_100;
 	QAction * act_options_zoom_main_3200;
 
-	MENFU ( options_full_screen, "Full Screen", "F11", "view-fullscreen" )
-	MENFU ( options_preferences, "Preferences ...", "Ctrl+P",
+	QEX_MENU ( options_full_screen, "Full Screen", "F11", "view-fullscreen")
+	QEX_MENU ( options_preferences, "Preferences ...", "Ctrl+P",
 		"preferences-other" )
-	MENFU ( options_statusbar, "Show Status Bar", NULL, NULL )
-	MENFU ( options_pan_window, "Pan Window", "End", NULL )
-	MENFU ( options_split_canvas, "Split Canvas", "V", NULL )
-	MENFU ( options_split_switch, "Split Canvas Switch", "H", NULL )
-	MENFU ( options_split_focus, "Split Canvas Focus", NULL, NULL )
-	MENFU ( options_zoom_main_in, "Zoom In", "+", NULL )
-	MENFU ( options_zoom_main_out, "Zoom Out", "-", NULL )
-	MENFU ( options_zoom_main_3, "3%", "4", NULL )
-	MENFU ( options_zoom_main_100, "100%", "5", NULL )
-	MENFU ( options_zoom_main_3200, "3200%", "6", NULL )
-	MENFU ( options_zoom_split_in, "Zoom Split In", "Shift++", NULL )
-	MENFU ( options_zoom_split_out, "Zoom Split Out", "Shift+-", NULL )
-	MENFU ( options_zoom_split_3, "3%", "1", NULL )
-	MENFU ( options_zoom_split_100, "100%", "2", NULL )
-	MENFU ( options_zoom_split_3200, "3200%", "3", NULL )
-	MENFU ( options_zoom_grid, "Show Zoom Grid", NULL, NULL )
+	QEX_MENU ( options_statusbar, "Show Status Bar", NULL, NULL )
+	QEX_MENU ( options_pan_window, "Pan Window", "End", NULL )
+	QEX_MENU ( options_split_canvas, "Split Canvas", "V", NULL )
+	QEX_MENU ( options_split_switch, "Split Canvas Switch", "H", NULL )
+	QEX_MENU ( options_split_focus, "Split Canvas Focus", NULL, NULL )
+	QEX_MENU ( options_zoom_main_in, "Zoom In", "+", "zoom-in" )
+	QEX_MENU ( options_zoom_main_out, "Zoom Out", "-", "zoom-out" )
+	QEX_MENU ( options_zoom_main_3, "3%", "4", NULL )
+	QEX_MENU ( options_zoom_main_100, "100%", "5", "zoom-original" )
+	QEX_MENU ( options_zoom_main_3200, "3200%", "6", NULL )
+	QEX_MENU ( options_zoom_split_in, "Zoom Split In", "Shift++", "zoom-in")
+	QEX_MENU ( options_zoom_split_out,"Zoom Split Out","Shift+-","zoom-out")
+	QEX_MENU ( options_zoom_split_3, "3%", "1", NULL )
+	QEX_MENU ( options_zoom_split_100, "100%", "2", "zoom-original" )
+	QEX_MENU ( options_zoom_split_3200, "3200%", "3", NULL )
+	QEX_MENU ( options_zoom_grid, "Show Zoom Grid", NULL, NULL )
 
 	QMenu * options_menu = menuBar ()->addMenu ( "&Options" );
 	options_menu->setTearOffEnabled ( true );
@@ -622,9 +595,9 @@ void Mainwindow::create_menu ()
 	QAction * act_help_about_qt;
 	QAction * act_help_about;
 
-	MENFU ( help_help, "Help ...", "F1", "help-contents" )
-	MENFU ( help_about_qt, "About Qt ...", NULL, NULL )
-	MENFU ( help_about, "About ...", NULL, "help-about" )
+	QEX_MENU ( help_help, "Help ...", "F1", "help-contents" )
+	QEX_MENU ( help_about_qt, "About Qt ...", NULL, NULL )
+	QEX_MENU ( help_about, "About ...", NULL, "help-about" )
 
 	QMenu * help_menu = menuBar ()->addMenu ( "&Help" );
 	help_menu->setTearOffEnabled ( true );

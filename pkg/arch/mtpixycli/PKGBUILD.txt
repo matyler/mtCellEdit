@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="Pixel CLI"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('readline' 'libmtkit' 'libmtpixy' 'libmtpixyui')
+depends=('readline' 'libmtkit' 'libmtpixy')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

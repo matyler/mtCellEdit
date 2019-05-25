@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
 
 
 APP_NAME="libmtKit"
-LIB_NAME="libmtkit.so"
+LIB_NAME="libmtkit"
 
 MTCF_INIT
 MTCF_PARSE_ARGS "$@"
@@ -15,7 +15,7 @@ MTCF_PRE_CONF
 MTCF_CHECK_LIBS z
 MTCF_PKGCONFIG "sqlite3"
 
-BIN_FLAGS="$BIN_FLAGS -D_FILE_OFFSET_BITS=64"
+MTCF_ADD_BIN_FLAGS "-D_FILE_OFFSET_BITS=64"
 
 MTCF_POST_CONF
 MTCF_PRINT_CONF

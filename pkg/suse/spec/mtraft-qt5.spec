@@ -4,7 +4,7 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt5 Directory Analysis Tool
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit libmtqex5 libqt5-qtbase-devel
+BuildRequires:		libmtkit libmtcelledit libmtqex5 libqt5-qtbase-devel inkscape
 Requires:		libmtkit libmtcelledit libmtqex5 libQt5Core5
 
 %global debug_package %{nil}

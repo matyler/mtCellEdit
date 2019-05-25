@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -55,17 +55,17 @@ void mtDW::FileScan::path_recurse ( std::string const & path )
 			continue;
 		}
 
-		if ( buf.st_size < FILESIZE_MIN )
-		{
-			continue;
-		}
-
 		if ( S_ISDIR ( buf.st_mode ) )
 		{
 			path_recurse ( tmp );
 		}
 		else
 		{
+			if ( buf.st_size < FILESIZE_MIN )
+			{
+				continue;
+			}
+
 			if (	! S_ISLNK ( buf.st_mode ) &&
 				S_ISREG ( buf.st_mode )
 				)
@@ -85,12 +85,8 @@ mtDW::FileScan::FileScan (
 	:
 	m_file_db	( db )
 {
-	mtKit::SqliteTransaction trans ( db );
+	mtKit::SqliteTransaction trans ( db.m_db );
 
 	path_recurse ( mtKit::realpath ( path ) );
-}
-
-mtDW::FileScan::~FileScan ()
-{
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,9 +19,13 @@
 
 
 
+char const * const mtDW::Well::PASSWORD_OTHER_DEFAULT = "!?£#$@&%*";
+
+
+
 mtDW::Well::Well ( char const * const path )
 	:
-	op		( new WellOp ( path ) )
+	op		( new Well::Op ( path ) )
 {
 }
 
@@ -33,6 +37,11 @@ mtDW::Well::~Well ()
 void mtDW::Well::get_shifts ( int shifts[8] ) const
 {
 	op->m_bitshift.get_shifts ( shifts );
+}
+
+void mtDW::Well::set_shifts () const
+{
+	op->m_bitshift.set_shifts ( op->m_random );
 }
 
 uint64_t mtDW::Well::get_seed () const
@@ -50,11 +59,6 @@ void mtDW::Well::set_seed_by_time () const
 	op->m_random.set_seed_by_time ();
 }
 
-std::string const & mtDW::Well::get_path () const
-{
-	return op->get_path ();
-}
-
 int mtDW::Well::get_files_done () const
 {
 	return op->count_files_done ();
@@ -65,7 +69,7 @@ int mtDW::Well::get_files_todo () const
 	return op->count_files_todo ();
 }
 
-int mtDW::Well::add_path ( char const * const path ) const
+void mtDW::Well::add_path ( char const * const path ) const
 {
 	try
 	{
@@ -73,10 +77,7 @@ int mtDW::Well::add_path ( char const * const path ) const
 	}
 	catch ( ... )
 	{
-		return 1;
 	}
-
-	return 0;
 }
 
 void mtDW::Well::empty () const
@@ -90,5 +91,43 @@ int mtDW::Well::save_file (
 	) const
 {
 	return op->save_file ( bytes, filename );
+}
+
+int mtDW::Well::get_int () const
+{
+	return op->get_int ();
+}
+
+int mtDW::Well::get_int ( int modulo ) const
+{
+	return op->get_int ( modulo );
+}
+
+void mtDW::Well::get_data ( uint8_t * buf, size_t buflen ) const
+{
+	op->get_data ( buf, buflen );
+}
+
+void mtDW::Well::save_state () const
+{
+	return op->save_state ();
+}
+
+void mtDW::Well::shuffle ( std::vector<int> &items ) const
+{
+	size_t const size = items.size ();
+	if ( size < 2 )
+	{
+		return;
+	}
+
+	for ( size_t i = 0; i < size; i++ )
+	{
+		size_t	const	other = (size_t)get_int ( (int)size );
+		int	const	tmp = items[ other ];
+
+		items[ other ] = items[ i ];
+		items[ i ] = tmp;
+	}
 }
 

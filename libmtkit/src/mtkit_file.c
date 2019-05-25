@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -98,14 +98,11 @@ fail:
 	return NULL;
 }
 
-static int64_t mtkit_file_size (
+int64_t mtkit_file_size (
 	char	const *	const	filename
 	)
-	// -2 = System error (use errno to get details)
-	// -1 = Arg error
-	// Otherwise it returns the file size in bytes
 {
-	struct stat	buf;
+	struct stat buf;
 
 
 	if ( ! filename )
@@ -358,9 +355,27 @@ int mtkit_file_readable (
 	char	const *	const	filename
 	)
 {
-	if ( filename && 0 == access ( filename, R_OK ) )
+	char path[ PATH_MAX ];
+
+	// Don't count symlinks as a file, they could be for directories.
+	if ( ! filename || ! realpath ( filename, path ) )
 	{
-		return 1;
+		return 0;	// NOT a file
+	}
+
+	if (	0 == access ( path, F_OK )	&&
+		0 == access ( path, R_OK )
+		)
+	{
+		struct stat buf;
+		if (	lstat ( path, &buf )	||
+			S_ISDIR ( buf.st_mode )
+			)
+		{
+			return 0;	// NOT a file
+		}
+
+		return 1;	// Exists, is file, and readable
 	}
 
 	return 0;
@@ -1002,8 +1017,9 @@ char * mtkit_set_filename_extension (
 	// Replace current extension (if one exists)
 	{
 		char const * rchar = strrchr ( filename, '.' );
+		char const * rchar_sep = strrchr ( filename, MTKIT_DIR_SEP );
 
-		if ( rchar )
+		if ( rchar && rchar > rchar_sep )
 		{
 			return replace_extension ( filename,
 				(size_t)(rchar - filename), ext_a );
@@ -1012,5 +1028,46 @@ char * mtkit_set_filename_extension (
 
 	// At this point we know that there is no extension in filename
 	return mtkit_string_join ( filename, ".", ext_a, NULL );
+}
+
+int mtkit_file_lock (
+	char	const * const	filename,
+	int		* const	file_id
+	)
+{
+	*file_id = open ( filename, O_CREAT | O_RDWR, 0666 );
+
+	if ( -1 == *file_id )
+	{
+		return 1;		// Failed to open lock file
+	}
+
+	if ( -1 == lockf ( *file_id, F_TLOCK, 0 ) )
+	{
+		mtkit_file_unlock ( file_id );
+
+		return 1;		// Failed to lock the file
+	}
+
+	return 0;			// Success
+}
+
+void mtkit_file_unlock (
+	int	* const	file_id
+	)
+{
+	if ( -1 != *file_id )
+	{
+		close ( *file_id );
+		*file_id = -1;
+	}
+}
+
+void mtkit_mkdir ( char const * const path )
+{
+	if ( path )
+	{
+		mkdir ( path, S_IRWXU | S_IRWXG | S_IRWXO );
+	}
 }
 

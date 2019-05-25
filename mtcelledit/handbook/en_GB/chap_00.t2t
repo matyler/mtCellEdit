@@ -1,7 +1,4 @@
 
-
-
-
 %!postproc: '(?i)(</head>)' '<TITLE>The mtCellEdit Handbook - Contents</TITLE>\1'
 
 [Previous index.html] | [Next chap_01.html]
@@ -54,7 +51,6 @@
     - [5.1.1 mtNetLog chap_05.html#SEC11]
     - [5.1.2 mtRaft chap_05.html#SEC12]
   - [5.2 Porting and Hacking mtCellEdit chap_05.html#SEC2]
-    - [5.2.1 User Defined Menu Keyboard Shortcuts chap_05.html#SEC21]
   - [5.3 Command Line Examples chap_05.html#SEC3]
     - [5.3.1 awk chap_05.html#SEC31]
       - [5.3.1.1 mtNetLog Queries chap_05.html#SEC311]
@@ -79,14 +75,6 @@
   - [6.8 Shell Scripts chap_06.html#SEC8]
     - [6.8.1 Putting Several Sheets into a Book chap_06.html#SEC81]
     - [6.8.2 Extracting Sheets From a Book chap_06.html#SEC82]
-
-- [7. mtDWCLI chap_07.html]
-  - [7.1 Commands chap_07.html#SEC1]
-  - [7.2 Examples chap_07.html#SEC2]
-    - [7.2.1 Setting up a Well chap_07.html#SEC21]
-    - [7.2.2 Managing Butt's chap_07.html#SEC22]
-    - [7.2.3 Creating Soda chap_07.html#SEC23]
-    - [7.2.4 Using a Tap chap_07.html#SEC24]
 
 - [A. Miscellaneous chap_A.html]
   - [A.1 Shortcuts chap_A.html#SEC1]

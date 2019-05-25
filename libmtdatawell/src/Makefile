@@ -1,41 +1,16 @@
 include		../_conf.txt
 
-LIB_SONAME	= $(LIB_NAME).1
-HEADER		= mtdatawell.h
-OBJS		=			\
-		butt_databutt.o		\
-		butt_op.o		\
-		butt_otp.o		\
-		butt_read.o		\
-		core_misc.o		\
-		soda_datasoda.o		\
-		soda_decode.o		\
-		soda_encode.o		\
-		soda_load.o		\
-		soda_op.o		\
-		tap_audio.o		\
-		tap_audio_decode.o	\
-		tap_audio_encode.o	\
-		tap_datatap.o		\
-		tap_file.o		\
-		tap_image_decode.o	\
-		tap_image_encode.o	\
-		tap_op.o		\
-		well_datawell.o		\
-		well_filedb.o		\
-		well_filescan.o		\
-		well_filestream.o	\
-		well_op.o		\
-		well_save.o		\
-
+HEADER		:= mtdatawell.h
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 .PHONY:		all install uninstall clean
 
 
 all:		$(LIB_SONAME)
 
+
 $(LIB_SONAME):	$(OBJS)
-		$(CXX) -shared -o $(LIB_SONAME) $(OBJS) $(LDFLAGS) -Wl,-soname,$(LIB_SONAME)
+		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
 $(OBJS):	*.h
 
@@ -57,4 +32,4 @@ uninstall:
 		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
 
 clean:
-		rm -f *.o $(LIB_SONAME)
+		rm -f *.o *.so.$(LIB_SONUM)

@@ -1,16 +1,9 @@
-PIXYPICA
-mtPixyUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-pixypica - image analysis
+@BIN_NAME@ - image analysis
 
 
 = SYNOPSIS =
-**pixypica** [ [OPTION]... [FILE] ]...
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
 
 
 = DESCRIPTION =
@@ -27,11 +20,3 @@ PICA is Palette Image Cell Analysis.
 
 = SEE ALSO =
 pixyutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

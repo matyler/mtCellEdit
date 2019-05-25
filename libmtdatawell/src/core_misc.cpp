@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "core.h"
+#include "well.h"
 
 
 
@@ -27,9 +27,7 @@ std::string mtDW::prepare_path ( char const * const path )
 	{
 		real_path += path;
 
-		mkdir ( real_path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO );
-
-		real_path += MTKIT_DIR_SEP;
+		mtkit_mkdir ( real_path.c_str() );
 	}
 	else
 	{
@@ -37,21 +35,19 @@ std::string mtDW::prepare_path ( char const * const path )
 		real_path += MTKIT_DIR_SEP;
 		real_path += ".config";
 
-		mkdir ( real_path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO );
+		mtkit_mkdir ( real_path.c_str() );
 
 		real_path += MTKIT_DIR_SEP;
 		real_path += APP_NAME;
 
-		mkdir ( real_path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO );
-
-		real_path += MTKIT_DIR_SEP;
+		mtkit_mkdir ( real_path.c_str() );
 	}
 
-	return real_path;
+	return mtKit::realpath ( real_path ) + MTKIT_DIR_SEP;
 }
 
 void mtDW::get_temp_filename (
-	std::string	&	filename,
+	std::string		& filename,
 	char	const * const	prefix
 	)
 {
@@ -61,7 +57,16 @@ void mtDW::get_temp_filename (
 	{
 		snprintf ( buf, sizeof(buf), "_%02i", i );
 
-		filename = prefix;
+		if ( prefix )
+		{
+			filename = prefix;
+		}
+		else
+		{
+			filename.clear ();
+		}
+
+		filename += "_x9Zwq";
 		filename += buf;
 
 		if ( ! mtkit_file_readable ( filename.c_str () ) )
@@ -114,5 +119,112 @@ void mtDW::FilenameSwap::swap ()
 	char const * const f0 = f1;
 	f1 = f2;
 	f2 = f0;
+}
+
+int mtDW::Database::open ( char const * const path )
+{
+	try
+	{
+		mtKit::unique_ptr<mtDW::Well> well ( new mtDW::Well ( path ) );
+		mtKit::unique_ptr<mtDW::Butt> butt ( new mtDW::Butt ( path ) );
+		mtKit::unique_ptr<mtDW::Soda> soda ( new mtDW::Soda ( path ) );
+		mtKit::unique_ptr<mtDW::Tap> tap ( new mtDW::Tap () );
+
+		m_tap.reset ( tap.release () );
+		m_soda.reset ( soda.release () );
+		m_butt.reset ( butt.release () );
+		m_well.reset ( well.release () );
+
+		m_path = mtDW::prepare_path ( path );
+	}
+	catch ( ... )
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+int mtDW::remove_dir ( std::string const &path )
+{
+	mtDW::OpenDir dir ( path );
+
+	if ( ! dir.dp )
+	{
+		std::cerr << "Unable to opendir '" << path << "'\n";
+		return 1;
+	}
+
+	struct dirent * ep;
+
+	while ( ( ep = readdir ( dir.dp ) ) )
+	{
+		std::string const src = path + ep->d_name;
+		struct stat buf;
+
+		if ( lstat ( src.c_str (), &buf ) )
+		{
+			continue;
+		}
+
+		if (	S_ISDIR ( buf.st_mode )		||
+			S_ISLNK ( buf.st_mode )		||
+			! S_ISREG ( buf.st_mode )
+			)
+		{
+			continue;
+		}
+
+		if ( remove ( src.c_str () ) )
+		{
+			std::cerr << "Unable to remove '" << src << "'\n";
+			return 1;
+		}
+	}
+
+	if ( remove ( path.c_str () ) )
+	{
+		std::cerr << "Unable to remove '" << path << "'\n";
+		return 1;
+	}
+
+	return 0;
+}
+
+void mtDW::ByteBuf::load_whole ( std::string const &filename )
+{
+	int64_t const filesize = mtkit_file_size ( filename.c_str () );
+
+	if ( filesize < 0 || this->allocate ( (size_t)filesize ) )
+	{
+		this->allocate ( 0 );
+
+		return;
+	}
+
+	load_fill ( filename );
+}
+
+void mtDW::ByteBuf::load_fill ( std::string const &filename )
+{
+	mtKit::ByteFileRead file;
+
+	file.open ( filename.c_str (), 0 );
+	m_tot = file.read ( m_buf, m_size );
+	m_pos = 0;
+}
+
+int mtDW::ByteBuf::save ( std::string const &filename ) const
+{
+	mtKit::ByteFileWrite file;
+
+	if (	file.open ( filename.c_str () )		||
+		file.write ( m_buf, m_size )
+		)
+	{
+		return 1;
+	}
+
+	return 0;
 }
 

@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # Build and install script for all packages.
 # Mark Tyler 2011-12-7
 
 
 SUDO="sudo"
-MAKE_ARGS=""
 
 
 MT_flush_func()
@@ -18,7 +17,7 @@ MT_flush_func()
 		for PKG in $PKG_LIST
 		do
 			# Find the directory for each package
-			DIR_LIST="$DIR_LIST $(cat etc/apps_list.tsv |
+			DIR_LIST="$DIR_LIST $(cat $CWD/etc/apps_list.tsv |
 				awk -v "PKG=$PKG" '$1==PKG { print $2; exit }')"
 		done
 
@@ -92,7 +91,7 @@ MT_remove_func()
 		# On error exit
 		set -e
 
-		$CONF
+		MT_RUN_COM $CONF
 		$SUDO make uninstall
 	done
 

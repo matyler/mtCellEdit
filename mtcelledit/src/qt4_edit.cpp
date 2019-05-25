@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-void MainWindow::pressEditUndo ()
+void MainWindow::press_EditUndo ()
 {
 	int		res;
 
@@ -40,7 +40,7 @@ void MainWindow::pressEditUndo ()
 	updateChangesChores ( 1, 0 );	// Update menus/titles
 }
 
-void MainWindow::pressEditRedo ()
+void MainWindow::press_EditRedo ()
 {
 	int		res;
 
@@ -61,7 +61,7 @@ void MainWindow::pressEditRedo ()
 	updateChangesChores ( 1, 0 );	// Update menus/titles
 }
 
-void MainWindow::pressEditFixYears ()
+void MainWindow::press_EditFixYears ()
 {
 	int		res;
 
@@ -94,12 +94,12 @@ void MainWindow::pressEditFixYears ()
 	updateChangesChores ( 1, 0 );
 }
 
-void MainWindow::pressEditSelectAll ()
+void MainWindow::press_EditSelectAll ()
 {
 	setCursorRange ( 1, 1, MAX (1,sheetRows), MAX(1,sheetCols), 0, 0, 0 );
 }
 
-void MainWindow::pressOptionsEditCell ()
+void MainWindow::press_OptionsEditCell ()
 {
 	editCelltext->setFocus ( Qt::OtherFocusReason );
 }

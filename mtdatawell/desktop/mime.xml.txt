@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-mtdatawell-soda">
+         <comment xml:lang="en">Soda Encrypted File</comment>
+         <generic-icon name="application-x-@BIN_NAME@"/>
+         <magic>
+             <match value="\000mtCSoda" type="string" offset="0"/>
+         </magic>
+         <glob pattern="*.soda"/>
+  </mime-type>
+</mime-info>
+

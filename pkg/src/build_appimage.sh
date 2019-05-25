@@ -22,7 +22,8 @@ MT_PARSE_ARGS libmtkit libmtpixy libmtqex4
 
 case "$1" in
 "mtcelledit"* )	MT_PARSE_ARGS libmtcelledit libmtcedui mtcelledit-qt4;;
-"mtpixy"* )	MT_PARSE_ARGS libmtpixyui mtpixy-qt4;;
+"mtdatawell"* )	MT_PARSE_ARGS libmtdatawell mtdatawell-qt4;;
+"mtpixy"* )	MT_PARSE_ARGS mtpixy-qt4;;
 "mtraft"* )	MT_PARSE_ARGS libmtcelledit mtraft-qt4;;
 * )
 	echo
@@ -47,8 +48,9 @@ rm -rf $APPDIR
 PRECONF="CFLAGS=\"-I$APPDIR/usr/include -O1 -std=gnu11\""
 PRECONF="$PRECONF CXXFLAGS=\"-I$APPDIR/usr/include -O1 -std=gnu++11\""
 PRECONF="$PRECONF LDFLAGS=\"-L$APPDIR/usr/lib -Wl,--as-needed\""
+PRECONF="$PRECONF APPIMAGE_PREFIX=\"../..\""
 
-CONF="$CONF --disable-man --disable-handbook"
+CONF="$CONF --disable-man"
 
 DESTDIR="$APPDIR"
 

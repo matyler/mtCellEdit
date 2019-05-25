@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007-2017 Mark Tyler
+	Copyright (C) 2007-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1044,7 +1044,6 @@ int mtkit_strtothou (
 	)
 {
 	int		i, j, k, start, end, oldlen, newlen;
-	size_t		len;
 	char	const	* ch;
 
 
@@ -1057,7 +1056,7 @@ int mtkit_strtothou (
 		return -1;
 	}
 
-	len = strlen ( src );
+	size_t const len = strlen ( src );
 	if ( len > INT_MAX / 4 )
 	{
 		return -1;

@@ -1,20 +1,13 @@
-MTCHLS
-mtUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-mtbinana - binary file analysis
+@BIN_NAME@ - binary file analysis
 
 
 = SYNOPSIS =
-**mtbinana** [ **OPTIONS** ] [ FILENAME ]...
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]...
 
 
 = DESCRIPTION =
-mtBinana prints information about a given file, or list of files.
+@BIN_NAME@ prints information about a given file, or list of files.
 
 
 = OPTIONS =
@@ -23,11 +16,3 @@ mtBinana prints information about a given file, or list of files.
 
 **-double**
 	Analyse byte pairs (default is to analyse each byte).
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

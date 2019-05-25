@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,26 +18,6 @@
 #include "rdc.h"
 
 
-
-static int64_t mtkit_file_size (
-	char	const * const	filename
-	)
-{
-	struct stat	buf;
-
-
-	if ( ! filename )
-	{
-		return -1;
-	}
-
-	if ( stat ( filename, &buf ) )
-	{
-		return -2;
-	}
-
-	return buf.st_size;
-}
 
 static void mtkit_print_errno (
 	int	const	e

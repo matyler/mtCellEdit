@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2018 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 
 
 Mainwindow::Mainwindow (
-	QApplication	&app,
 	Backend		&be
 	)
 	:
@@ -35,6 +34,11 @@ Mainwindow::Mainwindow (
 	m_view_mode_flags 	( 0 )
 {
 	setEnabled ( false );
+
+	std::string path;
+	mtKit::get_data_dir ( path, DATA_INSTALL "/icons/hicolor/256x256/apps/"
+		BIN_NAME ".png" );
+	setWindowIcon ( QIcon ( path.c_str () ) );
 
 
 	mtPixy::Image	* im_screenshot = NULL;
@@ -84,7 +88,8 @@ Mainwindow::Mainwindow (
 	// Hide all widgets for now
 	toggle_view_mode ();
 
-	app.processEvents ();	// Needed to centralise large images properly
+	// Needed to centralise large images properly
+	mtQEX::process_qt_pending ();
 
 	if ( im_screenshot )
 	{
@@ -225,13 +230,13 @@ int main (
 
 
 	// I don't want Qt snooping or changing my command line.
-	int		dummy_argc	= 1;
-	char		dummy_str[1]	= { 0 };
-	char		* dummy_argv	= dummy_str;
+	int	dummy_argc	= 1;
+	char	dummy_str[1]	= { 0 };
+	char	* dummy_argv	= dummy_str;
 
 
 	QApplication	app ( dummy_argc, &dummy_argv );
-	Mainwindow	window ( app, backend );
+	Mainwindow	window ( backend );
 
 	return app.exec ();
 }

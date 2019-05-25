@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,17 +19,29 @@
 
 
 
-static void decode_rgb (
-	uint8_t		* const	dest,
-	uint8_t	const *		src,
-	size_t		const	src_tot
+static int decode_rgb (
+	mtKit::ByteFileWrite	&file,
+	uint8_t	const *	const	src_mem,
+	uint64_t	const	src_len
 	)
 {
-	size_t const tot = src_tot / 8;
+	uint8_t		buf[8192];
+	uint64_t const	buflen = (uint64_t)sizeof(buf);
+	uint8_t	const	* src = src_mem;
 
-	for ( size_t i = 0; i < tot; i++ )
+	for ( uint64_t j = 0; j < src_len; )
 	{
-		dest[i] = (uint8_t)(
+		uint64_t const remaining = src_len - j;
+		uint64_t const tot = MIN ( buflen, remaining / 8 );
+
+		if ( tot < 1 )
+		{
+			break;
+		}
+
+		for ( uint64_t i = 0; i < tot; i++ )
+		{
+			buf[i] = (uint8_t)(
 				((src[0] & 1) << 0) |
 				((src[1] & 1) << 1) |
 				((src[2] & 1) << 2) |
@@ -38,53 +50,64 @@ static void decode_rgb (
 				((src[5] & 1) << 5) |
 				((src[6] & 1) << 6) |
 				((src[7] & 1) << 7) );
-		src += 8;
+
+			src += 8;
+		}
+
+		if ( file.write ( buf, tot ) )
+		{
+			return 1;
+		}
+
+		j += tot * 8;
 	}
+
+	return 0;
 }
 
-int mtDW::TapOp::decode_image (
+int mtDW::Tap::Op::decode_image (
 	mtPixy::Image	* const	image,
-	char	const * const	output
+	char	const * const	output,
+	int			& type
 	)
 {
 	uint64_t const pixels = (uint64_t)(image->get_width () *
 					image->get_height ());
 
-	mtKit::ByteBuf buf;
-
-	buf.array_len = (size_t)(pixels * (24 / 3));
-	buf.array = (uint8_t *)calloc ( 1, buf.array_len );
-
 	try
 	{
-		if ( ! buf.array )
+		mtKit::ByteFileWrite file;
+
+		if ( file.open ( output ) )
 		{
-			std::cerr << "Unable to allocate buffer memory.\n";
-			throw 123;
+			return report_error ( ERROR_IMAGE_OPEN_OUTPUT );
 		}
 
-		decode_rgb( buf.array, image->get_canvas(), (size_t)(pixels*3));
-
-		if ( buf.save ( output ) )
+		if ( decode_rgb ( file, image->get_canvas (), pixels * 3 ) )
 		{
-			std::cerr << "Unable to save buffer.\n";
-			throw 123;
+			remove ( output );
+
+			return report_error ( ERROR_IMAGE_WRITE );
 		}
 
 		SodaFile soda;
 		if ( 0 == soda.open ( output ) )
 		{
-			return TapFile::TYPE_RGB_1;
+			type = TapFile::TYPE_RGB_1;
+			return 0;
 		}
 
-		// Fall through, removing the temp file
+		// Not a Soda file so remove temp file
+		remove ( output );
+
+		type = TapFile::TYPE_RGB;
+		return 0;
 	}
 	catch ( ... )
 	{
+		remove ( output );
 	}
 
-	remove ( output );
-
-	return TapFile::TYPE_INVALID;
+	return report_error ( ERROR_IMAGE_DECODE_EXCEPTION );
 }
 

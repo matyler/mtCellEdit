@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,95 +19,82 @@
 
 
 
-int mtDW::SodaOp::decode (
+int mtDW::Soda::Op::decode (
 	Butt		* const	butt,
 	char	const * const	input,
 	char	const * const	output
 	)
 {
-	SodaFile soda;
-
-	if ( soda.open ( input ) )
+	if ( ! input || ! output )
 	{
-		return 1;
+		return report_error ( ERROR_SODA_DECODE_INSANITY );
 	}
 
-	mtKit::ByteBuf	xorb;
+	SodaFile	soda_file;
 
-	if ( ! soda.m_mode_raw )
+	RETURN_ON_ERROR ( soda_file.open ( input ) )
+
+	ByteBuf		xorb;
+
+	if ( ! soda_file.m_mode_raw )
 	{
 		if ( ! butt )
 		{
-			std::cerr << "No butt available.\n";
-			return 1;
+			return report_error ( ERROR_SODA_DECODE_NO_BUTT );
 		}
 
-		xorb.array_len = CHUNK_SIZE;
-		xorb.array = (uint8_t *)calloc ( 1, CHUNK_SIZE );
-
-		if ( ! xorb.array )
+		if ( xorb.allocate ( SODA_CHUNK_SIZE ) )
 		{
-			std::cerr << "Unable to allocate XOR buffer.\n";
-			return 1;
+			return report_error ( ERROR_SODA_DECODE_NO_XOR );
 		}
 
-		if ( butt->read_set_butt ( soda.m_butt_name, soda.m_bucket,
-			soda.m_bucket_pos ) )
-		{
-			std::cerr << "Unable to prepare butt.\n";
-			return 1;
-		}
+		RETURN_ON_ERROR ( butt->read_set_otp ( soda_file.m_otp_name,
+			soda_file.m_bucket, soda_file.m_bucket_pos ) )
 	}
 
 	mtKit::ByteFileWrite file_out;
 
 	if ( file_out.open ( output ) )
 	{
-		std::cerr << "Unable to open output file.\n";
-		return 1;
+		return report_error ( ERROR_SODA_OPEN_OUTPUT );
 	}
 
 	char		id[ mtKit::ChunkFile::CHUNK_HEADER_SIZE ] = {0};
 	uint8_t		* buf;
 	uint32_t	buflen;
-	mtKit::ByteBuf	membuf;
-	uint64_t	todo = soda.m_filesize;
+	ByteBuf		membuf;
+	uint64_t	todo = soda_file.m_filesize;
 
 	while ( todo > 0 )
 	{
 		membuf.set ( NULL, 0 );
 
-		if ( soda.m_chunk.get_chunk( &buf, &buflen, id, NULL ) )
+		if ( soda_file.m_chunk.get_chunk( &buf, &buflen, id, NULL ) )
 		{
-			std::cerr << "Missing bytes not found: " << todo <<"\n";
-			return 1;
+			return report_error ( ERROR_SODA_MISSING_DATA );
 		}
 
-		if ( 0 != memcmp ( id, FILE_CHUNK_ID, sizeof(id) ) )
+		if ( 0 != memcmp ( id, SODA_FILE_CHUNK_ID, sizeof(id) ) )
 		{
-			std::cerr << "Invalid Soda file data chunk ID.\n";
-			return 1;
+			return report_error ( ERROR_SODA_BAD_CHUNK_ID );
 		}
 
 		membuf.set ( buf, buflen );
 
-		if ( ! soda.m_mode_raw )
+		if ( ! soda_file.m_mode_raw )
 		{
-			if ( buflen > xorb.array_len )
+			if ( buflen > xorb.get_size () )
 			{
-				std::cerr << "Chunk too large.\n";
-				return 1;
+				return report_error ( ERROR_SODA_BIG_CHUNK );
 			}
 
-			if ( butt->read_get_data ( xorb.array, buflen ) )
-			{
-				std::cerr << "Unable to get butt data.\n";
-				return 1;
-			}
+			uint8_t * const src = xorb.get_buf ();
+
+			RETURN_ON_ERROR ( butt->read_get_data ( src, buflen ) )
 
 			for ( size_t i = 0; i < buflen; i++ )
 			{
-				buf[i] ^= xorb.array[i];
+				buf[i] ^= src[i];
 			}
 		}
 
@@ -117,8 +104,7 @@ int mtDW::SodaOp::decode (
 		{
 			if ( file_out.write ( buf, tot ) )
 			{
-				std::cerr <<"Problem writing to output file.\n";
-				return 1;
+				return report_error ( ERROR_SODA_FILE_WRITE );
 			}
 
 			todo -= tot;
@@ -128,43 +114,52 @@ int mtDW::SodaOp::decode (
 	return 0;
 }
 
-int mtDW::SodaOp::multi_decode (
+int mtDW::Soda::Op::multi_decode (
 	Butt		* const	butt,
 	char	const * const	input,
 	char	const * const	output
 	)
 {
+	if ( ! input || ! output )
+	{
+		return report_error ( ERROR_SODA_DECODE_INSANITY );
+	}
+
 	FilenameSwap	name ( output );
-	int		tot = 0;
 
 	name.m_res = decode ( butt, input, output );
-
-	if ( 0 == name.m_res )
+	if ( name.m_res )
 	{
-		tot ++;
-
-		while ( 1 )
-		{
-			name.m_res = decode ( butt, name.f1, name.f2 );
-
-			name.swap ();
-
-			if ( name.m_res )
-			{
-				break;
-			}
-		}
+		// We must decode at least once (and remove rogue output temp)
+		return name.m_res;
 	}
 
-	if ( tot > 0 )
+	// Some errors are not really errors in this context
+	mtDW::set_stderr_less ();
+
+	do
 	{
-		name.m_res = 0;
-	}
-	else
+		name.m_res = decode ( butt, name.f1, name.f2 );
+		name.swap ();
+
+	} while ( 0 == name.m_res );
+
+	mtDW::set_stderr_more ();
+
+	// Certain failures are allowed, i.e. we have extracted the input file
+	// which will NOT have a valid Soda header.
+	switch ( name.m_res )
 	{
-		name.m_res = 1;
+	case ERROR_SODA_OPEN_INPUT:
+	case ERROR_SODA_FILE_ID:
+	case ERROR_SODA_FILE_CHUNK_1:
+	case ERROR_SODA_BAD_HEADER_ID:
+	case ERROR_SODA_BAD_HEADER:
+		name.m_res = 0;		// Keep output file
+		return 0;
 	}
 
-	return name.m_res;
+//	Report any error as it was suppressed earlier on
+	return report_error ( name.m_res );
 }
 

@@ -1,16 +1,9 @@
-CEDPASTE
-mtCedUtils @APP_VERSION@
-%%date(%Y-%m-%d)
-
-%!encoding: utf-8
-
-
 = NAME =
-cedpaste - paste data into spreadsheet
+@BIN_NAME@ - paste data into spreadsheet
 
 
 = SYNOPSIS =
-**cedpaste** [ [ **OPTION** ] [ FILE ] ]...
+**@BIN_NAME@** [ [ **OPTION** ] [ FILE ] ]...
 
 
 = DESCRIPTION =
@@ -40,11 +33,3 @@ Load first file, and paste subsequent files onto the sheet.
 
 = SEE ALSO =
 cedutils(1)
-
-
-= HOMEPAGE =
-http://ced.marktyler.org/
-
-
-= AUTHOR =
-Mark Tyler

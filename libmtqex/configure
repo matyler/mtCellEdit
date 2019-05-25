@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 . ./mtConf.txt
@@ -20,12 +20,12 @@ MTCF_CHECK_LIBS mtkit mtpixy stdc++
 case "$ENABLE_TK" in
 qt4 )
 	TK_OBJ="moc_mtqex4.o"
-	LIB_NAME="libmtqex4.so"
+	LIB_NAME="libmtqex4"
 	HEADER_NAME="mtqex4.h"
 	;;
 qt5 )
 	TK_OBJ="moc_mtqex5.o"
-	LIB_NAME="libmtqex5.so"
+	LIB_NAME="libmtqex5"
 	HEADER_NAME="mtqex5.h"
 	;;
 esac

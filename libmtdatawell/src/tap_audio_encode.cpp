@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2019 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,12 +22,12 @@
 static size_t encode_with_input (
 	short		*	mem,
 	size_t		const	memlen,
-	mtKit::ByteBuf	*	buf
+	mtDW::ByteBuf	* const	buf
 	)
 {
-	size_t const buf_todo = buf->array_len - buf->pos;
+	size_t const buf_todo = buf->get_size () - buf->get_pos ();
 	size_t const bytes = MIN ( memlen / 8, buf_todo );
-	uint8_t const * const src = buf->array + buf->pos;
+	uint8_t const * const src = buf->get_buf () + buf->get_pos ();
 
 	for ( size_t i = 0; i < bytes; i++ )
 	{
@@ -43,35 +43,32 @@ static size_t encode_with_input (
 		mem += 8;
 	}
 
-	buf->pos += bytes;
+	buf->set_pos ( buf->get_pos () + bytes );
 
 	return bytes;
 }
 
-static void encode_with_butt (
-	mtDW::Butt	* const	butt,
+static void encode_with_well (
+	mtDW::Well	* const	well,
 	short		*	dst,
 	size_t		const	memlen,
-	mtKit::ByteBuf	*	buf
+	mtDW::ByteBuf	* const	buf
 	)
 {
-	if ( ! butt || ! buf->array )
+	if ( ! well || ! buf->get_buf () )
 	{
 		return;
 	}
 
-	// Reduce usage of Butt data as much as possible
-	uint64_t const max_bytes = MIN ( memlen, buf->array_len );
+	// Reduce usage of Well data as much as possible
+	uint64_t const max_bytes = MIN ( memlen, buf->get_size () );
 	uint64_t const major = max_bytes / 8;
 	uint64_t const minor = max_bytes % 8;
 	uint64_t const bytes = major + MIN ( minor, 1 );
 
-	if ( butt->otp_get_data ( buf->array, (size_t)bytes ) )
-	{
-		return;
-	}
+	well->get_data ( buf->get_buf (), (size_t)bytes );
 
-	uint8_t const * const src = buf->array;
+	uint8_t const * const src = buf->get_buf ();
 
 	if ( major > 0 )
 	{
@@ -107,22 +104,27 @@ static void encode_with_butt (
 	}
 }
 
-int mtDW::TapOp::encode_audio (
+int mtDW::Tap::Op::encode_audio (
 	TapAudioRead	* const	audio_in,
-	Butt		* const	butt,
+	Well		* const	well,
 	char	const * const	input,
 	char	const * const	output
 	)
 {
 	if ( ! audio_in || ! input || ! output )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_ENCODE_INSANITY );
 	}
 
 	SF_INFO const * audio_info = audio_in->get_info ();
-	if ( ! audio_info || audio_info->channels < 1 )
+	if ( ! audio_info )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_OPEN_INPUT );
+	}
+
+	if ( audio_info->channels < 1 )
+	{
+		return report_error ( ERROR_AUDIO_BAD_CHANNELS );
 	}
 
 	size_t const channels = (size_t)audio_info->channels;
@@ -132,23 +134,18 @@ int mtDW::TapOp::encode_audio (
 
 	if ( ! mem )
 	{
-		std::cerr << "Unable to load flavour file.\n";
-		return 1;
+		return report_error ( ERROR_LOAD_INPUT );
 	}
 
-	mtKit::ByteBuf buf;
-	buf.array = (uint8_t *)mem;
-	buf.array_len = (uint32_t)tot;
-	buf.pos = 0;
+	ByteBuf buf;
+
+	buf.set ( (uint8_t *)mem, (size_t)tot );
 
 	uint64_t todo = (uint64_t)tot;
 
 	TapAudioWrite audio_out;
 
-	if ( audio_out.open ( audio_in->get_info (), output ) )
-	{
-		return 1;
-	}
+	RETURN_ON_ERROR ( audio_out.open ( audio_in->get_info (), output ) )
 
 	short * audio_buf = NULL;
 	size_t audio_len = 0;
@@ -156,15 +153,11 @@ int mtDW::TapOp::encode_audio (
 
 	while ( todo > 0 )
 	{
-		if ( audio_in->read ( &audio_buf, &audio_len ) )
-		{
-			return 1;
-		}
+		RETURN_ON_ERROR ( audio_in->read ( &audio_buf, &audio_len ) )
 
 		if ( audio_len < 8 )
 		{
-			std::cerr << "Bottle is too small.\n";
-			return 1;
+			return report_error ( ERROR_AUDIO_TOO_SMALL );
 		}
 
 		if ( (8 * todo) < audio_len )
@@ -182,53 +175,35 @@ int mtDW::TapOp::encode_audio (
 
 		if ( done < 1 )
 		{
-			std::cerr << "Unable to encode input.\n";
-			return 1;
+			return report_error ( ERROR_AUDIO_ENCODE );
 		}
 
 		todo -= done;
 
-		if ( audio_out.write ( audio_buf, audio_done ) )
-		{
-			return 1;
-		}
+		RETURN_ON_ERROR ( audio_out.write ( audio_buf, audio_done ) )
 	}
 
 	if ( audio_len < 1 )
 	{
-		return 1;
+		return report_error ( ERROR_AUDIO_ZERO_INPUT );
 	}
 
-	if ( ! butt )
-	{
-		return 0;
-	}
-
-	free ( buf.array );
-	buf.array = (uint8_t *)calloc ( 1, audio_len );
-
-	buf.array_len = audio_len;
-	// If this allocation fails we don't care (butt encoding is skipped)
+	buf.allocate ( audio_len );
+	// If this allocation fails we don't care (Well encoding is skipped)
 
 	if ( audio_done < audio_len )
 	{
-		// Fill the remainder of the buffer using the butt
-		encode_with_butt ( butt, audio_buf + audio_done,
+		// Fill the remainder of the buffer using the well
+		encode_with_well ( well, audio_buf + audio_done,
 			audio_len - audio_done, &buf );
 
-		if ( audio_out.write ( audio_buf + audio_done,
+		RETURN_ON_ERROR ( audio_out.write ( audio_buf + audio_done,
 			audio_len - audio_done ) )
-		{
-			return 1;
-		}
 	}
 
 	while ( 1 )
 	{
-		if ( audio_in->read ( &audio_buf, &audio_len ) )
-		{
-			return 1;
-		}
+		RETURN_ON_ERROR ( audio_in->read ( &audio_buf, &audio_len ) )
 
 		if ( audio_len < 1 )
 		{
@@ -236,12 +211,9 @@ int mtDW::TapOp::encode_audio (
 			break;
 		}
 
-		encode_with_butt ( butt, audio_buf, audio_len, &buf );
+		encode_with_well ( well, audio_buf, audio_len, &buf );
 
-		if ( audio_out.write ( audio_buf, audio_len ) )
-		{
-			return 1;
-		}
+		RETURN_ON_ERROR ( audio_out.write ( audio_buf, audio_len ) )
 	}
 
 	return 0;
