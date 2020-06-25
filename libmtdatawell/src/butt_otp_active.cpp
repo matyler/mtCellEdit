@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -235,7 +235,7 @@ int mtDW::OTPactive::delete_otp ( std::string const & name ) const
 
 	std::string const full_path = m_op.m_butt_root + name + MTKIT_DIR_SEP;
 
-	mtKit::unique_ptr<mtKit::Prefs> prefs ( create_otp_prefs () );
+	std::unique_ptr<mtKit::Prefs> prefs ( create_otp_prefs () );
 	std::string const prefs_filename = full_path + OTP_PREFS_FILENAME;
 	prefs.get ()->load ( prefs_filename.c_str (), NULL );
 
@@ -444,7 +444,7 @@ void mtDW::OTPactive::get_otp_list ( std::vector<OTPinfo> &list ) const
 			filename += MTKIT_DIR_SEP;
 			filename += OTP_PREFS_FILENAME;
 
-			mtKit::unique_ptr<mtKit::Prefs> prefs
+			std::unique_ptr<mtKit::Prefs> prefs
 				( create_otp_prefs () );
 
 			prefs.get ()->load ( filename.c_str (), NULL );

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -61,12 +61,16 @@ int mtDW::FileStream::read ( ByteBuf & buf )
 
 		while ( m_buf_file.get_tot () < m_buf_file.get_size () )
 		{
+			int newfile = 0;
+
 			if ( ! m_file.is_open () )
 			{
 				if ( open () )
 				{
 					return 1;	// Not filled
 				}
+
+				newfile = 1;
 			}
 
 			size_t const len = m_buf_file.get_size () -
@@ -77,13 +81,15 @@ int mtDW::FileStream::read ( ByteBuf & buf )
 
 			if ( 0 == loaded )
 			{
-				if ( 0 == m_file.get_pos () )
+				if ( newfile > 0 )
 				{
 					/* IMPORTANT! - if after opening a file
 					it yields 0 bytes, remove it! If we
 					don't do this we can end up in an
 					infinite loop!!!!
 					*/
+
+					std::cerr << "Zero length file\n";
 
 					m_file_db.remove_todo_filename ();
 

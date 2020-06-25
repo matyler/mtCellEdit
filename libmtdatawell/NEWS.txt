@@ -1,3 +1,7 @@
+3.4	2020-6-25
+
+	* BUGFIX: FileStream::read() now handles zero length files properly.
+
 3.2	2018-8-25
 
 1.0	2018-6-19

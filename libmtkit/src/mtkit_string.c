@@ -1062,6 +1062,12 @@ int mtkit_strtothou (
 		return -1;
 	}
 
+	if ( len < 1 )
+	{
+		dest[0] = 0;
+		return 0;
+	}
+
 	oldlen = (int)len;
 
 	// First character to be subjected to separating

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ void Backend::prefs_init ()
 	mtPrefTable	const	prefs_table[] = {
 { PREFS_WINDOW_X, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
 { PREFS_WINDOW_Y, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_W, MTKIT_PREF_TYPE_INT, "500", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_H, MTKIT_PREF_TYPE_INT, "500", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_W, MTKIT_PREF_TYPE_INT, "800", NULL, NULL, 0, NULL, NULL },
+{ PREFS_WINDOW_H, MTKIT_PREF_TYPE_INT, "600", NULL, NULL, 0, NULL, NULL },
 { PREFS_WINDOW_MAXIMIZED, MTKIT_PREF_TYPE_INT, "1", NULL, NULL, 0, NULL, NULL },
 { PREFS_WINDOW_STATE, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
 

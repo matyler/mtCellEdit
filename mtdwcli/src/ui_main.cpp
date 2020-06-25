@@ -84,6 +84,21 @@ static int init_table ( mtKit::CliTab &clitab )
 			"<INTEGER> <DECIMAL> <DECIMAL>" )
 		|| clitab.add_item ( "app diceroll", jtf_app_diceroll, 2, 2,
 			"<INTEGER> <INTEGER>" )
+
+		|| clitab.add_item ( "app homoglyph analyse",
+			jtf_app_homoglyph_analyse, 1, 1,
+			"<INPUT FILENAME UTF-8>" )
+		|| clitab.add_item ( "app homoglyph clean",
+			jtf_app_homoglyph_clean, 2, 2,
+			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8>" )
+		|| clitab.add_item ( "app homoglyph encode",
+			jtf_app_homoglyph_encode, 3, 3,
+			"<INPUT FILENAME UTF-8> <INPUT FILENAME BIN> "
+			"<OUTPUT FILENAME UTF-8>" )
+		|| clitab.add_item ( "app homoglyph decode",
+			jtf_app_homoglyph_decode, 2, 2,
+			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME BIN>" )
+
 		|| clitab.add_item ( "app intlist", jtf_app_intlist, 3, 3,
 			"<INTEGER> <INTEGER> <INTEGER>" )
 		|| clitab.add_item ( "app numshuff", jtf_app_numshuff, 1, 1,
@@ -93,6 +108,16 @@ static int init_table ( mtKit::CliTab &clitab )
 			"[STRING]" )
 		|| clitab.add_item ( "app pins", jtf_app_pins, 2, 2,
 			"<INTEGER> <INTEGER>" )
+
+		|| clitab.add_item ( "app utf8font clean",
+			jtf_app_utf8font_clean, 2, 2,
+			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8>" )
+		|| clitab.add_item ( "app utf8font encode",
+			jtf_app_utf8font_encode, 3, 3,
+			"<INPUT FILENAME UTF-8> <INTEGER> "
+			"<OUTPUT FILENAME UTF-8>" )
+		|| clitab.add_item ( "app utf8font list", jtf_app_utf8font_list,
+			0, 0, NULL )
 
 		|| clitab.add_item ( "butt add buckets", jtf_butt_add_buckets,
 			1, 1,"<INTEGER>")

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2019 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1148,17 +1148,18 @@ int mtkit_arg_string_boundary_check (
 
 int mtkit_int_bound (
 	int		num,
-	int		min,
+	int		min,	// caller must ensure min <= max
 	int		max
 	);
 	// Return num within bounds
 
 double mtkit_double_bound (
 	double		num,
-	double		min,
+	double		min,	// caller must ensure min <= max
 	double		max
 	);
 	// Return num within bounds
+	// num=-inf, return min; num=+inf, return max; num=NaN, return min;
 
 /*
 The following code is a simple implementation of the ZIP file format.
@@ -1280,6 +1281,7 @@ void mtkit_int32_pack (			// Pack integer into little endian
 }
 
 #include <iostream>		// Needed for std::string
+#include <vector>
 
 
 
@@ -1306,30 +1308,32 @@ int string_from_data (
 
 int string_strip_extension (		// Case insensitive
 	std::string	&filename,	// Will never return "" if filename>""
-	char	const	* extension	// e.g. "png", "flac"
+	char	const	* extension	// e.g. "png", "flac". NULL=any "*.*"
 	);
 	// 0 = No change
 	// 1 = ".extension" removed from the end of "filename"
 
 
 
+class ArithEncode;
+class ArithDecode;
 class BitPackRead;
 class BitPackWrite;
 class BitShifter;
+class Busy;
 class ByteFileRead;
 class ByteFileWrite;
 class CliItem;
 class CliTab;
 class Exit;
 class FileLock;
+class LineFileRead;
 class Prefs;
 class Random;
 class RecentFile;
 
 namespace ByteCube {}
 namespace ChunkFile {}
-
-template <typename T> class unique_ptr;
 
 typedef struct CharInt		CharInt;
 
@@ -1339,23 +1343,6 @@ typedef int (* CliFunc) (
 	// 0 = Success
 	// 1 = Fail (CliTab::parse reports error)
 	// 2 = Fail (this function reports error)
-
-
-
-template <typename T> class unique_ptr
-{
-public:
-	inline unique_ptr () : m_ptr () {}
-	inline explicit unique_ptr ( T * ptr ) : m_ptr ( ptr ) {}
-	inline ~unique_ptr () { delete m_ptr; }
-
-	inline T *	get () const { return m_ptr; }
-	inline void	reset ( T * ptr ) { delete m_ptr; m_ptr = ptr; }
-	inline T *	release () { T * tmp = m_ptr; m_ptr = NULL; return tmp;}
-
-private:
-	T * m_ptr;
-};
 
 
 
@@ -1489,7 +1476,7 @@ private:
 class RecentFile
 {
 public:
-	RecentFile ( char const * prefix, int tot = 20 );
+	explicit RecentFile ( char const * prefix, int tot = 20 );
 	~RecentFile ();
 
 	int init_prefs ( mtKit::Prefs * pr );
@@ -1698,6 +1685,52 @@ int decode (				// Read serial encoding to create a cube
 
 
 
+class ArithEncode
+{
+public:
+	ArithEncode ();
+
+	void push_mem ( uint8_t const * mem, size_t len ); // 1 <= len <= 7
+
+	int pop_code ( int span, int & code );		// 2 <= span <= 256
+		// 0 = OK, data left to encode
+		// 1 = OK, data all encoded
+
+	int get_encoded_byte_count () const;
+
+private:
+	uint64_t	m_mem;		// Current data
+	uint64_t	m_span_mem;	// Current total span in m_mem
+	uint64_t	m_span_popped;	// Current total popped
+};
+
+
+
+class ArithDecode
+{
+public:
+	ArithDecode ();
+
+	int push_code (
+		int code,	// 0 <= code <= 255
+		int span	// 2 <= span <= 256
+		);
+		// 0 = OK, code packed
+		// 1 = not sent, full (i.e. span * m_span_mem > 7 bytes)
+		// -1 = Error
+
+	int pop_mem ( uint8_t * dest, size_t & size );
+			// dest Must be >= 7 bytes
+
+	int get_encoded_byte_count () const;
+
+private:
+	uint64_t	m_mem;		// Current data
+	uint64_t	m_span_mem;	// Current total span in m_mem
+};
+
+
+
 class BitPackWrite
 {
 public:
@@ -1726,12 +1759,14 @@ public:
 	BitPackRead ( unsigned char const * mem, size_t memlen );
 
 	int read ( int &byte, int bit_tot );
+	void restart ( unsigned char const * mem, size_t memlen );
+	size_t bytes_left () const;
 
 private:
-	unsigned char	const * const	m_mem_start;
-	unsigned char		const	* m_mem;
-	unsigned char	const *	const	m_memlim;
-	int				m_bit_next;
+	unsigned char	const * m_mem_start;
+	unsigned char	const * m_mem;
+	unsigned char	const *	m_memlim;
+	int			m_bit_next;
 };
 
 
@@ -1795,6 +1830,7 @@ public:
 	int open ( char const * filename );
 	void close ();
 	int write ( void * mem, size_t len );
+	inline FILE * get_fp () const { return m_fp; }
 
 private:
 	void set_file ( FILE * fp );
@@ -1802,6 +1838,51 @@ private:
 /// ----------------------------------------------------------------------------
 
 	FILE		* m_fp;
+};
+
+
+
+class FileLock
+{
+public:
+	FileLock ();
+	~FileLock ();
+
+	// Create/Open a file and lock it. On unset, destructor, or another set
+	// the file is deleted.
+	int set ( std::string const &filename );
+
+	void unset ();
+
+private:
+	int		m_id;
+	std::string	m_filename;
+};
+
+
+
+class LineFileRead
+{
+public:
+	LineFileRead ();
+	~LineFileRead ();
+
+	int open ( std::string const & filename );
+	void open ( FILE * fp );	// fp will be fclose'd later
+	int read_line ();		// 0 = Line OK, 1 = EOF, 2 = Error
+
+	// Parse the line just read in:
+	int get_double ( double & result );
+	int get_int ( int & result );
+
+private:
+	void close ();
+
+/// ----------------------------------------------------------------------------
+
+	FILE	* m_fp;
+	char	* m_text;
+	char	* m_field;
 };
 
 
@@ -1827,21 +1908,36 @@ protected:
 
 
 
-class FileLock
+class Busy
 {
 public:
-	FileLock ();
-	~FileLock ();
+	Busy ()
+		:
+		m_min (0),
+		m_max (0),
+		m_val (0),
+		m_aborted ( false ),
+		m_range_changed (false )
+	{}
 
-	// Create/Open a file and lock it. On unset, destructor, or another set
-	// the file is deleted.
-	int set ( std::string const &filename );
+	inline bool aborted () const { return m_aborted; }
+	inline bool range_changed () const { return m_range_changed; }
 
-	void unset ();
+	inline int get_min () const { return m_min; }
+	inline int get_max () const { return m_max; }
+	inline int get_value () const { return m_val; }
+
+	inline void set_minmax ( int const min, int const max )
+	{ m_min = min; m_max = max; m_range_changed = true; }
+
+	inline void set_value ( int const val ) { m_val = val; }
+	inline void set_aborted () { m_aborted = true; }
+	inline void clear_range_changed () { m_range_changed = false; }
 
 private:
-	int		m_id;
-	std::string	m_filename;
+	int	m_min, m_max, m_val;
+	bool	m_aborted;
+	bool	m_range_changed;
 };
 
 
@@ -1855,11 +1951,10 @@ This is only in the mtKit API if the caller has used #include <sqlite3.h> before
 
 class Sqlite;
 class SqliteAddRecord;
+class SqliteAddRecordField;
 class SqliteGetRecord;
 class SqliteStmt;
 class SqliteTransaction;
-
-class SqliteAddRecordOp;	// Opaque / Pimpl
 
 
 
@@ -1877,13 +1972,23 @@ public:
 		{ return exec_sql ( sql.c_str () ); };
 	int exec_sql ( char const * const sql ) const;
 
+	// RULE: table/field names must be alphanumeric only (e.g. no spaces)
+	int add_table ( std::string const & name ) const;
+	int add_column_field (
+		std::string const & table_name,
+		std::string const & field_name,
+		std::string const & field_type	// TEXT, REAL, INTEGER, BLOB
+		) const;
+
 	int empty_table ( std::string const & table ) const;
 	int count_rows ( std::string const & table ) const;
 
 	int get_version () const;
 	void set_version ( int version );
 
-	void archive_table ( char const * table, int suffix );
+	void archive_table ( char const * table, int suffix ) const;
+
+	void vacuum () const;		// Reduce size of disk file
 
 protected:
 	sqlite3		* m_db;
@@ -1891,26 +1996,83 @@ protected:
 
 
 
+class SqliteStmt
+{
+public:
+	explicit SqliteStmt ( Sqlite const & db );
+	~SqliteStmt ();
+
+	int prepare ( std::string const & sql );
+	int step ();
+	int reset ();
+	int bind_text ( int item, char const * text );
+	int bind_blob ( int item, void const * mem, int mem_len );
+	int bind_int64 ( int item, sqlite3_int64 num );
+	int bind_real ( int item, double num );
+
+/// ----------------------------------------------------------------------------
+
+	Sqlite	const & m_db;
+	sqlite3_stmt	* stmt;
+	int		err;
+};
+
+
+
+class SqliteAddRecordField
+{
+public:
+	enum
+	{
+		FIELD_TEXT,
+		FIELD_BLOB,
+		FIELD_INTEGER,
+		FIELD_REAL
+	};
+
+	SqliteAddRecordField ()
+		:
+		m_type		( FIELD_INTEGER ),
+		m_mem_value	( NULL ),
+		m_mem_len	( 0 ),
+		m_int_value	( 0 ),
+		m_real_value	( 0.0 )
+	{}
+
+/// ----------------------------------------------------------------------------
+
+	int		m_type;
+	char	const *	m_mem_value;
+	size_t		m_mem_len;
+	sqlite3_int64	m_int_value;
+	double		m_real_value;
+};
+
+
+
 class SqliteAddRecord		// All items throw on fail
 {
 public:
-	// NOTE: all text/memory values must be valid when insert() is called.
+	// NOTE: all text/memory values must be valid when insert is called.
 
 	SqliteAddRecord ( Sqlite const & db, char const * table );
-	~SqliteAddRecord ();
 
-	void text ( char const * name, char const * value ) const;
-	void blob ( char const * name, char const * value, int value_len) const;
-	void integer ( char const * name, sqlite3_int64 value ) const;
+	void add_field ( char const * name );
+	void end_field ();
 
-	void insert () const;
+	void set_text ( char const * value );
+	void set_blob ( char const * value, size_t value_len );
+	void set_integer ( sqlite3_int64 value );
+	void set_real ( double value );
+
+	void insert_record ();
 
 private:
-	SqliteAddRecordOp * const op;
-
-	SqliteAddRecord ( const SqliteAddRecord & ); // Disable copy constructor
-	SqliteAddRecord & operator = (const SqliteAddRecord &);
-		// Disable = operator
+	SqliteStmt		m_stmt;
+	Sqlite		const	& m_db;
+	std::string		m_sql;
+	std::vector<SqliteAddRecordField> m_field;
+	size_t			m_field_num;
 };
 
 
@@ -1936,71 +2098,6 @@ protected:
 
 
 
-class SqliteStmt
-{
-public:
-	inline SqliteStmt ( Sqlite const & db, std::string const & sql )
-		:
-		stmt	()
-	{
-		err = sqlite3_prepare_v2 ( db.get_sqlite3 (), sql.c_str(), -1,
-			&stmt, 0 );
-	}
-
-	inline ~SqliteStmt ()
-	{
-		if ( stmt )
-		{
-			sqlite3_finalize ( stmt );
-			stmt = NULL;
-		}
-	}
-
-	inline int step ()
-	{
-		return (err = sqlite3_step ( stmt ));
-	}
-
-	inline int bind_text (
-		int const item,
-		char const * const text
-		)
-	{
-		err = sqlite3_bind_text ( stmt, item, text, -1, SQLITE_STATIC );
-
-		return err;
-	}
-
-	inline int bind_blob (
-		int const item,
-		void const * const mem,
-		int const mem_len
-		)
-	{
-		err = sqlite3_bind_blob ( stmt, item, mem, mem_len,
-			SQLITE_STATIC );
-
-		return err;
-	}
-
-	inline int bind_int64 (
-		int const item,
-		sqlite3_int64 num
-		)
-	{
-		err = sqlite3_bind_int64 ( stmt, item, num );
-
-		return err;
-	}
-
-/// ----------------------------------------------------------------------------
-
-	sqlite3_stmt	* stmt;
-	int		err;
-};
-
-
-
 class SqliteGetRecord
 {
 public:
@@ -2008,8 +2105,11 @@ public:
 	~SqliteGetRecord ();
 
 	int next ();
+		// 0 = Record found, 1 = None found
 
-	int get_type ( int arg );
+	inline int get_field_num () const { return m_field_num; }
+
+	int get_type ();
 		// = SQLITE_< INTEGER | FLOAT | TEXT | BLOB | NULL >
 
 	/* The following functions all return:
@@ -2017,15 +2117,19 @@ public:
 		1 = NULL
 		2 = Other type mismatch
 	*/
-	int get_blob ( int arg, std::string & res );	// Also gets TEXT
-	int get_text ( int arg, std::string & res );
-	int get_int ( int arg, int & res );
-	int get_int64 ( int arg, int64_t & res );
-	int get_double ( int arg, double & res );
+	int get_blob ( void const ** mem, int & memlen );
+	int get_blob_text ( std::string & res ); // blob/text -> String
+	int get_text ( std::string & res );
+	int get_int ( int & res );
+	int get_int64 ( int64_t & res );
+	int get_double ( double & res );
 
 /// ----------------------------------------------------------------------------
 
 	SqliteStmt	stmt;
+
+private:
+	int		m_field_num;
 };
 
 

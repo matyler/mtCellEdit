@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #ifdef __cplusplus
 
+#include <memory>
 
 
 namespace mtPixy
@@ -96,6 +97,7 @@ public:
 	~Color ();
 
 	void set ( int i );
+	int get () const;
 
 /// ----------------------------------------------------------------------------
 
@@ -283,6 +285,8 @@ protected:
 
 	Color		m_color [ COLOR_TOTAL_MAX ];
 };
+
+
 
 class Image
 {
@@ -574,7 +578,7 @@ protected:
 	void flood_fill_internal (	// Args checked by caller
 		Image * im, int x, int y ) const;
 
-	void paint_flow ( Brush &bru ) const;
+	void paint_flow ( Brush const &bru ) const;
 	mtPixy::Image * flood_fill_prepare_alpha ( int x, int y );
 
 /// ----------------------------------------------------------------------------
@@ -590,6 +594,8 @@ protected:
 	int		m_width;
 	int		m_height;
 };
+
+
 
 class Font
 {
@@ -977,7 +983,7 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::unique_ptr<mtPixy::Image> m_img;
+	std::unique_ptr<mtPixy::Image> m_img;
 
 	int		m_x, m_y;	// Position of original copy
 	std::string	m_path;

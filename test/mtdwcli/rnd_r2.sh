@@ -6,8 +6,9 @@
 echo "butt add otp rndfiles_1"
 echo "butt add buckets 5"
 
+ITEM_TOT=$1
 
-for (( item=0; item<1000; item++ ))
+for (( item=0; item<$ITEM_TOT; item++ ))
 do
 	printf "soda encode r1/%06i r2/%06i.soda\n" $item $item
 done

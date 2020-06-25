@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ static char	const *	arg_password_chars	=
 						;
 static int		arg_password_len	= 10;
 static int		arg_seed		= 0;
+static int		arg_verbose		= 1;
 
 static int		exit_val		= 0;
 
@@ -87,6 +88,7 @@ char	const *	get_arg_pad ( void ) {		return arg_pad;		}
 int		get_arg_pad_start ( void ) {	return arg_pad_start;	}
 char	const *	get_arg_password_chars ( void ) { return arg_password_chars; }
 int		get_arg_password_len ( void ) {	return arg_password_len; }
+int		get_arg_verbose ( void ) {	return arg_verbose;	}
 
 static int set_seed (
 	mtArg	const * const	ARG_UNUSED ( mtarg ),

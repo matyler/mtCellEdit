@@ -242,12 +242,8 @@ MTCF_PRE_CONF()
 		I_EX=""
 		L_EX="-lm -s"
 
-		if [ "$ENABLE_TK" = "qt5" ]
-		then
-			# Qt5 requires a modern compiler
-			CFLAGS+=" -std=gnu11"
-			CXXFLAGS+=" -std=gnu++11"
-		fi
+		CFLAGS+=" -std=gnu11"
+		CXXFLAGS+=" -std=gnu++11"
 		;;
 	"YES" )
 		I_EX="-fsanitize=undefined $DEBUG_I_EX"
@@ -259,16 +255,9 @@ MTCF_PRE_CONF()
 	"OLD" )
 		I_EX="$DEBUG_I_EX"
 		L_EX="-lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS+=" -std=gnu99"
+		CFLAGS+=" -std=gnu11"
 		CFLAGS+=" -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
-		CXXFLAGS+=" -std=c++03"
-
-		if [ "$ENABLE_TK" = "qt5" ]
-		then
-			# Qt5 requires a modern compiler
-			CFLAGS+=" -std=gnu11"
-			CXXFLAGS+=" -std=gnu++11"
-		fi
+		CXXFLAGS+=" -std=gnu++11"
 		;;
 	esac
 

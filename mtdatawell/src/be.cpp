@@ -50,7 +50,7 @@ static int file_func (
 	void		* const	user_data
 	)
 {
-	Backend * const backend = static_cast<Backend * const>(user_data);
+	Backend * const backend = static_cast<Backend *>(user_data);
 
 	backend->cline_add_filename ( filename );
 

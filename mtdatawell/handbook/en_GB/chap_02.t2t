@@ -11,7 +11,7 @@ mtDataWell is a lightweight crypto and random data program that I created from s
 
 The core of the program is a shared C++ library which can be used by any C++ program.
 
-mtDataWell is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, ARM_32, and PowerPC_32 hardware platforms.
+mtDataWell is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, and ARM_32 hardware platforms.
 
 
 
@@ -61,6 +61,7 @@ An important decision I have taken is to release it as free software using the G
 | 2018-5-18  | 0.0         | Project started. |
 | 2018-8-25  | 3.2         | mtDWCLI published. |
 | 2019-5-25  | 3.3         | mtDataWell published. |
+| 2020-6-25  | 3.4         | mtDWUtils added. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

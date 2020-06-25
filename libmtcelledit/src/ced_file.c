@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1160,7 +1160,8 @@ static int export_html_output_cb (
 	if ( cell->prefs )
 	{
 		// Style attribute start
-		if (	cell->prefs->color_background != 16777215 ||
+		if (	CED_COLOR_BACKGROUND_DEFAULT !=
+				cell->prefs->color_background ||
 			cell->prefs->border_type
 			)
 		{
@@ -1171,7 +1172,8 @@ static int export_html_output_cb (
 			}
 		}
 
-		if ( cell->prefs->color_background != 16777215 )
+		if ( CED_COLOR_BACKGROUND_DEFAULT !=
+			cell->prefs->color_background )
 		{
 			snprintf ( state->txt_buf, sizeof(state->txt_buf),
 				"background: #%06x;",
@@ -1191,7 +1193,8 @@ static int export_html_output_cb (
 		}
 
 		// Style attribute finish
-		if (	cell->prefs->color_background != 16777215 ||
+		if (	CED_COLOR_BACKGROUND_DEFAULT !=
+				cell->prefs->color_background ||
 			cell->prefs->border_type
 			)
 		{

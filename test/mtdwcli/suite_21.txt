@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+
+# r1: create random files & mtdwcli scripts
+FILE_TOT=100
+./rndfile -db d0 -path r1 -quiet -tot $FILE_TOT -min 1000 -max 100000
+./rnd_r2.sh $FILE_TOT > tmp/r2.txt
+./rnd_r3.sh $FILE_TOT > tmp/r3.txt
+
+
+
+# r1 -> r2
+run_sh_cli ../tmp/r2
+
+# r2 -> r3
+run_sh_cli ../tmp/r3
+
+
+cmp_diff "mtDWCLI r1->r3"	r1	r3
+

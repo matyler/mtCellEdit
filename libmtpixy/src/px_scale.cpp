@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ static void scale_indexed_smooth (
 {
 	int		oi, oj, oi1, oj1, oi2, oj2;
 	int		a = 0, b = 0, c = 0;
-	int		d = 0, e = 0, xlen, ylen, avi, avj;
+	int		d = 0, xlen, ylen, avi, avj;
 	float		foi1, foj1, foi2, foj2;
 	float		ab, ac, xf1, xf2, yf1, yf2, av_tot, pf1, pf2, ff;
 
@@ -185,7 +185,7 @@ static void scale_indexed_smooth (
 			 a = (int)( ( 0.49999f ) + ( (float)ff ) / av_tot );
 			}
 
-			e = (int)(	(1 - ac) * ((1 - ab) * ((float)a) +
+			int const e = (int)( (1 - ac) * ((1 - ab) * ((float)a) +
 					ab * ((float)b) ) +
 					ac * ( ( 1 - ab ) * ((float)c) +
 					ab * ((float)d) )

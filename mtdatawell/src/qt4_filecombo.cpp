@@ -19,15 +19,17 @@
 
 
 
-groupCombo::groupCombo (
-	mtKit::Prefs		&preferences,
-	QString		const	&title,
-	QWidget		* const	parent
+fileCombo::fileCombo (
+	mtKit::Prefs			&preferences,
+	char		const * const	title,
+	QFileDialog::FileMode	const	filename_type
 	)
 	:
-	QGroupBox	( title, parent ),
+	QGroupBox	( title ),
 	prefs		( preferences ),
-	m_dir_combo	( NULL )
+	m_dir_combo	( new QComboBox ),
+	m_title		( title ),
+	m_filemode	( filename_type )
 {
 	setAcceptDrops ( true );
 
@@ -41,7 +43,6 @@ groupCombo::groupCombo (
 
 	QHBoxLayout * gb_layh = new QHBoxLayout ( w );
 
-	m_dir_combo = new QComboBox;
 	gb_layh->addWidget ( m_dir_combo );
 
 	m_dir_combo->setEditable ( true );
@@ -56,11 +57,11 @@ groupCombo::groupCombo (
 		QSizePolicy::Fixed ) );
 }
 
-groupCombo::~groupCombo ()
+fileCombo::~fileCombo ()
 {
 }
 
-void groupCombo::dragEnterEvent ( QDragEnterEvent * const event )
+void fileCombo::dragEnterEvent ( QDragEnterEvent * const event )
 {
 	if ( event->mimeData ()->hasUrls () )
 	{
@@ -68,7 +69,7 @@ void groupCombo::dragEnterEvent ( QDragEnterEvent * const event )
 	}
 }
 
-void groupCombo::dropEvent ( QDropEvent * const event )
+void fileCombo::dropEvent ( QDropEvent * const event )
 {
 	QList<QUrl> const list = event->mimeData ()->urls ();
 
@@ -82,7 +83,7 @@ void groupCombo::dropEvent ( QDropEvent * const event )
 	event->acceptProposedAction ();
 }
 
-void groupCombo::press_select ()
+void fileCombo::press_select ()
 {
 	char const * last_dir = prefs.getString ( PREFS_LAST_DIRECTORY );
 
@@ -91,9 +92,26 @@ void groupCombo::press_select ()
 		last_dir = mtkit_file_home ();
 	}
 
-	QString const filename = QFileDialog::getExistingDirectory ( this,
-		"Select Output Directory", mtQEX::qstringFromC ( last_dir ),
-		QFileDialog::DontUseNativeDialog );
+	std::string const title = "Select " + m_title;
+
+	QString filename;
+	QString qlast_dir = mtQEX::qstringFromC ( last_dir );
+
+	mtQEX::SaveFileDialog dialog ( this, title.c_str () );
+
+	if ( QFileDialog::ExistingFile == m_filemode )
+	{
+		dialog.setOption ( QFileDialog::DontConfirmOverwrite );
+	}
+
+	dialog.selectFile ( qlast_dir );
+	dialog.setFileMode ( m_filemode );
+
+	if ( dialog.exec () )
+	{
+		QStringList fileList = dialog.selectedFiles ();
+		filename = fileList.at ( 0 );
+	}
 
 	if ( filename.isEmpty () )
 	{
@@ -102,10 +120,11 @@ void groupCombo::press_select ()
 
 	m_dir_combo->lineEdit ()->setText ( filename );
 
+	// Even if this is a filename, still store it as we need the directory.
 	prefs.set ( PREFS_LAST_DIRECTORY, filename.toUtf8 ().data () );
 }
 
-void groupCombo::repopulate ( mtKit::RecentFile const &recent_dir )
+void fileCombo::repopulate ( mtKit::RecentFile const &recent_dir )
 {
 	m_dir_combo->clear ();
 
@@ -122,7 +141,7 @@ void groupCombo::repopulate ( mtKit::RecentFile const &recent_dir )
 	}
 }
 
-QString groupCombo::get_directory ()
+QString fileCombo::get_directory ()
 {
 	return m_dir_combo->lineEdit ()->text ();
 }

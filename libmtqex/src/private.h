@@ -15,6 +15,10 @@
 	along with this program in the file COPYING.
 */
 
+#include <unistd.h>
+
+
+
 #ifdef U_TK_QT4
 	#include "mtqex4.h"
 #endif

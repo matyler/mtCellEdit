@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ void Mainwindow::press_soda_info ()
 		return;
 	}
 
-	DialogSodaInfo dialog ( *this, list.first () );
+	DialogSodaInfo ( *this, list.first () );
 }
 
 
@@ -64,6 +64,7 @@ DialogSodaInfo::DialogSodaInfo (
 	}
 
 	setWindowTitle ( "Soda Information" );
+	setModal ( true );
 	resize ( mw.width (), 10 );
 
 	QVBoxLayout * vbox = new QVBoxLayout;

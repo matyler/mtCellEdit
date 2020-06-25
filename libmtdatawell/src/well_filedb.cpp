@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,15 +16,6 @@
 */
 
 #include "well.h"
-
-
-
-#define SCHEMA_VERSION		3202
-
-#define DB_TABLE_FILES		"Files"
-
-#define DB_FIELD_ID		"id"
-#define DB_FIELD_FILENAME	"filename"
 
 
 
@@ -78,44 +69,17 @@ int mtDW::FileDB::open ( std::string const & filename )
 	return 0;
 }
 
-int mtDW::FileDB::add_table_filename (
-	std::string	const & filename,
-	char	const * const	table
-	) const
+void mtDW::FileDB::get_todo_filename_internal ( std::string & res )
 {
-	try
-	{
-		mtKit::SqliteAddRecord rec ( m_db, table );
-
-		rec.blob ( DB_FIELD_FILENAME, filename.c_str (),
-			(int)filename.size () );
-
-		rec.insert ();
-	}
-	catch ( ... )
-	{
-		return 1;
-	}
-
-	return 0;
-}
-
-int mtDW::FileDB::add_todo_filename ( std::string const & filename ) const
-{
-	return add_table_filename ( filename, DB_TABLE_FILES );
-}
-
-std::string const mtDW::FileDB::get_todo_filename_internal ()
-{
-	std::string res;
+	res.clear ();
 
 	try
 	{
-		static const std::string sql =
-			"SELECT " DB_FIELD_FILENAME ", " DB_FIELD_ID
-			" FROM " DB_TABLE_FILES
-			" WHERE " DB_FIELD_ID " >= ?1"
-			" LIMIT 1;";
+		static const std::string sql (
+			"SELECT "	DB_FIELD_ID "," DB_FIELD_FILENAME
+			" FROM "	DB_TABLE_FILES
+			" WHERE "	DB_FIELD_ID " >= ?1"
+			" LIMIT 1;" );
 
 		mtKit::SqliteGetRecord record ( m_db, sql );
 
@@ -125,7 +89,7 @@ std::string const mtDW::FileDB::get_todo_filename_internal ()
 		{
 			int64_t id64;
 
-			if ( record.get_int64 ( 1, id64 ) )
+			if ( record.get_int64 ( id64 ) )
 			{
 				std::cerr << "Field 1 isn't an integer\n";
 				throw 123;
@@ -134,14 +98,12 @@ std::string const mtDW::FileDB::get_todo_filename_internal ()
 			m_file_id = (uint32_t)id64;
 
 			// Quietly ignore error as string remains empty
-			record.get_blob ( 0, res );
+			record.get_blob_text ( res );
 		}
 	}
 	catch ( ... )
 	{
 	}
-
-	return res;
 }
 
 void mtDW::FileDB::remove_todo_filename ()
@@ -157,7 +119,9 @@ void mtDW::FileDB::remove_todo_filename ()
 
 std::string const mtDW::FileDB::get_todo_filename ()
 {
-	std::string const res = get_todo_filename_internal ();
+	std::string res;
+
+	get_todo_filename_internal ( res );
 
 	if ( res.size () < 1 && m_file_id > 1 )
 	{
@@ -165,7 +129,9 @@ std::string const mtDW::FileDB::get_todo_filename ()
 
 		m_file_id = 1;
 
-		return get_todo_filename_internal ();
+		get_todo_filename_internal ( res );
+
+		return res;
 	}
 
 	return res;
@@ -179,7 +145,7 @@ int mtDW::FileDB::count_files () const
 void mtDW::FileDB::remove_all_files ()
 {
 	m_db.empty_table ( DB_TABLE_FILES );
-	m_db.exec_sql ( "VACUUM" );
+	m_db.vacuum ();
 	m_file_id = 1;
 }
 

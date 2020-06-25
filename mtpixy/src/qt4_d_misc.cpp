@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -88,9 +88,10 @@ int DialogGetInt::get_int ()
 }
 
 DialogImageInfo::DialogImageInfo (
-	Backend		&be
+	Mainwindow	&mw
 	)
 {
+	Backend &be = mw.backend;
 	mtPixy::Image * const im = be.file.get_image ();
 
 	if ( ! im )

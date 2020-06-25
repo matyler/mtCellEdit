@@ -9,11 +9,13 @@ mtcedutils	mtcedutils	1
 mtcedcli	mtcedcli	1
 libmtdatawell	libmtdatawell	1
 mtdatawell-qt5	mtdatawell	1
+mtdwutils	mtdwutils	1
 mtdwcli	mtdwcli	1
 mtraft-qt5	mtraft	1
 mtpixy-qt5	mtpixy	1
 mtpixyutils	mtpixyutils	1
 mtpixycli	mtpixycli	1
+mtcrul-qt5	mtcrul	1
 libmtqex4	libmtqex
 mtcelledit-qt4	mtcelledit
 mtdatawell-qt4	mtdatawell

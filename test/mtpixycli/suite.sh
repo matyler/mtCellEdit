@@ -6,7 +6,7 @@
 txt_title "mtPixyCLI"
 
 
-CLICOM="mtpixycli -seed 123 -q -t -patterns /usr/share/mtpixy-qt4/patterns/default.png -shapes /usr/share/mtpixy-qt4/shapes/default.png"
+CLICOM="mtpixycli -seed 123 -q -t -patterns /usr/share/mtpixy-qt5/patterns/default.png -shapes /usr/share/mtpixy-qt5/shapes/default.png"
 run_sh_cli_init
 
 

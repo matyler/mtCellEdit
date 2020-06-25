@@ -118,3 +118,272 @@ mtDWCLI > tap multi decode d2/bottle.in.005.soda.flac   d3/in.005.txt
 mtDWCLI > tap multi decode d2/bottle.in.006.soda.png    d3/in.006.txt
 mtDWCLI > 
 
+----------- scripts/12.txt -----------
+
+
+Checking error table ...
+Error table is valid: 66 items
+
+mtDWCLI > app homoglyph encode h1/in.001.txt h1/000000 h2/in.001.txt
+
+mtDWCLI > 
+mtDWCLI > app homoglyph clean h2/in.001.txt h3/in.001.txt
+
+mtDWCLI > app homoglyph decode h2/in.001.txt h3/000000
+
+mtDWCLI > 
+
+----------- scripts/13.txt -----------
+
+
+Checking error table ...
+Error table is valid: 66 items
+
+mtDWCLI > app utf8font encode h1/in.002.txt 1   h2/in.002.txt
+mtDWCLI > app utf8font encode h1/in.003.txt 2   h2/in.003.txt
+mtDWCLI > app utf8font encode h1/in.004.txt 3   h2/in.004.txt
+mtDWCLI > app utf8font encode h1/in.005.txt 4   h2/in.005.txt
+mtDWCLI > app utf8font encode h1/in.006.txt 5   h2/in.006.txt
+mtDWCLI > app utf8font encode h1/in.007.txt 6   h2/in.007.txt
+mtDWCLI > app utf8font encode h1/in.008.txt 7   h2/in.008.txt
+mtDWCLI > app utf8font encode h1/in.009.txt 8   h2/in.009.txt
+mtDWCLI > app utf8font encode h1/in.010.txt 9   h2/in.010.txt
+mtDWCLI > app utf8font encode h1/in.011.txt 10  h2/in.011.txt
+mtDWCLI > app utf8font encode h1/in.012.txt 11  h2/in.012.txt
+mtDWCLI > app utf8font encode h1/in.013.txt 12  h2/in.013.txt
+mtDWCLI > app utf8font encode h1/in.014.txt 13  h2/in.014.txt
+mtDWCLI > 
+mtDWCLI > app utf8font clean h2/in.002.txt      h3/in.002.txt
+mtDWCLI > app utf8font clean h2/in.003.txt      h3/in.003.txt
+mtDWCLI > app utf8font clean h2/in.004.txt      h3/in.004.txt
+mtDWCLI > app utf8font clean h2/in.005.txt      h3/in.005.txt
+mtDWCLI > app utf8font clean h2/in.006.txt      h3/in.006.txt
+mtDWCLI > app utf8font clean h2/in.007.txt      h3/in.007.txt
+mtDWCLI > app utf8font clean h2/in.008.txt      h3/in.008.txt
+mtDWCLI > app utf8font clean h2/in.009.txt      h3/in.009.txt
+mtDWCLI > app utf8font clean h2/in.010.txt      h3/in.010.txt
+mtDWCLI > app utf8font clean h2/in.011.txt      h3/in.011.txt
+mtDWCLI > app utf8font clean h2/in.012.txt      h3/in.012.txt
+mtDWCLI > app utf8font clean h2/in.013.txt      h3/in.013.txt
+mtDWCLI > app utf8font clean h2/in.014.txt      h3/in.014.txt
+mtDWCLI > 
+
+----------- scripts/../tmp/r2.txt -----------
+
+
+Checking error table ...
+Error table is valid: 66 items
+
+mtDWCLI > butt add otp rndfiles_1
+Butt OTP already exists
+mtDWCLI > butt add buckets 5
+mtDWCLI > soda encode r1/000000 r2/000000.soda
+mtDWCLI > soda encode r1/000001 r2/000001.soda
+mtDWCLI > soda encode r1/000002 r2/000002.soda
+mtDWCLI > soda encode r1/000003 r2/000003.soda
+mtDWCLI > soda encode r1/000004 r2/000004.soda
+mtDWCLI > soda encode r1/000005 r2/000005.soda
+mtDWCLI > soda encode r1/000006 r2/000006.soda
+mtDWCLI > soda encode r1/000007 r2/000007.soda
+mtDWCLI > soda encode r1/000008 r2/000008.soda
+mtDWCLI > soda encode r1/000009 r2/000009.soda
+mtDWCLI > soda encode r1/000010 r2/000010.soda
+mtDWCLI > soda encode r1/000011 r2/000011.soda
+mtDWCLI > soda encode r1/000012 r2/000012.soda
+mtDWCLI > soda encode r1/000013 r2/000013.soda
+mtDWCLI > soda encode r1/000014 r2/000014.soda
+mtDWCLI > soda encode r1/000015 r2/000015.soda
+mtDWCLI > soda encode r1/000016 r2/000016.soda
+mtDWCLI > soda encode r1/000017 r2/000017.soda
+mtDWCLI > soda encode r1/000018 r2/000018.soda
+mtDWCLI > soda encode r1/000019 r2/000019.soda
+mtDWCLI > soda encode r1/000020 r2/000020.soda
+mtDWCLI > soda encode r1/000021 r2/000021.soda
+mtDWCLI > soda encode r1/000022 r2/000022.soda
+mtDWCLI > soda encode r1/000023 r2/000023.soda
+mtDWCLI > soda encode r1/000024 r2/000024.soda
+mtDWCLI > soda encode r1/000025 r2/000025.soda
+mtDWCLI > soda encode r1/000026 r2/000026.soda
+mtDWCLI > soda encode r1/000027 r2/000027.soda
+mtDWCLI > soda encode r1/000028 r2/000028.soda
+mtDWCLI > soda encode r1/000029 r2/000029.soda
+mtDWCLI > soda encode r1/000030 r2/000030.soda
+mtDWCLI > soda encode r1/000031 r2/000031.soda
+mtDWCLI > soda encode r1/000032 r2/000032.soda
+mtDWCLI > soda encode r1/000033 r2/000033.soda
+mtDWCLI > soda encode r1/000034 r2/000034.soda
+mtDWCLI > soda encode r1/000035 r2/000035.soda
+mtDWCLI > soda encode r1/000036 r2/000036.soda
+mtDWCLI > soda encode r1/000037 r2/000037.soda
+mtDWCLI > soda encode r1/000038 r2/000038.soda
+mtDWCLI > soda encode r1/000039 r2/000039.soda
+mtDWCLI > soda encode r1/000040 r2/000040.soda
+mtDWCLI > soda encode r1/000041 r2/000041.soda
+mtDWCLI > soda encode r1/000042 r2/000042.soda
+mtDWCLI > soda encode r1/000043 r2/000043.soda
+mtDWCLI > soda encode r1/000044 r2/000044.soda
+mtDWCLI > soda encode r1/000045 r2/000045.soda
+mtDWCLI > soda encode r1/000046 r2/000046.soda
+mtDWCLI > soda encode r1/000047 r2/000047.soda
+mtDWCLI > soda encode r1/000048 r2/000048.soda
+mtDWCLI > soda encode r1/000049 r2/000049.soda
+mtDWCLI > soda encode r1/000050 r2/000050.soda
+mtDWCLI > soda encode r1/000051 r2/000051.soda
+mtDWCLI > soda encode r1/000052 r2/000052.soda
+mtDWCLI > soda encode r1/000053 r2/000053.soda
+mtDWCLI > soda encode r1/000054 r2/000054.soda
+mtDWCLI > soda encode r1/000055 r2/000055.soda
+mtDWCLI > soda encode r1/000056 r2/000056.soda
+mtDWCLI > soda encode r1/000057 r2/000057.soda
+mtDWCLI > soda encode r1/000058 r2/000058.soda
+mtDWCLI > soda encode r1/000059 r2/000059.soda
+mtDWCLI > soda encode r1/000060 r2/000060.soda
+mtDWCLI > soda encode r1/000061 r2/000061.soda
+mtDWCLI > soda encode r1/000062 r2/000062.soda
+mtDWCLI > soda encode r1/000063 r2/000063.soda
+mtDWCLI > soda encode r1/000064 r2/000064.soda
+mtDWCLI > soda encode r1/000065 r2/000065.soda
+mtDWCLI > soda encode r1/000066 r2/000066.soda
+mtDWCLI > soda encode r1/000067 r2/000067.soda
+mtDWCLI > soda encode r1/000068 r2/000068.soda
+mtDWCLI > soda encode r1/000069 r2/000069.soda
+mtDWCLI > soda encode r1/000070 r2/000070.soda
+mtDWCLI > soda encode r1/000071 r2/000071.soda
+mtDWCLI > soda encode r1/000072 r2/000072.soda
+mtDWCLI > soda encode r1/000073 r2/000073.soda
+mtDWCLI > soda encode r1/000074 r2/000074.soda
+mtDWCLI > soda encode r1/000075 r2/000075.soda
+mtDWCLI > soda encode r1/000076 r2/000076.soda
+mtDWCLI > soda encode r1/000077 r2/000077.soda
+mtDWCLI > soda encode r1/000078 r2/000078.soda
+mtDWCLI > soda encode r1/000079 r2/000079.soda
+mtDWCLI > soda encode r1/000080 r2/000080.soda
+mtDWCLI > soda encode r1/000081 r2/000081.soda
+mtDWCLI > soda encode r1/000082 r2/000082.soda
+mtDWCLI > soda encode r1/000083 r2/000083.soda
+mtDWCLI > soda encode r1/000084 r2/000084.soda
+mtDWCLI > soda encode r1/000085 r2/000085.soda
+mtDWCLI > soda encode r1/000086 r2/000086.soda
+mtDWCLI > soda encode r1/000087 r2/000087.soda
+mtDWCLI > soda encode r1/000088 r2/000088.soda
+mtDWCLI > soda encode r1/000089 r2/000089.soda
+mtDWCLI > soda encode r1/000090 r2/000090.soda
+mtDWCLI > soda encode r1/000091 r2/000091.soda
+mtDWCLI > soda encode r1/000092 r2/000092.soda
+mtDWCLI > soda encode r1/000093 r2/000093.soda
+mtDWCLI > soda encode r1/000094 r2/000094.soda
+mtDWCLI > soda encode r1/000095 r2/000095.soda
+mtDWCLI > soda encode r1/000096 r2/000096.soda
+mtDWCLI > soda encode r1/000097 r2/000097.soda
+mtDWCLI > soda encode r1/000098 r2/000098.soda
+mtDWCLI > soda encode r1/000099 r2/000099.soda
+mtDWCLI > 
+
+----------- scripts/../tmp/r3.txt -----------
+
+
+Checking error table ...
+Error table is valid: 66 items
+
+mtDWCLI > soda decode r2/000000.soda r3/000000
+mtDWCLI > soda decode r2/000001.soda r3/000001
+mtDWCLI > soda decode r2/000002.soda r3/000002
+mtDWCLI > soda decode r2/000003.soda r3/000003
+mtDWCLI > soda decode r2/000004.soda r3/000004
+mtDWCLI > soda decode r2/000005.soda r3/000005
+mtDWCLI > soda decode r2/000006.soda r3/000006
+mtDWCLI > soda decode r2/000007.soda r3/000007
+mtDWCLI > soda decode r2/000008.soda r3/000008
+mtDWCLI > soda decode r2/000009.soda r3/000009
+mtDWCLI > soda decode r2/000010.soda r3/000010
+mtDWCLI > soda decode r2/000011.soda r3/000011
+mtDWCLI > soda decode r2/000012.soda r3/000012
+mtDWCLI > soda decode r2/000013.soda r3/000013
+mtDWCLI > soda decode r2/000014.soda r3/000014
+mtDWCLI > soda decode r2/000015.soda r3/000015
+mtDWCLI > soda decode r2/000016.soda r3/000016
+mtDWCLI > soda decode r2/000017.soda r3/000017
+mtDWCLI > soda decode r2/000018.soda r3/000018
+mtDWCLI > soda decode r2/000019.soda r3/000019
+mtDWCLI > soda decode r2/000020.soda r3/000020
+mtDWCLI > soda decode r2/000021.soda r3/000021
+mtDWCLI > soda decode r2/000022.soda r3/000022
+mtDWCLI > soda decode r2/000023.soda r3/000023
+mtDWCLI > soda decode r2/000024.soda r3/000024
+mtDWCLI > soda decode r2/000025.soda r3/000025
+mtDWCLI > soda decode r2/000026.soda r3/000026
+mtDWCLI > soda decode r2/000027.soda r3/000027
+mtDWCLI > soda decode r2/000028.soda r3/000028
+mtDWCLI > soda decode r2/000029.soda r3/000029
+mtDWCLI > soda decode r2/000030.soda r3/000030
+mtDWCLI > soda decode r2/000031.soda r3/000031
+mtDWCLI > soda decode r2/000032.soda r3/000032
+mtDWCLI > soda decode r2/000033.soda r3/000033
+mtDWCLI > soda decode r2/000034.soda r3/000034
+mtDWCLI > soda decode r2/000035.soda r3/000035
+mtDWCLI > soda decode r2/000036.soda r3/000036
+mtDWCLI > soda decode r2/000037.soda r3/000037
+mtDWCLI > soda decode r2/000038.soda r3/000038
+mtDWCLI > soda decode r2/000039.soda r3/000039
+mtDWCLI > soda decode r2/000040.soda r3/000040
+mtDWCLI > soda decode r2/000041.soda r3/000041
+mtDWCLI > soda decode r2/000042.soda r3/000042
+mtDWCLI > soda decode r2/000043.soda r3/000043
+mtDWCLI > soda decode r2/000044.soda r3/000044
+mtDWCLI > soda decode r2/000045.soda r3/000045
+mtDWCLI > soda decode r2/000046.soda r3/000046
+mtDWCLI > soda decode r2/000047.soda r3/000047
+mtDWCLI > soda decode r2/000048.soda r3/000048
+mtDWCLI > soda decode r2/000049.soda r3/000049
+mtDWCLI > soda decode r2/000050.soda r3/000050
+mtDWCLI > soda decode r2/000051.soda r3/000051
+mtDWCLI > soda decode r2/000052.soda r3/000052
+mtDWCLI > soda decode r2/000053.soda r3/000053
+mtDWCLI > soda decode r2/000054.soda r3/000054
+mtDWCLI > soda decode r2/000055.soda r3/000055
+mtDWCLI > soda decode r2/000056.soda r3/000056
+mtDWCLI > soda decode r2/000057.soda r3/000057
+mtDWCLI > soda decode r2/000058.soda r3/000058
+mtDWCLI > soda decode r2/000059.soda r3/000059
+mtDWCLI > soda decode r2/000060.soda r3/000060
+mtDWCLI > soda decode r2/000061.soda r3/000061
+mtDWCLI > soda decode r2/000062.soda r3/000062
+mtDWCLI > soda decode r2/000063.soda r3/000063
+mtDWCLI > soda decode r2/000064.soda r3/000064
+mtDWCLI > soda decode r2/000065.soda r3/000065
+mtDWCLI > soda decode r2/000066.soda r3/000066
+mtDWCLI > soda decode r2/000067.soda r3/000067
+mtDWCLI > soda decode r2/000068.soda r3/000068
+mtDWCLI > soda decode r2/000069.soda r3/000069
+mtDWCLI > soda decode r2/000070.soda r3/000070
+mtDWCLI > soda decode r2/000071.soda r3/000071
+mtDWCLI > soda decode r2/000072.soda r3/000072
+mtDWCLI > soda decode r2/000073.soda r3/000073
+mtDWCLI > soda decode r2/000074.soda r3/000074
+mtDWCLI > soda decode r2/000075.soda r3/000075
+mtDWCLI > soda decode r2/000076.soda r3/000076
+mtDWCLI > soda decode r2/000077.soda r3/000077
+mtDWCLI > soda decode r2/000078.soda r3/000078
+mtDWCLI > soda decode r2/000079.soda r3/000079
+mtDWCLI > soda decode r2/000080.soda r3/000080
+mtDWCLI > soda decode r2/000081.soda r3/000081
+mtDWCLI > soda decode r2/000082.soda r3/000082
+mtDWCLI > soda decode r2/000083.soda r3/000083
+mtDWCLI > soda decode r2/000084.soda r3/000084
+mtDWCLI > soda decode r2/000085.soda r3/000085
+mtDWCLI > soda decode r2/000086.soda r3/000086
+mtDWCLI > soda decode r2/000087.soda r3/000087
+mtDWCLI > soda decode r2/000088.soda r3/000088
+mtDWCLI > soda decode r2/000089.soda r3/000089
+mtDWCLI > soda decode r2/000090.soda r3/000090
+mtDWCLI > soda decode r2/000091.soda r3/000091
+mtDWCLI > soda decode r2/000092.soda r3/000092
+mtDWCLI > soda decode r2/000093.soda r3/000093
+mtDWCLI > soda decode r2/000094.soda r3/000094
+mtDWCLI > soda decode r2/000095.soda r3/000095
+mtDWCLI > soda decode r2/000096.soda r3/000096
+mtDWCLI > soda decode r2/000097.soda r3/000097
+mtDWCLI > soda decode r2/000098.soda r3/000098
+mtDWCLI > soda decode r2/000099.soda r3/000099
+mtDWCLI > 
+

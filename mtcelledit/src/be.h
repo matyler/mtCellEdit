@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -73,7 +73,6 @@ class Backend;
 #define PREFS_WINDOW_W		GUI_INIFILE_MAIN_WINDOW"_w"
 #define PREFS_WINDOW_H		GUI_INIFILE_MAIN_WINDOW"_h"
 #define RECENT_MENU_TOTAL	20
-#define	CEDVIEW_FRZ_PANE_TOT	7
 #define MAX_SORT		10
 #define COLOR_SWATCH_ROWS	5
 #define COLOR_SWATCH_COLS	8
@@ -95,31 +94,6 @@ enum
 {
 	SORT_ROWS	= 0,
 	SORT_COLUMNS	= 1
-};
-
-enum
-{
-	CEDVIEW_AREA_TL,
-	CEDVIEW_AREA_TR,		// Main drawing areas
-	CEDVIEW_AREA_BL,
-	CEDVIEW_AREA_BR,		// Scrollable area
-
-	CEDVIEW_AREA_CORNER,		// Top left corner area - visual bell
-
-	CEDVIEW_TITLE_C1,
-	CEDVIEW_TITLE_C2,		// Row/column title header areas
-	CEDVIEW_TITLE_R1,
-	CEDVIEW_TITLE_R2,
-
-	CEDVIEW_FRZ_COL,		// Frozen pane areas
-	CEDVIEW_FRZ_ROW,
-	CEDVIEW_FRZ_V_TOP,
-	CEDVIEW_FRZ_V_BOTTOM,
-	CEDVIEW_FRZ_H_LEFT,
-	CEDVIEW_FRZ_H_RIGHT,
-	CEDVIEW_FRZ_CORNER,
-
-	CEDVIEW_AREA_TOTAL
 };
 
 

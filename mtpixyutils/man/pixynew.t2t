@@ -27,8 +27,14 @@ Creates a new image according to given geometry and type.
 	Save current image to this file (immediately).
 **-otype** STRING
 	Output format of file (use 'list' to list types, default=BMP).
+**-palette** INTEGER
+	Palette type for new image: 0=default=8 colours; 1=Greyscale; 2..6 Uniform;
 **-width** INTEGER
 	Set new image height.
+
+
+= EXAMPLE =
+**@BIN_NAME@** -width 1000 -height 1000 -imtype rgb -otype png "" -o image.png
 
 
 = SEE ALSO =

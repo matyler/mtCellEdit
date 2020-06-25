@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2017 Mark Tyler
+	Copyright (C) 2011-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -484,7 +484,7 @@ static int export_cairo_output_fore_cb (
 {
 	outSTATE	* const	state = static_cast<outSTATE *>(user_data);
 	char		* new_text = NULL, * txt;
-	int		r = 0, g = 0, b = 0, text_style = 0, yoff = 0;
+	int		r = 0, g = 0, b = 0, text_style = 0;
 	double		x, y, xo, vis_right;
 
 
@@ -578,8 +578,7 @@ static int export_cairo_output_fore_cb (
 		break;
 	}
 
-	yoff = PANGO_PIXELS ( pango_layout_get_baseline ( state->p_layout ) );
-	y = state->dy + state->row_y_start + state->std_baseline - yoff;
+	y = state->dy + state->row_y_start;
 
 	// Left side cell expansion
 	for (	g = col-2;	// -1 for shifting to array number,
@@ -592,9 +591,6 @@ static int export_cairo_output_fore_cb (
 	{
 		state->dx = state->colx[g];
 		state->dw += state->mren_state.col_w[g] * state->glyph_w;
-
-		// state->cell_active[g] = 1;
-		// Not required for leftwards, only rightwards
 	}
 
 
@@ -609,9 +605,6 @@ static int export_cairo_output_fore_cb (
 		g++ )
 	{
 		state->dw += state->mren_state.col_w[g] * state->glyph_w;
-
-		// Don't allow reuse of this cell later
-		state->mren_state.cell_active[g] = 1;
 	}
 
 
@@ -2048,7 +2041,6 @@ static int main_background_ren_cb (
 	)
 {
 	mrenSTATE	* const	state = static_cast<mrenSTATE *>(user_data);
-	unsigned char	color[3], * dest;
 
 
 	if ( cell->text )
@@ -2056,9 +2048,12 @@ static int main_background_ren_cb (
 		state->cell_active[ col - state->c1 ] = 1;
 	}
 
-	if (	! cell->prefs ||
-		cell->prefs->color_background == 16777215
-		)
+	if ( ! cell->prefs )
+	{
+		return 0;
+	}
+
+	if ( CED_COLOR_BACKGROUND_DEFAULT == cell->prefs->color_background )
 	{
 		return 0;		// Already default
 	}
@@ -2076,6 +2071,8 @@ static int main_background_ren_cb (
 
 	get_cell_x_extent ( state, col );
 
+	unsigned char color[3];
+
 	color[0] = (unsigned char)mtPixy::int_2_red (
 		cell->prefs->color_background );
 
@@ -2085,7 +2082,7 @@ static int main_background_ren_cb (
 	color[2] = (unsigned char)mtPixy::int_2_blue (
 		cell->prefs->color_background );
 
-	dest = state->rgb + 3 * (state->mx - state->x);
+	unsigned char * dest = state->rgb + 3 * (state->mx - state->x);
 
 	for ( state->mx = state->cwidth; state->mx > 0; state->mx -- )
 	{
@@ -2223,14 +2220,6 @@ static void prepare_ren_expansion (
 				{
 					break;
 				}
-
-/*
-For every new empty cell that we encroach set the cell flag to 1 so that right
-justified over-runs to the right of this cell don't clash with this text.
-NOTE: We don't bother doing this when overlapping to the left because it serves
-no practical purpose as we render from left to right.
-*/
-				state->cell_active[j] = 1;
 
 				c2 = i;		// The new rightmost column
 

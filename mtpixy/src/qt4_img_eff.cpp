@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ void Mainwindow::press_image_to_rgb ()
 
 void Mainwindow::press_image_to_indexed ()
 {
-	DialogImageIndexed	dialog ( *this );
+	DialogImageIndexed ( *this );
 }
 
 void Mainwindow::press_image_delete_alpha ()
@@ -63,12 +63,12 @@ void Mainwindow::press_image_delete_alpha ()
 
 void Mainwindow::press_image_scale ()
 {
-	DialogImageScale	dialog ( *this );
+	DialogImageScale ( *this );
 }
 
 void Mainwindow::press_image_resize ()
 {
-	DialogImageResize	dialog ( *this );
+	DialogImageResize ( *this );
 }
 
 void Mainwindow::press_image_crop ()
@@ -102,7 +102,7 @@ void Mainwindow::press_image_rotate_anticlockwise ()
 
 void Mainwindow::press_image_information ()
 {
-	DialogImageInfo		dialog ( backend );
+	DialogImageInfo ( *this );
 }
 
 void Mainwindow::press_effects_transform_color ()
@@ -110,7 +110,7 @@ void Mainwindow::press_effects_transform_color ()
 	mtPixy::Image	* const im = backend.file.get_image ();
 	if ( im )
 	{
-		DialogTransColor	dialog ( *this, im );
+		DialogTransColor ( *this, im );
 	}
 }
 

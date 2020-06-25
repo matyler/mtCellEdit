@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -181,6 +181,21 @@ int mtKit::string_strip_extension (
 	char	const * const	extension
 	)
 {
+	if ( ! extension )
+	{
+		char const * const st = filename.c_str ();
+		char const * const pos = strrchr ( st, '.' );
+		char const * const sep = strrchr ( st, MTKIT_DIR_SEP );
+
+		if ( pos > sep && pos > st )
+		{
+			filename.resize ( (size_t)(pos - st) );
+			return 1;
+		}
+
+		return 0;
+	}
+
 	std::string scan ("*.");
 	scan += extension;
 

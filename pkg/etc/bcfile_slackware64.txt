@@ -6,6 +6,7 @@ mtutils	./configure
 mtcedutils	./configure
 mtcedcli	./configure.slackware12.0
 libmtdatawell	./configure --libdir=/usr/lib64
+mtdwutils	./configure
 mtdwcli	./configure.slackware12.0
 mtpixyutils	./configure
 mtpixycli	./configure.slackware12.0

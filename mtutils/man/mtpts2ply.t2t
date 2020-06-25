@@ -1,0 +1,35 @@
+= NAME =
+@BIN_NAME@ - convert PTS file to PLY
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ converts a PTS file to PLY format.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-n** INTEGER
+	Set the number of subdivisions to 2^n (default = none).  -32 <= n <= 32.
+
+**-o** FILENAME
+	Output file prefix.
+
+**-slices** INTEGER
+	Slice data up in N x N files (x,y) as given by -o (default = 1).
+	1 <= N <= 16.
+
+
+= EXAMPLE =
+
+mtpts2ply -n -2 raw.pts > ordered_2.ply
+
+xzcat raw.pts.xz | mtpts2ply -n -2 > ordered_2.ply
+
+xzcat raw.pts.xz | mtpts2ply -slices 5 -o ~/data/out_
+

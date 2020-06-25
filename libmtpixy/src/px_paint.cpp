@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -330,7 +330,7 @@ int mtPixy::Image::paint_brush (
 }
 
 void mtPixy::Image::paint_flow (
-	Brush		&bru
+	Brush	const	&bru
 	) const
 {
 	int	const	fl = bru.get_flow ();

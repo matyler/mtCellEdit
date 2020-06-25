@@ -1,0 +1,4 @@
+app homoglyph encode h1/in.001.txt h1/000000 h2/in.001.txt
+
+app homoglyph clean h2/in.001.txt h3/in.001.txt
+app homoglyph decode h2/in.001.txt h3/000000

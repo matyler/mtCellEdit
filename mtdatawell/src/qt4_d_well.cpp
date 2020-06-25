@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ void Mainwindow::press_well_info ()
 		return;
 	}
 
-	DialogWellInfo dialog ( *this );
+	DialogWellInfo ( *this );
 
 	well->save_state ();
 }
@@ -85,6 +85,7 @@ DialogWellInfo::DialogWellInfo (
 	QWidget		* w;
 
 	setWindowTitle ( "Well Information" );
+	setModal ( true );
 
 	QVBoxLayout * vbox = new QVBoxLayout;
 	setLayout ( vbox );

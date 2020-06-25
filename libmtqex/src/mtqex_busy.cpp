@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,18 +15,18 @@
 	along with this program in the file COPYING.
 */
 
-#include <unistd.h>
-
 #include "private.h"
 
 
 
-mtQEX::BusyDialog::BusyDialog ( QWidget * parent )
+mtQEX::BusyDialog::BusyDialog (
+	QWidget		* const	parent,
+	char	const * const	message
+	)
 	:
 	QDialog		( parent ),
 	m_progress	(),
 	m_button_box	(),
-	m_aborted	( false ),
 	m_default	( true )
 {
 	setModal ( true );
@@ -37,6 +37,11 @@ mtQEX::BusyDialog::BusyDialog ( QWidget * parent )
 	vbox->setMargin ( 5 );
 	setLayout ( vbox );
 
+	if ( message )
+	{
+		vbox->addWidget ( new QLabel ( message ) );
+	}
+
 	m_progress = new QProgressBar;
 
 	// Sadly the GTK2 Qt theme doesn't have a nice animated "busy indicator"
@@ -44,6 +49,11 @@ mtQEX::BusyDialog::BusyDialog ( QWidget * parent )
 	// option.
 	m_progress->setMinimum ( 0 );
 	m_progress->setMaximum ( 100 );
+	m_progress->setValue ( 0 );
+
+	m_busy.set_minmax ( 0, 100 );
+	m_busy.set_value ( 0 );
+	m_busy.clear_range_changed ();
 
 	m_progress->setTextVisible ( false );
 	vbox->addWidget ( m_progress );
@@ -69,7 +79,7 @@ void mtQEX::BusyDialog::show_abort () const
 	m_button_box->show ();
 }
 
-void mtQEX::BusyDialog::wait_for_thread ( QThread &thread ) const
+void mtQEX::BusyDialog::wait_for_thread ( QThread &thread )
 {
 	do
 	{
@@ -78,27 +88,31 @@ void mtQEX::BusyDialog::wait_for_thread ( QThread &thread ) const
 			int const num = (m_progress->value () + 1) %
 				(m_progress->maximum () + 1);
 
-			set_value ( num );
+			m_busy.set_value ( num );
 		}
 
 		process_qt_pending ();
 
 		usleep ( 20000 );	// 50th sec
 
+		if ( m_busy.range_changed () )
+		{
+			m_busy.clear_range_changed ();
+
+			m_default = false;
+
+			m_progress->setMinimum ( m_busy.get_min () );
+			m_progress->setMaximum ( m_busy.get_max () );
+
+			m_progress->setTextVisible ( true );
+		}
+
+		if ( m_busy.get_value () != m_progress->value () )
+		{
+			m_progress->setValue ( m_busy.get_value () );
+		}
+
 	} while ( thread.isRunning () );
-}
-
-void mtQEX::BusyDialog::set_minmax ( int const min, int const max )
-{
-	m_default = false;
-	m_progress->setMinimum ( min );
-	m_progress->setMaximum ( max );
-	m_progress->setTextVisible ( true );
-}
-
-void mtQEX::BusyDialog::set_value ( int const val ) const
-{
-	m_progress->setValue ( val );
 }
 
 void mtQEX::BusyDialog::accept ()
@@ -116,6 +130,6 @@ void mtQEX::BusyDialog::closeEvent ( QCloseEvent * ev )
 
 void mtQEX::BusyDialog::press_abort ()
 {
-	m_aborted = true;
+	m_busy.set_aborted ();
 }
 

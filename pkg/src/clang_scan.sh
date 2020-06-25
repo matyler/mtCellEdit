@@ -14,7 +14,7 @@ cd ..
 set +e
 
 
-for NAME in scan-build-4.0 scan-build-5.0 scan-build-6.0 scan-build-7.0
+for NAME in scan-build scan-build-4.0 scan-build-5.0 scan-build-6.0 scan-build-7.0
 do
 	BIN=$(which $NAME)
 

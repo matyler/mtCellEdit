@@ -1,0 +1,30 @@
+= NAME =
+@BIN_NAME@ - decode UTF-8 font file to ASCII
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Decode a UTF-8 font file back to ASCII.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-db** STRING
+	Load the database from this directory.  Can only be set once before the
+	filenames are passed.
+**-o** STRING
+	Save output files to this directory.  Default = ".".
+**-v**
+	Verbose.
+
+
+= EXAMPLE =
+**@BIN_NAME@** -o files_out_decoded files_out/*
+
+
+= SEE ALSO =
+dwutils(1)

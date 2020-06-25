@@ -127,6 +127,8 @@ void Mainwindow::create_menu ()
 	QAction * act_apps_coins;
 	QAction * act_apps_declist;
 	QAction * act_apps_dice;
+	QAction * act_apps_unicodefonts;
+	QAction * act_apps_homoglyphs;
 	QAction * act_apps_intlist;
 	QAction * act_apps_numshuff;
 	QAction * act_apps_passwords;
@@ -137,6 +139,8 @@ void Mainwindow::create_menu ()
 	QEX_MENU ( apps_coins, "Coin Toss ...", NULL, NULL )
 	QEX_MENU ( apps_declist, "Decimal List ...", NULL, NULL )
 	QEX_MENU ( apps_dice, "Dice Rolls ...", NULL, NULL )
+	QEX_MENU ( apps_unicodefonts, "Fonts ...", NULL, NULL )
+	QEX_MENU ( apps_homoglyphs, "Homoglyphs ...", NULL, NULL )
 	QEX_MENU ( apps_intlist, "Integer List ...", NULL, NULL )
 	QEX_MENU ( apps_numshuff, "Number Shuffle ...", NULL, NULL )
 	QEX_MENU ( apps_passwords, "Passwords ...", NULL, NULL )
@@ -154,6 +158,11 @@ void Mainwindow::create_menu ()
 	m_apps_menu->addAction ( act_apps_passwords );
 	m_apps_menu->addAction ( act_apps_pins );
 	m_apps_menu->setEnabled ( false );
+
+	QMenu * menuUnicode = m_apps_menu->addMenu ( "Unicode" );
+	menuUnicode->setTearOffEnabled ( true );
+	menuUnicode->addAction ( act_apps_unicodefonts );
+	menuUnicode->addAction ( act_apps_homoglyphs );
 
 
 	QAction * act_help_help;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -150,19 +150,19 @@ void Mainwindow::create_statusbar ()
 	w->setSizePolicy ( QSizePolicy::Expanding, QSizePolicy::Preferred );
 	sb->addWidget ( w );
 
-	m_statusbar_cursor = new QLabel ( "" );
+	m_statusbar_cursor = new QLabel;
 	sb->addWidget ( m_statusbar_cursor );
 
 ///	RIGHT
 
-	m_statusbar_selection = new QLabel ( "" );
+	m_statusbar_selection = new QLabel;
 	sb->addPermanentWidget ( m_statusbar_selection );
 
 	w = new QWidget;
 	w->setSizePolicy ( QSizePolicy::Expanding, QSizePolicy::Preferred );
 	sb->addPermanentWidget ( w );
 
-	m_statusbar_undo = new QLabel ( "" );
+	m_statusbar_undo = new QLabel;
 	sb->addPermanentWidget ( m_statusbar_undo );
 }
 

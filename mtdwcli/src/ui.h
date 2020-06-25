@@ -48,8 +48,10 @@ public:
 
 /// ----------------------------------------------------------------------------
 
-	mtDW::Database	db;
-	mtKit::Exit	exit;
+	mtDW::Database		db;
+	mtDW::Homoglyph		hg_index;
+	mtDW::Utf8Font		font_index;
+	mtKit::Exit		exit;
 
 private:
 	void main_loop ();
@@ -68,10 +70,17 @@ int jtf_app_cardshuff		( char const * const * );
 int jtf_app_cointoss		( char const * const * );
 int jtf_app_declist		( char const * const * );
 int jtf_app_diceroll		( char const * const * );
+int jtf_app_homoglyph_analyse	( char const * const * );
+int jtf_app_homoglyph_clean	( char const * const * );
+int jtf_app_homoglyph_decode	( char const * const * );
+int jtf_app_homoglyph_encode	( char const * const * );
 int jtf_app_intlist		( char const * const * );
 int jtf_app_numshuff		( char const * const * );
 int jtf_app_password		( char const * const * );
 int jtf_app_pins		( char const * const * );
+int jtf_app_utf8font_clean	( char const * const * );
+int jtf_app_utf8font_encode	( char const * const * );
+int jtf_app_utf8font_list	( char const * const * );
 int jtf_butt_add_buckets	( char const * const * );
 int jtf_butt_add_otp		( char const * const * );
 int jtf_butt_add_random_otp	( char const * const * );

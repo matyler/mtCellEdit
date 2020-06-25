@@ -1,0 +1,27 @@
+app utf8font encode h1/in.002.txt 1	h2/in.002.txt
+app utf8font encode h1/in.003.txt 2	h2/in.003.txt
+app utf8font encode h1/in.004.txt 3	h2/in.004.txt
+app utf8font encode h1/in.005.txt 4	h2/in.005.txt
+app utf8font encode h1/in.006.txt 5	h2/in.006.txt
+app utf8font encode h1/in.007.txt 6	h2/in.007.txt
+app utf8font encode h1/in.008.txt 7	h2/in.008.txt
+app utf8font encode h1/in.009.txt 8	h2/in.009.txt
+app utf8font encode h1/in.010.txt 9	h2/in.010.txt
+app utf8font encode h1/in.011.txt 10	h2/in.011.txt
+app utf8font encode h1/in.012.txt 11	h2/in.012.txt
+app utf8font encode h1/in.013.txt 12	h2/in.013.txt
+app utf8font encode h1/in.014.txt 13	h2/in.014.txt
+
+app utf8font clean h2/in.002.txt 	h3/in.002.txt
+app utf8font clean h2/in.003.txt 	h3/in.003.txt
+app utf8font clean h2/in.004.txt 	h3/in.004.txt
+app utf8font clean h2/in.005.txt 	h3/in.005.txt
+app utf8font clean h2/in.006.txt 	h3/in.006.txt
+app utf8font clean h2/in.007.txt 	h3/in.007.txt
+app utf8font clean h2/in.008.txt 	h3/in.008.txt
+app utf8font clean h2/in.009.txt 	h3/in.009.txt
+app utf8font clean h2/in.010.txt 	h3/in.010.txt
+app utf8font clean h2/in.011.txt 	h3/in.011.txt
+app utf8font clean h2/in.012.txt 	h3/in.012.txt
+app utf8font clean h2/in.013.txt 	h3/in.013.txt
+app utf8font clean h2/in.014.txt 	h3/in.014.txt

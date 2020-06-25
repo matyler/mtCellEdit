@@ -1,8 +1,12 @@
+3.4	2020-6-25
+
+	* mtpts2ply added.
+
 3.1	2018-2-25
 
 	* mtdsize added.
 
 0.0	2017-6-3
 
-	* mtUtils project started
+	* mtUtils project started.
 

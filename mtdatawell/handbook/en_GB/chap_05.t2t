@@ -15,11 +15,33 @@ The best way to learn about the structure of libmtDataWell is to study the publi
 To see an example of mtDWCLI in action have a look at the /test/ directory which is where I have various scripts to test the core library.
 
 
-
 ==5.2 Porting and Hacking mtDataWell==[SEC2]
 
 mtDataWell was designed and built on a GNU/Linux system, with the GUI created with the help of Qt4/5.  It should possible to port it anywhere else (with a little effort) as it is just a C++ program. I don't have enough time and energy to do this porting myself but feel free to port the code if you want (according to the GNU GPL of course) and tell me or the world about your experiences.
 
+
+==5.3 mtDWUtils==[SEC2]
+
+mtDWUtils is a collection of command line programs to manipulate libmtdatawell files.  Here is a list of the programs provided:
+
+| **Program** | **Description** |
+| dwdecbot    | Decode a data file from a bottle file (PNG or FLAC). |
+| dwdecfont   | Decode a UTF-8 font file back to ASCII. |
+| dwdechg     | Decode a homoglyph file and retrieve the original file. |
+| dwdecsoda   | Decode a data file from a soda file. |
+| dwencbot    | Encode a data file into a bottle file (PNG or FLAC). |
+| dwencfont   | Encode an ASCII text file using a unicode font. |
+| dwenchg     | Encode a file into a homoglyph file. |
+| dwencsoda   | Encode a data file into a soda file. |
+| dwutils     | Main program which can be run directly or by using a symlink. |
+
+
+More information can be obtained by consulting the man page:
+
+
+```
+man dwutils
+```
 
 
 

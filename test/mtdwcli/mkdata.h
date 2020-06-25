@@ -42,8 +42,8 @@ private:
 
 	mtKit::Random	&	m_random;
 
-	mtKit::unique_ptr<mtPixy::Image> m_image;
-	mtKit::unique_ptr<mtPixy::Brush> m_brush;
+	std::unique_ptr<mtPixy::Image> m_image;
+	std::unique_ptr<mtPixy::Brush> m_brush;
 
 	mtPixy::Palette		* m_palette;
 	mtPixy::Color		* m_color;

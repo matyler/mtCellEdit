@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -123,6 +123,59 @@ int jtf_app_diceroll (
 	return 0;
 }
 
+int jtf_app_homoglyph_analyse (
+	char	const * const * const	args
+	)
+{
+	std::string	txt;
+
+	backend.hg_index.file_analyse ( args[0], txt );
+
+	std::cout << txt << "\n";
+
+	return 0;
+}
+
+int jtf_app_homoglyph_clean (
+	char	const * const * const	args
+	)
+{
+	std::string	txt;
+
+	backend.hg_index.file_clean ( args[0], args[1], txt );
+
+	std::cout << txt << "\n";
+
+	return 0;
+}
+
+int jtf_app_homoglyph_decode (
+	char	const * const * const	args
+	)
+{
+	std::string	txt;
+
+	backend.hg_index.file_decode ( args[0], args[1], txt );
+
+	std::cout << txt << "\n";
+
+	return 0;
+}
+
+int jtf_app_homoglyph_encode (
+	char	const * const * const	args
+	)
+{
+	std::string	txt;
+
+	backend.hg_index.file_encode ( args[0], args[1], args[2],
+		backend.db.get_well (), txt );
+
+	std::cout << txt << "\n";
+
+	return 0;
+}
+
 int jtf_app_intlist (
 	char	const * const * const	args
 	)
@@ -231,6 +284,56 @@ int jtf_app_password (
 		upper, num, other_txt ), chtot, txt, tot );
 
 	std::cout << txt << "\n";
+
+	return 0;
+}
+
+int jtf_app_utf8font_clean (
+	char	const * const * const	args
+	)
+{
+	std::string	info;
+
+	if ( backend.font_index.file_clean ( args[0], args[1], info ) )
+	{
+		std::cout << info << "\n";
+		return 1;
+	}
+
+	return 0;
+}
+
+int jtf_app_utf8font_encode (
+	char	const * const * const	args
+	)
+{
+	std::string	info;
+	int	const	min = mtDW::Utf8Font::TYPE_MIN;
+	int	const	max = mtDW::Utf8Font::TYPE_MAX;
+	int		type = 0;
+
+	if ( mtKit::cli_parse_int ( args[1], type, min, max ) )
+	{
+		return 1;
+	}
+
+	if ( backend.font_index.file_encode ( args[0], type, args[2], info ) )
+	{
+		std::cout << info << "\n";
+		return 1;
+	}
+
+	return 0;
+}
+
+int jtf_app_utf8font_list (
+	char	const * const * const	ARG_UNUSED ( args )
+	)
+{
+	std::string	info;
+
+	backend.font_index.get_font_list ( info );
+	std::cout << info << "\n";
 
 	return 0;
 }
@@ -379,7 +482,8 @@ int jtf_butt_list (
 
 	for ( size_t i = 0; i < list.size (); i++ )
 	{
-		printf ( "%5zu  %-20s  %s  %6i  %s\n", i+1,
+		printf ( "%5lu  %-20s  %s  %6i  %s\n",
+			((unsigned long)i+1),
 			list[i].m_name.c_str (),
 			(list[i].m_status & 1) ? "R " : "RW",
 			list[i].m_buckets,

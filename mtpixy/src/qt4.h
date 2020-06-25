@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -727,7 +727,7 @@ class DialogImageInfo : public QDialog
 	Q_OBJECT
 
 public:
-	explicit DialogImageInfo ( Backend &be );
+	explicit DialogImageInfo ( Mainwindow &mw );
 };
 
 

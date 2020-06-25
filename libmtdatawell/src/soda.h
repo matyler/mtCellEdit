@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@ class SodaTransaction::Op
 public:
 	mtKit::SqliteTransaction trans;
 
-	inline explicit Op ( mtKit::Sqlite & db )
+	inline explicit Op ( mtKit::Sqlite const & db )
 		:
 		trans ( db )
 	{

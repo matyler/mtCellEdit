@@ -1,0 +1,26 @@
+= NAME =
+@BIN_NAME@ - Mark Tyler's point Cloud RULer
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ is a tool for viewing and analysing point cloud data.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-db** STRING
+	Use this path to read the database files.
+
+**-prefs** STRING
+	Use this file for GUI program preferences (e.g. window position).
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Default file used for storing user preferences.

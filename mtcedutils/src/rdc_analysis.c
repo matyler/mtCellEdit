@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2019 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -155,7 +155,7 @@ static int print_analysis_real ( void )
 
 	char	const * const	filename	= get_arg_i ();
 	size_t		const	bufsize		= 1000000;
-	int		const	verbose		= 1;
+	int		const	verbose		= get_arg_verbose ();
 	static char const * const numrep_str[ SEQ_MAX ] = {
 			"2", "3", "4", "5", "6+" };
 

@@ -12,11 +12,19 @@
 mtPixyUtils is a collection of command line programs to manipulate image files.  Here is a list of the programs provided:
 
 | **Program** | **Description** |
+| pixycmp     | Compare two images. |
+| pixydelta   | Get pixel delta's between two images. |
+| pixyfade    | Create a fade between two images. |
 | pixyls      | List image file information. |
 | pixynew     | Create a new image. |
+| pixypica    | Analyse an indexed palette image. |
 | pixyresize  | Resize an image. |
+| pixyriba    | Analyse an RGB image. |
+| pixyrida    | Analyse an RGB image. |
+| pixyrisa    | Analyse an RGB image. |
 | pixyscale   | Scale an image. |
 | pixyutils   | Main program which can be run directly or by using a symlink. |
+| pixytwit    | Prepare an image for Twitter. |
 
 
 For more detailed information use:

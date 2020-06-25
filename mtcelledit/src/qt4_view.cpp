@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,6 +16,10 @@
 */
 
 #include "qt4.h"
+
+
+
+#define	CEDVIEW_FRZ_PANE_TOT	7
 
 
 

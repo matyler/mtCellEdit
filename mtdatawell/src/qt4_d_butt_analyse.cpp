@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 void Mainwindow::press_butt_analysis ()
 {
-	DialogButtAnalysis dialog ( *this );
+	DialogButtAnalysis ( *this );
 }
 
 
@@ -47,8 +47,8 @@ DialogButtAnalysis::DialogButtAnalysis (
 	analysis	( *mw.backend.db.get_butt () ),
 	mainwindow	( mw )
 {
-	mtKit::unique_ptr<mtPixy::Image> im_8bit;
-	mtKit::unique_ptr<mtPixy::Image> im_16bit;
+	std::unique_ptr<mtPixy::Image> im_8bit;
+	std::unique_ptr<mtPixy::Image> im_16bit;
 
 	if ( report_lib_error ( &mw, analysis.init ( im_8bit, im_16bit ) ) )
 	{
@@ -60,6 +60,7 @@ DialogButtAnalysis::DialogButtAnalysis (
 	QLabel		* label;
 
 	setWindowTitle ( "Butt Analysis" );
+	setModal ( true );
 
 	QVBoxLayout * vbox = new QVBoxLayout;
 	setLayout ( vbox );
@@ -101,10 +102,10 @@ DialogButtAnalysis::DialogButtAnalysis (
 	label = new QLabel ( "Size: " );
 	hbox->addWidget ( label );
 
-	m_bucket_size = new QLabel ( "" );
+	m_bucket_size = new QLabel;
 	hbox->addWidget ( m_bucket_size );
 
-	label = new QLabel ( "" );
+	label = new QLabel;
 	hbox->addWidget ( label );
 	label->setSizePolicy ( QSizePolicy::Expanding,
 		QSizePolicy::Preferred );

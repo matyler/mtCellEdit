@@ -15,16 +15,17 @@ MT_STARTUP
 
 
 # All packages need these
-MT_PARSE_ARGS libmtkit libmtpixy libmtqex4
+MT_PARSE_ARGS libmtkit libmtpixy libmtqex5
 
 
-# NOTE: we use *-qt4 & qex4, but this Qt reference is irrelevant until we set CONF below.
+# NOTE: we use *-qt5 & qex5, but this Qt reference is irrelevant until we set CONF below.
 
 case "$1" in
-"mtcelledit"* )	MT_PARSE_ARGS libmtcelledit libmtcedui mtcelledit-qt4;;
-"mtdatawell"* )	MT_PARSE_ARGS libmtdatawell mtdatawell-qt4;;
-"mtpixy"* )	MT_PARSE_ARGS mtpixy-qt4;;
-"mtraft"* )	MT_PARSE_ARGS libmtcelledit mtraft-qt4;;
+"mtcelledit"* )	MT_PARSE_ARGS libmtcelledit libmtcedui mtcelledit-qt5;;
+"mtdatawell"* )	MT_PARSE_ARGS libmtdatawell mtdatawell-qt5;;
+"mtpixy"* )	MT_PARSE_ARGS mtpixy-qt5;;
+"mtraft"* )	MT_PARSE_ARGS libmtcelledit mtraft-qt5;;
+"mtcrul"* )	MT_PARSE_ARGS mtcrul-qt5;;
 * )
 	echo
 	echo "ERROR - argument '$1' not recognised"

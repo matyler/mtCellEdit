@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -131,7 +131,7 @@ private:
 /// ----------------------------------------------------------------------------
 
 	// Butt prefs
-	mtKit::unique_ptr<mtKit::Prefs> m_prefs_butt;
+	std::unique_ptr<mtKit::Prefs> m_prefs_butt;
 	int			m_write_next;
 	int			m_status;
 };

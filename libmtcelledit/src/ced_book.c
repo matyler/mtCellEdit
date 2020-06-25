@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2017 Mark Tyler
+	Copyright (C) 2009-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1774,7 +1774,7 @@ int ced_book_merge (
 			if ( ! name || ced_book_detach_sheet ( sheet ) )
 			{
 				free ( name );
-				state.res = 2;
+//				state.res = 2;
 				break;
 			}
 
@@ -1786,7 +1786,7 @@ int ced_book_merge (
 				// Destroy orphaned sheet
 				ced_sheet_destroy ( sheet );
 				free ( name );
-				state.res = 2;
+//				state.res = 2;
 				break;
 			}
 

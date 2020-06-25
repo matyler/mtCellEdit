@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2018 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -109,6 +109,18 @@ void MainWindow::pressRightSplitTab (
 	{
 		tabWidget->hide ();
 		viewMain->setFocus ();
+	}
+
+	if ( index == TAB_VIEW )
+	{
+		viewTab->show ();
+	}
+	else
+	{
+		// We need to hide the CedView when not visible otherwise it
+		// pushes the split divider unexpectedly to the left when using:
+		// the find tool; graphs; etc. when using frozen panes.
+		viewTab->hide ();
 	}
 }
 
@@ -226,8 +238,15 @@ void MainWindow::createRightSplit (
 	graphTextEdit = new QTextEdit;
 	layv->addWidget ( graphTextEdit );
 
+	widget = new QWidget;
+	layv = new QVBoxLayout;
+	layv->setMargin ( 0 );
+	layv->setSpacing ( 0 );
+	widget->setLayout ( layv );
+	tabWidget->addTab ( widget, "View" );
+
 	viewTab = new CedView;
-	tabWidget->addTab ( viewTab, "View" );
+	layv->addWidget ( viewTab );
 
 	QWidget * tabClose = new QWidget;
 	tabWidget->addTab ( tabClose, "Close" );

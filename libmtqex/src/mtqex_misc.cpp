@@ -180,7 +180,7 @@ int mtQEX::qt_get_state (
 	char	const	* const txt = pr->getString ( key );
 
 
-	if ( ! txt )
+	if ( ! txt || txt[0] == 0 )
 	{
 		return 1;
 	}

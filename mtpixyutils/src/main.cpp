@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -94,9 +94,18 @@ static char const * const ff_errtab[] = {
 
 
 static const utComRec * get_comrec (
-	char	const * const	command
+	char	const *	command
 	)
 {
+	if (	command[0] == 'p' &&
+		command[1] == 'i' &&
+		command[2] == 'x' &&
+		command[3] == 'y'
+		)
+	{
+		command += 4;
+	}
+
 	for ( int i = 0; comtab[i].name; i++ )
 	{
 		if ( 0 == strcmp ( command, comtab[i].name ) )
@@ -185,20 +194,6 @@ static int error_func (
 	fprintf ( stderr, "\n" );
 
 	return 0;			// Keep parsing
-}
-
-static void select_command ()
-{
-	if (	global.s_arg[0] == 'p' &&
-		global.s_arg[1] == 'i' &&
-		global.s_arg[2] == 'x' &&
-		global.s_arg[3] == 'y'
-		)
-	{
-		global.s_arg += 4;
-	}
-
-	comrec = get_comrec ( global.s_arg );
 }
 
 static int print_version (
@@ -509,7 +504,7 @@ int main (
 		global.s_arg ++;
 	}
 
-	select_command ();
+	comrec = get_comrec ( global.s_arg );
 
 	// Parse & action the command line arguments
 	mtArg const arg_list[] = {

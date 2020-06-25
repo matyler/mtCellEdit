@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2019 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -37,6 +37,31 @@ class	SortDialog;
 class	SwatchDialog;
 
 
+
+enum
+{
+	CEDVIEW_AREA_TL,
+	CEDVIEW_AREA_TR,		// Main drawing areas
+	CEDVIEW_AREA_BL,
+	CEDVIEW_AREA_BR,		// Scrollable area
+
+	CEDVIEW_AREA_CORNER,		// Top left corner area - visual bell
+
+	CEDVIEW_TITLE_C1,
+	CEDVIEW_TITLE_C2,		// Row/column title header areas
+	CEDVIEW_TITLE_R1,
+	CEDVIEW_TITLE_R2,
+
+	CEDVIEW_FRZ_COL,		// Frozen pane areas
+	CEDVIEW_FRZ_ROW,
+	CEDVIEW_FRZ_V_TOP,
+	CEDVIEW_FRZ_V_BOTTOM,
+	CEDVIEW_FRZ_H_LEFT,
+	CEDVIEW_FRZ_H_RIGHT,
+	CEDVIEW_FRZ_CORNER,
+
+	CEDVIEW_AREA_TOTAL
+};
 
 enum
 {
@@ -487,7 +512,7 @@ class SortDialog : public QDialog
 	Q_OBJECT
 
 public:
-	SortDialog (
+	explicit SortDialog (
 		int axis,		// 0 = Rows, 1 = Columns
 		QWidget * par = NULL
 		);

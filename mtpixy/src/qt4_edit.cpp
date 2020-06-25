@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ void Mainwindow::press_edit_paste_centre ()
 
 void Mainwindow::press_edit_paste_text ()
 {
-	DialogPasteText		dialog ( *this );
+	DialogPasteText ( *this );
 }
 
 void DialogColorEdit::color_changed (

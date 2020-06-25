@@ -15,7 +15,7 @@ The core of the program is a shared C/C++ library which can be used by any C/C++
 
 The default file format mtCellEdit uses is portable and transparent as it is a ZIP file containing TSV text files.  I deliberately designed it this way so that data can be extracted and read by any modern spreadsheet program on any operating system without requiring mtCellEdit. Over the years I have been frustrated by binary and XML formats that make data only accessible via a single program (or by me wasting time manually converting each file, or by me writing a file format conversion program).  This format ensures that my data never becomes stranded, and can be manipulated by whichever tool I choose for a particular job (i.e. spreadsheet programs, text editors, command line tools, etc).
 
-mtCellEdit is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, ARM_32, and PowerPC_32 hardware platforms.
+mtCellEdit is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, and ARM_32 hardware platforms.
 
 
 
@@ -75,7 +75,7 @@ An important decision I have taken is to release it as free software using the G
 | 2010-6-25  | 1.0.0       | First feature complete version. |
 | 2010-12-25 | 1.2.0       | Sheet export output to: EPS, PDF, PDF Paged, PNG, PS, SVG, TSV, TSV Quoted. |
 | 2011-4-25  | 1.4.0       | Graphing facilities incorporated into GUI, and exports to: EPS, PDF, PNG, PS, SVG. Sheet export output to HTML.  Cell borders. |
-| 2012-3-25  | 2.0         | Rendering and graphing now done by external library. CSV load/save completed. Major re-factoring, cleanups, and optimizations. 64 bit systems now supported. |
+| 2012-3-25  | 2.0         | Rendering and graphing now done by external library. CSV load/save completed. Major re-factoring, cleanups, and optimizations. 64 bit systems now supported. mtCedUtils added. |
 | 2013-3-24  | 2.1         | mtCedCLI command line spreadsheet program added. |
 | 2013-8-25  | 2.2         | mtRaft example program added. |
 | 2014-2-22  | 2.3         | Qt 4 & Qt 5 ports added for mtCellEdit, mtRaft, mtEleana. |
@@ -87,6 +87,7 @@ An important decision I have taken is to release it as free software using the G
 | 2018-2-25  | 3.1         | General improvements. mtEleana removed. |
 | 2018-8-25  | 3.2         | libmtdatawell, mtDWCLI added. |
 | 2019-5-25  | 3.3         | libmtPixyUI merged into libmtPixy. mtDataWell added. |
+| 2020-6-25  | 3.4         | mtCrul and mtDWUtils added. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -58,9 +58,40 @@ int mtKit::Sqlite::exec_sql ( char const * const sql ) const
 	return 1;
 }
 
+int mtKit::Sqlite::add_table ( std::string const & name ) const
+{
+	std::string sql ( "CREATE TABLE IF NOT EXISTS " );
+
+	sql += name;
+	sql += "(id INTEGER PRIMARY KEY)";
+
+	return exec_sql ( sql );
+}
+
+int mtKit::Sqlite::add_column_field (
+	std::string	const &	table_name,
+	std::string	const &	field_name,
+	std::string	const &	field_type
+	) const
+{
+	std::string sql ( "ALTER TABLE " );
+
+	sql += table_name;
+	sql += " ADD ";
+	sql += field_name;
+	sql += " ";
+	sql += field_type;
+
+	return exec_sql ( sql );
+}
+
 int mtKit::Sqlite::empty_table ( std::string const & table ) const
 {
-	return exec_sql ( "DELETE FROM " + table +  ";" );
+	std::string	sql ( "DELETE FROM " );
+
+	sql += table;
+
+	return exec_sql ( sql );
 }
 
 static int count_rows_callback (
@@ -79,9 +110,10 @@ static int count_rows_callback (
 
 int mtKit::Sqlite::count_rows ( std::string const & table ) const
 {
-	int count = 0;
+	int		count = 0;
+	std::string	sql ( "SELECT COUNT(*) FROM " );
 
-	std::string const sql = "SELECT COUNT(*) FROM " + table;
+	sql += table;
 
 	sqlite3_exec ( m_db, sql.c_str (), count_rows_callback, &count, NULL );
 
@@ -110,7 +142,7 @@ void mtKit::Sqlite::set_version ( int const version )
 void mtKit::Sqlite::archive_table (
 	char	const * const	table,
 	int		const	suffix
-	)
+	) const
 {
 	char buf[32];
 
@@ -122,262 +154,163 @@ void mtKit::Sqlite::archive_table (
 	sql += table;
 	sql += buf;
 
-	exec_sql ( sql.c_str () );
+	exec_sql ( sql );
+}
+
+void mtKit::Sqlite::vacuum () const
+{
+	exec_sql ( "VACUUM" );
 }
 
 
 
 /// SqliteAddRecord ------------------------------------------------------------
 
-class RecordField
-{
-public:
-	enum
-	{
-		FIELD_TEXT,
-		FIELD_BLOB,
-		FIELD_INTEGER
-	};
-
-
-
-	RecordField ( char const * name, char const * value )
-		:
-		m_type		(FIELD_TEXT),
-		m_name		(name),
-		m_mem_value	(value),
-		m_mem_len	(0),
-		m_int_value	(0)
-	{}
-
-	RecordField ( char const * name, char const * value, int value_len )
-		:
-		m_type		(FIELD_BLOB),
-		m_name		(name),
-		m_mem_value	(value),
-		m_mem_len	(value_len),
-		m_int_value	(0)
-	{}
-
-	RecordField ( char const * name, sqlite3_int64 value )
-		:
-		m_type		(FIELD_INTEGER),
-		m_name		(name),
-		m_mem_value	(),
-		m_mem_len	(0),
-		m_int_value	(value)
-	{}
-
-/// ----------------------------------------------------------------------------
-
-	int			m_type;
-	char	const * const	m_name;
-	char	const * const	m_mem_value;
-	int			m_mem_len;
-	sqlite3_int64		m_int_value;
-};
-
-
-
-namespace mtKit
-{
-
-template <typename T> class ArrayList
-{
-public:
-	ArrayList ()
-		:
-		m_size		( 0 ),
-		m_array_tot	( m_block ),
-		m_array		( (T **)calloc ( sizeof(T*), m_array_tot ) )
-	{
-		if ( ! m_array )
-		{
-			throw 123;
-		}
-	}
-
-	~ArrayList ()
-	{
-		for ( size_t i = 0; i < m_size; i++ )
-		{
-			delete m_array[ i ];
-		}
-
-		free ( m_array );
-	}
-
-	void add ( T * t )		// Throw & delete t on fail
-	{
-		if ( m_size == m_array_tot )
-		{
-			size_t const new_tot = m_array_tot + m_block;
-			T ** const new_array = (T **)realloc ( m_array,
-				new_tot * sizeof(T*) );
-
-			if ( ! new_array )
-			{
-				delete t;
-				throw 123;
-			}
-
-			m_array_tot = new_tot;
-			m_array = new_array;
-		}
-
-		m_array[ m_size ] = t;
-		m_size++;
-	}
-
-	inline size_t size () const { return m_size; };
-	inline T ** get_array () const { return m_array; };
-
-private:
-	static size_t const	m_block = 64;
-	size_t			m_size;
-	size_t			m_array_tot;	// Allocated items in m_array
-	T		**	m_array;
-
-	ArrayList ( const ArrayList & );	// Disable copy constructor
-	ArrayList & operator = (const ArrayList &);	// Disable = operator
-};
-
-
-
-class SqliteAddRecordOp
-{
-public:
-	SqliteAddRecordOp ( Sqlite const & db, char const * const table )
-		:
-		m_db		( db ),
-		m_table		( table )
-	{
-	}
-
-	~SqliteAddRecordOp () {}
-
-/// ----------------------------------------------------------------------------
-
-	Sqlite		const &	m_db;
-	char	const * const	m_table;
-
-	ArrayList<RecordField>	m_fields;
-};
-
-}	// namespace mtKit
-
 
 
 mtKit::SqliteAddRecord::SqliteAddRecord (
-	Sqlite		const &	db,
-	char	const *	const	table
+	Sqlite		const	& db,
+	char	const * const	table
 	)
 	:
-	op ( new SqliteAddRecordOp ( db, table ) )
+	m_stmt		( db ),
+	m_db		( db ),
+	m_sql		( "INSERT INTO " ),
+	m_field_num	( 0 )
 {
+	m_sql += table;
+	m_sql += " (";
 }
 
-mtKit::SqliteAddRecord::~SqliteAddRecord ()
+void mtKit::SqliteAddRecord::add_field ( char const * const name )
 {
-	delete ( op );
-}
-
-void mtKit::SqliteAddRecord::text (
-	char	const * const	name,
-	char	const * const	value
-	) const
-{
-	op->m_fields.add ( new RecordField ( name, value ) );
-}
-
-void mtKit::SqliteAddRecord::blob (
-	char	const * const	name,
-	char	const * const	value,
-	int		const	value_len
-	) const
-{
-	op->m_fields.add ( new RecordField ( name, value, value_len ) );
-}
-
-void mtKit::SqliteAddRecord::integer (
-	char	const * const	name,
-	sqlite3_int64	const	value
-	) const
-{
-	op->m_fields.add ( new RecordField ( name, value ) );
-}
-
-void mtKit::SqliteAddRecord::insert () const
-{
-	size_t const tot = op->m_fields.size ();
-
-	if ( tot < 1 )
+	if ( m_field.size () > 0 )
 	{
-		return;
+		m_sql += ",";
 	}
 
-	RecordField const * const * const field = op->m_fields.get_array ();
+	m_sql += name;
 
-	std::string sql = "INSERT INTO ";
-	sql += op->m_table;
-	sql += " ( ";
-	sql += field[0]->m_name;
+	m_field.push_back ( SqliteAddRecordField () );
+}
 
-	std::string values = " ) VALUES ( ?";
+void mtKit::SqliteAddRecord::end_field ()
+{
+	m_sql += ") VALUES (?";
+
+	size_t const tot = m_field.size ();
 
 	for ( size_t i = 1; i < tot; i++ )
 	{
-		sql += ", ";
-		sql += field[i]->m_name;
-
-		values += ", ?";
+		m_sql += ",?";
 	}
 
-	sql += values;
-	sql += " )";
+	m_sql += ")";
 
-	SqliteStmt ss ( op->m_db, sql );
-
-	if ( SQLITE_OK != ss.err )
+	if ( SQLITE_OK != m_stmt.prepare ( m_sql ) )
 	{
 		throw 123;
 	}
+}
+
+void mtKit::SqliteAddRecord::set_text (
+	char	const * const	value
+	)
+{
+	m_field[ m_field_num ].m_type = SqliteAddRecordField::FIELD_TEXT;
+	m_field[ m_field_num ].m_mem_value = value;
+
+	m_field_num++;
+}
+
+void mtKit::SqliteAddRecord::set_blob (
+	char	const * const	value,
+	size_t		const	value_len
+	)
+{
+	m_field[ m_field_num ].m_type = SqliteAddRecordField::FIELD_BLOB;
+	m_field[ m_field_num ].m_mem_value = value;
+	m_field[ m_field_num ].m_mem_len = value_len;
+
+	m_field_num++;
+}
+
+void mtKit::SqliteAddRecord::set_integer (
+	sqlite3_int64	const	value
+	)
+{
+	m_field[ m_field_num ].m_type = SqliteAddRecordField::FIELD_INTEGER;
+	m_field[ m_field_num ].m_int_value = value;
+
+	m_field_num++;
+}
+
+void mtKit::SqliteAddRecord::set_real (
+	double	const	value
+	)
+{
+	m_field[ m_field_num ].m_type = SqliteAddRecordField::FIELD_REAL;
+	m_field[ m_field_num ].m_real_value = value;
+
+	m_field_num++;
+}
+
+void mtKit::SqliteAddRecord::insert_record ()
+{
+	m_field_num = 0;
+
+	size_t const tot = m_field.size ();
 
 	for ( size_t i = 0; i < tot; i++ )
 	{
-		int		const	ii = (int)(i + 1);
-		char	const * const	mem = field[i]->m_mem_value;
-		int		const	len = field[i]->m_mem_len;
-		sqlite3_int64	const	i64 = field[i]->m_int_value;
+		SqliteAddRecordField const &rec = m_field[ i ];
 
-		switch ( field[i]->m_type )
+		switch ( rec.m_type )
 		{
-		case RecordField::FIELD_TEXT:
-			ss.bind_text ( ii, mem );
+		case SqliteAddRecordField::FIELD_TEXT:
+			m_stmt.bind_text ( (int)(i + 1), rec.m_mem_value );
 			break;
 
-		case RecordField::FIELD_BLOB:
-			ss.bind_blob ( ii, mem, len );
+		case SqliteAddRecordField::FIELD_BLOB:
+			m_stmt.bind_blob ( (int)(i + 1), rec.m_mem_value,
+				(int)rec.m_mem_len );
 			break;
 
-		case RecordField::FIELD_INTEGER:
-			ss.bind_int64 ( ii, i64 );
+		case SqliteAddRecordField::FIELD_INTEGER:
+			m_stmt.bind_int64 ( (int)(i + 1), rec.m_int_value );
+			break;
+
+		case SqliteAddRecordField::FIELD_REAL:
+			m_stmt.bind_real ( (int)(i + 1), rec.m_real_value );
 			break;
 
 		default:
+			std::cerr << "Bad field type: " << rec.m_type << "\n";
 			throw 123;
 		}
 
-		if ( SQLITE_OK != ss.err )
+		if ( SQLITE_OK != m_stmt.err )
 		{
+			std::cerr << "Sqlite error: " << m_stmt.err
+				<< " " << sqlite3_errmsg ( m_db.get_sqlite3 () )
+				<< "\n";
 			throw 123;
 		}
 	}
 
-	if ( ss.step () )
+	switch ( m_stmt.step () )
 	{
+	case SQLITE_OK:
+	case SQLITE_DONE:
+		break;
+	default:
+		std::cerr << "step error: " << m_sql << " err=" << m_stmt.err
+			<< " " << sqlite3_errmsg ( m_db.get_sqlite3 () )
+			<< "\n";
 		throw 123;
 	}
+
+	m_stmt.reset ();
 }
 
 
@@ -391,9 +324,10 @@ mtKit::SqliteGetRecord::SqliteGetRecord (
 	std::string	const &	sql
 	)
 	:
-	stmt		( db, sql )
+	stmt		( db ),
+	m_field_num	( 0 )
 {
-	if ( SQLITE_OK != stmt.err )
+	if ( SQLITE_OK != stmt.prepare ( sql ) )
 	{
 		throw 123;
 	}
@@ -405,6 +339,8 @@ mtKit::SqliteGetRecord::~SqliteGetRecord ()
 
 int mtKit::SqliteGetRecord::next ()
 {
+	m_field_num = 0;
+
 	if ( SQLITE_ROW == stmt.step () )
 	{
 		return 0;
@@ -413,17 +349,42 @@ int mtKit::SqliteGetRecord::next ()
 	return 1;
 }
 
-int mtKit::SqliteGetRecord::get_type ( int const arg )
+int mtKit::SqliteGetRecord::get_type ()
 {
-	return sqlite3_column_type ( stmt.stmt, arg );
+	return sqlite3_column_type ( stmt.stmt, m_field_num );
 }
 
 int mtKit::SqliteGetRecord::get_blob (
-	int	const	arg,
-	std::string	& res
+	void	const ** mem,
+	int		& memlen
 	)
 {
-	switch ( get_type ( arg ) )
+	switch ( get_type () )
+	{
+	case SQLITE_BLOB:
+		// Valid
+		break;
+
+	case SQLITE_NULL:
+		m_field_num++;
+		return 1;	// NULL
+
+	default:
+		m_field_num++;
+		return 2;	// Mismatched type
+	}
+
+	*mem = sqlite3_column_blob ( stmt.stmt, m_field_num );
+	memlen = sqlite3_column_bytes ( stmt.stmt, m_field_num );
+
+	m_field_num++;
+
+	return 0;
+}
+
+int mtKit::SqliteGetRecord::get_blob_text ( std::string & res )
+{
+	switch ( get_type () )
 	{
 	case SQLITE_BLOB:
 	case SQLITE_TEXT:
@@ -431,112 +392,192 @@ int mtKit::SqliteGetRecord::get_blob (
 		break;
 
 	case SQLITE_NULL:
+		m_field_num++;
 		return 1;	// NULL
 
 	default:
+		m_field_num++;
 		return 2;	// Mismatched type
 	}
 
-	int const size = sqlite3_column_bytes ( stmt.stmt, arg );
-	void const * const data = sqlite3_column_blob ( stmt.stmt, arg );
+	void const * const data = sqlite3_column_blob ( stmt.stmt, m_field_num);
+	int const size = sqlite3_column_bytes ( stmt.stmt, m_field_num );
 
 	mtKit::string_from_data ( res, data, (size_t)size );
+
+	m_field_num++;
 
 	return 0;
 }
 
 int mtKit::SqliteGetRecord::get_text (
-	int	const	arg,
 	std::string	& res
 	)
 {
-	switch ( get_type ( arg ) )
+	switch ( get_type () )
 	{
 	case SQLITE_TEXT:
 		// Valid
 		break;
 
 	case SQLITE_NULL:
+		m_field_num++;
 		return 1;	// NULL
 
 	default:
+		m_field_num++;
 		return 2;	// Mismatched type
 	}
 
-	int const size = sqlite3_column_bytes ( stmt.stmt, arg );
-	void const * const data = sqlite3_column_blob ( stmt.stmt, arg );
+	int const size = sqlite3_column_bytes ( stmt.stmt, m_field_num );
+	void const * const data = sqlite3_column_blob ( stmt.stmt, m_field_num);
 
 	mtKit::string_from_data ( res, data, (size_t)size );
 
+	m_field_num++;
+
 	return 0;
 }
 
-int mtKit::SqliteGetRecord::get_int (
-	int	const	arg,
-	int		& res
-	)
+int mtKit::SqliteGetRecord::get_int ( int & res )
 {
-	switch ( get_type ( arg ) )
+	switch ( get_type () )
 	{
 	case SQLITE_INTEGER:
 		// Valid
 		break;
 
 	case SQLITE_NULL:
+		m_field_num++;
 		return 1;	// NULL
 
 	default:
+		m_field_num++;
 		return 2;	// Mismatched type
 	}
 
-	res = (int)sqlite3_column_int64 ( stmt.stmt, arg );
+	res = (int)sqlite3_column_int64 ( stmt.stmt, m_field_num );
+
+	m_field_num++;
 
 	return 0;
 }
 
-int mtKit::SqliteGetRecord::get_int64 (
-	int	const	arg,
-	int64_t		& res
-	)
+int mtKit::SqliteGetRecord::get_int64 ( int64_t & res )
 {
-	switch ( get_type ( arg ) )
+	switch ( get_type () )
 	{
 	case SQLITE_INTEGER:
 		// Valid
 		break;
 
 	case SQLITE_NULL:
+		m_field_num++;
 		return 1;	// NULL
 
 	default:
+		m_field_num++;
 		return 2;	// Mismatched type
 	}
 
-	res = (int64_t)sqlite3_column_int64 ( stmt.stmt, arg );
+	res = (int64_t)sqlite3_column_int64 ( stmt.stmt, m_field_num );
+
+	m_field_num++;
 
 	return 0;
 }
 
-int mtKit::SqliteGetRecord::get_double (
-	int	const	arg,
-	double		& res
-	)
+int mtKit::SqliteGetRecord::get_double ( double & res )
 {
-	switch ( get_type ( arg ) )
+	switch ( get_type () )
 	{
 	case SQLITE_FLOAT:
 		// Valid
 		break;
 
 	case SQLITE_NULL:
+		m_field_num++;
 		return 1;	// NULL
 
 	default:
+		m_field_num++;
 		return 2;	// Mismatched type
 	}
 
-	res = sqlite3_column_double ( stmt.stmt, arg );
+	res = sqlite3_column_double ( stmt.stmt, m_field_num );
+
+	m_field_num++;
 
 	return 0;
+}
+
+
+
+/// SqliteStmt -----------------------------------------------------------------
+
+
+
+mtKit::SqliteStmt::SqliteStmt ( Sqlite const & db )
+	:
+	m_db	( db ),
+	stmt	( NULL ),
+	err	( 0 )
+{
+}
+
+mtKit::SqliteStmt::~SqliteStmt ()
+{
+	sqlite3_finalize ( stmt );
+	stmt = NULL;
+}
+
+int mtKit::SqliteStmt::prepare ( std::string const & sql )
+{
+	return (err = sqlite3_prepare_v2 ( m_db.get_sqlite3 (), sql.c_str(),
+		-1, &stmt, 0 ) );
+}
+
+int mtKit::SqliteStmt::step ()
+{
+	return (err = sqlite3_step ( stmt ));
+}
+
+int mtKit::SqliteStmt::reset ()
+{
+	return (err = sqlite3_reset ( stmt ));
+}
+
+int mtKit::SqliteStmt::bind_text (
+	int		const	item,
+	char	const * const	text
+	)
+{
+	return (err = sqlite3_bind_text ( stmt, item, text, -1, SQLITE_STATIC));
+}
+
+int mtKit::SqliteStmt::bind_blob (
+	int		const	item,
+	void	const * const	mem,
+	int		const	mem_len
+	)
+{
+	return (err = sqlite3_bind_blob ( stmt, item, mem, mem_len,
+		SQLITE_STATIC ));
+}
+
+int mtKit::SqliteStmt::bind_int64 (
+	int		const	item,
+	sqlite3_int64	const	num
+	)
+{
+	return (err = sqlite3_bind_int64 ( stmt, item, num ));
+}
+
+int mtKit::SqliteStmt::bind_real (
+	int	const	item,
+	double	const	num
+	)
+{
+	return (err = sqlite3_bind_double ( stmt, item, num ));
 }
 

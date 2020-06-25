@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2017 Mark Tyler
+	Copyright (C) 2009-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -528,7 +528,6 @@ int mtkit_zip_save_file (
 	if ( zip->flistn )
 	{
 		zip->flistn->next = finfo;
-		zip->flistn = finfo;
 	}
 	else
 	{

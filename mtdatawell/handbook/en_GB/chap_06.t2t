@@ -30,10 +30,17 @@ Here is the complete list of commands that mtDWCLI accepts:
 | app cointoss           | <INTEGER>          | Toss this number of coins
 | app declist            | <INTEGER> <DECIMAL MIN> <DECIMAL MAX> | List this number of random decimal numbers between this minimum and maximum
 | app diceroll           | <INTEGER> <INTEGER FACES> | Roll this number of dice with the given number of faces
+| app homoglyph analyse  | <INPUT FILENAME UTF-8> | Analyse this UTF-8 text file
+| app homoglyph clean    | <INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8> | Clean this UTF-8 text file back to ASCII characters (if possible)
+| app homoglyph decode   | <INPUT FILENAME UTF-8> <OUTPUT FILENAME BIN> | Decode this encoded UTF-8 file back to the original binary file
+| app homoglyph encode   | <INPUT FILENAME UTF-8> <INPUT FILENAME BIN> <OUTPUT FILENAME UTF-8> | Encode this UTF-8 text file with this binary file
 | app intlist            | <INTEGER> <INTEGER MIN> <INTEGER RANGE> | List this number of random integers from the minimum over the set range
 | app numshuff           | <INTEGER>          | Shuffle the integers from 0 to the given number minus 1
 | app password           | <INTEGER> <INTEGER CHARS> [lower] [upper] [num] [other] [STRING] | List this number of passwords, with this number of characters, with the given properties
 | app pins               | <INTEGER> <INTEGER DIGITS> | List this number of pin numbers with the given number of digits
+| app utf8font clean     | <INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8> | Clean an encoded UTF-8 font text file, and return to ASCII encoding
+| app utf8font encode    | <INPUT FILENAME UTF-8> <INTEGER> <OUTPUT FILENAME UTF-8> | Encode an ASCII text file using a given UTF-8 font
+| app utf8font list      |                    | List the UTF-8 fonts and their codes
 | butt add buckets       | <INTEGER>          | Add buckets to the current OTP
 | butt add otp           | <STRING>           | Create a new named OTP
 | butt add random otp    |                    | Create a new randomly named OTP
@@ -164,7 +171,7 @@ soda multi encode input.txt output.soda george_15 jane_54 rosi_06 bertie_06
 To decode a single or multiple nested Soda files you would use:
 
 ```
-soda multi decode output.soda input.txt
+soda multi decode output.soda input2.txt
 ```
 
 
@@ -174,13 +181,13 @@ soda multi decode output.soda input.txt
 If you want to conceal a file inside a PNG or FLAC file you would do this:
 
 ```
-tap encode bottle.flac input.txt bottle.flac
+tap encode bottle.flac input.txt bottle2.flac
 ```
 
 The output file is still a valid audio file and can be used as such.  However it also contains the input.txt file which can be extracted by using:
 
 ```
-tap decode bottle.flac input.txt
+tap decode bottle2.flac input2.txt
 ```
 
 It is possible to nest several Soda levels in a file, and then place this into a FLAC or PNG file in a kind of Russian doll.  To extract a message buried inside more than one level you could use:
@@ -188,7 +195,7 @@ It is possible to nest several Soda levels in a file, and then place this into a
 ```
 soda multi encode input.txt input.soda butt_1 butt_2 butt_3 butt_4
 tap encode bottle.flac input.soda bottle.soda.flac
-tap multi decode bottle.soda.flac input.txt
+tap multi decode bottle.soda.flac input2.txt
 ```
 
 

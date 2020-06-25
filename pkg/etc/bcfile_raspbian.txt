@@ -6,9 +6,16 @@ mtutils	./configure
 mtcedutils	./configure
 mtcedcli	./configure
 libmtdatawell	./configure --libdir=/usr/lib/arm-linux-gnueabihf
+mtdwutils	./configure
 mtdwcli	./configure
 mtpixyutils	./configure
 mtpixycli	./configure
+libmtqex5	./configure --use-qt5 --libdir=/usr/lib/arm-linux-gnueabihf
+mtcelledit-qt5	./configure --use-qt5
+mtdatawell-qt5	./configure --use-qt5
+mtraft-qt5	./configure --use-qt5
+mtpixy-qt5	./configure --use-qt5
+mtcrul-qt5	./configure --use-qt5
 libmtqex4	./configure --use-qt4 --libdir=/usr/lib/arm-linux-gnueabihf
 mtcelledit-qt4	./configure --use-qt4
 mtdatawell-qt4	./configure --use-qt4

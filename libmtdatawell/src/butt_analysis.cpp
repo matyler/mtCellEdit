@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -40,8 +40,8 @@ mtDW::OTPanalysis::~OTPanalysis ()
 }
 
 int mtDW::OTPanalysis::init (
-	mtKit::unique_ptr<mtPixy::Image> &im_8bit,
-	mtKit::unique_ptr<mtPixy::Image> &im_16bit
+	std::unique_ptr<mtPixy::Image> &im_8bit,
+	std::unique_ptr<mtPixy::Image> &im_16bit
 	)
 {
 	im_8bit.reset ( mtPixy::Image::create ( mtPixy::Image::TYPE_INDEXED,

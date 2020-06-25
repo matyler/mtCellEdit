@@ -3,7 +3,9 @@
 # M.Tyler 2019-2-12
 
 
-for (( item=0; item<1000; item++ ))
+ITEM_TOT=$1
+
+for (( item=0; item<$ITEM_TOT; item++ ))
 do
 	printf "soda decode r2/%06i.soda r3/%06i\n" $item $item
 done

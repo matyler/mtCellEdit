@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -146,9 +146,9 @@ void Mainwindow::init_well_success ( int const fail )
 	update_recent_db_menu ();
 }
 
-void Mainwindow::database_load ( char const * const path )
+void Mainwindow::database_load ( std::string const & path )
 {
-	init_well_success ( backend.open_database ( path ) );
+	init_well_success ( backend.open_database ( path.c_str () ) );
 }
 
 void Mainwindow::create_statusbar ()
@@ -159,19 +159,19 @@ void Mainwindow::create_statusbar ()
 
 ///	LEFT
 
-	m_statusbar_db = new QLabel ( "" );
+	m_statusbar_db = new QLabel;
 	sb->addWidget ( m_statusbar_db );
 
 	QWidget * const w = new QWidget;
 	w->setSizePolicy ( QSizePolicy::Expanding, QSizePolicy::Preferred );
 	sb->addWidget ( w );
 
-	m_statusbar_butt = new QLabel ( "" );
+	m_statusbar_butt = new QLabel;
 	sb->addWidget ( m_statusbar_butt );
 
 ///	RIGHT
 
-	m_statusbar_soda = new QLabel ( "" );
+	m_statusbar_soda = new QLabel;
 	sb->addPermanentWidget ( m_statusbar_soda );
 }
 
@@ -224,7 +224,9 @@ void Mainwindow::create_main_ui ()
 
 	/// Top Group
 
-	m_combo = new groupCombo ( prefs, "Output Directory" );
+	m_combo = new fileCombo ( prefs, "Output Directory",
+		QFileDialog::Directory );
+
 	layv->addWidget ( m_combo );
 
 	m_combo->repopulate ( backend.recent_dir );

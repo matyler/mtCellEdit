@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -70,10 +70,10 @@ void ced_del_cell (
 
 
 static CedCellPrefs const default_cell_prefs =
-			{
-			0, 16777215, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			NULL, NULL, NULL, NULL
-			};
+	{
+	0, CED_COLOR_BACKGROUND_DEFAULT, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	NULL, NULL, NULL, NULL
+	};
 
 
 

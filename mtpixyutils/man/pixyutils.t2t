@@ -1,5 +1,5 @@
 = NAME =
-@BIN_NAME@ - command line graphics program
+@BIN_NAME@ - command line graphics utilities
 
 
 = SYNOPSIS =
@@ -36,6 +36,8 @@ mtPixyUtils is a collection of command line functions for manipulating image fil
 	Save current image to this file (immediately).
 **-otype** STRING
 	Output format of file (use 'list' to list types, default=none).
+**-palette** INTEGER
+	Palette type for new image: 0=default=8 colours; 1=Greyscale; 2..6 Uniform;
 **-prefix** STRING
 	Output file prefix.  Default=""
 **-scale_blocky**
@@ -53,14 +55,15 @@ mtPixyUtils is a collection of command line functions for manipulating image fil
 
 
 = SEE ALSO =
+pixycmp(1),
 pixydelta(1),
 pixyfade(1),
 pixyls(1),
 pixynew(1),
 pixypica(1),
 pixyresize(1),
-pixyresize(1),
 pixyriba(1),
 pixyrida(1),
 pixyrisa(1),
-pixyscale(1)
+pixyscale(1),
+pixytwit(1)

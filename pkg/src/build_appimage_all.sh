@@ -3,12 +3,16 @@
 # Mark Tyler 2018-3-23
 
 
+# Exit on error
+set -e
+
+
 wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
 chmod a+x linuxdeployqt*.AppImage
 
 
 
-for PKG in "mtcelledit-qt4" "mtdatawell-qt4" "mtpixy-qt4" "mtraft-qt4"
+for PKG in "mtcrul-qt5" "mtcelledit-qt5" "mtdatawell-qt5" "mtpixy-qt5" "mtraft-qt5"
 do
 	echo	./build_appimage.sh $PKG
 		./build_appimage.sh $PKG

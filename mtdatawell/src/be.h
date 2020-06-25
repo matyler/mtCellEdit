@@ -78,6 +78,8 @@ public:
 /// ----------------------------------------------------------------------------
 
 	mtDW::Database		db;
+	mtDW::Homoglyph		hg_index;
+	mtDW::Utf8Font		font_index;
 	mtKit::Exit		exit;
 	mtKit::Prefs		prefs;
 	mtKit::RecentFile	recent_db;

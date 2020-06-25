@@ -527,3 +527,8 @@ void mtPixy::Color::set ( int const i )
 	blue	= (unsigned char)int_2_blue ( i );
 }
 
+int mtPixy::Color::get () const
+{
+	return rgb_2_int ( red, green, blue );
+}
+

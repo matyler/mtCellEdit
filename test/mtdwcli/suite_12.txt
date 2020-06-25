@@ -1,0 +1,30 @@
+#!/bin/bash
+
+
+# Create files and list
+FILE_LIST=""
+
+for (( item=1; item<=14; item++ ))
+do
+	FILENAME=$(printf "in.%03i.txt" $item)
+	FILE_LIST="$FILE_LIST $FILENAME"
+
+	cp -af ../../COPYING.txt h1/$FILENAME
+done
+
+# Create random binary file to infuse into COPYING.txt via homoglyphs
+./rndfile -db d0 -path h1 -quiet -tot 1 -min 16000 -max 16000
+
+# h1 -> h2 -> h3 : Homoglyphs encode and decode
+run_sh_cli 12
+
+# h1 -> h2 -> h3 : Fonts encode and decode
+run_sh_cli 13
+
+# Check all of the files in h2 are different to h1
+for FILENAME in $FILE_LIST
+do
+	diff -q h1/$FILENAME h2/$FILENAME && txt_fail "$FILENAME"
+done
+
+cmp_diff "mtDWCLI h1->h3"	h1	h3

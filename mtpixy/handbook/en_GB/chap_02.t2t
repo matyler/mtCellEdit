@@ -9,7 +9,7 @@
 
 mtPixy is a lightweight image editing program that I created from scratch. It is a small, no frills program which is designed to handle simple day to day tasks. I have put the most important facilities I want into a small customized program which means I can avoid the problems of larger programs such as slow operating speeds and overcomplicated user interfaces.
 
-mtPixy is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, ARM_32, and PowerPC_32 hardware platforms.
+mtPixy is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, and ARM_32 hardware platforms.
 
 
 
@@ -53,6 +53,7 @@ An important decision I have taken is to release it as free software using the G
 | 2018-2-25  | 3.1         | Minor improvements |
 | 2018-8-25  | 3.2         | Minor improvements |
 | 2019-5-25  | 3.3         | Minor improvements |
+| 2020-6-25  | 3.4         | Minor improvements |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

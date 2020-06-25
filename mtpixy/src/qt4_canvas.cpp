@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -167,7 +167,7 @@ int CanvasView::get_zoom_percent () const
 
 	if ( zs < 0 )
 	{
-		return 100 / -zs;
+		return -100 / zs;
 	}
 
 	// zoom >= 0

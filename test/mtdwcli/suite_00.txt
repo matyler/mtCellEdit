@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Start afresh
+rm -rf {d0,d1,d2,d3,r1,r2,r3}/*
+
+# d0: mkdata, create butts from data in this repo
+run_sh_cli 01
+

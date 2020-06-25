@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -72,20 +72,25 @@ void mtDW::FileScan::path_recurse ( std::string const & path )
 			{
 				// This is a normal file (no symlink)
 
-				m_file_db.add_todo_filename ( tmp );
+				m_rec.set_blob ( tmp.c_str (), tmp.size () );
+				m_rec.insert_record ();
 			}
 		}
 	}
 }
 
 mtDW::FileScan::FileScan (
-	mtDW::FileDB	&	db,
-	std::string	const &	path
+	mtDW::FileDB		& db,
+	std::string	const	& path
 	)
 	:
-	m_file_db	( db )
+	m_file_db	( db ),
+	m_rec		( db.m_db, DB_TABLE_FILES )
 {
 	mtKit::SqliteTransaction trans ( db.m_db );
+
+	m_rec.add_field ( DB_FIELD_FILENAME );
+	m_rec.end_field ();
 
 	path_recurse ( mtKit::realpath ( path ) );
 }

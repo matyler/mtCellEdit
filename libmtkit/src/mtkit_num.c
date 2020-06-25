@@ -54,12 +54,12 @@ double mtkit_double_bound (
 {
 	if ( isnan ( num ) )
 	{
-		return 0.0;
+		return min;
 	}
 
 	if ( isinf ( num ) )
 	{
-		return 0.0;
+		return (num < 0) ? min : max;
 	}
 
 	return MAX( MIN( num, max ), min );

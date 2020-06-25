@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -434,14 +434,13 @@ int mtPixy::Image::get_information (
 	unsigned char const * const lim =
 			m_canvas + m_canvas_bpp * m_width * m_height;
 	int	const	coltot = m_palette.get_color_total ();
-	int		i;
 
 
 	urp = 0;
 	pnip = 0;
 	pt = coltot;
 
-	for ( i = 0; i < Palette::COLOR_TOTAL_MAX; i++ )
+	for ( int i = 0; i < Palette::COLOR_TOTAL_MAX; i++ )
 	{
 		pf [ i ] = 0;
 	}
@@ -453,35 +452,37 @@ int mtPixy::Image::get_information (
 
 	if ( TYPE_RGB == m_type )
 	{
-		unsigned char * cube = (unsigned char *)calloc( 256*256, 256 );
+		int * cube = (int *)calloc( 256*256*256, sizeof(*cube) );
 		if ( ! cube )
 		{
-			return 1;
-		}
-
-
-		Color	const * const	col = m_palette.get_color ();
-
-
-		if ( get_histogram_rgb ( m_canvas, lim, pf, col, coltot ) )
-		{
-			free ( cube );
 			return 1;
 		}
 
 		for ( unsigned char const * s = m_canvas; s < lim; s += 3 )
 		{
 			int const rgb = mtPixy::rgb_2_int ( s[0], s[1], s[2] );
-			cube[ rgb ] = 1;
+			cube[ rgb ] ++;
 		}
 
 		// Count unique pixel values
-		for ( i = 0; i < 16777216; i++ )
+		for ( int i = 0; i < 16777216; i++ )
 		{
 			if ( cube[i] > 0 )
 			{
 				urp++;
 			}
+		}
+
+		Color const * const col = m_palette.get_color ();
+
+		for ( int i = 0; i < coltot; i++ )
+		{
+			int const rgb = col[i].get ();
+
+			pf[i] = cube[ rgb ];
+
+			// Don't count duplicate colours twice!
+			cube[ rgb ] = 0;
 		}
 
 		free ( cube );
@@ -491,7 +492,7 @@ int mtPixy::Image::get_information (
 		get_histogram ( m_canvas, lim, pf );
 
 		// Count unique pixel values
-		for ( i = 0; i < Palette::COLOR_TOTAL_MAX; i++ )
+		for ( int i = 0; i < Palette::COLOR_TOTAL_MAX; i++ )
 		{
 			if ( pf[i] > 0 )
 			{
@@ -502,7 +503,7 @@ int mtPixy::Image::get_information (
 
 	pnip = m_width * m_height;
 
-	for ( i = 0; i < coltot; i++ )
+	for ( int i = 0; i < coltot; i++ )
 	{
 		pnip -= pf[i];
 	}

@@ -26,7 +26,7 @@ mtDataWell then requires various libraries that I have created:
 | **Package**   | **Dependencies** | **Description** |
 | libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
 | libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
-| libmtDataWell | libmtKit, libmtPixy, libsqlite3, libsndfile | Crypto and random data library. |
+| libmtDataWell | libmtKit, libmtPixy, libsndfile | Crypto and random data library. |
 | libmtQEX      | libmtKit, libmtPixy, Qt5 | Various Qt function utilities including preferences editor. |
 
 

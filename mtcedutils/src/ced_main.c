@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2017 Mark Tyler
+	Copyright (C) 2011-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -99,9 +99,17 @@ static char const * const ff_errtab[] = {
 
 
 static const utComRec * get_comrec (
-	char	const * const	command
+	char	const *	command
 	)
 {
+	if (	command[0] == 'c' &&
+		command[1] == 'e' &&
+		command[2] == 'd'
+		)
+	{
+		command += 3;
+	}
+
 	int a = 0;
 	int b = COMTAB_LEN - 1;
 
@@ -208,19 +216,6 @@ static int error_func (
 	fprintf ( stderr, "\n" );
 
 	return 0;			// Keep parsing
-}
-
-static void select_command ( void )
-{
-	if (	global.s_arg[0] == 'c' &&
-		global.s_arg[1] == 'e' &&
-		global.s_arg[2] == 'd'
-		)
-	{
-		global.s_arg += 3;
-	}
-
-	comrec = get_comrec ( global.s_arg );
 }
 
 static int init_globals ( void )
@@ -701,7 +696,7 @@ int main (
 		global.s_arg ++;
 	}
 
-	select_command ();
+	comrec = get_comrec ( global.s_arg );
 
 	command_line ( argc, argv );
 

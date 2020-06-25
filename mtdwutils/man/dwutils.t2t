@@ -1,0 +1,40 @@
+= NAME =
+@BIN_NAME@ - command line crypto utilities
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+mtDWUtils is a collection of command line functions for manipulating libmtdatawell files.  These functions can be executed using **dwutils** or the function names directly as listed in the **SEE ALSO** section.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-bottle** STRING
+	Set the bottle filename.
+**-com** STRING
+	Change command (with or without dw prefix).  Available commands:
+	encsoda, decsoda, encbot, decbot, encfont, decfont, enchg, dechg.
+**-db** STRING
+	Load the database from this directory.  Can only be set once before the
+	filenames are passed.
+**-font** INTEGER
+	Use this font: 1..13 (default=5).
+**-o** STRING
+	Save output files to this directory.  Default = ".".
+**-v**
+	Verbose.
+
+
+= SEE ALSO =
+dwencsoda(1),
+dwdecsoda(1),
+dwencbot(1),
+dwdecbot(1),
+dwencfont(1),
+dwdecfont(1),
+dwenchg(1),
+dwdechg(1)

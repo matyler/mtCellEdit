@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ char	const *	get_arg_pad		( void );
 int		get_arg_pad_start	( void );
 char	const *	get_arg_password_chars	( void );
 int		get_arg_password_len	( void );
+int		get_arg_verbose		( void );
 
 void		set_exit_fail		( void );
 

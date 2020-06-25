@@ -1,0 +1,7 @@
+3.4	2020-6-25
+
+	* First public release.
+
+0.0	2020-3-17
+
+	* mtCrul started.

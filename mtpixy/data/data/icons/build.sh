@@ -6,11 +6,25 @@
 # Print commands
 set x+
 
+
+case $(inkscape --version) in
+
+	"Inkscape 1"*)
+		PNG_OPT="--export-filename"
+		;;
+	*)
+		PNG_OPT="-z --export-png"
+		;;
+esac
+
+
 for i in $(seq -w 1 10)
 do
 	FILE=$i.png
 	HEIGHT=$((96 * 10#$i))
+	WIDTH=$(($HEIGHT * 3 / 2))
 
-	inkscape -z -e $FILE --export-height=$HEIGHT default.svg
+	inkscape $PNG_OPT=$FILE --export-width=$WIDTH --export-height=$HEIGHT \
+		default.svg
 done
 

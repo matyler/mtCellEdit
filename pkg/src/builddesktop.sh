@@ -10,9 +10,20 @@ cat "$1" |
 	awk -v CF="$5" '{ gsub ("@BIN_SUFFIX@", CF, $0); print }'
 
 
+case $(inkscape --version) in
+
+	"Inkscape 1"*)
+		PNG_OPT="--export-filename"
+		;;
+	*)
+		PNG_OPT="-z --export-png"
+		;;
+esac
+
+
 for SIZE in 16 32 48 64 256
 do
-	inkscape -z -e $SIZE.png --export-width=$SIZE --export-height=$SIZE \
+	inkscape $PNG_OPT=$SIZE.png --export-width=$SIZE --export-height=$SIZE \
 		svg.svg > /dev/null
 done
 

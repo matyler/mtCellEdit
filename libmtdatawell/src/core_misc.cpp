@@ -125,10 +125,10 @@ int mtDW::Database::open ( char const * const path )
 {
 	try
 	{
-		mtKit::unique_ptr<mtDW::Well> well ( new mtDW::Well ( path ) );
-		mtKit::unique_ptr<mtDW::Butt> butt ( new mtDW::Butt ( path ) );
-		mtKit::unique_ptr<mtDW::Soda> soda ( new mtDW::Soda ( path ) );
-		mtKit::unique_ptr<mtDW::Tap> tap ( new mtDW::Tap () );
+		std::unique_ptr<mtDW::Well> well ( new mtDW::Well ( path ) );
+		std::unique_ptr<mtDW::Butt> butt ( new mtDW::Butt ( path ) );
+		std::unique_ptr<mtDW::Soda> soda ( new mtDW::Soda ( path ) );
+		std::unique_ptr<mtDW::Tap> tap ( new mtDW::Tap () );
 
 		m_tap.reset ( tap.release () );
 		m_soda.reset ( soda.release () );

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
 		return NULL;
 	}
 
-	mtKit::unique_ptr<Image> alpha( create( TYPE_ALPHA, m_width, m_height));
+	std::unique_ptr<Image> alpha( create( TYPE_ALPHA, m_width, m_height));
 
 	if ( ! alpha.get () )
 	{
@@ -216,7 +216,7 @@ int mtPixy::Image::paint_flood_fill (
 	int	const	y
 	)
 {
-	mtKit::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
+	std::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
 	if ( ! alpha.get () )
 	{
 		return 1;
@@ -232,7 +232,7 @@ int mtPixy::Image::lasso (
 	int	const	y
 	)
 {
-	mtKit::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
+	std::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
 	if ( ! alpha.get () )
 	{
 		return 1;

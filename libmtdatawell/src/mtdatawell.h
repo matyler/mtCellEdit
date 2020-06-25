@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #ifdef __cplusplus
 
 #include <vector>
+#include <map>
 
 
 
@@ -43,11 +44,15 @@ class Well;
 
 class AppPassword;
 class ButtSaveState;
+class GlyphIndex;
+class GlyphNode;
+class Homoglyph;
 class OTPanalysis;
 class OTPinfo;
 class SodaFile;
 class SodaTransaction;
 class TapFile;
+class Utf8Font;
 class WellSaveState;
 
 
@@ -84,10 +89,10 @@ public:
 private:
 	std::string			m_path;
 
-	mtKit::unique_ptr<mtDW::Well>	m_well;
-	mtKit::unique_ptr<mtDW::Butt>	m_butt;
-	mtKit::unique_ptr<mtDW::Soda>	m_soda;
-	mtKit::unique_ptr<mtDW::Tap>	m_tap;
+	std::unique_ptr<mtDW::Well>	m_well;
+	std::unique_ptr<mtDW::Butt>	m_butt;
+	std::unique_ptr<mtDW::Soda>	m_soda;
+	std::unique_ptr<mtDW::Tap>	m_tap;
 };
 
 
@@ -273,8 +278,8 @@ public:
 	~OTPanalysis ();
 
 	static int init (		// Prepare graphics, memory, etc.
-		mtKit::unique_ptr<mtPixy::Image> &im_8bit,
-		mtKit::unique_ptr<mtPixy::Image> &im_16bit
+		std::unique_ptr<mtPixy::Image> &im_8bit,
+		std::unique_ptr<mtPixy::Image> &im_16bit
 		);
 		// Returns error code.  Interpret via get_error_text()
 
@@ -592,6 +597,195 @@ public:
 
 private:
 	std::vector<std::string> m_chr_list;
+};
+
+
+
+class GlyphNode
+{
+public:
+	explicit GlyphNode ( std::string const &nodes );
+		// Caller must have validated this string
+
+	inline char get_root () const { return m_root; }
+
+	int get_index (
+		std::string const &node,
+		int * bit_total,
+		int * node_count	// Including root
+		) const;
+		// -1 = error, else 0-63
+
+	int get_node ( int index, std::string &node ) const;
+		// 0=node is populated, 1=error
+
+/// ----------------------------------------------------------------------------
+
+//	static size_t	const	NODE_MAX = 64;
+
+private:
+	int add ( std::string const &node );
+	void recalc_bit_total ();
+
+/// ----------------------------------------------------------------------------
+
+	char			const	m_root;
+	int				m_bit_total;
+	std::map<std::string, int>	m_nodes;	// Key = node
+	std::map<int, std::string>	m_index;	// Key = index
+};
+
+
+
+class GlyphIndex
+{
+public:
+	int file_clean (
+		char const * input,
+		char const * output,
+		std::string &info
+		) const;
+	int utf8_clean (
+		std::string const &input,
+		std::string &info,
+		std::string &output
+		) const;
+
+	int get_index (
+		std::string const & node,
+		int * bit_total,
+		int * node_count
+		) const;
+		// -1 = error, else 0-63 for index
+
+	int get_root_bits (
+		std::string const &node,
+		char * root,		// Optional
+		int * bit_total,	// Optional - Bit code capacity
+		int * node_count	// Optional - Arithmetic coder capacity
+		) const;
+
+	int get_node ( char root, int index, std::string &node ) const;
+		// -1 = error, else node contains the item
+
+/// ----------------------------------------------------------------------------
+
+protected:
+	void add_root_nodes (
+		std::string const &nodes	// e.g. "AÀÁÂÃÄÅꓮ"
+			// First glyph must be ASCII, and is the root.
+			// Length in UTF-8 must be 2,4,8,16,32,64.
+			// Each glyph must be new to the m_nodes index.
+		);
+		// Throws on error
+
+/// ----------------------------------------------------------------------------
+
+	std::map<char, GlyphNode> m_root;		// Key = root
+	std::map<std::string, GlyphNode const *> m_nodes;	// Key = node
+};
+
+
+
+class Homoglyph : public GlyphIndex
+{
+public:
+	Homoglyph ();
+
+	int file_analyse ( char const * filename, std::string &info ) const;
+	int file_encode (
+		char const * input_utf8,
+		char const * input_bin,
+		char const * output_utf8,
+		Well * well,		// NULL => Don't pad with random data
+		std::string &info
+		) const;
+	int file_decode (
+		char const * input_utf8,
+		char const * output_bin,
+		std::string &info
+		) const;
+
+	int utf8_analyse (
+		std::string const &input,
+		std::string const &covert,
+		std::string &info
+		) const;
+	int utf8_decode (
+		std::string const &input,
+		std::string &covert,
+		std::string &info,
+		std::string &output
+		) const;
+	int utf8_encode (
+		std::string const &input,
+		std::string const &covert,
+		std::string &info,
+		std::string &output,
+		Well * well		// NULL => Don't pad with random data
+		) const;
+
+/// ----------------------------------------------------------------------------
+
+	static int	const	INPUT_FILESIZE_MAX = 16777215;
+
+};
+
+
+
+class Utf8Font : public GlyphIndex
+{
+public:
+	Utf8Font ();
+
+	enum
+	{
+		// Fonts have A-Z & a-z unless otherwise stated
+
+		TYPE_ERROR		= -1,
+		TYPE_MIN		= 0,
+
+		TYPE_ASCII		= 0,	// & 0-9
+		TYPE_BOLD		= 1,	// & 0-9
+		TYPE_ITALIC		= 2,
+		TYPE_BOLD_ITALIC	= 3,
+		TYPE_SCRIPT		= 4,
+		TYPE_SCRIPT_BOLD	= 5,
+		TYPE_FRAKTUR		= 6,
+		TYPE_FRAKTUR_BOLD	= 7,
+		TYPE_SANS		= 8,	// & 0-9
+		TYPE_SANS_BOLD		= 9,	// & 0-9
+		TYPE_SANS_ITALIC	= 10,
+		TYPE_SANS_BOLD_ITALIC	= 11,
+		TYPE_MONOSPACE		= 12,	// & 0-9
+		TYPE_DOUBLE_STRIKE	= 13,	// & 0-9
+
+		TYPE_MAX		= 13
+	};
+
+	int file_encode (
+		char const * input_utf8,
+		int type,
+		char const * output_utf8,
+		std::string &info
+		);
+
+	int utf8_encode (
+		std::string const &input,
+		int type,
+		std::string &info,
+		std::string &output
+		);
+
+	static int get_type_name ( int type, std::string &name );
+		// 0 = Found; 1 = Not found
+
+	static void get_font_list ( std::string &txt );
+
+private:
+
+/// ----------------------------------------------------------------------------
+
 };
 
 

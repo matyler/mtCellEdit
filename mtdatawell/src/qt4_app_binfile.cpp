@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 void Mainwindow::press_apps_binfile ()
 {
-	DialogBinFile dialog ( *this );
+	DialogBinFile ( *this );
 }
 
 

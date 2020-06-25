@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -138,8 +138,8 @@ public:
 
 	std::string	m_soda_file;	// Temp file (0 size = no Soda)
 
-	mtKit::unique_ptr<mtPixy::Image> m_image;
-	mtKit::unique_ptr<TapAudioRead> m_audio;
+	std::unique_ptr<mtPixy::Image> m_image;
+	std::unique_ptr<TapAudioRead> m_audio;
 
 	size_t		m_capacity;
 };

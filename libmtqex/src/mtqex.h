@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2019 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -201,20 +201,16 @@ class BusyDialog : public QDialog
 	Q_OBJECT
 
 public:
-	BusyDialog ( QWidget * parent = NULL );
+	BusyDialog ( QWidget * parent = NULL, char const * message = NULL );
 	~BusyDialog ();
 
 	void show_abort () const;
-	inline bool aborted () const { return m_aborted; }
+	inline bool aborted () const { return m_busy.aborted (); }
+	mtKit::Busy * get_busy () { return &m_busy; }
 
-	void wait_for_thread ( QThread &thread ) const;
+	void wait_for_thread ( QThread &thread );
 
 public slots:
-	// NOTE: Worker threads use these via a SIGNAL in a QThread which must
-	// be connected by calling GUI thread.
-	void set_minmax ( int min, int max );
-	void set_value ( int val ) const;
-
 	void accept ();
 	void reject ();
 
@@ -225,9 +221,9 @@ private slots:
 	void press_abort ();
 
 private:
+	mtKit::Busy		m_busy;
 	QProgressBar		* m_progress;
 	QDialogButtonBox	* m_button_box;
-	bool			m_aborted;
 	bool			m_default;
 };
 

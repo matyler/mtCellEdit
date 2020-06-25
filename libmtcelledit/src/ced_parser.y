@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2019 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ static int arg_add (
 
 // Bison declarations.
 
-%pure-parser
+%define api.pure
 
 %parse-param {	char		const	* input }
 %parse-param {	CedParser		* state }
@@ -119,8 +119,8 @@ static int arg_add (
 %left	'-' '+'
 %left	'*' '/'
 
-%left NEG		// negation--unary minus
-//%precedence NEG		// negation--unary minus BISON 3
+//%left NEG		// negation--unary minus BISON old
+%precedence NEG		// negation--unary minus BISON 3
 
 %right	'^'		// exponentiation
 %right	'<' '>' '='	// conditional operators
@@ -131,7 +131,7 @@ static int arg_add (
 
 input:
 	// empty
-//	%empty	// BISON 3
+	%empty	// BISON 3
 
 	| exp
 	{
@@ -238,7 +238,7 @@ exp:
 
 argset:
 	// empty
-//	%empty	// BISON 3
+	%empty	// BISON 3
 
 	{
 		$$.arg[ 0 ].type = 0;

@@ -1,0 +1,32 @@
+= NAME =
+@BIN_NAME@ - encode UTF-8 font file
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+Encode an ASCII text file using a unicode font.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-db** STRING
+	Load the database from this directory.  Can only be set once before the
+	filenames are passed.
+**-font** INTEGER
+	Use this font: 1..13 (default=5).
+**-o** STRING
+	Save output files to this directory.  Default = ".".
+**-v**
+	Verbose.
+
+
+= EXAMPLE =
+**@BIN_NAME@** -o files_out files_in/*
+
+
+= SEE ALSO =
+dwutils(1)

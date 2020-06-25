@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,6 +19,15 @@
 
 
 
+#define SCHEMA_VERSION		3202
+
+#define DB_TABLE_FILES		"Files"
+
+#define DB_FIELD_ID		"id"
+#define DB_FIELD_FILENAME	"filename"
+
+
+
 namespace mtDW
 {
 
@@ -35,7 +44,6 @@ public:
 
 	int open ( std::string const & filename );
 
-	int add_todo_filename ( std::string const & filename ) const;
 	std::string const get_todo_filename ();
 	void remove_todo_filename ();
 
@@ -51,12 +59,7 @@ public:
 	mtKit::Sqlite	m_db;
 
 private:
-	std::string const get_todo_filename_internal ();
-
-	int add_table_filename (
-		std::string const & filename,
-		char const * table
-		) const;
+	void get_todo_filename_internal ( std::string & res );
 
 /// ----------------------------------------------------------------------------
 
@@ -133,7 +136,7 @@ private:
 
 	std::string	const	m_well_root;	// <m_path> / well /
 
-	mtKit::unique_ptr<mtKit::Prefs> m_prefs_well;
+	std::unique_ptr<mtKit::Prefs> m_prefs_well;
 
 	FileStream		m_file;
 
@@ -166,6 +169,7 @@ private:
 /// ----------------------------------------------------------------------------
 
 	FileDB		& m_file_db;
+	mtKit::SqliteAddRecord m_rec;
 };
 
 

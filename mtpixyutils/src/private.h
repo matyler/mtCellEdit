@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,8 +47,8 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::unique_ptr<mtPixy::Image> m_image_a;
-	mtKit::unique_ptr<mtPixy::Image> m_image_b;
+	std::unique_ptr<mtPixy::Image> m_image_a;
+	std::unique_ptr<mtPixy::Image> m_image_b;
 };
 
 

@@ -233,3 +233,24 @@ int mtKit::BitPackRead::read (
 	return 0;
 }
 
+void mtKit::BitPackRead::restart (
+	unsigned char	const * const	mem,
+	size_t			const	memlen
+	)
+{
+	m_mem_start	= mem;
+	m_mem		= mem;
+	m_memlim	= mem + memlen;
+	m_bit_next	= 0;
+}
+
+size_t mtKit::BitPackRead::bytes_left () const
+{
+	if ( m_mem >= m_memlim )
+	{
+		return 0;
+	}
+
+	return (size_t)(m_memlim - m_mem - 1 + (0==m_bit_next ? 1 : 0 ) );
+}
+

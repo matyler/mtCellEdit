@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 
 
 class Mainwindow;
-class groupCombo;
+class fileCombo;
 class groupList;
 
 class DialogWellInfo;
@@ -44,10 +44,12 @@ class DialogCardShuff;
 class DialogCoinToss;
 class DialogDecList;
 class DialogDiceRolls;
+class DialogHomoglyphs;
 class DialogIntList;
 class DialogNumShuff;
 class DialogPasswords;
 class DialogPins;
+class DialogUnicodeFonts;
 
 
 
@@ -102,10 +104,12 @@ private slots:
 	void press_apps_coins ();
 	void press_apps_declist ();
 	void press_apps_dice ();
+	void press_apps_homoglyphs ();
 	void press_apps_intlist ();
 	void press_apps_numshuff ();
 	void press_apps_passwords ();
 	void press_apps_pins ();
+	void press_apps_unicodefonts ();
 
 	void press_help_help ();
 	void press_help_about_qt ();
@@ -124,7 +128,7 @@ private:
 		// 0=Valid & added to recent_dir & combo repopulated
 		// 1=Invalid & user error dialog presented
 
-	void database_load ( char const * path );
+	void database_load ( std::string const & path );
 
 /// ----------------------------------------------------------------------------
 
@@ -141,24 +145,27 @@ private:
 	QAction		* act_db_recent [ PREFS_RECENT_DB_TOTAL ];
 	QAction		* act_soda_encrypt;
 
-	groupCombo	* m_combo;
+	fileCombo	* m_combo;
 	groupList	* m_input;
 	groupList	* m_bottles;
 };
 
 
 
-class groupCombo : public QGroupBox
+class fileCombo : public QGroupBox
 {
 	Q_OBJECT
 
 public:
-	groupCombo (
+	fileCombo (
 		mtKit::Prefs &preferences,
-		QString const &title,
-		QWidget * parent = NULL
+		char const * title,
+		QFileDialog::FileMode filemode
+			// QFileDialog::ExistingFile =don't prompt for overwrite
+			// QFileDialog::AnyFile = Save (prompt for overwrite)
+			// QFileDialog::Directory
 		);
-	~groupCombo ();
+	~fileCombo ();
 
 	void repopulate ( mtKit::RecentFile const &recent_dir );
 	QString get_directory ();
@@ -171,9 +178,12 @@ private slots:
 	void press_select ();
 
 private:
-	mtKit::Prefs	&prefs;
+	mtKit::Prefs		&prefs;
 
-	QComboBox	* m_dir_combo;
+	QComboBox		* const	m_dir_combo;
+
+	std::string		const	m_title;
+	QFileDialog::FileMode const	m_filemode;
 };
 
 
@@ -323,12 +333,8 @@ public:
 
 	inline int error () { return m_error; }
 
-signals:
-	void set_minmax ( int min, int max );
-	void set_value ( int val ) const;
-
 private:
-	mtQEX::BusyDialog	&m_busy;
+	mtKit::Busy	* const	m_busy;
 	mtDW::Well	* const	m_well;
 	mtDW::Butt	* const	m_butt;
 	int		const	m_total;
@@ -476,6 +482,85 @@ private:
 /// ----------------------------------------------------------------------------
 
 	mtDW::Well	* const	m_well;
+};
+
+
+
+class DialogHomoglyphs : public QDialog
+{
+	Q_OBJECT
+
+public:
+	explicit DialogHomoglyphs ( Mainwindow &mw );
+
+private slots:
+	void press_utf8_analyse ();
+	void press_utf8_decode ();
+	void press_utf8_encode ();
+	void press_utf8_copy_covert ();
+	void press_utf8_copy_output ();
+
+	void press_enc_analyse ();
+	void press_enc_encode ();
+
+	void press_dec_clean ();
+	void press_dec_decode ();
+
+private:
+	QTextEdit	* m_text_dec_info;
+	QTextEdit	* m_text_enc_info;
+
+	QTextEdit	* m_utf8_covert;
+	QTextEdit	* m_utf8_info;
+	QTextEdit	* m_utf8_input;
+	QTextEdit	* m_utf8_output;
+
+	fileCombo	* m_file_enc_overt;
+	fileCombo	* m_file_enc_covert;
+	fileCombo	* m_file_enc_output;
+
+	fileCombo	* m_file_dec_input;
+	fileCombo	* m_file_dec_output;
+
+/// ----------------------------------------------------------------------------
+
+	mtDW::Well	* const	m_well;
+	mtDW::Homoglyph	&m_hg_index;
+};
+
+
+
+class DialogUnicodeFonts : public QDialog
+{
+	Q_OBJECT
+
+public:
+	explicit DialogUnicodeFonts ( Mainwindow &mw );
+
+private slots:
+	void press_utf8_decode ();
+	void press_utf8_encode ();
+	void press_utf8_copy_output ();
+
+	void press_file_encode ();
+	void press_file_decode ();
+
+private:
+	QTextEdit	* m_utf8_info;
+	QTextEdit	* m_utf8_input;
+	QTextEdit	* m_utf8_output;
+
+	mtQEX::ButtonMenu * m_font_type;
+
+	QTextEdit	* m_file_info;
+	QTextEdit	* m_font_list;
+
+	fileCombo	* m_file_input;
+	fileCombo	* m_file_output;
+
+/// ----------------------------------------------------------------------------
+
+	mtDW::Utf8Font	&m_font_index;
 };
 
 

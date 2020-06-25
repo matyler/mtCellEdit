@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 void Mainwindow::press_butt_info ()
 {
-	DialogButtInfo dialog ( *this );
+	DialogButtInfo ( *this );
 }
 
 
@@ -32,31 +32,26 @@ ButtAddThread::ButtAddThread (
 	int		const	tot
 	)
 	:
-	m_busy		( busy ),
+	m_busy		( busy.get_busy () ),
 	m_well		( mw.backend.db.get_well () ),
 	m_butt		( mw.backend.db.get_butt () ),
 	m_total		( tot ),
 	m_error		( 0 )
 {
-	connect ( this, SIGNAL( set_minmax( int, int ) ), &busy,
-		SLOT( set_minmax( int, int ) ) );
-
-	connect ( this, SIGNAL( set_value( int ) ), &busy,
-		SLOT( set_value( int ) ) );
 }
 
 void ButtAddThread::run ()
 {
-	emit set_minmax ( 0, m_total );
+	m_busy->set_minmax ( 0, m_total );
 
 	for ( int i = 0; i < m_total; i++ )
 	{
-		if ( m_busy.aborted () )
+		if ( m_busy->aborted () )
 		{
 			break;
 		}
 
-		emit set_value ( i );
+		m_busy->set_value ( i );
 
 		m_error = m_butt->add_buckets ( m_well, 1 );
 	}
@@ -99,6 +94,7 @@ DialogButtInfo::DialogButtInfo (
 	QVBoxLayout	* vbox;
 
 	setWindowTitle ( "Butt Information" );
+	setModal ( true );
 
 	QVBoxLayout * vbox_main = new QVBoxLayout;
 	setLayout ( vbox_main );

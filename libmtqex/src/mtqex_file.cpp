@@ -39,14 +39,13 @@ mtQEX::SaveFileDialog::SaveFileDialog (
 		selectFile ( mtQEX::qstringFromC ( filename ) );
 	}
 
-	if ( formatList.count () > 0 )
+	QLayout * const l = layout ();
+
+	if ( l && formatList.count () > 0 )
 	{
-		QLayout		* l = layout ();
 		QGridLayout	* grid = dynamic_cast<QGridLayout *>( l );
-		QWidget		* w;
 		QHBoxLayout	* row;
-
-
+		QWidget		* w;
 
 		w = new QWidget ();
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -128,15 +128,25 @@ void mtDW::Soda::Op::db_add_encode (
 
 		mtKit::SqliteAddRecord rec ( m_db, DB_TABLE_LOG_ENCODE );
 
-		rec.text ( DB_FIELD_DATETIME, buf_date );
-		rec.blob ( DB_FIELD_FILENAME, filename, (int)strlen(filename) );
-		rec.integer ( DB_FIELD_FILESIZE, (sqlite3_int64)filesize );
-		rec.integer ( DB_FIELD_MODE, mode );
-		rec.integer ( DB_FIELD_OTP_BUCKET, otp_bucket );
-		rec.integer ( DB_FIELD_BUCKET_POS, bucket_position );
-		rec.text ( DB_FIELD_OTP_NAME, otp_name.c_str () );
+		rec.add_field ( DB_FIELD_DATETIME );
+		rec.add_field ( DB_FIELD_FILENAME );
+		rec.add_field ( DB_FIELD_FILESIZE );
+		rec.add_field ( DB_FIELD_MODE );
+		rec.add_field ( DB_FIELD_OTP_BUCKET );
+		rec.add_field ( DB_FIELD_BUCKET_POS );
+		rec.add_field ( DB_FIELD_OTP_NAME );
 
-		rec.insert ();
+		rec.end_field ();
+
+		rec.set_text ( buf_date );
+		rec.set_blob ( filename, strlen ( filename ) );
+		rec.set_integer ( (sqlite3_int64)filesize );
+		rec.set_integer ( mode );
+		rec.set_integer ( otp_bucket );
+		rec.set_integer ( bucket_position );
+		rec.set_text ( otp_name.c_str () );
+
+		rec.insert_record ();
 	}
 	catch ( ... )
 	{
