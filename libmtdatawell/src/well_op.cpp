@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@
 
 #define PREFS_SEED_LSI		"seed_lsi"
 #define PREFS_SEED_MSI		"seed_msi"
+#define PREFS_BUF_FILE_TOT	"buf_file_tot"
 #define PREFS_BUF_FILE_POS	"buf_file_pos"
+#define PREFS_BUF_PRNG_TOT	"buf_prng_tot"
 #define PREFS_BUF_PRNG_POS	"buf_prng_pos"
 #define PREFS_BUF_ZLIB_POS	"buf_zlib_pos"
 #define PREFS_FILE_ID		"file_id"
@@ -68,7 +70,7 @@ mtDW::Well::Op::Op ( char const * const path )
 	new_well_prefs ();
 
 	std::string const fn = m_well_root + PREFS_FILENAME;
-	m_prefs_well.get ()->load ( fn.c_str (), NULL );
+	m_prefs_well->uprefs.load ( fn.c_str (), NULL );
 
 	restore_well_state ();
 }
@@ -85,77 +87,70 @@ void mtDW::Well::Op::store_well_state ()
 
 	m_file.get_zlib ().save ( m_well_root + BUF_ZLIB_FILENAME );
 
-	mtKit::Prefs * const prefs = m_prefs_well.get ();
+	WellPrefs * const prefs = m_prefs_well.get ();
 
 	if ( prefs )
 	{
-		prefs->set ( PREFS_BUF_FILE_POS, (int)m_file_buffer.get_pos() );
-		prefs->set ( PREFS_BUF_PRNG_POS, (int)m_prng_buffer.get_pos() );
-		prefs->set ( PREFS_BUF_ZLIB_POS,
-			(int)m_file.get_zlib ().get_pos() );
+		prefs->buf_file_tot = (int)m_file_buffer.get_tot();
+		prefs->buf_file_pos = (int)m_file_buffer.get_pos();
+
+		prefs->buf_prng_tot = (int)m_prng_buffer.get_tot();
+		prefs->buf_prng_pos = (int)m_prng_buffer.get_pos();
+
+		prefs->buf_zlib_pos = (int)m_file.get_zlib ().get_pos();
 
 		uint64_t const seed = m_random.get_seed ();
 
-		prefs->set ( PREFS_SEED_LSI, (int)(seed & 0xFFFFFFFF) );
-		prefs->set ( PREFS_SEED_MSI, (int)((seed >> 32) & 0xFFFFFFFF) );
+		prefs->seed_lsi = (int)(seed & 0xFFFFFFFF);
+		prefs->seed_msi = (int)((seed >> 32) & 0xFFFFFFFF);
 
-		prefs->set ( PREFS_FILE_ID, m_file_db.get_file_id () );
+		prefs->file_id = m_file_db.get_file_id ();
 
 		uint64_t const & pos = m_file.get_pos ();
 
-		prefs->set ( PREFS_FILE_POS_LSI, (int)(pos & 0xFFFFFFFF) );
-		prefs->set ( PREFS_FILE_POS_MSI, (int)((pos >> 32)&0xFFFFFFFF));
+		prefs->file_pos_lsi = (int)(pos & 0xFFFFFFFF);
+		prefs->file_pos_msi = (int)((pos >> 32) & 0xFFFFFFFF);
 
-		prefs->set ( PREFS_BITSHIFT_SALT, m_bitshift.get_salt () );
-		prefs->set ( PREFS_BITSHIFT_POS, m_bitshift.get_pos () );
+		prefs->bitshift_salt = m_bitshift.get_salt ();
+		prefs->bitshift_pos = m_bitshift.get_pos ();
 
-		int shifts[8] = { 0 };
-
-		m_bitshift.get_shifts ( shifts );
-
-		prefs->set ( PREFS_BITSHIFT_ "0", shifts[0] );
-		prefs->set ( PREFS_BITSHIFT_ "1", shifts[1] );
-		prefs->set ( PREFS_BITSHIFT_ "2", shifts[2] );
-		prefs->set ( PREFS_BITSHIFT_ "3", shifts[3] );
-		prefs->set ( PREFS_BITSHIFT_ "4", shifts[4] );
-		prefs->set ( PREFS_BITSHIFT_ "5", shifts[5] );
-		prefs->set ( PREFS_BITSHIFT_ "6", shifts[6] );
-		prefs->set ( PREFS_BITSHIFT_ "7", shifts[7] );
+		m_bitshift.get_shifts ( prefs->bitshift );
 	}
 }
 
 void mtDW::Well::Op::restore_well_state ()
 {
-	mtKit::Prefs * const prefs = m_prefs_well.get ();
+	WellPrefs * const prefs = m_prefs_well.get ();
 
 	if ( prefs )
 	{
-		m_file_db.set_file_id ( prefs->getInt ( PREFS_FILE_ID ) );
+		m_file_db.set_file_id ( prefs->file_id );
 
 		uint64_t lsi, msi;
 
-		lsi = (uint64_t)prefs->getInt ( PREFS_SEED_LSI );
-		msi = (uint64_t)prefs->getInt ( PREFS_SEED_MSI );
+		lsi = (uint64_t)prefs->seed_lsi;
+		msi = (uint64_t)prefs->seed_msi;
 		uint64_t const seed = (lsi & 0xFFFFFFFF) | (msi << 32);
 
-		lsi = (uint64_t)prefs->getInt ( PREFS_FILE_POS_LSI );
-		msi = (uint64_t)prefs->getInt ( PREFS_FILE_POS_MSI );
+		lsi = (uint64_t)prefs->file_pos_lsi;
+		msi = (uint64_t)prefs->file_pos_msi;
 		size_t const file_pos = (size_t)
 			((lsi & 0xFFFFFFFF) | (msi << 32));
 
 		// Buffer files ------------------------------------------------
 
 		m_file_buffer.load_fill ( m_well_root + BUF_FILE_FILENAME );
-		m_file_buffer.set_pos ( (size_t)prefs->getInt (
-			PREFS_BUF_FILE_POS ) );
+		m_file_buffer.set_pos ( (size_t)prefs->buf_file_pos );
+		m_file_buffer.set_tot ( MIN( (size_t)prefs->buf_file_tot,
+			m_file_buffer.get_tot() ) );
 
 		m_prng_buffer.load_fill ( m_well_root + BUF_PRNG_FILENAME );
-		m_prng_buffer.set_pos ( (size_t)prefs->getInt (
-			PREFS_BUF_PRNG_POS ) );
+		m_prng_buffer.set_pos ( (size_t)prefs->buf_prng_pos );
+		m_prng_buffer.set_tot ( MIN( (size_t)prefs->buf_prng_tot,
+			m_prng_buffer.get_tot() ) );
 
 		m_file.get_zlib ().load_whole( m_well_root + BUF_ZLIB_FILENAME);
-		m_file.get_zlib ().set_pos ( (size_t)prefs->getInt (
-			PREFS_BUF_ZLIB_POS ) );
+		m_file.get_zlib ().set_pos ( (size_t)prefs->buf_zlib_pos );
 
 		// Finalize ----------------------------------------------------
 
@@ -168,28 +163,14 @@ void mtDW::Well::Op::restore_well_state ()
 		{
 			m_random.set_seed ( seed );
 
-			int const shifts[8] = {
-				prefs->getInt ( PREFS_BITSHIFT_ "0" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "1" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "2" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "3" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "4" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "5" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "6" ),
-				prefs->getInt ( PREFS_BITSHIFT_ "7" )
-				};
-
-			if ( m_bitshift.set_shifts ( shifts ) )
+			if ( m_bitshift.set_shifts ( prefs->bitshift ) )
 			{
 				m_bitshift.set_shifts ( m_random );
 			}
 			else
 			{
-				m_bitshift.set_salt ( prefs->getInt (
-					PREFS_BITSHIFT_SALT ) );
-
-				m_bitshift.set_pos ( prefs->getInt (
-					PREFS_BITSHIFT_POS ) );
+				m_bitshift.set_salt ( prefs->bitshift_salt );
+				m_bitshift.set_pos ( prefs->bitshift_pos );
 			}
 		}
 
@@ -200,34 +181,31 @@ void mtDW::Well::Op::restore_well_state ()
 	}
 }
 
-mtKit::Prefs * mtDW::Well::Op::create_well_prefs ()
+mtDW::WellPrefs * mtDW::Well::Op::create_well_prefs ()
 {
-	mtKit::Prefs * prefs = new mtKit::Prefs;
+	auto prefs = new WellPrefs;
 
-	static mtPrefTable const local[] = {
-	{ PREFS_SEED_LSI,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_SEED_MSI,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BUF_FILE_POS,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BUF_PRNG_POS,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BUF_ZLIB_POS,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_FILE_ID,	MTKIT_PREF_TYPE_INT, "1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_FILE_POS_LSI,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_FILE_POS_MSI,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_TODO_TABLE,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_SALT,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_POS,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "0",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "1",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "2",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "3",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "4",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "5",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "6",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_BITSHIFT_ "7",	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-	{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-	};
-
-	prefs->addTable ( local );
+	prefs->uprefs.add_int ( PREFS_SEED_LSI, prefs->seed_lsi, 0 );
+	prefs->uprefs.add_int ( PREFS_SEED_MSI, prefs->seed_msi, 0 );
+	prefs->uprefs.add_int ( PREFS_BUF_FILE_TOT, prefs->buf_file_tot, 0 );
+	prefs->uprefs.add_int ( PREFS_BUF_FILE_POS, prefs->buf_file_pos, 0 );
+	prefs->uprefs.add_int ( PREFS_BUF_PRNG_TOT, prefs->buf_prng_tot, 0 );
+	prefs->uprefs.add_int ( PREFS_BUF_PRNG_POS, prefs->buf_prng_pos, 0 );
+	prefs->uprefs.add_int ( PREFS_BUF_ZLIB_POS, prefs->buf_zlib_pos, 0 );
+	prefs->uprefs.add_int ( PREFS_FILE_ID, prefs->file_id, 1 );
+	prefs->uprefs.add_int ( PREFS_FILE_POS_LSI, prefs->file_pos_lsi, 0 );
+	prefs->uprefs.add_int ( PREFS_FILE_POS_MSI, prefs->file_pos_msi, 0 );
+	prefs->uprefs.add_int ( PREFS_TODO_TABLE, prefs->todo_table, 0 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_SALT, prefs->bitshift_salt, 0 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_POS, prefs->bitshift_pos, 0 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "0", prefs->bitshift[0], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "1", prefs->bitshift[1], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "2", prefs->bitshift[2], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "3", prefs->bitshift[3], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "4", prefs->bitshift[4], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "5", prefs->bitshift[5], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "6", prefs->bitshift[6], -1 );
+	prefs->uprefs.add_int ( PREFS_BITSHIFT_ "7", prefs->bitshift[7], -1 );
 
 	return prefs;
 }
@@ -245,12 +223,12 @@ void mtDW::Well::Op::new_well_prefs ()
 
 void mtDW::Well::Op::save_state ()
 {
-	mtKit::Prefs * const prefs = m_prefs_well.get ();
+	WellPrefs * const prefs = m_prefs_well.get ();
 
 	if ( prefs )
 	{
 		store_well_state ();
-		prefs->save ();
+		prefs->uprefs.save ();
 	}
 }
 

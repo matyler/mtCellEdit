@@ -27,9 +27,6 @@
 class Backend
 {
 public:
-	Backend ();
-	~Backend ();
-
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running
 		// 1 = Terminate program, returning exit.value()
@@ -43,15 +40,15 @@ public:
 
 	mtDW::Database	m_db;
 
-	int		m_file_tot;
-	int		m_file_size_min;
-	int		m_file_size_max;
-	int		m_quiet;
+	int		m_file_tot	= 1000;
+	int		m_file_size_min	= 1000;
+	int		m_file_size_max	= 100000;
+	int		m_quiet		= 0;
 private:
 
 /// ----------------------------------------------------------------------------
 
-	char	const *	m_db_path;
-	char	const *	m_output_path;
+	char	const *	m_db_path	= nullptr;
+	char	const *	m_output_path	= nullptr;
 };
 

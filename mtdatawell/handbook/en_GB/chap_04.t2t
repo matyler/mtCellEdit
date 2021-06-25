@@ -154,14 +154,14 @@ The status bar at the bottom of the UI is as follows:
 - The current Soda mode is on the right.
 
 
-==4.3.1 Database Menu==[SEC31]
+===4.3.1 Database Menu===[SEC31]
 
 You can use the Database menu to open or create a new database on the PC
 filesystem.  You can also pick a database from the recently used list to quickly
 load it back into mtDataWell.
 
 
-==4.3.2 Well Menu==[SEC32]
+===4.3.2 Well Menu===[SEC32]
 
 The Well menu allows you to view and edit the current Well.  By pressing the
 "Reset" button you will:
@@ -177,7 +177,7 @@ state of the Well, and various options to:
 
 
 
-==4.3.3 Butt Menu==[SEC33]
+===4.3.3 Butt Menu===[SEC33]
 
 The Butt menu enables you to study and edit the active OTP, as well as
 having an overview of all the OTP's currently in the database.
@@ -205,7 +205,7 @@ statistically random.  Press the button **"Butt->Analysis ..."** to do this.
 
 
 
-==4.3.4 Soda Menu==[SEC34]
+===4.3.4 Soda Menu===[SEC34]
 
 The Soda menu enables you to encode and decode data files that you want to keep
 private using OTP encryption.
@@ -230,7 +230,7 @@ output directory.
 
 
 
-==4.3.5 Tap Menu==[SEC35]
+===4.3.5 Tap Menu===[SEC35]
 
 The Tap menu enables you to encode and decode Bottle files (PNG or FLAC
 formats).  These Bottles are used to conceal Soda data that holds a file that
@@ -260,7 +260,7 @@ output directory.
 
 
 
-==4.3.6 App Menu==[SEC36]
+===4.3.6 App Menu===[SEC36]
 
 Each of the applets in the App menu get their random data directly from the
 Well.
@@ -284,7 +284,7 @@ transferred to an internet connected PC to be emailed to somebody else who can
 safely decode it on their secure PC.
 
 
-==4.4.1 Simple - 2 People==[SEC41]
+===4.4.1 Simple - 2 People===[SEC41]
 
 - People: Alice, Bob.
 
@@ -304,7 +304,7 @@ As long as both continue to have secure PC's then nobody else can get the OTP
 data and decode their communication.
 
 
-==4.4.2 Complex - 5 People==[SEC42]
+===4.4.2 Complex - 5 People===[SEC42]
 
 - People: Aga, Carol, Grady, Polson, Skaggs.
 - Organisations: MFI (Aga, Carol, Grady), AEF (Aga, Polson, Skaggs).

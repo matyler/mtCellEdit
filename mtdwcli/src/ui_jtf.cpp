@@ -21,7 +21,7 @@
 
 
 
-int jtf_about (
+int Backend::jtf_about (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -33,20 +33,20 @@ int jtf_about (
 	return 0;
 }
 
-int jtf_app_cardshuff (
+int Backend::jtf_app_cardshuff (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	std::string	txt;
 
-	backend.db.get_well ()->app_card_shuffle ( txt );
+	db.get_well ()->app_card_shuffle ( txt );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_cointoss (
+int Backend::jtf_app_cointoss (
 	char	const * const * const	args
 	)
 {
@@ -60,14 +60,14 @@ int jtf_app_cointoss (
 		return 1;
 	}
 
-	backend.db.get_well ()->app_coin_toss ( txt, tot );
+	db.get_well ()->app_coin_toss ( txt, tot );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_declist (
+int Backend::jtf_app_declist (
 	char	const * const * const	args
 	)
 {
@@ -90,14 +90,14 @@ int jtf_app_declist (
 		return 1;
 	}
 
-	backend.db.get_well ()->app_declist ( txt, tot, min, max );
+	db.get_well ()->app_declist ( txt, tot, min, max );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_diceroll (
+int Backend::jtf_app_diceroll (
 	char	const * const * const	args
 	)
 {
@@ -116,67 +116,66 @@ int jtf_app_diceroll (
 		return 1;
 	}
 
-	backend.db.get_well ()->app_dice_rolls ( txt, tot, faces );
+	db.get_well ()->app_dice_rolls ( txt, tot, faces );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_homoglyph_analyse (
+int Backend::jtf_app_homoglyph_analyse (
 	char	const * const * const	args
 	)
 {
 	std::string	txt;
 
-	backend.hg_index.file_analyse ( args[0], txt );
+	hg_index.file_analyse ( args[0], txt );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_homoglyph_clean (
+int Backend::jtf_app_homoglyph_clean (
 	char	const * const * const	args
 	)
 {
 	std::string	txt;
 
-	backend.hg_index.file_clean ( args[0], args[1], txt );
+	hg_index.file_clean ( args[0], args[1], txt );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_homoglyph_decode (
+int Backend::jtf_app_homoglyph_decode (
 	char	const * const * const	args
 	)
 {
 	std::string	txt;
 
-	backend.hg_index.file_decode ( args[0], args[1], txt );
+	hg_index.file_decode ( args[0], args[1], txt );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_homoglyph_encode (
+int Backend::jtf_app_homoglyph_encode (
 	char	const * const * const	args
 	)
 {
 	std::string	txt;
 
-	backend.hg_index.file_encode ( args[0], args[1], args[2],
-		backend.db.get_well (), txt );
+	hg_index.file_encode ( args[0], args[1], args[2], db.get_well (), txt );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_intlist (
+int Backend::jtf_app_intlist (
 	char	const * const * const	args
 	)
 {
@@ -199,14 +198,14 @@ int jtf_app_intlist (
 		return 1;
 	}
 
-	backend.db.get_well ()->app_intlist ( txt, tot, min, range );
+	db.get_well ()->app_intlist ( txt, tot, min, range );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_numshuff (
+int Backend::jtf_app_numshuff (
 	char	const * const * const	args
 	)
 {
@@ -220,14 +219,14 @@ int jtf_app_numshuff (
 		return 1;
 	}
 
-	backend.db.get_well ()->app_number_shuffle ( txt, tot );
+	db.get_well ()->app_number_shuffle ( txt, tot );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_app_password (
+int Backend::jtf_app_password (
 	char	const * const * const	args
 	)
 {
@@ -280,7 +279,7 @@ int jtf_app_password (
 		other_txt = "";
 	}
 
-	backend.db.get_well ()->app_passwords ( mtDW::AppPassword ( lower,
+	db.get_well ()->app_passwords ( mtDW::AppPassword ( lower,
 		upper, num, other_txt ), chtot, txt, tot );
 
 	std::cout << txt << "\n";
@@ -288,13 +287,13 @@ int jtf_app_password (
 	return 0;
 }
 
-int jtf_app_utf8font_clean (
+int Backend::jtf_app_utf8font_clean (
 	char	const * const * const	args
 	)
 {
 	std::string	info;
 
-	if ( backend.font_index.file_clean ( args[0], args[1], info ) )
+	if ( font_index.file_clean ( args[0], args[1], info ) )
 	{
 		std::cout << info << "\n";
 		return 1;
@@ -303,7 +302,7 @@ int jtf_app_utf8font_clean (
 	return 0;
 }
 
-int jtf_app_utf8font_encode (
+int Backend::jtf_app_utf8font_encode (
 	char	const * const * const	args
 	)
 {
@@ -317,7 +316,7 @@ int jtf_app_utf8font_encode (
 		return 1;
 	}
 
-	if ( backend.font_index.file_encode ( args[0], type, args[2], info ) )
+	if ( font_index.file_encode ( args[0], type, args[2], info ) )
 	{
 		std::cout << info << "\n";
 		return 1;
@@ -326,19 +325,19 @@ int jtf_app_utf8font_encode (
 	return 0;
 }
 
-int jtf_app_utf8font_list (
+int Backend::jtf_app_utf8font_list (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	std::string	info;
 
-	backend.font_index.get_font_list ( info );
+	font_index.get_font_list ( info );
 	std::cout << info << "\n";
 
 	return 0;
 }
 
-int jtf_app_pins (
+int Backend::jtf_app_pins (
 	char	const * const * const	args
 	)
 {
@@ -357,30 +356,30 @@ int jtf_app_pins (
 		return 1;
 	}
 
-	backend.db.get_well ()->app_pins ( txt, tot, digits );
+	db.get_well ()->app_pins ( txt, tot, digits );
 
 	std::cout << txt << "\n";
 
 	return 0;
 }
 
-int jtf_help (
+int Backend::jtf_help (
 	char	const * const * const	args
 	)
 {
-	return backend.get_help ( args );
+	return get_help ( args );
 }
 
-int jtf_quit (
+int Backend::jtf_quit (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.exit.abort ();
+	exit.abort ();
 
 	return 0;
 }
 
-int jtf_butt_add_buckets (
+int Backend::jtf_butt_add_buckets (
 	char	const * const * const	args
 	)
 {
@@ -391,23 +390,22 @@ int jtf_butt_add_buckets (
 		return 1;
 	}
 
-	return backend.db.get_butt ()->add_buckets ( backend.db.get_well (),
-		tot );
+	return db.get_butt ()->add_buckets ( db.get_well (), tot );
 }
 
-int jtf_butt_add_otp (
+int Backend::jtf_butt_add_otp (
 	char	const * const * const	args
 	)
 {
-	return backend.db.get_butt ()->add_otp ( args[0] );
+	return db.get_butt ()->add_otp ( args[0] );
 }
 
-int jtf_butt_add_random_otp (
+int Backend::jtf_butt_add_random_otp (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	mtDW::Well * const well = backend.db.get_well ();
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Well * const well = db.get_well ();
+	mtDW::Butt * const butt = db.get_butt ();
 	std::string name;
 
 	butt->get_new_name ( well, name );
@@ -417,32 +415,32 @@ int jtf_butt_add_random_otp (
 	return butt->add_otp ( name.c_str () );
 }
 
-int jtf_butt_delete_otp (
+int Backend::jtf_butt_delete_otp (
 	char	const * const * const	args
 	)
 {
-	return backend.db.get_butt ()->delete_otp ( args[0] );
+	return db.get_butt ()->delete_otp ( args[0] );
 }
 
-int jtf_butt_empty (
+int Backend::jtf_butt_empty (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	return backend.db.get_butt ()->empty_buckets ();
+	return db.get_butt ()->empty_buckets ();
 }
 
-int jtf_butt_import_otp (
+int Backend::jtf_butt_import_otp (
 	char	const * const * const	args
 	)
 {
-	return backend.db.get_butt ()->import_otp ( args[0] );
+	return db.get_butt ()->import_otp ( args[0] );
 }
 
-int jtf_butt_info (
+int Backend::jtf_butt_info (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 	std::string const status = butt->is_read_only () ?
 		"Read Only" : "Read Write";
 
@@ -464,11 +462,11 @@ int jtf_butt_info (
 	return 0;
 }
 
-int jtf_butt_list (
+int Backend::jtf_butt_list (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
 	std::cout << "\n";
 
@@ -495,46 +493,46 @@ int jtf_butt_list (
 	return 0;
 }
 
-int jtf_butt_set_comment (
+int Backend::jtf_butt_set_comment (
 	char	const * const * const	args
 	)
 {
-	return backend.db.get_butt ()->set_comment ( args[0] );
+	return db.get_butt ()->set_comment ( args[0] );
 }
 
-int jtf_butt_set_otp (
+int Backend::jtf_butt_set_otp (
 	char	const * const * const	args
 	)
 {
-	return backend.db.get_butt ()->set_otp ( args[0] );
+	return db.get_butt ()->set_otp ( args[0] );
 }
 
-int jtf_butt_set_read_only (
+int Backend::jtf_butt_set_read_only (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.db.get_butt ()->set_read_only ();
+	db.get_butt ()->set_read_only ();
 
 	return 0;
 }
 
-int jtf_butt_set_read_write (
+int Backend::jtf_butt_set_read_write (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.db.get_butt ()->set_read_write ();
+	db.get_butt ()->set_read_write ();
 
 	return 0;
 }
 
-int jtf_db (
+int Backend::jtf_db (
 	char	const * const * const	args
 	)
 {
-	return backend.db.open ( args[0] );
+	return db.open ( args[0] );
 }
 
-int jtf_info (
+int Backend::jtf_info (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -553,25 +551,25 @@ int jtf_info (
 	return 0;
 }
 
-int jtf_soda_decode (
+int Backend::jtf_soda_decode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
 	return mtDW::Soda::decode ( butt, args[0], args[1] );
 }
 
-int jtf_soda_encode (
+int Backend::jtf_soda_encode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
-	return backend.db.get_soda ()->encode ( butt, args[0], args[1] );
+	return db.get_soda ()->encode ( butt, args[0], args[1] );
 }
 
-int jtf_soda_file_info (
+int Backend::jtf_soda_file_info (
 	char	const * const * const	args
 	)
 {
@@ -602,11 +600,11 @@ int jtf_soda_file_info (
 	return 0;
 }
 
-int jtf_soda_info (
+int Backend::jtf_soda_info (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	mtDW::Soda * soda = backend.db.get_soda ();
+	mtDW::Soda * soda = db.get_soda ();
 
 	std::cout << "\n"
 		<< "Soda Mode          : " << soda->get_mode () << "\n"
@@ -615,26 +613,25 @@ int jtf_soda_info (
 	return 0;
 }
 
-int jtf_soda_multi_decode (
+int Backend::jtf_soda_multi_decode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
 	return mtDW::Soda::multi_decode ( butt, args[0], args[1] );
 }
 
-int jtf_soda_multi_encode (
+int Backend::jtf_soda_multi_encode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
-	return backend.db.get_soda ()->multi_encode ( butt, args[0], args[1],
-		args + 2 );
+	return db.get_soda ()->multi_encode ( butt, args[0], args[1], args + 2);
 }
 
-int jtf_soda_set_mode (
+int Backend::jtf_soda_set_mode (
 	char	const * const * const	args
 	)
 {
@@ -645,12 +642,12 @@ int jtf_soda_set_mode (
 		return 1;
 	}
 
-	backend.db.get_soda ()->set_mode ( mode );
+	db.get_soda ()->set_mode ( mode );
 
 	return 0;
 }
 
-int jtf_tap_file_info (
+int Backend::jtf_tap_file_info (
 	char	const * const * const	args
 	)
 {
@@ -721,53 +718,53 @@ int jtf_tap_file_info (
 	return 0;
 }
 
-int jtf_tap_decode (
+int Backend::jtf_tap_decode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
 	return mtDW::Tap::decode ( butt, args[0], args[1] );
 }
 
-int jtf_tap_multi_decode (
+int Backend::jtf_tap_multi_decode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Butt * const butt = backend.db.get_butt ();
+	mtDW::Butt * const butt = db.get_butt ();
 
 	return mtDW::Tap::multi_decode ( butt, args[0], args[1] );
 }
 
-int jtf_tap_encode (
+int Backend::jtf_tap_encode (
 	char	const * const * const	args
 	)
 {
-	mtDW::Well * const well = backend.db.get_well ();
-	mtDW::Butt * const butt = backend.db.get_butt ();
-	mtDW::Soda * const soda = backend.db.get_soda ();
-	mtDW::Tap const * const tap = backend.db.get_tap ();
+	mtDW::Well * const well = db.get_well ();
+	mtDW::Butt * const butt = db.get_butt ();
+	mtDW::Soda * const soda = db.get_soda ();
+	mtDW::Tap const * const tap = db.get_tap ();
 
 	return tap->encode ( well, butt, soda, args[0], args[1], args[2] );
 }
 
-int jtf_well_empty (
+int Backend::jtf_well_empty (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.db.get_well ()->empty ();
+	db.get_well ()->empty ();
 
 	return 0;
 }
 
-int jtf_well_info (
+int Backend::jtf_well_info (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	mtDW::Well * well = backend.db.get_well ();
+	mtDW::Well * const well = db.get_well ();
 
 	std::cout << "\n"
-	<< "DB Path            : " << backend.db.get_path () << "\n"
+	<< "DB Path            : " << db.get_path () << "\n"
 	<< "\n"
 	<< "Seed               : " << well->get_seed () << "\n"
 	;
@@ -789,16 +786,16 @@ int jtf_well_info (
 	return 0;
 }
 
-int jtf_well_add_path (
+int Backend::jtf_well_add_path (
 	char	const * const * const	args
 	)
 {
-	backend.db.get_well ()->add_path ( args[0] );
+	db.get_well ()->add_path ( args[0] );
 
 	return 0;
 }
 
-int jtf_well_save_file (
+int Backend::jtf_well_save_file (
 	char	const * const * const	args
 	)
 {
@@ -809,19 +806,19 @@ int jtf_well_save_file (
 		return 1;
 	}
 
-	return backend.db.get_well ()->save_file ( bytes, args[1] );
+	return db.get_well ()->save_file ( bytes, args[1] );
 }
 
-int jtf_well_seed (
+int Backend::jtf_well_seed (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.db.get_well ()->set_seed_by_time ();
+	db.get_well ()->set_seed_by_time ();
 
 	return 0;
 }
 
-int jtf_well_seed_int (
+int Backend::jtf_well_seed_int (
 	char	const * const * const	args
 	)
 {
@@ -832,16 +829,16 @@ int jtf_well_seed_int (
 		return 1;
 	}
 
-	backend.db.get_well ()->set_seed ( (uint64_t)seed );
+	db.get_well ()->set_seed ( (uint64_t)seed );
 
 	return 0;
 }
 
-int jtf_well_reset_shifts (
+int Backend::jtf_well_reset_shifts (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.db.get_well ()->set_shifts ();
+	db.get_well ()->set_shifts ();
 
 	return 0;
 }

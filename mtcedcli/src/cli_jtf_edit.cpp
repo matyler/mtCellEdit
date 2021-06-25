@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,25 +19,25 @@
 
 
 
-int jtf_delete_column (
+int Backend::jtf_delete_column (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	CedSheet	* const sheet = backend.sheet ();
+	CedSheet	* const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
 	int		r1, c1, r2, c2;
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
-	int const res = cui_sheet_delete_column ( backend.file()->cubook, sheet,
+	int const res = cui_sheet_delete_column ( file()->cubook, sh,
 		c1, c2 - c1 + 1 );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -46,30 +46,30 @@ int jtf_delete_column (
 		return 2;
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }
 
-int jtf_delete_row (
+int Backend::jtf_delete_row (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	CedSheet	* const sheet = backend.sheet ();
+	CedSheet	* const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
 	int		r1, c1, r2, c2;
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
-	int const res = cui_sheet_delete_row ( backend.file()->cubook, sheet,
+	int const res = cui_sheet_delete_row ( file()->cubook, sh,
 		r1, r2 - r1 + 1 );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -78,7 +78,7 @@ int jtf_delete_row (
 		return 2;
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }
@@ -113,13 +113,13 @@ static int find_cb (
 	return 0;
 }
 
-int jtf_find (
+int Backend::jtf_find (
 	char	const * const * const	args
 	)
 {
-	CedSheet	* const sheet = backend.sheet ();
+	CedSheet	* const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
@@ -169,7 +169,7 @@ int jtf_find (
 
 	int	r1, c1, r2, c2;
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
 	if ( r1 == r2 && c1 == c2 )
 	{
@@ -200,12 +200,12 @@ int jtf_find (
 			return 2;
 		}
 
-		ced_sheet_find_value ( sheet, value, find_mode,
+		ced_sheet_find_value ( sh, value, find_mode,
 			r1, c1, r2, c2, find_cb, &tot_matches );
 	}
 	else
 	{
-		ced_sheet_find_text ( sheet, args[0], find_mode,
+		ced_sheet_find_text ( sh, args[0], find_mode,
 			r1, c1, r2, c2, find_cb, &tot_matches );
 	}
 
@@ -213,7 +213,7 @@ int jtf_find (
 	return 0;
 }
 
-int jtf_set_book (
+int Backend::jtf_set_book (
 	char	const * const * const	args
 	)
 {
@@ -221,7 +221,7 @@ int jtf_set_book (
 
 
 	if (	mtkit_strtoi ( args[0], &booknum, NULL, 1 )	||
-		backend.set_file ( booknum )
+		set_file ( booknum )
 		)
 	{
 		fprintf ( stderr, "Bad book number '%s'\n\n", args[0] );
@@ -232,37 +232,37 @@ int jtf_set_book (
 	return 0;
 }
 
-int jtf_set_cell (
+int Backend::jtf_set_cell (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
 	int		r1, c1, r2, c2;
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
-	int const res = cui_sheet_set_cell ( backend.file()->cubook, sheet,
-		sheet->prefs.cursor_r1, sheet->prefs.cursor_c1, args[0] );
+	int const res = cui_sheet_set_cell ( file()->cubook, sh,
+		sh->prefs.cursor_r1, sh->prefs.cursor_c1, args[0] );
 
-	backend.undo_report_updates ( res );
-	backend.update_changes_chores ();
+	undo_report_updates ( res );
+	update_changes_chores ();
 
 	return 0;
 }
 
-int jtf_select (
+int Backend::jtf_select (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
@@ -274,17 +274,17 @@ int jtf_select (
 
 		// Select all
 
-		if ( ced_sheet_get_geometry ( sheet, &row_max, &col_max ) )
+		if ( ced_sheet_get_geometry ( sh, &row_max, &col_max ) )
 		{
 			fprintf ( stderr, "Unable to get sheet geometry.\n\n ");
 
 			return 2;
 		}
 
-		sheet->prefs.cursor_r1 = 1;
-		sheet->prefs.cursor_c1 = 1;
-		sheet->prefs.cursor_r2 = MAX ( row_max, 1 );
-		sheet->prefs.cursor_c2 = MAX ( col_max, 1 );
+		sh->prefs.cursor_r1 = 1;
+		sh->prefs.cursor_c1 = 1;
+		sh->prefs.cursor_r2 = MAX ( row_max, 1 );
+		sh->prefs.cursor_c2 = MAX ( col_max, 1 );
 	}
 	else if ( strchr ( args[0], ':' ) )
 	{
@@ -310,10 +310,10 @@ int jtf_select (
 			return 2;
 		}
 
-		sheet->prefs.cursor_r1 = r1.row_d;
-		sheet->prefs.cursor_c1 = r1.col_d;
-		sheet->prefs.cursor_r2 = r2.row_d;
-		sheet->prefs.cursor_c2 = r2.col_d;
+		sh->prefs.cursor_r1 = r1.row_d;
+		sh->prefs.cursor_c1 = r1.col_d;
+		sh->prefs.cursor_r2 = r2.row_d;
+		sh->prefs.cursor_c2 = r2.col_d;
 	}
 	else
 	{
@@ -335,27 +335,27 @@ int jtf_select (
 			return 2;
 		}
 
-		sheet->prefs.cursor_r1 = r1.row_d;
-		sheet->prefs.cursor_c1 = r1.col_d;
-		sheet->prefs.cursor_r2 = r1.row_d;
-		sheet->prefs.cursor_c2 = r1.col_d;
+		sh->prefs.cursor_r1 = r1.row_d;
+		sh->prefs.cursor_c1 = r1.col_d;
+		sh->prefs.cursor_r2 = r1.row_d;
+		sh->prefs.cursor_c2 = r1.col_d;
 	}
 
 	return 0;
 }
 
-int jtf_set_graph (
+int Backend::jtf_set_graph (
 	char	const * const * const	args
 	)
 {
-	if ( ! cui_graph_get ( backend.file()->cubook->book, args[0] ) )
+	if ( ! cui_graph_get ( file()->cubook->book, args[0] ) )
 	{
 		fprintf ( stderr, "No such graph.\n\n" );
 
 		return 2;
 	}
 
-	if ( mtkit_strfreedup ( &backend.file()->cubook->book->prefs.
+	if ( mtkit_strfreedup ( &file()->cubook->book->prefs.
 		active_graph, args[0] ) )
 	{
 		fprintf ( stderr, "Unable to change graph.\n\n" );
@@ -366,18 +366,18 @@ int jtf_set_graph (
 	return 0;
 }
 
-int jtf_set_sheet (
+int Backend::jtf_set_sheet (
 	char	const * const * const	args
 	)
 {
-	if ( ! ced_book_get_sheet ( backend.file()->cubook->book, args[0] ) )
+	if ( ! ced_book_get_sheet ( file()->cubook->book, args[0] ) )
 	{
 		fprintf ( stderr, "No such sheet.\n\n" );
 
 		return 2;
 	}
 
-	if ( mtkit_strfreedup ( &backend.file()->cubook->book->prefs.
+	if ( mtkit_strfreedup ( &file()->cubook->book->prefs.
 		active_sheet, args[0] ) )
 	{
 		fprintf ( stderr, "Unable to change sheet.\n\n" );
@@ -388,27 +388,27 @@ int jtf_set_sheet (
 	return 0;
 }
 
-int jtf_set_width (
+int Backend::jtf_set_width (
 	char	const * const * const	args
 	)
 {
-	CedSheet	* const sheet = backend.sheet ();
+	CedSheet	* const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
 	int		r1, c1, r2, c2, res;
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
 	int	const	ctot = c2 - c1 + 1;
 
 	if ( strcmp ( "auto", args[0] ) == 0 )
 	{
-		res = cui_sheet_set_column_width_auto ( backend.file()->cubook,
-			sheet, c1, ctot );
+		res = cui_sheet_set_column_width_auto ( file()->cubook, sh, c1,
+			ctot );
 	}
 	else
 	{
@@ -422,11 +422,11 @@ int jtf_set_width (
 			return 2;
 		}
 
-		res = cui_sheet_set_column_width( backend.file()->cubook, sheet,
-			c1, ctot, w );
+		res = cui_sheet_set_column_width( file()->cubook, sh, c1, ctot,
+			w );
 	}
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res )
 	{
@@ -436,70 +436,70 @@ int jtf_set_width (
 	return 0;
 }
 
-int jtf_undo (
+int Backend::jtf_undo (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	if ( ! backend.file()->cubook->undo.undo_step )
+	if ( ! file()->cubook->undo.undo_step )
 	{
 		fprintf ( stderr, "No undo available.\n\n" );
 
 		return 2;
 	}
 
-	int const res = cui_book_undo_step ( backend.file()->cubook );
+	int const res = cui_book_undo_step ( file()->cubook );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res == CUI_ERROR_NO_CHANGES )
 	{
 		return 2;
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }
 
-int jtf_redo (
+int Backend::jtf_redo (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	if ( ! backend.file()->cubook->undo.redo_step )
+	if ( ! file()->cubook->undo.redo_step )
 	{
 		fprintf ( stderr, "No redo available.\n\n" );
 
 		return 2;
 	}
 
-	int const res = cui_book_redo_step ( backend.file()->cubook );
+	int const res = cui_book_redo_step ( file()->cubook );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res == CUI_ERROR_NO_CHANGES )
 	{
 		return 2;
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }
 
-int jtf_recalc_book (
+int Backend::jtf_recalc_book (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.recalc_book_core ();
+	recalc_book_core ();
 
 	return 0;
 }
 
-int jtf_recalc_sheet (
+int Backend::jtf_recalc_sheet (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.recalc_sheet_core ();
+	recalc_sheet_core ();
 
 	return 0;
 }

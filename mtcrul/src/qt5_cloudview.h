@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,13 +21,11 @@
 
 
 #include "qt5.h"
-#include "qt5_gl_cloud.h"
-#include "qt5_gl_ruler.h"
-#include "qt5_gl_model.h"
 
 
 
 class CloudView;
+class RulerQtGL;
 
 
 
@@ -37,11 +35,11 @@ class CloudView : public QOpenGLWidget, protected QOpenGLFunctions
 
 public:
 	CloudView (
-		mtKit::Prefs	& prefs,
+		mtKit::UserPrefs & prefs,
 		char	const	* prefs_prefix,
-		CloudQtGL	& cloud_gl,
+		mtGin::GL::Points & cloud_gl,
 		RulerQtGL	& ruler_gl,
-		ModelQtGL	& model_gl,
+		mtGin::GL::Triangles & model_gl,
 		QWidget		* parent
 		);
 	~CloudView ();
@@ -81,7 +79,7 @@ public:
 	void show_cloud ( bool visible );
 	void show_model ( bool visible );
 
-	void get_camera_matrix ( QMatrix4x4 & camera ) const;
+	void get_camera_matrix ( mtGin::GL::Matrix4x4 & camera ) const;
 
 /// ----------------------------------------------------------------------------
 
@@ -126,8 +124,8 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::Prefs	& m_prefs;
-	char const * const m_prefs_prefix;
+	mtKit::UserPrefs	& m_uprefs;
+	char	const * const	m_prefs_prefix;
 
 	QElapsedTimer	m_time;
 	int		m_frames;
@@ -156,16 +154,61 @@ private:
 	bool		m_show_model;
 
 	QPoint		m_last_pos;
-	QMatrix4x4	m_proj;
+	mtGin::GL::Matrix4x4 m_proj;
 
 	QColor	const	m_color_white;
 	QColor	const	m_color_crosshair;
 	QBrush	const	m_brush_black_semi;
 	QBrush	const	m_brush_red_semi;
 
-	CloudQtGL	& m_cloud_gl;
-	RulerQtGL	& m_ruler_gl;
-	ModelQtGL	& m_model_gl;
+	mtGin::GL::Points	& m_cloud_gl;
+	RulerQtGL		& m_ruler_gl;
+	mtGin::GL::Triangles	& m_model_gl;
+};
+
+
+
+class RulerQtGL
+{
+public:
+	RulerQtGL ();
+	~RulerQtGL ();
+
+	void init ( std::string const & version );
+	void destroy ();
+
+	void populate (
+		std::map<int, Crul::Ruler> const & map,
+		double plane_range
+		);
+
+	void render (
+		mtGin::GL::Matrix4x4 const & camera,
+		mtGin::GL::Matrix4x4 const & proj,
+		mtGin::Vertex const & light
+		) const;
+
+	inline void set_active_ruler_id ( int const i) { m_active_ruler_id = i;}
+	inline void set_show_lines ( bool const s ) { m_show_lines = s; }
+	inline void set_show_plane ( bool const s ) { m_show_plane = s; }
+	inline void set_line_butt_size ( double const s ) { m_line_butt_size=s;}
+	inline void set_line_thickness ( double const s ) { m_line_thickness=s;}
+
+private:
+	inline bool is_visible() const { return (m_show_lines || m_show_plane);}
+
+/// ----------------------------------------------------------------------------
+
+	int		m_active_ruler_id;
+
+	bool		m_show_lines;
+	bool		m_show_plane;
+
+	double		m_line_butt_size;
+	double		m_line_thickness;
+
+	mtGin::GL::Triangles	m_triangles;
+	mtGin::GL::Lines	m_lines;
 };
 
 

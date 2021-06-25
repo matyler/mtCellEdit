@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007-2018 Mark Tyler
+	Copyright (C) 2007-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -335,6 +335,7 @@ int mtkit_strnncat (
 
 
 	size_t		len = strlen ( dest );
+	int		res = 0;
 
 
 	dest += len;
@@ -349,13 +350,15 @@ int mtkit_strnncat (
 		// src string is too long for buffer so truncate
 
 		len = (destSize - 1);
+
+		res = -1;
 	}
 
 	memcpy ( dest, src, len );
 
 	dest [ len ] = 0;
 
-	return 0;
+	return res;
 }
 
 int mtkit_strtod (
@@ -507,29 +510,6 @@ char * mtkit_strtok (
 	}
 
 	return ns;
-}
-
-int mtkit_strtok_num (
-	char	const	* const	input,
-	char	const	* const	delim,
-	int		const	n,
-	double		* const	result
-	)
-{
-	int		res;
-	char		* tok;
-
-
-	tok = mtkit_strtok ( input, delim, n );
-	if ( ! tok )
-	{
-		return 1;
-	}
-
-	res = mtkit_strtod ( tok, result, NULL, 0 );
-	free ( tok );
-
-	return res;
 }
 
 char * mtkit_strcasestr (
@@ -1043,10 +1023,6 @@ int mtkit_strtothou (
 	int		const	right_justify
 	)
 {
-	int		i, j, k, start, end, oldlen, newlen;
-	char	const	* ch;
-
-
 	if (	! dest		||
 		! src		||
 		sep_num < 1	||
@@ -1068,13 +1044,14 @@ int mtkit_strtothou (
 		return 0;
 	}
 
-	oldlen = (int)len;
+	int const oldlen = (int)len;
+	char	const	* ch;
 
 	// First character to be subjected to separating
-	start = 0;
+	int start = 0;
 
 	// Last character to be subjected to separating
-	end = oldlen - 1;
+	int end = oldlen - 1;
 
 	if ( ( ch = strrchr ( src, dpoint ) ) )
 	{
@@ -1095,8 +1072,8 @@ int mtkit_strtothou (
 		return -1;
 	}
 
-	newlen = oldlen + ( end - start ) / sep_num;
-	if ( newlen + 1 > dest_size )
+	int const newlen = oldlen + ( end - start ) / sep_num + 1;
+	if ( newlen < 0 || newlen > dest_size )
 	{
 		// Output buffer is not large enough to hold the result, so
 		// bail out
@@ -1104,8 +1081,9 @@ int mtkit_strtothou (
 		return -1;
 	}
 
-	i = oldlen - 1;			// Input buffer pointer
-	k = dest_size - 1;		// Output buffer pointer
+	int i = oldlen - 1;			// Input buffer pointer
+	int j;
+	int k = dest_size - 1;		// Output buffer pointer
 	dest[k--] = 0;			// Output string terminator
 
 	while ( i > end )
@@ -1153,5 +1131,48 @@ int mtkit_strtothou (
 	}
 
 	return 0;
+}
+
+static size_t slen ( char const * const str )
+{
+	if ( str )
+	{
+		return strlen ( str );
+	}
+
+	return 0;
+}
+
+char * mtkit_string_join (
+	char	const * const	sta,
+	char	const * const	stb,
+	char	const * const	stc,
+	char	const * const	std
+	)
+{
+	size_t const ln[4] = { slen(sta), slen(stb), slen(stc), slen(std) };
+	size_t const size = ln[0] + ln[1] + ln[2] + ln[3];
+
+	char * txt = malloc ( size + 1 );
+	if ( ! txt )
+	{
+		return NULL;
+	}
+
+	char * pos = txt;
+	char const * const st[4] = { sta, stb, stc, std };
+
+	for ( int i = 0; i < 4; i++ )
+	{
+		if ( st[i] )
+		{
+			memcpy ( pos, st[i], ln[i] );
+			pos += ln[i];
+		}
+	}
+
+	txt[size] = 0;
+
+	return txt;
 }
 

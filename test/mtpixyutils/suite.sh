@@ -96,6 +96,38 @@ run_sh $FILE_42 pixynew -width 1 -height 32767 -otype png "" -o $FILE_42
 run_sh $FILE_43 pixynew -width 32767 -height 1 -otype png "" -o $FILE_43
 
 
+# Processing - resize & scale
+FILE_51=$OUT/51_scale.bmp
+FILE_52=$OUT/52_scale.bmp
+FILE_53=$OUT/53_scale.bmp
+FILE_54=$OUT/54_scale.bmp
+FILE_55=$OUT/55_scale.bmp
+FILE_56=$OUT/56_scale.bmp
+FILE_57=$OUT/57_scale.bmp
+FILE_58=$OUT/58_scale.bmp
+FILE_59=$OUT/59_scale.bmp
+run_sh $FILE_51 pixyscale -width 23 -height 17 results/_61idx.bmp -o $FILE_51
+run_sh $FILE_52 pixyscale -width 73 -height 47 results/_61idx.bmp -o $FILE_52
+run_sh $FILE_53 pixyscale -width 91 -height 81 results/_61idx.bmp -o $FILE_53
+run_sh $FILE_54 pixyscale -width 23 -height 17 results/_61rgb.bmp -o $FILE_54
+run_sh $FILE_55 pixyscale -width 73 -height 47 results/_61rgb.bmp -o $FILE_55
+run_sh $FILE_56 pixyscale -width 91 -height 81 results/_61rgb.bmp -o $FILE_56
+run_sh $FILE_57 pixyscale -scale_blocky -width 23 -height 17 results/_61rgb.bmp -o $FILE_57
+run_sh $FILE_58 pixyscale -scale_blocky -width 73 -height 47 results/_61rgb.bmp -o $FILE_58
+run_sh $FILE_59 pixyscale -scale_blocky -width 91 -height 81 results/_61rgb.bmp -o $FILE_59
+FILE_51=$OUT/51_resize.bmp
+FILE_52=$OUT/52_resize.bmp
+FILE_53=$OUT/53_resize.bmp
+FILE_54=$OUT/54_resize.bmp
+FILE_55=$OUT/55_resize.bmp
+FILE_56=$OUT/56_resize.bmp
+run_sh $FILE_51 pixyresize -width 23 -height 17 results/_61idx.bmp -o $FILE_51
+run_sh $FILE_52 pixyresize -width 73 -height 47 results/_61idx.bmp -o $FILE_52
+run_sh $FILE_53 pixyresize -width 91 -height 81 results/_61idx.bmp -o $FILE_53
+run_sh $FILE_54 pixyresize -width 23 -height 17 results/_61rgb.bmp -o $FILE_54
+run_sh $FILE_55 pixyresize -width 73 -height 47 results/_61rgb.bmp -o $FILE_55
+run_sh $FILE_56 pixyresize -width 91 -height 81 results/_61rgb.bmp -o $FILE_56
+
 
 # Process manually prepared files for checking later
 cd input

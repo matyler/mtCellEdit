@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -107,13 +107,14 @@ static int parse_expression (
 }
 
 static int sort_rowcol (
+	CuiBook			* const cubook,
+	CedSheet		* const	sheet,
 	int			const	rows,
 	char	const * const * const	args
 	)
 {
 	int		rc_mode[EXP_MAX + 1]	= {0};
 	int		rc[EXP_MAX + 1]		= {0};
-	CedSheet	* const sheet		= backend.sheet ();
 
 	if ( ! sheet || parse_expression ( args[0], rc, rc_mode ) )
 	{
@@ -126,12 +127,12 @@ static int sort_rowcol (
 
 	if ( rows )
 	{
-		res = cui_sheet_sort_rows ( backend.file()->cubook, sheet,
+		res = cui_sheet_sort_rows ( cubook, sheet,
 			r1, r2 - r1 + 1, rc, 0, rc_mode );
 	}
 	else
 	{
-		res = cui_sheet_sort_columns ( backend.file()->cubook, sheet,
+		res = cui_sheet_sort_columns ( cubook, sheet,
 			c1, c2 - c1 + 1, rc, 0, rc_mode );
 	}
 
@@ -145,17 +146,17 @@ static int sort_rowcol (
 	return 0;
 }
 
-int jtf_sort_column (
+int Backend::jtf_sort_column (
 	char	const * const * const	args
 	)
 {
-	return sort_rowcol ( 0, args );
+	return sort_rowcol ( file()->cubook, sheet (), 0, args );
 }
 
-int jtf_sort_row (
+int Backend::jtf_sort_row (
 	char	const * const * const	args
 	)
 {
-	return sort_rowcol ( 1, args );
+	return sort_rowcol ( file()->cubook, sheet (), 1, args );
 }
 

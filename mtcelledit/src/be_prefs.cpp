@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,207 +21,178 @@
 
 void Backend::prefs_init ()
 {
-	mtPrefTable	const prefs_table[] = {
+	uprefs.add_directory ( PREFS_LAST_DIR, mprefs.last_dir, "" );
+	uprefs.set_invisible ( PREFS_LAST_DIR );
 
-{ GUI_INIFILE_LAST_DIR,	MTKIT_PREF_TYPE_DIR, NULL, NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_WINDOW_X, mprefs.window_x, 50 );
+	uprefs.add_int ( PREFS_WINDOW_Y, mprefs.window_y, 50 );
+	uprefs.add_int ( PREFS_WINDOW_W, mprefs.window_w, 400 );
+	uprefs.add_int ( PREFS_WINDOW_H, mprefs.window_h, 400 );
+	uprefs.add_int ( PREFS_WINDOW_STATE, mprefs.window_state, 0 );
 
-{ GUI_INIFILE_MAIN_WINDOW"_state", MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_WINDOW"_x", MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_WINDOW"_y", MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_WINDOW"_w", MTKIT_PREF_TYPE_INT, "400", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_WINDOW"_h", MTKIT_PREF_TYPE_INT, "400", NULL, NULL, 0, NULL, NULL },
+	uprefs.set_invisible ( PREFS_WINDOW_X );
+	uprefs.set_invisible ( PREFS_WINDOW_Y );
+	uprefs.set_invisible ( PREFS_WINDOW_W );
+	uprefs.set_invisible ( PREFS_WINDOW_H );
+	uprefs.set_invisible ( PREFS_WINDOW_STATE );
 
-{ GUI_INIFILE_SHARED_WINDOW"_x", MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_SHARED_WINDOW"_y", MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_SHARED_WINDOW"_w", MTKIT_PREF_TYPE_INT, "400", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_SHARED_WINDOW"_h", MTKIT_PREF_TYPE_INT, "400", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_SHARED_WINDOW_X, mprefs.shared_window_x, 50 );
+	uprefs.add_int ( PREFS_SHARED_WINDOW_Y, mprefs.shared_window_y, 50 );
+	uprefs.add_int ( PREFS_SHARED_WINDOW_W, mprefs.shared_window_w, 400 );
+	uprefs.add_int ( PREFS_SHARED_WINDOW_H, mprefs.shared_window_h, 400 );
 
-{ GUI_INIFILE_HELP_FILE, MTKIT_PREF_TYPE_FILE, DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_HELP_BROWSER, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+	uprefs.set_invisible ( PREFS_SHARED_WINDOW_X );
+	uprefs.set_invisible ( PREFS_SHARED_WINDOW_Y );
+	uprefs.set_invisible ( PREFS_SHARED_WINDOW_W );
+	uprefs.set_invisible ( PREFS_SHARED_WINDOW_H );
 
-{ GUI_INIFILE_MAIN_FILE"1", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"2", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"3", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"4", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"5", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"6", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"7", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"8", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"9", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"10",MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"11", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"12", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"13", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"14", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"15", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"16", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"17", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"18", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"19", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_MAIN_FILE"20", MTKIT_PREF_TYPE_FILE, NULL, NULL, NULL, 0, NULL, NULL },
+	uprefs.add_string ( PREFS_HELP_FILE, mprefs.help_file,
+		DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html" );
+	uprefs.add_string ( PREFS_HELP_BROWSER, mprefs.help_browser, "" );
 
-{ GUI_INIFILE_FILE_LOCK_LOAD, MTKIT_PREF_TYPE_OPTION, "0", NULL, NULL, 0, "RW	RWL	RO", NULL },
-{ GUI_INIFILE_FILE_LOCK_SAVE, MTKIT_PREF_TYPE_OPTION, "0", NULL, NULL, 0, "RW	RWL	RO", NULL },
+	uprefs.add_option ( PREFS_FILE_LOCK_LOAD, mprefs.file_lock_load, 0,
+		{ "RW", "RWL", "RO" } );
+	uprefs.add_option ( PREFS_FILE_LOCK_SAVE, mprefs.file_lock_save, 0,
+		{ "RW", "RWL", "RO" } );
 
-{ GUI_INIFILE_FONT_PANGO_NAME, MTKIT_PREF_TYPE_STR, "Sans", NULL, pref_change_font, 0, NULL, &preferences },
-{ GUI_INIFILE_FONT_SIZE,	MTKIT_PREF_TYPE_INT, "16", NULL, pref_change_font, 0, "1	128", &preferences },
+	uprefs.add_string ( PREFS_FONT_PANGO_NAME, mprefs.font_pango_name,
+		"Sans" );
+	uprefs.add_int ( PREFS_FONT_SIZE, mprefs.font_size, 16, 1, 128 );
 
-{ GUI_INIFILE_ROW_PAD,	MTKIT_PREF_TYPE_INT, "1", NULL, pref_change_row_pad, 0, "0	4", NULL },
+	uprefs.add_int ( PREFS_ROW_PAD,	mprefs.row_pad, 1, 0, 4 );
+	uprefs.add_int ( PREFS_RECENT_FILENAME_LEN, mprefs.recent_filename_len,
+		80, 50, 500 );
 
-{ GUI_INIFILE_RECENT_FILENAME_LEN,	MTKIT_PREF_TYPE_INT, "80", NULL, pref_change_recent_filename_len, 0, "50	500", NULL },
+	uprefs.add_int ( PREFS_YEAR_START_2D, mprefs.year_start_2d, -1, -1,
+		5879510 );
+	uprefs.set_description ( PREFS_YEAR_START_2D,  "Resets two digit years "
+		"to between this and 99 years later.  -1 = 50 years ago to 49 "
+		"years time." );
 
-{ GUI_INIFILE_2DYEAR_START,	MTKIT_PREF_TYPE_INT, "-1", "Resets two digit years to between this and 99 years later.  -1 = 50 years ago to 49 years time.", NULL, 0, "-1	5879510", NULL },
+	uprefs.add_bool ( PREFS_FIND_WILDCARDS,	mprefs.find_wildcards, 0 );
+	uprefs.add_bool ( PREFS_FIND_CASE_SENSITIVE, mprefs.find_case_sensitive,
+		0 );
+	uprefs.add_bool ( PREFS_FIND_VALUE, mprefs.find_value, 0 );
+	uprefs.add_bool ( PREFS_FIND_ALL_SHEETS, mprefs.find_all_sheets, 0 );
+	uprefs.add_string ( PREFS_FIND_TEXT, mprefs.find_text, "" );
 
-{ GUI_INIFILE_GRAPH_PANE_POS,	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_FIND_PANE_POS,	MTKIT_PREF_TYPE_INT, "-1", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_FIND_WILDCARDS,	MTKIT_PREF_TYPE_BOOL, "0", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_FIND_CASE_SENSITIVE, MTKIT_PREF_TYPE_BOOL, "0", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_FIND_VALUE,	MTKIT_PREF_TYPE_BOOL, "0", NULL, NULL, 0, NULL, NULL },
-{ GUI_INIFILE_FIND_ALL_SHEETS,	MTKIT_PREF_TYPE_BOOL, "0", NULL, NULL, 0, NULL, NULL },
+	uprefs.set_invisible ( PREFS_FIND_WILDCARDS );
+	uprefs.set_invisible ( PREFS_FIND_CASE_SENSITIVE );
+	uprefs.set_invisible ( PREFS_FIND_VALUE );
+	uprefs.set_invisible ( PREFS_FIND_ALL_SHEETS );
+	uprefs.set_invisible ( PREFS_FIND_TEXT );
 
-{ GUI_INIFILE_FIND_TEXT,	MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_bool ( PREFS_CLIPBOARD_USE_SYSTEM,
+		mprefs.clipboard_use_system, 1 );
+	uprefs.set_invisible ( PREFS_CLIPBOARD_USE_SYSTEM );
+	uprefs.set_description ( PREFS_CLIPBOARD_USE_SYSTEM,
+		"Use system clipboard when copying and pasting" );
 
-{ GUI_INIFILE_CLIPBOARD_USE_SYSTEM, MTKIT_PREF_TYPE_BOOL, "1", "Use system clipboard when copying and pasting", NULL, 0, NULL, NULL },
+	uprefs.add_int ( CUI_INIFILE_PAGE_WIDTH, mprefs.page_width, 297 );
+	uprefs.add_int ( CUI_INIFILE_PAGE_HEIGHT, mprefs.page_height, 210 );
+	uprefs.add_int ( CUI_INIFILE_PAGE_MARGIN_X, mprefs.page_margin_x, 10 );
+	uprefs.add_int ( CUI_INIFILE_PAGE_MARGIN_Y, mprefs.page_margin_y, 10 );
 
-{ CUI_INIFILE_PAGE_WIDTH,	MTKIT_PREF_TYPE_INT, "297", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_HEIGHT,	MTKIT_PREF_TYPE_INT, "210", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_MARGIN_X,	MTKIT_PREF_TYPE_INT, "10", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_MARGIN_Y,	MTKIT_PREF_TYPE_INT, "10", NULL, NULL, 0, NULL, NULL },
+	// NOTE: these options come from CUI_HEADER_OPTIONS
 
-{ CUI_INIFILE_PAGE_HEADER_LEFT, MTKIT_PREF_TYPE_OPTION, "2", NULL, NULL, 0, CUI_HEADER_OPTIONS, NULL },
-{ CUI_INIFILE_PAGE_HEADER_CENTRE, MTKIT_PREF_TYPE_OPTION, "0", NULL, NULL, 0, CUI_HEADER_OPTIONS, NULL },
-{ CUI_INIFILE_PAGE_HEADER_RIGHT, MTKIT_PREF_TYPE_OPTION, "3", NULL, NULL, 0, CUI_HEADER_OPTIONS, NULL },
-{ CUI_INIFILE_PAGE_FOOTER_LEFT, MTKIT_PREF_TYPE_OPTION, "6", NULL, NULL, 0, CUI_HEADER_OPTIONS, NULL },
-{ CUI_INIFILE_PAGE_FOOTER_CENTRE, MTKIT_PREF_TYPE_OPTION, "0", NULL, NULL, 0, CUI_HEADER_OPTIONS, NULL },
-{ CUI_INIFILE_PAGE_FOOTER_RIGHT, MTKIT_PREF_TYPE_OPTION, "4", NULL, NULL, 0, CUI_HEADER_OPTIONS, NULL },
+#define PAGE_OPTION_LIST { "None", "Filename (long)", \
+	"Filename (short)", "Sheet Name", "Page #", "Date", "Date and Time" }
 
-{ GUI_INIFILE_GRAPH_SCALE,	MTKIT_PREF_TYPE_DOUBLE, "1", NULL, pref_change_graph_scale, 0, "0.1	1000", NULL },
+	uprefs.add_option ( CUI_INIFILE_PAGE_HEADER_LEFT,
+		mprefs.page_header_left, 2, PAGE_OPTION_LIST );
 
-{ GUI_INIFILE_SHEET_PREFS_PERSIST, MTKIT_PREF_TYPE_BOOL, "0", "Keep sheet preferences (cursor area, frozen panes) when loading a new text file after a previous text file", NULL, 0, NULL, NULL },
+	uprefs.add_option ( CUI_INIFILE_PAGE_HEADER_CENTRE,
+		mprefs.page_header_centre, 0, PAGE_OPTION_LIST );
 
-	{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-	};
+	uprefs.add_option ( CUI_INIFILE_PAGE_HEADER_RIGHT,
+		mprefs.page_header_right, 3, PAGE_OPTION_LIST );
 
+	uprefs.add_option ( CUI_INIFILE_PAGE_FOOTER_LEFT,
+		mprefs.page_footer_left, 6, PAGE_OPTION_LIST );
 
-	preferences.addTable ( prefs_table );
-	preferences.initWindowPrefs ();
+	uprefs.add_option ( CUI_INIFILE_PAGE_FOOTER_CENTRE,
+		mprefs.page_footer_centre, 0, PAGE_OPTION_LIST );
 
-	recent_file.init_prefs ( &preferences );
+	uprefs.add_option ( CUI_INIFILE_PAGE_FOOTER_RIGHT,
+		mprefs.page_footer_right, 4, PAGE_OPTION_LIST );
 
-	preferences.load ( prefs_filename, BIN_NAME );
+	uprefs.add_double ( PREFS_GRAPH_SCALE, mprefs.graph_scale,1, 0.1, 1000);
+
+	uprefs.add_bool ( PREFS_SHEET_PREFS_PERSIST, mprefs.sheet_prefs_persist,
+		0 );
+	uprefs.set_description ( PREFS_SHEET_PREFS_PERSIST,
+		"Keep sheet preferences (cursor area, frozen panes) when "
+		"loading a new text file after a previous text file" );
+
+	uprefs.add_ui_defaults ( mprefs.ui_editor );
+	mprefs.recent_file.init ( uprefs, PREFS_RECENT_FILE, 20 );
+
+	uprefs.load ( prefs_filename, BIN_NAME );
 }
 
-static void be_book_prefs_transfer (
-	mtPrefs		* const	mtpr,
-	CedBook		* const	book,
-	int		const	write_mode
-	)
+void Backend::ui_shared_prefs_init ( mtKit::UserPrefs & prefs )
 {
-	mtBulkInt	const	table_i[] = {
-			{ CED_FILE_PREFS_BOOK_DISABLE_LOCKS, &book->prefs.disable_locks },
-			{ CED_FILE_PREFS_BOOK_AUTO_RECALC, &book->prefs.auto_recalc },
-			{ NULL, NULL }
-			};
-	mtBulkStr	const	table_s[] = {
-			{ CED_FILE_PREFS_BOOK_AUTHOR, &book->prefs.author },
-			{ CED_FILE_PREFS_BOOK_COMMENT, &book->prefs.comment },
-			{ NULL, NULL }
-			};
-
-
-	if ( write_mode )
-	{
-		// Write to book from prefs
-		mtkit_prefs_bulk_get ( mtpr, table_i, NULL, table_s );
-	}
-	else
-	{
-		// Read from book to prefs
-		mtkit_prefs_bulk_set ( mtpr, table_i, NULL, table_s );
-	}
+	prefs.set ( MTKIT_PREFS_WINDOW_X, mprefs.shared_window_x );
+	prefs.set ( MTKIT_PREFS_WINDOW_Y, mprefs.shared_window_y );
+	prefs.set ( MTKIT_PREFS_WINDOW_W, mprefs.shared_window_w );
+	prefs.set ( MTKIT_PREFS_WINDOW_H, mprefs.shared_window_h );
 }
 
-mtPrefs * Backend::book_prefs_init (
-	CedBook		* const	book
-	)
+void Backend::ui_shared_prefs_finish ( mtKit::UserPrefs & prefs )
 {
-	mtPrefs		* mtpr;
-	mtPrefTable	const item_table[] = {
-	{ CED_FILE_PREFS_BOOK_AUTHOR, MTKIT_PREF_TYPE_STR_MULTI, "", "Book Author", fe_book_prefs_changed, 0, NULL, NULL },
-	{ CED_FILE_PREFS_BOOK_COMMENT, MTKIT_PREF_TYPE_STR_MULTI, "", "Book Comment", fe_book_prefs_changed, 0, NULL, NULL },
-	{ CED_FILE_PREFS_BOOK_DISABLE_LOCKS, MTKIT_PREF_TYPE_BOOL, "0", "Disable all cell locks", fe_book_prefs_changed, 0, NULL, NULL },
-	{ CED_FILE_PREFS_BOOK_AUTO_RECALC, MTKIT_PREF_TYPE_OPTION, "1", "Automatically recalculate the sheet or book after changes", fe_book_prefs_changed, 0, "None	Sheet	Book", NULL },
-	{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-	};
-
-
-	// Load window prefs
-	mtpr = load_pref_window_prefs ( item_table );
-
-	mtkit_prefs_block_callback ( mtpr );
-	be_book_prefs_transfer ( mtpr, book, 0 );
-	mtkit_prefs_unblock_callback ( mtpr );
-
-	return mtpr;
+	mprefs.shared_window_x = prefs.get_int ( MTKIT_PREFS_WINDOW_X );
+	mprefs.shared_window_y = prefs.get_int ( MTKIT_PREFS_WINDOW_Y );
+	mprefs.shared_window_w = prefs.get_int ( MTKIT_PREFS_WINDOW_W );
+	mprefs.shared_window_h = prefs.get_int ( MTKIT_PREFS_WINDOW_H );
 }
 
-void be_book_prefs_finish (
-	mtPrefs		* const	mtpr,
-	CedBook		* const	book
-	)
-{
-	be_book_prefs_transfer ( mtpr, book, 1 );
-}
-
-int be_color_swatch_get (
-	int		const	i
-	)
+int be_color_swatch_get ( int const i )
 {
 	static int const swatch_color_table [ COLOR_SWATCH_TOTAL + 1 ] = {
-	mtPixy::rgb_2_int (   0,   0,   0 ),
-	mtPixy::rgb_2_int (  90,   0,   0 ),
-	mtPixy::rgb_2_int ( 100,  72,   0 ),
-	mtPixy::rgb_2_int ( 100, 100,   0 ),
-	mtPixy::rgb_2_int (   0,  90,   0 ),
-	mtPixy::rgb_2_int (   0,  90,  90 ),
-	mtPixy::rgb_2_int (   0,   0, 100 ),
-	mtPixy::rgb_2_int (  90,   0,  90 ),
+	pixy_rgb_2_int (   0,   0,   0 ),
+	pixy_rgb_2_int (  90,   0,   0 ),
+	pixy_rgb_2_int ( 100,  72,   0 ),
+	pixy_rgb_2_int ( 100, 100,   0 ),
+	pixy_rgb_2_int (   0,  90,   0 ),
+	pixy_rgb_2_int (   0,  90,  90 ),
+	pixy_rgb_2_int (   0,   0, 100 ),
+	pixy_rgb_2_int (  90,   0,  90 ),
 
-	mtPixy::rgb_2_int ( 100, 100, 100 ),
-	mtPixy::rgb_2_int ( 170,   0,   0 ),
-	mtPixy::rgb_2_int ( 180, 106,   0 ),
-	mtPixy::rgb_2_int ( 170, 170,   0 ),
-	mtPixy::rgb_2_int (   0, 160,   0 ),
-	mtPixy::rgb_2_int (   0, 160, 160 ),
-	mtPixy::rgb_2_int (   0, 100, 180 ),
-	mtPixy::rgb_2_int ( 150,   0, 150 ),
+	pixy_rgb_2_int ( 100, 100, 100 ),
+	pixy_rgb_2_int ( 170,   0,   0 ),
+	pixy_rgb_2_int ( 180, 106,   0 ),
+	pixy_rgb_2_int ( 170, 170,   0 ),
+	pixy_rgb_2_int (   0, 160,   0 ),
+	pixy_rgb_2_int (   0, 160, 160 ),
+	pixy_rgb_2_int (   0, 100, 180 ),
+	pixy_rgb_2_int ( 150,   0, 150 ),
 
-	mtPixy::rgb_2_int ( 180, 180, 180 ),
-	mtPixy::rgb_2_int ( 230, 140, 140 ),
-	mtPixy::rgb_2_int ( 230, 150,   0 ),
-	mtPixy::rgb_2_int ( 220, 220, 100 ),
-	mtPixy::rgb_2_int ( 120, 220, 120 ),
-	mtPixy::rgb_2_int ( 100, 230, 230 ),
-	mtPixy::rgb_2_int ( 100, 200, 255 ),
-	mtPixy::rgb_2_int ( 230, 140, 230 ),
+	pixy_rgb_2_int ( 180, 180, 180 ),
+	pixy_rgb_2_int ( 230, 140, 140 ),
+	pixy_rgb_2_int ( 230, 150,   0 ),
+	pixy_rgb_2_int ( 220, 220, 100 ),
+	pixy_rgb_2_int ( 120, 220, 120 ),
+	pixy_rgb_2_int ( 100, 230, 230 ),
+	pixy_rgb_2_int ( 100, 200, 255 ),
+	pixy_rgb_2_int ( 230, 140, 230 ),
 
-	mtPixy::rgb_2_int ( 220, 220, 220 ),
-	mtPixy::rgb_2_int ( 255, 200, 200 ),
-	mtPixy::rgb_2_int ( 255, 216, 160 ),
-	mtPixy::rgb_2_int ( 255, 255, 160 ),
-	mtPixy::rgb_2_int ( 180, 255, 180 ),
-	mtPixy::rgb_2_int ( 180, 255, 255 ),
-	mtPixy::rgb_2_int ( 180, 230, 255 ),
-	mtPixy::rgb_2_int ( 255, 200, 255 ),
+	pixy_rgb_2_int ( 220, 220, 220 ),
+	pixy_rgb_2_int ( 255, 200, 200 ),
+	pixy_rgb_2_int ( 255, 216, 160 ),
+	pixy_rgb_2_int ( 255, 255, 160 ),
+	pixy_rgb_2_int ( 180, 255, 180 ),
+	pixy_rgb_2_int ( 180, 255, 255 ),
+	pixy_rgb_2_int ( 180, 230, 255 ),
+	pixy_rgb_2_int ( 255, 200, 255 ),
 
-	mtPixy::rgb_2_int ( 255, 255, 255 ),
-	mtPixy::rgb_2_int ( 255,   0,   0 ),
-	mtPixy::rgb_2_int ( 255, 200,   0 ),
-	mtPixy::rgb_2_int ( 255, 255,   0 ),
-	mtPixy::rgb_2_int (   0, 255,   0 ),
-	mtPixy::rgb_2_int (   0, 255, 255 ),
-	mtPixy::rgb_2_int (   0,   0, 255 ),
-	mtPixy::rgb_2_int ( 255,   0, 255 )
+	pixy_rgb_2_int ( 255, 255, 255 ),
+	pixy_rgb_2_int ( 255,   0,   0 ),
+	pixy_rgb_2_int ( 255, 200,   0 ),
+	pixy_rgb_2_int ( 255, 255,   0 ),
+	pixy_rgb_2_int (   0, 255,   0 ),
+	pixy_rgb_2_int (   0, 255, 255 ),
+	pixy_rgb_2_int (   0,   0, 255 ),
+	pixy_rgb_2_int ( 255,   0, 255 )
 	};
 
 

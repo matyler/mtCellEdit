@@ -1119,6 +1119,17 @@ error:
 	return res;
 }
 
+
+
+#define DIR_SHEET	"/sheet/"
+#define DIR_SHEET_LEN	7
+#define DIR_PREFS	"/prefs/book.txt"
+#define DIR_PREFS_LEN	15
+#define DIR_VALUES	"/values/"
+#define DIR_VALUES_LEN	8
+
+
+
 static int load_cb (
 	char	const	* const	name,
 	void		* const	buf,
@@ -1132,188 +1143,169 @@ static int load_cb (
 	void		* const	user_data
 	)
 {
-	if ( name )
+	if ( ! name )
 	{
-		int			i = 0,
-					res;
-		char		const	* s = NULL;
-		char	const	* const	fname[] = {
-					"/sheet/",
-					"/prefs/book.txt",
-					"/values/",
-					NULL
-					};
-		char		const	* sheet_name;
-		char			* free_sheet_name = NULL;
-		bookSTATE	* const state = (bookSTATE *)user_data;
-		CedSheet		* sheet;
-		CedBookFile		* bookfile;
+		return MTKIT_ZIP_OK;	// Request next file
+	}
 
+	bookSTATE * const state = (bookSTATE *)user_data;
+	int		values = 0;
+	char	const	* sheet_name, *s;
 
-		for ( i = 0; fname[i]; i++ )
+	if ( (s = strstr ( name, DIR_SHEET )) && s == strchr ( name, '/' ) )
+	{
+		sheet_name = s + DIR_SHEET_LEN;
+	}
+	else if ( (s = strstr (name,DIR_PREFS)) && s == strchr ( name,'/' ) )
+	{
+		// LOAD PREFS
+		if ( s[ DIR_PREFS_LEN ] )
 		{
-			s = strstr ( name, fname[i] );
-			if ( s && s == strchr ( name, '/' ) )
-			{
-				break;
-			}
+			// Catches bad filename
+			return MTKIT_ZIP_OK;
 		}
 
-		sheet_name = s + 7;
-
-		switch ( i )
+		if ( ! state->book_prefs )
 		{
-		case 2:	// LOAD SHEET (values)
-			if ( ! s[8] )
-			{
-				// Catches nameless sheets
-				return MTKIT_ZIP_OK;
-			}
-
-			sheet_name = s + 8;
-			// FALLTHROUGH
-
-		case 0:	// LOAD SHEET
-			if ( ! s[7] )
-			{
-				// Catches nameless sheets
-				return MTKIT_ZIP_OK;
-			}
-
-			if (	state->encoding &&
+			if (	state->encoding	&&
+				buf		&&
+				buf_len > 0	&&
 				! mtkit_utf8_string_legal (
-					(unsigned char const *)sheet_name, 0 ) )
+					(unsigned char *)buf,
+					(size_t)buf_len )
+				)
 			{
+				char	* newmem,
+					* ob = (char *)buf;
+
+
+				ob[ buf_len - 1 ] = 0;
+
 				if ( mtkit_string_encoding_conversion (
-					sheet_name, state->encoding,
-					&free_sheet_name, "UTF-8" ) )
+					(char *)buf, state->encoding,
+					&newmem, "UTF-8" ) )
 				{
 					return MTKIT_ZIP_ERROR_USER;
 				}
 
-				sheet_name = free_sheet_name;
-			}
+				state->book_prefs =
+					mtkit_utree_load_mem ( NULL,
+					newmem, strlen ( newmem ) + 1,
+					NULL );
 
-			// This file has "/sheet/" in it so its a sheet
-			sheet = ced_sheet_load_mem ( (char *)buf,
-				(size_t)buf_len, state->encoding,
-				&state->filetype );
-
-			if ( ! sheet )
-			{
-				free ( free_sheet_name );
-				return MTKIT_ZIP_ERROR_USER;
-			}
-
-			if ( i == 0 )
-			{
-				res = ced_book_add_sheet ( state->book, sheet,
-					sheet_name );
+				free ( newmem );
 			}
 			else
 			{
-				if ( ! state->book_values )
-				{
-					state->book_values =
-						ced_book_new_real ();
-				}
-
-				if ( ! state->book_values )
-				{
-					res = 1;
-				}
-				else
-				{
-					res = ced_book_add_sheet (
-						state->book_values, sheet,
-						sheet_name );
-				}
+				state->book_prefs =
+					mtkit_utree_load_mem ( NULL,
+					(char *)buf, (size_t)buf_len,
+					NULL );
 			}
-
-			free ( free_sheet_name );
-
-			if ( res )
-			{
-				ced_sheet_destroy ( sheet );
-				return MTKIT_ZIP_ERROR_USER;
-			}
-			break;
-
-		case 1:	// LOAD PREFS
-			if ( s[15] )
-			{
-				// Catches bad filename
-				return MTKIT_ZIP_OK;
-			}
-
-			if ( ! state->book_prefs )
-			{
-				if (	state->encoding	&&
-					buf		&&
-					buf_len > 0	&&
-					! mtkit_utf8_string_legal (
-						(unsigned char *)buf,
-						(size_t)buf_len )
-					)
-				{
-					char	* newmem,
-						* ob = (char *)buf;
-
-
-					ob[ buf_len - 1 ] = 0;
-
-					if ( mtkit_string_encoding_conversion (
-						(char *)buf, state->encoding,
-						&newmem, "UTF-8" ) )
-					{
-						return MTKIT_ZIP_ERROR_USER;
-					}
-
-					state->book_prefs =
-						mtkit_utree_load_mem ( NULL,
-						newmem, strlen ( newmem ) + 1,
-						NULL );
-
-					free ( newmem );
-				}
-				else
-				{
-					state->book_prefs =
-						mtkit_utree_load_mem ( NULL,
-						(char *)buf, (size_t)buf_len,
-						NULL );
-				}
-			}
-			break;
-
-		default: // LOAD FILE
-			s = strchr ( name, '/' );
-			if ( ! s )
-			{
-				s = name;
-			}
-			else
-			{
-				s++;
-			}
-
-			bookfile = ced_book_add_file ( state->book, (char *)buf,
-				buf_len, s );
-
-			if ( bookfile == NULL )
-			{
-				return MTKIT_ZIP_ERROR_USER;
-			}
-
-			bookfile->timestamp[0] = year;
-			bookfile->timestamp[1] = month;
-			bookfile->timestamp[2] = day;
-			bookfile->timestamp[3] = hour;
-			bookfile->timestamp[4] = minute;
-			bookfile->timestamp[5] = second;
-
-			return MTKIT_ZIP_OK_DONT_FREE;
 		}
+
+		return MTKIT_ZIP_OK;	// Request next file
+	}
+	else if ( (s = strstr ( name, DIR_VALUES )) && s == strchr( name, '/' ))
+	{
+		sheet_name = s + DIR_VALUES_LEN;
+		values = 1;
+	}
+	else
+	{
+		// LOAD FILE
+
+		s = strchr ( name, '/' );
+		if ( ! s )
+		{
+			s = name;
+		}
+		else
+		{
+			s++;
+		}
+
+		CedBookFile * bookfile = ced_book_add_file ( state->book,
+			(char *)buf, buf_len, s );
+
+		if ( bookfile == NULL )
+		{
+			return MTKIT_ZIP_ERROR_USER;
+		}
+
+		bookfile->timestamp[0] = year;
+		bookfile->timestamp[1] = month;
+		bookfile->timestamp[2] = day;
+		bookfile->timestamp[3] = hour;
+		bookfile->timestamp[4] = minute;
+		bookfile->timestamp[5] = second;
+
+		return MTKIT_ZIP_OK_DONT_FREE;
+	}
+
+	// LOAD SHEET
+	if ( ! sheet_name[0] )
+	{
+		// Catches nameless sheets
+		return MTKIT_ZIP_OK;
+	}
+
+	char * free_sheet_name = NULL;
+
+	if (	state->encoding &&
+		! mtkit_utf8_string_legal (
+			(unsigned char const *)sheet_name, 0 ) )
+	{
+		if ( mtkit_string_encoding_conversion (
+			sheet_name, state->encoding,
+			&free_sheet_name, "UTF-8" ) )
+		{
+			return MTKIT_ZIP_ERROR_USER;
+		}
+
+		sheet_name = free_sheet_name;
+	}
+
+	// This file has "/sheet/" in it so its a sheet
+	CedSheet * sheet = ced_sheet_load_mem ( (char *)buf, (size_t)buf_len,
+		state->encoding, &state->filetype );
+
+	if ( ! sheet )
+	{
+		free ( free_sheet_name );
+		return MTKIT_ZIP_ERROR_USER;
+	}
+
+	int res;
+
+	if ( values )
+	{
+		if ( ! state->book_values )
+		{
+			state->book_values = ced_book_new_real ();
+		}
+
+		if ( ! state->book_values )
+		{
+			res = 1;
+		}
+		else
+		{
+			res = ced_book_add_sheet ( state->book_values, sheet,
+				sheet_name );
+		}
+	}
+	else	// Sheet without values
+	{
+		res = ced_book_add_sheet ( state->book, sheet, sheet_name );
+	}
+
+	free ( free_sheet_name );
+
+	if ( res )
+	{
+		ced_sheet_destroy ( sheet );
+		return MTKIT_ZIP_ERROR_USER;
 	}
 
 	return MTKIT_ZIP_OK;	// Request next file

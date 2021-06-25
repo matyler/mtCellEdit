@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,25 +28,28 @@ int mtPixyUI::File::palette_new_chores (
 		return num;
 	}
 
-	m_undo_stack.add_next_step ( m_image );
+	m_undo_stack.add_next_step ( get_pixmap () );
 	m_modified = 1;
 
 	return 0;
 }
 
 int mtPixyUI::File::palette_set (
-	mtPixy::Palette	const * const	pal
+	mtPalette	const * const	pal
 	)
 {
-	return palette_new_chores ( m_image->get_palette ()->copy ( pal ) );
+	mtPixmap * const pixmap = get_pixmap ();
+	return palette_new_chores ( pixy_palette_copy ( &pixmap->palette,
+		pal ) );
 }
 
 int mtPixyUI::File::palette_set_size (
 	int	const	num
 	)
 {
-	return palette_new_chores ( m_image->get_palette ()->
-		set_color_total ( num ) );
+	mtPixmap * const pixmap = get_pixmap ();
+	return palette_new_chores ( pixy_palette_set_size (
+		&pixmap->palette, num ) );
 }
 
 int mtPixyUI::File::palette_load (
@@ -54,15 +57,13 @@ int mtPixyUI::File::palette_load (
 	)
 {
 	int		res = 1;
-	mtPixy::Image	* im = mtPixy::Image::load ( fn );
+	mtPixy::Pixmap	const im ( pixy_pixmap_load ( fn, NULL ) );
 
-	if ( im )
+	if ( im.get() )
 	{
-		res = palette_new_chores ( m_image->get_palette ()->
-			copy ( im->get_palette () ) );
-
-		delete im;
-		im = NULL;
+		mtPixmap * const pixmap = get_pixmap ();
+		res = palette_new_chores ( pixy_palette_copy (
+			& pixmap->palette, &im.get()->palette ) );
 	}
 
 	return res;
@@ -70,17 +71,20 @@ int mtPixyUI::File::palette_load (
 
 int mtPixyUI::File::palette_save (
 	char	const * const	fn
-	)
+	) const
 {
-	return m_image->get_palette ()->save ( fn );
+	mtPixmap const * const pixmap = get_pixmap ();
+	return pixy_palette_save ( &pixmap->palette, fn );
 }
 
 int mtPixyUI::File::palette_load_default (
 	int	const	pal_type,
-	int	const	pal_num
+	int	const	pal_num,
+	std::string const & pal_filename
 	)
 {
-	m_image->palette_set_default ( pal_type, pal_num );
+	pixy_pixmap_palette_set_default ( get_pixmap(), pal_type, pal_num,
+		pal_filename.c_str() );
 
 	return palette_new_chores ( 0 );
 }
@@ -92,11 +96,8 @@ int mtPixyUI::File::palette_load_color (
 	unsigned char	const	b
 	)
 {
-	mtPixy::Color * const col = m_image->get_palette ()->get_color ();
-	if ( ! col )
-	{
-		return 1;
-	}
+	mtPixmap * const pixmap = get_pixmap ();
+	mtColor * const col = &pixmap->palette.color[0];
 
 	col[idx].red = r;
 	col[idx].green = g;
@@ -111,7 +112,9 @@ int mtPixyUI::File::palette_append (
 	unsigned char	const	b
 	)
 {
-	int const idx = m_image->get_palette ()->append_color ( r, g, b );
+	mtPixmap * const pixmap = get_pixmap ();
+	int const idx = pixy_palette_append_color ( &pixmap->palette,
+		r, g, b );
 	if ( idx >= 0 )
 	{
 		palette_new_chores ( 0 );
@@ -124,43 +127,50 @@ int mtPixyUI::File::palette_append (
 int mtPixyUI::File::palette_sort (
 	unsigned char	const	i_start,
 	unsigned char	const	i_end,
-	mtPixy::Image::PaletteSortType	const	s_type,
+	int		const	s_type,
 	bool		const	reverse
 	)
 {
-	return palette_new_chores ( m_image->palette_sort ( i_start, i_end,
-		s_type, reverse ) );
+	return palette_new_chores ( pixy_pixmap_palette_sort ( get_pixmap (),
+		i_start, i_end, s_type, reverse ) );
 }
 
 int mtPixyUI::File::palette_merge_duplicates (
 	int	* const	tot
 	)
 {
-	return palette_new_chores ( m_image->palette_merge_duplicates ( tot ) );
+	return palette_new_chores ( pixy_palette_merge_duplicates (
+		get_pixmap (), tot ) );
 }
 
 int mtPixyUI::File::palette_remove_unused (
 	int	* const	tot
 	)
 {
-	return palette_new_chores ( m_image->palette_remove_unused ( tot ) );
+	return palette_new_chores ( pixy_palette_remove_unused ( get_pixmap (),
+		tot ) );
 }
 
 int mtPixyUI::File::palette_create_gradient ()
 {
-	return palette_new_chores ( m_image->get_palette ()->create_gradient (
+	mtPixmap * const pixmap = get_pixmap ();
+	return palette_new_chores ( pixy_palette_create_gradient (
+		& pixmap->palette,
 		brush.get_color_a_index (), brush.get_color_b_index () ) );
 }
 
 int mtPixyUI::File::palette_create_from_canvas ()
 {
-	return palette_new_chores ( m_image->palette_create_from_canvas () );
+	return palette_new_chores ( pixmap_palette_create_from_canvas (
+		get_pixmap () ) );
 }
 
 int mtPixyUI::File::palette_quantize_pnn ()
 {
-	return palette_new_chores ( m_image->quantize_pnn (
-		m_image->get_palette ()->get_color_total () ) );
+	mtPixmap * const pixmap = get_pixmap ();
+
+	return palette_new_chores ( pixmap_pixmap_quantize_pnn ( pixmap,
+		pixmap->palette.size, NULL ) );
 }
 
 int mtPixyUI::File::palette_changed ()
@@ -170,14 +180,16 @@ int mtPixyUI::File::palette_changed ()
 
 int mtPixyUI::File::palette_swap_ab ()
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap ();
+
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
 	unsigned char	const	a = brush.get_color_a_index ();
 	unsigned char	const	b = brush.get_color_b_index ();
-	mtPixy::Color * const col = m_image->get_palette ()->get_color ();
+	mtColor const * const	col = &pixmap->palette.color[0];
 
 	brush.set_color_ab ( b, a, col );
 
@@ -187,7 +199,7 @@ int mtPixyUI::File::palette_swap_ab ()
 static int mask_num (
 	char		* const	mem,
 	int		const	num,
-	mtPixy::Image	* const	im
+	mtPixmap const * const	im
 	)
 {
 	if ( ! im )
@@ -195,31 +207,33 @@ static int mask_num (
 		return 1;
 	}
 
-	memset ( mem, num, (size_t)im->get_palette ()->get_color_total () );
+	memset ( mem, num, (size_t)pixy_pixmap_get_palette_size ( im ) );
 
 	return 0;
 }
 
 int mtPixyUI::File::palette_mask_all ()
 {
-	return mask_num ( palette_mask.color, 1, m_image );
+	return mask_num ( palette_mask.color, 1, get_pixmap () );
 }
 
 int mtPixyUI::File::palette_unmask_all ()
 {
-	return mask_num ( palette_mask.color, 0, m_image );
+	return mask_num ( palette_mask.color, 0, get_pixmap () );
 }
 
 int mtPixyUI::File::update_brush_colors ()
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap ();
+
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
-	unsigned char	const a = brush.get_color_a_index ();
-	unsigned char	const b = brush.get_color_b_index ();
-	mtPixy::Color	* const col = m_image->get_palette ()->get_color ();
+	unsigned char	const	a = brush.get_color_a_index ();
+	unsigned char	const	b = brush.get_color_b_index ();
+	mtColor const * const	col = &pixmap->palette.color[0];
 
 	brush.set_color_ab ( a, b, col );
 

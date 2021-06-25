@@ -83,7 +83,7 @@ Mainwindow::Mainwindow ( Frontend & fe )
 	m_button_rul_edit	( NULL ),
 	m_button_rul_hide_all	( NULL ),
 
-	m_info_file		( NULL ),
+	m_info_db		( NULL ),
 	m_info_points		( NULL ),
 	m_info_resolution	( NULL ),
 	m_info_x		( NULL ),
@@ -93,13 +93,15 @@ Mainwindow::Mainwindow ( Frontend & fe )
 	m_info_g		( NULL ),
 	m_info_b		( NULL ),
 	m_fe			( fe ),
-	m_prefs			( fe.backend.prefs )
+	m_uprefs		( fe.backend.uprefs ),
+	m_mprefs		( fe.backend.mprefs ),
+	recent_crul_db		( fe.backend.mprefs.recent_crul_db )
 {
 	setWindowTitle ( VERSION );
 
 	std::string path;
-	mtKit::get_data_dir ( path, DATA_INSTALL "/icons/hicolor/256x256/apps/"
-		BIN_NAME ".png" );
+	mtKit::get_data_dir ( path, DATA_INSTALL "/icons/hicolor/scalable/apps/"
+		BIN_NAME ".svg" );
 	setWindowIcon ( QIcon ( path.c_str () ) );
 
 	setEnabled ( false );
@@ -107,12 +109,10 @@ Mainwindow::Mainwindow ( Frontend & fe )
 	create_main_ui ();
 
 	setMinimumSize ( 160, 160 );
-	setGeometry ( m_prefs.getInt ( PREFS_WINDOW_X ),
-		m_prefs.getInt ( PREFS_WINDOW_Y ),
-		m_prefs.getInt ( PREFS_WINDOW_W ),
-		m_prefs.getInt ( PREFS_WINDOW_H ) );
+	setGeometry ( m_mprefs.window_x, m_mprefs.window_y,
+		m_mprefs.window_w, m_mprefs.window_h );
 
-	if ( 1 == m_prefs.getInt ( PREFS_WINDOW_MAXIMIZED ) )
+	if ( 1 == m_mprefs.window_maximized )
 	{
 		showMaximized ();
 	}
@@ -126,7 +126,7 @@ Mainwindow::Mainwindow ( Frontend & fe )
 	// Restore positions of the splits
 	QByteArray qba;
 
-	if ( 0 == mtQEX::qt_get_state ( &m_prefs, PREFS_CRUL_SPLIT_MAIN, &qba ))
+	if ( 0 == mtQEX::qt_get_state ( m_uprefs, PREFS_CRUL_SPLIT_MAIN, qba ) )
 	{
 		m_split_main->restoreState ( qba );
 	}
@@ -140,18 +140,17 @@ Mainwindow::Mainwindow ( Frontend & fe )
 		m_split_main->setSizes ( list );
 	}
 
-	if ( 0 == mtQEX::qt_get_state ( &m_prefs, PREFS_VIEW_SPLIT_POS, &qba ) )
+	if ( 0 == mtQEX::qt_get_state ( m_uprefs, PREFS_VIEW_SPLIT_POS, qba ) )
 	{
 		m_split_view->restoreState ( qba );
 	}
 
 	update_recent_db_menu ();
 
-	act_view_split->setChecked ( (0 != m_prefs.getInt ( PREFS_VIEW_SPLIT_ON
-		) ) );
+	act_view_split->setChecked ( (0 != m_mprefs.view_split_on ) );
 	press_view_split ();
 
-	set_view_split_vert ( 0 != m_prefs.getInt ( PREFS_VIEW_SPLIT_VERT ) );
+	set_view_split_vert ( 0 != m_mprefs.view_split_vert );
 
 	press_edit_mode_camera ();	// Prepare mode
 
@@ -164,29 +163,29 @@ Mainwindow::~Mainwindow ()
 {
 	if ( isMaximized () )
 	{
-		m_prefs.set ( PREFS_WINDOW_MAXIMIZED, 1 );
+		m_uprefs.set ( PREFS_WINDOW_MAXIMIZED, 1 );
 	}
 	else
 	{
-		m_prefs.set ( PREFS_WINDOW_MAXIMIZED, 0 );
+		m_uprefs.set ( PREFS_WINDOW_MAXIMIZED, 0 );
 
-		m_prefs.set ( PREFS_WINDOW_X, geometry().x () );
-		m_prefs.set ( PREFS_WINDOW_Y, geometry().y () );
-		m_prefs.set ( PREFS_WINDOW_W, geometry().width () );
-		m_prefs.set ( PREFS_WINDOW_H, geometry().height () );
+		m_uprefs.set ( PREFS_WINDOW_X, geometry().x () );
+		m_uprefs.set ( PREFS_WINDOW_Y, geometry().y () );
+		m_uprefs.set ( PREFS_WINDOW_W, geometry().width () );
+		m_uprefs.set ( PREFS_WINDOW_H, geometry().height () );
 	}
 
 	QByteArray qba;
 
 	qba = m_split_main->saveState ();
-	mtQEX::qt_set_state ( &m_prefs, PREFS_CRUL_SPLIT_MAIN, &qba );
+	mtQEX::qt_set_state ( m_uprefs, PREFS_CRUL_SPLIT_MAIN, qba );
 
 	qba = m_split_view->saveState ();
-	mtQEX::qt_set_state ( &m_prefs, PREFS_VIEW_SPLIT_POS, &qba );
+	mtQEX::qt_set_state ( m_uprefs, PREFS_VIEW_SPLIT_POS, qba );
 
-	m_prefs.set ( PREFS_VIEW_SPLIT_ON, act_view_split->isChecked () ? 1:0 );
-	m_prefs.set ( PREFS_VIEW_SPLIT_VERT,
-		m_split_view->orientation () == Qt::Vertical ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SPLIT_ON, act_view_split->isChecked () ? 1:0);
+	m_uprefs.set ( PREFS_VIEW_SPLIT_VERT, m_split_view->orientation () ==
+		Qt::Vertical ? 1 : 0 );
 
 	m_fe.save_db_state ();
 }
@@ -194,7 +193,7 @@ Mainwindow::~Mainwindow ()
 static QVBoxLayout * tight_vbox ( QWidget * parent )
 {
 	QVBoxLayout * vlay = new QVBoxLayout ( parent );
-	vlay->setMargin ( 0 );
+	vlay->setContentsMargins ( 0, 0, 0, 0 );
 	vlay->setSpacing ( 0 );
 
 	return vlay;
@@ -224,7 +223,7 @@ void Mainwindow::create_main_ui ()
 	m_split_view = new QSplitter ( Qt::Vertical );
 	vlay->addWidget ( m_split_view );
 
-	m_cloud_view_a = new CloudView ( m_prefs, PREFS_VIEW_A, m_fe.cloud_gl,
+	m_cloud_view_a = new CloudView ( m_uprefs, PREFS_VIEW_A, m_fe.cloud_gl,
 		m_fe.ruler_gl, m_fe.model_gl, NULL );
 	m_split_view->addWidget ( m_cloud_view_a );
 	connect ( m_cloud_view_a, SIGNAL(ruler_changed ()),
@@ -238,7 +237,7 @@ void Mainwindow::create_main_ui ()
 		SLOT(mouse_ruler	(CloudView *, QMouseEvent *, int, int))
 		);
 
-	m_cloud_view_b = new CloudView ( m_prefs, PREFS_VIEW_B, m_fe.cloud_gl,
+	m_cloud_view_b = new CloudView ( m_uprefs, PREFS_VIEW_B, m_fe.cloud_gl,
 		m_fe.ruler_gl, m_fe.model_gl, NULL );
 	m_split_view->addWidget ( m_cloud_view_b );
 	connect ( m_cloud_view_b, SIGNAL(ruler_changed ()),
@@ -276,12 +275,12 @@ void Mainwindow::create_main_ui ()
 	vl->addWidget ( w );
 
 	grid = new QGridLayout;
-	grid->setSizeConstraint ( QLayout::SetFixedSize );
+//	grid->setSizeConstraint ( QLayout::SetFixedSize );
 	w->setLayout ( grid );
 
 	int row = 0, col = 0;
 
-	grid->addWidget ( new QLabel ( "File" ),	row++, col );
+	grid->addWidget ( new QLabel ( "Database" ),	row++, col );
 	grid->addWidget ( new QLabel ( "Points" ),	row++, col );
 	grid->addWidget ( new QLabel ( "Resolution  " ), row++, col );
 	grid->addWidget ( new QLabel ( "X" ),		row++, col );
@@ -294,7 +293,7 @@ void Mainwindow::create_main_ui ()
 	row = 0;
 	col = 1;
 
-	grid->addWidget ( m_info_file = new QLabel,	row++, col );
+	grid->addWidget ( m_info_db = new QLineEdit,	row++, col );
 	grid->addWidget ( m_info_points = new QLabel,	row++, col );
 	grid->addWidget ( m_info_resolution = new QLabel ("Low"), row++, col );
 	grid->addWidget ( m_info_x = new QLabel,	row++, col );
@@ -303,6 +302,8 @@ void Mainwindow::create_main_ui ()
 	grid->addWidget ( m_info_r = new QLabel,	row++, col );
 	grid->addWidget ( m_info_g = new QLabel,	row++, col );
 	grid->addWidget ( m_info_b = new QLabel,	row++, col );
+
+	m_info_db->setReadOnly ( true );
 
 	w = new QWidget;
 	w->setSizePolicy ( QSizePolicy ( QSizePolicy::Expanding,
@@ -402,7 +403,7 @@ void Mainwindow::create_main_ui ()
 	col = 1;
 	grid->addWidget ( m_label_nudge = new QLabel,	row++, col );
 
-	int const nudge = m_prefs.getInt ( PREFS_VIEW_NUDGE_SIZE );
+	int const nudge = m_mprefs.view_nudge_size;
 	m_slider_nudge = new QSlider ( Qt::Horizontal );
 	m_slider_nudge->setRange ( Crul::VIEW_NUDGE_MIN,
 		Crul::VIEW_NUDGE_MAX );
@@ -429,7 +430,7 @@ void Mainwindow::create_main_ui ()
 	m_slider_pt_size = new QSlider ( Qt::Horizontal );
 	m_slider_pt_size->setRange ( Crul::VIEW_POINT_SIZE_MIN,
 		Crul::VIEW_POINT_SIZE_MAX );
-	set_point_size ( (int)m_prefs.getDouble ( PREFS_GL_POINT_SIZE ) );
+	set_point_size ( (int)m_mprefs.gl_point_size );
 	vl->addWidget ( m_slider_pt_size );
 	connect ( m_slider_pt_size, SIGNAL(valueChanged (int)),
 		this, SLOT(set_point_size (int)) );
@@ -450,7 +451,7 @@ void Mainwindow::create_main_ui ()
 	m_slider_line_butt_size = new QSlider ( Qt::Horizontal );
 	m_slider_line_butt_size->setRange ( Crul::VIEW_LINE_BUTT_SIZE_MIN,
 		Crul::VIEW_LINE_BUTT_SIZE_MAX );
-	set_line_butt_size ( (int)m_prefs.getDouble ( PREFS_GL_LINE_BUTT_SIZE));
+	set_line_butt_size ( (int)m_mprefs.gl_line_butt_size );
 	vl->addWidget ( m_slider_line_butt_size );
 	connect ( m_slider_line_butt_size, SIGNAL(valueChanged (int)),
 		this, SLOT(set_line_butt_size (int)) );
@@ -471,21 +472,17 @@ void Mainwindow::create_main_ui ()
 	m_slider_line_thickness = new QSlider ( Qt::Horizontal );
 	m_slider_line_thickness->setRange ( Crul::VIEW_LINE_THICKNESS_MIN,
 		Crul::VIEW_LINE_THICKNESS_MAX );
-	set_line_thickness ( (int)m_prefs.getDouble ( PREFS_GL_LINE_THICKNESS));
+	set_line_thickness ( (int)m_mprefs.gl_line_thickness );
 	vl->addWidget ( m_slider_line_thickness );
 	connect ( m_slider_line_thickness, SIGNAL(valueChanged (int)),
 		this, SLOT(set_line_thickness (int)) );
 
 
-	set_slider_angle ( m_slider_ax, m_prefs.getDouble (
-		PREFS_VIEW_A PREFS_CAM_XROT ) );
-	set_slider_angle ( m_slider_az, m_prefs.getDouble (
-		PREFS_VIEW_A PREFS_CAM_ZROT ) );
+	set_slider_angle ( m_slider_ax, m_mprefs.view_a_cam_xrot );
+	set_slider_angle ( m_slider_az, m_mprefs.view_a_cam_zrot );
 
-	set_slider_angle ( m_slider_bx, m_prefs.getDouble (
-		PREFS_VIEW_B PREFS_CAM_XROT ) );
-	set_slider_angle ( m_slider_bz, m_prefs.getDouble (
-		PREFS_VIEW_B PREFS_CAM_ZROT ) );
+	set_slider_angle ( m_slider_bx, m_mprefs.view_b_cam_xrot );
+	set_slider_angle ( m_slider_bz, m_mprefs.view_b_cam_zrot );
 
 	m_camera_table = new QTableWidget;
 	vl->addWidget ( m_camera_table );
@@ -497,7 +494,8 @@ void Mainwindow::create_main_ui ()
 	m_camera_table->setEditTriggers ( QAbstractItemView::NoEditTriggers );
 	m_camera_table->setColumnCount ( 3 );
 	m_camera_table->setShowGrid ( false );
-	m_camera_table->verticalHeader ()->QEX_RESIZEMODE( QHeaderView::Fixed );
+	m_camera_table->verticalHeader ()->setSectionResizeMode (
+		QHeaderView::Fixed );
 	m_camera_table->horizontalHeader ()->resizeSections (
 		QHeaderView::ResizeToContents );
 	m_camera_table->horizontalHeader ()->setStretchLastSection ( true );
@@ -615,7 +613,8 @@ void Mainwindow::create_main_ui ()
 	m_ruler_table->setEditTriggers ( QAbstractItemView::NoEditTriggers );
 	m_ruler_table->setColumnCount ( 4 );
 	m_ruler_table->setShowGrid ( false );
-	m_ruler_table->verticalHeader ()->QEX_RESIZEMODE( QHeaderView::Fixed );
+	m_ruler_table->verticalHeader ()->setSectionResizeMode (
+		QHeaderView::Fixed );
 	m_ruler_table->horizontalHeader ()->resizeSections (
 		QHeaderView::ResizeToContents );
 	m_ruler_table->horizontalHeader ()->setStretchLastSection ( true );

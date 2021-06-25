@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,24 +19,8 @@
 
 
 
-mtPixyUI::UndoStack::UndoStack ()
-	:
-	m_step_first	(),
-	m_step_current	(),
-	m_max_bytes	( 1000000000 ),
-	m_max_steps	( 100 ),
-	m_total_undo_steps ( 0 ),
-	m_total_redo_steps ( 0 )
-{
-}
-
-mtPixyUI::UndoStack::~UndoStack ()
-{
-	clear ();
-}
-
 int mtPixyUI::UndoStack::undo (
-	mtPixy::Image ** const	ppim
+	mtPixy::Pixmap	& ppim
 	)
 {
 	if ( ! m_step_current )
@@ -44,9 +28,7 @@ int mtPixyUI::UndoStack::undo (
 		return 1;
 	}
 
-
-	UndoStep	* const ps = m_step_current->get_step_previous ();
-
+	UndoStep * const ps = m_step_current->get_step_previous ();
 
 	if ( ! ps )
 	{
@@ -67,7 +49,7 @@ int mtPixyUI::UndoStack::undo (
 }
 
 int mtPixyUI::UndoStack::redo (
-	mtPixy::Image ** const	ppim
+	mtPixy::Pixmap	& ppim
 	)
 {
 	if ( ! m_step_current )
@@ -75,9 +57,7 @@ int mtPixyUI::UndoStack::redo (
 		return 1;
 	}
 
-
-	UndoStep	* const ns = m_step_current->get_step_next ();
-
+	UndoStep * const ns = m_step_current->get_step_next ();
 
 	if ( ! ns )
 	{
@@ -98,32 +78,16 @@ int mtPixyUI::UndoStack::redo (
 }
 
 int mtPixyUI::UndoStack::add_next_step (
-	mtPixy::Image * const	pim
+	mtPixmap const * const	pim
 	)
 {
-	if ( ! pim )
-	{
-		return 1;
-	}
-
-
-	mtPixy::Image * i = pim->duplicate ();
-
-
+	mtPixmap * i = pixy_pixmap_duplicate ( pim );
 	if ( ! i )
 	{
 		return 1;
 	}
 
-	add_step ( new UndoStep ( i ) );
-
-	return 0;
-}
-
-void mtPixyUI::UndoStack::add_step (
-	UndoStep	* const	step
-	)
-{
+	UndoStep * const step = new UndoStep (i);
 	if ( ! m_step_first )
 	{
 		m_step_first = step;
@@ -156,6 +120,8 @@ void mtPixyUI::UndoStack::add_step (
 
 		m_total_undo_steps--;
 	}
+
+	return 0;
 }
 
 int64_t mtPixyUI::UndoStack::get_undo_bytes () const
@@ -222,7 +188,7 @@ int mtPixyUI::UndoStack::get_redo_steps () const
 	return m_total_redo_steps;
 }
 
-mtPixyUI::UndoStep * mtPixyUI::UndoStack::get_step_current ()
+mtPixyUI::UndoStep * mtPixyUI::UndoStack::get_step_current () const
 {
 	return m_step_current;
 }
@@ -260,24 +226,27 @@ void mtPixyUI::UndoStack::clear ()
 	m_total_redo_steps = 0;
 }
 
-mtPixy::Image * mtPixyUI::UndoStack::get_current_image ()
+mtPixmap * mtPixyUI::UndoStack::get_pixmap ()
 {
 	if ( ! m_step_current )
 	{
 		return NULL;
 	}
 
-	return m_step_current->get_image ();
+	return m_step_current->get_pixmap ();
 }
 
+
+
+/// ----------------------------------------------------------------------------
+
+
+
 mtPixyUI::UndoStep::UndoStep (
-	mtPixy::Image	* const	pim
+	mtPixmap	* const	pim
 	)
 	:
-	m_step_previous	(),
-	m_step_next	(),
-	m_image		( pim ),
-	m_canvas_bytes	( 0 )
+	m_pixmap	( pim )
 {
 	set_canvas_bytes ();
 }
@@ -296,9 +265,6 @@ mtPixyUI::UndoStep::~UndoStep ()
 
 	m_step_previous = NULL;
 	m_step_next = NULL;
-
-	delete m_image;
-	m_image = NULL;
 }
 
 void mtPixyUI::UndoStep::insert_after (
@@ -317,32 +283,27 @@ void mtPixyUI::UndoStep::insert_after (
 }
 
 int mtPixyUI::UndoStep::step_restore (
-	mtPixy::Image ** const	ppim
-	)
+	mtPixy::Pixmap	& ppim
+	) const
 {
-	if ( ! ppim || ! ppim[0] || ! m_image )
-	{
-		return 1;
-	}
-
-	mtPixy::Image * i = m_image->duplicate ();
+	mtPixmap const * const pixmap = get_pixmap ();
+	mtPixmap * i = pixy_pixmap_duplicate ( pixmap );
 	if ( ! i )
 	{
 		return 1;
 	}
 
-	delete ppim[0];
-	ppim[0] = i;
+	ppim.reset ( i );
 
 	return 0;
 }
 
-mtPixyUI::UndoStep * mtPixyUI::UndoStep::get_step_previous ()
+mtPixyUI::UndoStep * mtPixyUI::UndoStep::get_step_previous () const
 {
 	return m_step_previous;
 }
 
-mtPixyUI::UndoStep * mtPixyUI::UndoStep::get_step_next ()
+mtPixyUI::UndoStep * mtPixyUI::UndoStep::get_step_next () const
 {
 	return m_step_next;
 }
@@ -356,33 +317,22 @@ void mtPixyUI::UndoStep::set_canvas_bytes ()
 {
 	m_canvas_bytes = 1024;	// Default size for an 'empty' step
 
-
-	if ( m_image )
+	mtPixmap const * const pixmap = get_pixmap();
+	if ( ! pixmap )
 	{
-		int const can = m_image->get_width () * m_image->get_height ();
+		return;
+	}
 
+	int const can = pixmap->width * pixmap->height;
 
-		if ( m_image->get_alpha () )
-		{
-			m_canvas_bytes += can;
-		}
+	if ( pixmap->alpha )
+	{
+		m_canvas_bytes += can;
+	}
 
-		if ( m_image->get_canvas () )
-		{
-			switch ( m_image->get_type () )
-			{
-			case mtPixy::Image::TYPE_INDEXED:
-				m_canvas_bytes += can;
-				break;
-
-			case mtPixy::Image::TYPE_RGB:
-				m_canvas_bytes += can * 3;
-				break;
-
-			default:
-				break;
-			}
-		}
+	if ( pixmap->canvas )
+	{
+		m_canvas_bytes += can * pixmap->bpp;
 	}
 }
 
@@ -394,15 +344,10 @@ void mtPixyUI::UndoStep::delete_steps_next ()
 	}
 }
 
-mtPixy::Image * mtPixyUI::UndoStep::get_image ()
-{
-	return m_image;
-}
-
 int mtPixyUI::File::commit_undo_step ()
 {
 	m_modified = 1;
 
-	return m_undo_stack.add_next_step ( m_image );
+	return m_undo_stack.add_next_step ( get_pixmap() );
 }
 

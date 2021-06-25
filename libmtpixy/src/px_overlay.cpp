@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -173,13 +173,8 @@ void mtPixy::LineOverlay::render (
 		return;
 	}
 
-	mtPixy::Image * const	ipat = bru.get_pattern_rgb ();
-	if ( ! ipat )
-	{
-		return;
-	}
-
-	unsigned char	const * const	pat = ipat->get_canvas ();
+	mtPixmap * const ipat = bru.get_pattern_rgb ();
+	unsigned char	const * const	pat = pixy_pixmap_get_canvas ( ipat );
 	if ( ! pat )
 	{
 		return;
@@ -270,11 +265,11 @@ void mtPixy::LineOverlay::render (
 }
 
 int mtPixy::RecSelOverlay::set (
-	int			const	x,
-	int			const	y,
-	int			const	w,
-	int			const	h,
-	mtPixy::Image	const * const	im
+	int		const	x,
+	int		const	y,
+	int		const	w,
+	int		const	h,
+	mtPixmap const * const	im
 	)
 {
 	if ( ! im )
@@ -282,8 +277,8 @@ int mtPixy::RecSelOverlay::set (
 		return 1;
 	}
 
-	int	const	xmax = im->get_width () - 1;
-	int	const	ymax = im->get_height () - 1;
+	int	const	xmax = pixy_pixmap_get_width (im) - 1;
+	int	const	ymax = pixy_pixmap_get_height (im) - 1;
 
 	m_x1 = MAX ( 0, MIN ( x, xmax ) );
 	m_y1 = MAX ( 0, MIN ( y, ymax ) );
@@ -344,13 +339,13 @@ void mtPixy::RecSelOverlay::move_selection_end (
 }
 
 int mtPixy::RecSelOverlay::set_paste (
-	Image	* const	im,
-	Image	* const	pa,
-	int	const	px,
-	int	const	py
+	mtPixmap const * const	image,
+	mtPixmap const * const	paste,
+	int		const	px,
+	int		const	py
 	)
 {
-	if ( ! im || ! pa )
+	if ( ! image || ! paste )
 	{
 		return 1;
 	}
@@ -358,10 +353,10 @@ int mtPixy::RecSelOverlay::set_paste (
 	m_x1 = px;
 	m_y1 = py;
 
-	int	const	iw = im->get_width ();
-	int	const	ih = im->get_height ();
-	int	const	pw = pa->get_width ();
-	int	const	ph = pa->get_height ();
+	int	const	iw = pixy_pixmap_get_width (image);
+	int	const	ih = pixy_pixmap_get_height (image);
+	int	const	pw = pixy_pixmap_get_width (paste);
+	int	const	ph = pixy_pixmap_get_height (paste);
 
 	m_x1 = MAX ( m_x1, 1 - pw );
 	m_y1 = MAX ( m_y1, 1 - ph );
@@ -375,34 +370,34 @@ int mtPixy::RecSelOverlay::set_paste (
 }
 
 int mtPixy::RecSelOverlay::set_paste (
-	Image	* const	im,
-	Image	* const	pa
+	mtPixmap const * const	image,
+	mtPixmap const * const	paste
 	)
 {
-	return set_paste ( im, pa, m_x1, m_y1 );
+	return set_paste ( image, paste, m_x1, m_y1 );
 }
 
 int mtPixy::RecSelOverlay::move_paste (
 	int		const	x,
 	int		const	y,
-	Image	const * const	im,
-	Image	const * const	pa,
+	mtPixmap const * const	image,
+	mtPixmap const * const	paste,
 	int			&dx,
 	int			&dy,
 	int			&dw,
 	int			&dh
 	)
 {
-	if ( ! im || ! pa )
+	if ( ! image || ! paste )
 	{
 		return 0;
 	}
 
 	int		x1 = x, y1 = y, x2, y2;
-	int	const	iw = im->get_width ();
-	int	const	ih = im->get_height ();
-	int	const	pw = pa->get_width ();
-	int	const	ph = pa->get_height ();
+	int	const	iw = pixy_pixmap_get_width (image);
+	int	const	ih = pixy_pixmap_get_height (image);
+	int	const	pw = pixy_pixmap_get_width (paste);
+	int	const	ph = pixy_pixmap_get_height (paste);
 
 	x1 = MAX ( x1, 1 - pw );
 	y1 = MAX ( y1, 1 - ph );

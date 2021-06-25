@@ -32,46 +32,50 @@
 
 
 class Backend;
+class CuiCellPrefChange;
 
 
 
-#define GUI_INIFILE_FONT_PANGO_NAME	"main_font_pango_name"
-#define GUI_INIFILE_FONT_SIZE		"main_font_size"
-#define GUI_INIFILE_ROW_PAD		"main_row_pad"
-#define GUI_INIFILE_LAST_DIR		"main_last_dir"
-#define GUI_INIFILE_MAIN_WINDOW		"main_window"
-#define GUI_INIFILE_PREFS_WINDOW	"prefs.window"
-#define GUI_INIFILE_SHARED_WINDOW	"~/shared/window"
+#define PREFS_LAST_DIR			"main_last_dir"
 
-#define GUI_INIFILE_HELP_FILE		"help_file"
-#define GUI_INIFILE_HELP_BROWSER	"help_browser"
+#define PREFS_WINDOW_X			"main_window_x"
+#define PREFS_WINDOW_Y			"main_window_y"
+#define PREFS_WINDOW_W			"main_window_w"
+#define PREFS_WINDOW_H			"main_window_h"
+#define PREFS_WINDOW_STATE		"main_window_state"
 
-#define GUI_INIFILE_RECENT_FILENAME_LEN	"main_recent_filename_len"
-#define GUI_INIFILE_MAIN_FILE		"main_file"
-#define GUI_INIFILE_MAIN_FPICK		"main_fpick"
-#define GUI_INIFILE_MAIN_FPICK_PRE	"main_"
+#define PREFS_SHARED_WINDOW_X		"~/shared/window_x"
+#define PREFS_SHARED_WINDOW_Y		"~/shared/window_y"
+#define PREFS_SHARED_WINDOW_W		"~/shared/window_w"
+#define PREFS_SHARED_WINDOW_H		"~/shared/window_h"
 
-#define GUI_INIFILE_FILE_LOCK_LOAD	"file_lock_load"
-#define GUI_INIFILE_FILE_LOCK_SAVE	"file_lock_save"
+#define PREFS_HELP_FILE			"help_file"
+#define PREFS_HELP_BROWSER		"help_browser"
 
-#define GUI_INIFILE_GRAPH_PANE_POS	"graph_pane_pos"
-#define GUI_INIFILE_FIND_PANE_POS	"find_pane_pos"
-#define GUI_INIFILE_FIND_ALL_SHEETS	"find_all_sheets"
-#define GUI_INIFILE_FIND_WILDCARDS	"find_wildcards"
-#define GUI_INIFILE_FIND_CASE_SENSITIVE "find_case_sensitive"
-#define GUI_INIFILE_FIND_VALUE		"find_value"
-#define GUI_INIFILE_FIND_TEXT		"find_text"
+#define PREFS_FILE_LOCK_LOAD		"file_lock_load"
+#define PREFS_FILE_LOCK_SAVE		"file_lock_save"
 
-#define GUI_INIFILE_SHEET_PREFS_PERSIST	"sheet_prefs_persist"
-#define GUI_INIFILE_GRAPH_SCALE		"graph_scale"
-#define GUI_INIFILE_2DYEAR_START	"date.2digit_year_start"
-#define GUI_INIFILE_CLIPBOARD_USE_SYSTEM "clipboard.use_system"
+#define PREFS_FONT_PANGO_NAME		"main_font_pango_name"
+#define PREFS_FONT_SIZE			"main_font_size"
+#define PREFS_ROW_PAD			"main_row_pad"
+
+#define PREFS_RECENT_FILENAME_LEN	"main_recent_filename_len"
+#define PREFS_YEAR_START_2D		"date.2digit_year_start"
+
+#define PREFS_FIND_ALL_SHEETS		"find_all_sheets"
+#define PREFS_FIND_WILDCARDS		"find_wildcards"
+#define PREFS_FIND_CASE_SENSITIVE	"find_case_sensitive"
+#define PREFS_FIND_VALUE		"find_value"
+#define PREFS_FIND_TEXT			"find_text"
+
+#define PREFS_CLIPBOARD_USE_SYSTEM	"clipboard.use_system"
+#define PREFS_GRAPH_SCALE		"graph_scale"
+#define PREFS_SHEET_PREFS_PERSIST	"sheet_prefs_persist"
+
+#define PREFS_RECENT_FILE		"recent.file"
 
 
-#define PREFS_WINDOW_X		GUI_INIFILE_MAIN_WINDOW"_x"
-#define PREFS_WINDOW_Y		GUI_INIFILE_MAIN_WINDOW"_y"
-#define PREFS_WINDOW_W		GUI_INIFILE_MAIN_WINDOW"_w"
-#define PREFS_WINDOW_H		GUI_INIFILE_MAIN_WINDOW"_h"
+
 #define RECENT_MENU_TOTAL	20
 #define MAX_SORT		10
 #define COLOR_SWATCH_ROWS	5
@@ -106,36 +110,6 @@ int be_titlebar_text (
 	);
 	// 0 = file isn't a book
 	// 1 = file is a book
-
-
-
-// NOTE: The functions below are implemented by the toolkit code
-
-void pref_change_font (
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-void pref_change_row_pad (
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-void pref_change_recent_filename_len (
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-void pref_change_graph_scale (
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-// NOTE: end
 
 
 
@@ -220,75 +194,21 @@ int be_export_sheet (
 	int		filetype
 	);
 
-
-
-// NOTE: The functions below are implemented by the toolkit code
-
-void fe_commit_prefs_set (
-	int		pref_id,
-	int		pref_num,
-	char	const	* pref_charp,
-	int		change_cursor,
-	void		* callback_ptr
-	);
-
-void fe_book_prefs_changed (
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-// NOTE: end
-
-int be_commit_prefs_set (
-	CedSheet	* sheet,
-	CuiBook		* cubook,
-	int		pref_id,
-	int		pref_num,
-	char	const	* pref_charp
-	);
-
-int be_commit_prefs_set_check (
-	int		res,
-	CedSheet	* sheet,
-	int		change_cursor,
-	int		pref_id
-	);
-
-void be_cellpref_changed (
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-int be_prepare_prefs_set (
-	CedSheet	* sheet
-	);
-
-void be_cellpref_cleanup (
-	CedSheet	* sheet
-	);
-
-void be_book_prefs_finish (
-	mtPrefs		* mtpr,
-	CedBook		* book
-	);
-
 int be_color_swatch_get (
-	int		i
+	int i
 	);
 
 char const * be_graph_new (
-	CedBook		* book
+	CedBook * book
 	);
 
 char * be_graph_duplicate (
-	CuiBook		* cubook
+	CuiBook * cubook
 	);
 	// Caller must free result after use
 
 char * be_graph_selection_clip (
-	CedSheet	* sheet
+	CedSheet * sheet
 	);
 
 void be_find (
@@ -304,13 +224,70 @@ void be_find (
 	);
 
 
+class MemPrefs
+{
+public:
+	std::string		last_dir;
+
+	int			window_x		= 0;
+	int			window_y		= 0;
+	int			window_w		= 0;
+	int			window_h		= 0;
+	int			window_state		= 0;
+
+	int			shared_window_x		= 0;
+	int			shared_window_y		= 0;
+	int			shared_window_w		= 0;
+	int			shared_window_h		= 0;
+
+	std::string		help_file;
+	std::string		help_browser;
+
+	int			file_lock_load		= 0;
+	int			file_lock_save		= 0;
+
+	std::string		font_pango_name;
+	int			font_size		= 0;
+
+	int			row_pad			= 0;
+	int			recent_filename_len	= 0;
+	int			year_start_2d		= 0;
+
+	int			find_wildcards		= 0;
+	int			find_case_sensitive	= 0;
+	int			find_value		= 0;
+	int			find_all_sheets		= 0;
+
+	std::string		find_text;
+
+	int			clipboard_use_system	= 0;
+
+	int			page_width		= 0;
+	int			page_height		= 0;
+	int			page_margin_x		= 0;
+	int			page_margin_y		= 0;
+
+	int			page_header_left	= 0;
+	int			page_header_centre	= 0;
+	int			page_header_right	= 0;
+	int			page_footer_left	= 0;
+	int			page_footer_centre	= 0;
+	int			page_footer_right	= 0;
+
+	double			graph_scale		= 0.0;
+
+	int			sheet_prefs_persist	= 0;
+
+	mtKit::UPrefUIEdit	ui_editor;
+
+	mtKit::RecentFile	recent_file;
+};
+
+
 
 class Backend
 {
 public:
-	Backend ();
-	~Backend ();
-
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running
 		// 1 = Terminate program with 0
@@ -319,32 +296,24 @@ public:
 	int get_force_tsvcsv () const;
 
 	void remember_last_dir ( char const * filename );
-	int register_project ( CuiFile * file );
-	mtPrefs * book_prefs_init ( CedBook * book );
+	int register_project ( CuiFile const * file );
 
-	mtPrefs * cellpref_init (
-		CedSheet * sheet,
-		mtPrefCB callback,
-		void * ptr
-		);
-
-	mtPrefs * load_pref_window_prefs ( mtPrefTable const * table );
-
-	void save_pref_window_prefs ( mtPrefs * mtpr );
-	void load_pref_window_prefs ( mtPrefs * mtpr );
+	void ui_shared_prefs_init ( mtKit::UserPrefs & prefs );
+	void ui_shared_prefs_finish ( mtKit::UserPrefs & prefs );
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::Prefs		preferences;
-	mtKit::RecentFile	recent_file;
+	// uprefs must be destroyed before mprefs, so it appears below it:
+	MemPrefs		mprefs;
+	mtKit::UserPrefs	uprefs;
 
 private:
 	void prefs_init ();
 
 /// ----------------------------------------------------------------------------
 
-	int		force_tsvcsv;
-	char	const *	cline_filename;
-	char	const *	prefs_filename;
+	int		force_tsvcsv		= 0;
+	char	const *	cline_filename		= nullptr;
+	char	const *	prefs_filename		= nullptr;
 };
 

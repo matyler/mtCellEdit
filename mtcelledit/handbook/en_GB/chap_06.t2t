@@ -12,7 +12,7 @@ mtCedCLI is a program that provides spreadsheet functionality via a Command Line
 Both GUI's and CLI's have value, and allow particular jobs to be done more efficiently.  For example I use mtCedCLI as part of the testing phase before I release the whole mtCellEdit suite.  I have created a number of tests in the form of scripts which test each part of the core libraries.  This exposes any problems that may have crept into the code, and is a good form of regression testing.
 
 
-===6.1 Commands===[SEC1]
+==6.1 Commands==[SEC1]
 
 mtCedCLI reads instructions from the user via GNU Readline.  This offers useful interactive facilities like using the up and down arrows to access previous commands.
 
@@ -104,7 +104,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 
 
 
-===6.2 Book File Types===[SEC2]
+==6.2 Book File Types==[SEC2]
 
 | tsv_book |
 | tsv_value_book
@@ -112,7 +112,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 | ledger_value_book
 
 
-===6.3 Graph Output Types===[SEC3]
+==6.3 Graph Output Types==[SEC3]
 
 | eps |
 | pdf
@@ -121,7 +121,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 | svg
 
 
-===6.4 Sheet Output Types===[SEC4]
+==6.4 Sheet Output Types==[SEC4]
 
 | eps |
 | html
@@ -134,7 +134,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 | tsv_q
 
 
-===6.5 Sheet Types===[SEC5]
+==6.5 Sheet Types==[SEC5]
 
 | tsv |
 | tsv_gz
@@ -152,7 +152,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 | ledger_val_gz
 
 
-===6.6 Cell Border Codes===[SEC6]
+==6.6 Cell Border Codes==[SEC6]
 
 | -1 | Remove all borders |
 | -2 | Thin Outside
@@ -197,7 +197,7 @@ Here is the complete list of commands that mtCedCLI accepts:
 | 23 | Double Right
 
 
-===6.7 Sorting Expressions===[SEC7]
+==6.7 Sorting Expressions==[SEC7]
 
 <INTEGER> , < a | d > [c] [ , ... ]
 
@@ -205,11 +205,11 @@ For example, expression **1,ac,2,d** sorts by row/column 1 (ascending, case sens
 
 
 
-===6.8 Shell Scripts===[SEC8]
+==6.8 Shell Scripts==[SEC8]
 
 Because the interface to mtCedCLI is just text, this means that shell scripts can control the program.
 
-====6.8.1 Putting Several Sheets into a Book====[SEC81]
+===6.8.1 Putting Several Sheets into a Book===[SEC81]
 
 [DOWNLOAD FILE ../shawk/cedsheetbook.sh]
 
@@ -248,7 +248,7 @@ If you are happy with the text output then you can commit the actions with:
 ./cedsheetbook.sh ~/output.zip *.tsv *.csv | mtcedcli
 ```
 
-====6.8.2 Extracting Sheets From a Book====[SEC82]
+===6.8.2 Extracting Sheets From a Book===[SEC82]
 
 The following script does the reverse of the first script.
 It reads a ZIP file and extracts all of the sheets to TSV files in the

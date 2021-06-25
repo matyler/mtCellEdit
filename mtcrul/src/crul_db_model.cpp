@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,12 +19,14 @@
 
 
 
+#define MODEL_CACHE_FILENAME	"cache_model.bin"
+
+
+
 void Crul::DB::clear_model ()
 {
 	try
 	{
-		m_db.empty_table ( DB_TABLE_CACHE_PTS_MOD );
-
 		clear_cache_index ( CACHE_TYPE_MODEL );
 	}
 	catch (...)
@@ -33,7 +35,7 @@ void Crul::DB::clear_model ()
 }
 
 int Crul::DB::load_model (
-	std::vector<VertexGL>	& model
+	std::vector<mtGin::GL::VertexRGBnormal>	& model
 	)
 {
 	try
@@ -65,54 +67,36 @@ int Crul::DB::load_model (
 			return 0;
 		}
 
-		sql =	"SELECT "	DB_FIELD_MEM
-			" FROM "	DB_TABLE_CACHE_PTS_MOD
-			" WHERE "	DB_FIELD_ID	" = ?1"
-			" ORDER BY "	DB_FIELD_ITEM;
+		mtKit::ByteFileRead file;
+		std::string filename ( m_dir );
 
-		mtKit::SqliteGetRecord cache ( m_db, sql );
-		cache.stmt.bind_int64 ( 1, CACHE_TYPE_MODEL );
+		filename += MODEL_CACHE_FILENAME;
 
-		int const vec_len = (int)sizeof(model[0]);
+		if ( file.open ( filename.c_str (), 0 ) )
+		{
+			std::cerr << "DB::load_model - unable to open file "
+				<< filename << "\n";
+			return 1;
+		}
+
+		size_t const len = (int)sizeof(model[0]);
 
 		model.resize ( (size_t)cache_tot );
 
-		int vec_todo = cache_tot;
 		int vec_done = 0;
-		VertexGL * vec_dest = model.data ();
+		mtGin::GL::VertexRGBnormal * dest = model.data ();
 
-		for ( int i = 0; cache.next () == 0; i++ )
+		for ( ; vec_done < cache_tot; vec_done++ )
 		{
-			void const * mem;
-			int memlen;
+			size_t const loaded = file.read ( dest, len );
 
-			if ( cache.get_blob ( &mem, memlen ) || memlen < 1 )
+			if ( loaded != len )
 			{
-				std::cerr << "Unable to get model blob:"
-					<< " item = " << i
-					<< "\n";
+				std::cerr << "Model file ended prematurely\n";
 				break;
 			}
 
-			int const vec_items = memlen / vec_len;
-
-			if ( vec_items > vec_todo )
-			{
-				std::cerr << "Too much data in DB cache\n";
-				break;
-			}
-
-			if ( vec_items < 1 )
-			{
-				std::cerr << "Too little data in DB cache\n";
-				break;
-			}
-
-			memcpy ( vec_dest, mem, (size_t)vec_items * vec_len );
-
-			vec_todo -= vec_items;
-			vec_done += vec_items;
-			vec_dest += vec_items;
+			dest++;
 		}
 
 		if ( vec_done != cache_tot )
@@ -133,7 +117,7 @@ int Crul::DB::load_model (
 }
 
 int Crul::DB::save_model (
-	std::vector<VertexGL>	const &	model
+	std::vector<mtGin::GL::VertexRGBnormal>	const &	model
 	)
 {
 	if ( model.size () < 1 )
@@ -157,29 +141,30 @@ int Crul::DB::save_model (
 		rec_idx.set_integer ( (sqlite3_int64)model.size () );
 		rec_idx.insert_record ();
 
-		mtKit::SqliteAddRecord rec_data ( m_db, DB_TABLE_CACHE_PTS_MOD);
+		mtKit::ByteFileWrite file;
+		std::string filename ( m_dir );
 
-		rec_data.add_field ( DB_FIELD_ID );
-		rec_data.add_field ( DB_FIELD_ITEM );
-		rec_data.add_field ( DB_FIELD_MEM );
-		rec_data.end_field ();
+		filename += MODEL_CACHE_FILENAME;
 
-		size_t todo = model.size ();
-		size_t offset = 0;
-		VertexGL const * const mem = model.data ();
-
-		for ( int i = 0; todo > 0; i++ )
+		if ( file.open ( filename.c_str () ) )
 		{
-			size_t const items = MIN ( todo, DB_ITEM_SIZE );
-			size_t const len = items * sizeof(mem[0]);
+			std::cerr << "DB::save_model - unable to open file "
+				<< filename << "\n";
+			return 1;
+		}
 
-			rec_data.set_integer ( CACHE_TYPE_MODEL );
-			rec_data.set_integer ( i );
-			rec_data.set_blob ( (char const *)&mem[offset], len );
-			rec_data.insert_record ();
+		size_t const todo = model.size ();
+		mtGin::GL::VertexRGBnormal const * const mem = model.data ();
+		size_t const len = sizeof( mem[0] );
 
-			todo -= items;
-			offset += items;
+		for ( size_t i = 0; i < todo; i++ )
+		{
+			if ( file.write ( &mem[i], len ) )
+			{
+				std::cerr << "DB::save_model - error writing "
+					"to file " << filename << "\n";
+				return 1;
+			}
 		}
 	}
 	catch (...)

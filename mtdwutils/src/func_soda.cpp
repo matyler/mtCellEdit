@@ -19,24 +19,22 @@
 
 
 
-int dwut_decsoda ()
+int Global::dw_decsoda ()
 {
-	mtDW::Butt * const butt = global.db.get_butt ();
-	std::string filename ( global.s_o );
+	mtDW::Butt * const butt = db.get_butt ();
+	std::string filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 
 	mtKit::string_strip_extension ( filename, "soda" );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
-	if ( global.db.get_soda ()->multi_decode ( butt, global.s_arg,
-		filename.c_str () )
-		)
+	if ( db.get_soda ()->multi_decode ( butt, s_arg, filename.c_str () ) )
 	{
 		return ERROR_SODA_DECODE;
 	}
@@ -44,21 +42,21 @@ int dwut_decsoda ()
 	return 0;
 }
 
-int dwut_encsoda ()
+int Global::dw_encsoda ()
 {
-	mtDW::Butt * const butt = global.db.get_butt ();
-	std::string filename ( global.s_o );
+	mtDW::Butt * const butt = db.get_butt ();
+	std::string filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 	filename += ".soda";
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
-	if ( global.db.get_soda()->encode(butt, global.s_arg, filename.c_str()))
+	if ( db.get_soda()->encode ( butt, s_arg, filename.c_str() ) )
 	{
 		return ERROR_SODA_ENCODE;
 	}

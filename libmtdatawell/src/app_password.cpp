@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -71,9 +71,7 @@ mtDW::AppPassword::AppPassword (
 		int const ch_len = mtkit_utf8_offset (
 			(unsigned char const *)head, 1 );
 
-		std::string ch;
-
-		mtKit::string_from_data ( ch, head, (size_t)ch_len );
+		std::string ch ( head, (size_t)ch_len );
 		m_chr_list.push_back ( ch );
 
 		head += ch_len;

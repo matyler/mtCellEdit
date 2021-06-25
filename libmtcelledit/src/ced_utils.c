@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2017 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ int ced_sheet_insert_row (
 		return 1;
 	}
 
-	if ( (row + rowtot - 1) > CED_MAX_ROW )
+	if ( (row + rowtot) > (CED_MAX_ROW + 1) )
 	{
 		rowtot = CED_MAX_ROW + 1 - row;
 	}
@@ -129,7 +129,7 @@ int ced_sheet_delete_row (
 		return 1;
 	}
 
-	if ( (row + rowtot - 1) > CED_MAX_ROW )
+	if ( (row + rowtot) > (CED_MAX_ROW + 1) )
 	{
 		rowtot = CED_MAX_ROW + 1 - row;
 	}
@@ -189,7 +189,7 @@ int ced_sheet_insert_column (
 		return 1;
 	}
 
-	if ( (col + coltot - 1) > CED_MAX_COLUMN )
+	if ( (col + coltot) > (CED_MAX_COLUMN + 1) )
 	{
 		coltot = CED_MAX_COLUMN + 1 - col;
 	}
@@ -233,7 +233,7 @@ int ced_sheet_delete_column (
 		return 1;
 	}
 
-	if ( (col + coltot - 1) > CED_MAX_COLUMN )
+	if ( (col + coltot) > (CED_MAX_COLUMN + 1) )
 	{
 		coltot = CED_MAX_COLUMN + 1 - col;
 	}

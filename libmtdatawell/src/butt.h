@@ -66,6 +66,21 @@ protected:
 
 
 
+struct OTPprefs
+{
+	std::string		comment;
+	int			write_next	= 0;
+	int			bucket		= 0;
+	int			position	= 0;
+	int			status		= 0;
+
+
+	// Below must be destroyed first before the above items
+	mtKit::UserPrefs	uprefs;
+};
+
+
+
 class OTPactive : public OTP
 {
 public:
@@ -117,7 +132,7 @@ public:
 		// Returns error code.  Interpret via get_error_text()
 
 private:
-	static mtKit::Prefs * create_otp_prefs ();
+	static OTPprefs * create_otp_prefs ();
 	void new_otp_prefs ();
 	void store_otp_state ();
 	void restore_otp_state ();
@@ -131,9 +146,19 @@ private:
 /// ----------------------------------------------------------------------------
 
 	// Butt prefs
-	std::unique_ptr<mtKit::Prefs> m_prefs_butt;
+	std::unique_ptr<OTPprefs> m_prefs_butt;
 	int			m_write_next;
 	int			m_status;
+};
+
+
+
+struct ButtPrefs
+{
+	std::string		butt_name;
+
+	// Below must be destroyed first before the above items
+	mtKit::UserPrefs	uprefs;
 };
 
 
@@ -159,7 +184,7 @@ private:
 /// ----------------------------------------------------------------------------
 
 	mtKit::FileLock		m_lock;
-	mtKit::Prefs		m_prefs;
+	ButtPrefs		m_prefs;
 };
 
 
@@ -174,8 +199,8 @@ public:
 	int analyse_bucket ( int bucket );
 	int analyse_all_buckets ();
 	int analyse_finish (
-		mtPixy::Image * image_8bit,
-		mtPixy::Image * image_16bit
+		mtPixmap const * image_8bit,
+		mtPixmap const * image_16bit
 		);
 
 /// ----------------------------------------------------------------------------

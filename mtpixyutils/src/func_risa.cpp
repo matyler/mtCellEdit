@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017-2018 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -59,28 +59,20 @@ int * create_cube_analysis (
 	return mem;
 }
 
-static int prepare_output (
-	mtPixy::Image	* const	im
-	)
+static void prepare_output ( mtPixmap * const pixmap )
 {
-	if ( ! im )
-	{
-		printf ( "Unable to create output image.\n" );
-		return 1;
-	}
+	mtPalette * const pal = pixy_pixmap_get_palette ( pixmap );
 
-	mtPixy::Palette * const pal = im->get_palette ();
+	pixy_palette_set_grey ( pal );
 
-	pal->set_grey ();
-
-	mtPixy::Color * const col = pal->get_color ();
+	mtColor * const col = &pal->color[0];
 
 	col[1].red = 32;
 	col[1].green = 32;
 	col[1].blue = 32;
 
 	// Set up blue chequers on the top line
-	unsigned char * const mem = im->get_canvas ();
+	unsigned char * const mem = pixy_pixmap_get_canvas ( pixmap );
 
 	for ( int i = 0; i < 256; i++ )
 	{
@@ -106,11 +98,9 @@ static int prepare_output (
 	{
 		memcpy ( mem + 4096*512*i, mem, 4096*512 );
 	}
-
-	return 0;
 }
 
-static void analyse_rgb_image (
+static mtPixmap * analyse_rgb_image (
 	unsigned char	const * const	rgb,
 	int			const	w,
 	int			const	h
@@ -120,21 +110,22 @@ static void analyse_rgb_image (
 
 	if ( ! mem )
 	{
-		return;
+		return nullptr;
 	}
 
-	mtPixy::Image * im = mtPixy::Image::create( mtPixy::Image::TYPE_INDEXED,
-		4096, 4096 );
-
-	if ( prepare_output ( im ) )
+	mtPixmap * const pixmap = pixy_pixmap_new_indexed ( 4096, 4096 );
+	if ( ! pixmap )
 	{
 		free ( mem );
-		return;
+		printf ( "Unable to create output image.\n" );
+		return nullptr;
 	}
+
+	prepare_output ( pixmap );
 
 	// Map RGB cube totals to the image
 	int		const	memtot = 256*256*256;
-	unsigned char * const	dest = im->get_canvas ();
+	unsigned char * const	dest = pixy_pixmap_get_canvas ( pixmap );
 
 	for ( int i = 0; i < memtot; i++ )
 	{
@@ -158,33 +149,25 @@ static void analyse_rgb_image (
 		dest[ x + y * 4096 ] = (unsigned char)pix;
 	}
 
-	global.set_image ( im );
-
 	free ( mem );
+
+	return pixmap;
 }
 
-static int prepare_output64 (
-	mtPixy::Image	* const	im
-	)
+static void prepare_output64 ( mtPixmap * const pixmap )
 {
-	if ( ! im )
-	{
-		printf ( "Unable to create output image.\n" );
-		return 1;
-	}
+	mtPalette * const pal = pixy_pixmap_get_palette ( pixmap );
 
-	mtPixy::Palette * const pal = im->get_palette ();
+	pixy_palette_set_grey ( pal );
 
-	pal->set_grey ();
-
-	mtPixy::Color * const col = pal->get_color ();
+	mtColor * const col = &pal->color[0];
 
 	col[1].red = 32;
 	col[1].green = 32;
 	col[1].blue = 32;
 
 	// Set up blue chequers on the top line
-	unsigned char * const mem = im->get_canvas ();
+	unsigned char * const mem = pixy_pixmap_get_canvas ( pixmap );
 
 	for ( int i = 0; i < 64; i++ )
 	{
@@ -210,11 +193,9 @@ static int prepare_output64 (
 	{
 		memcpy ( mem + 512*128*i, mem, 512*128 );
 	}
-
-	return 0;
 }
 
-static void analyse_rgb_image64 (
+static mtPixmap * analyse_rgb_image64 (
 	unsigned char	const * const	rgb,
 	int			const	w,
 	int			const	h
@@ -224,21 +205,22 @@ static void analyse_rgb_image64 (
 
 	if ( ! mem )
 	{
-		return;
+		return nullptr;
 	}
 
-	mtPixy::Image * im = mtPixy::Image::create( mtPixy::Image::TYPE_INDEXED,
-		512, 512 );
-
-	if ( prepare_output64 ( im ) )
+	mtPixmap * const pixmap = pixy_pixmap_new_indexed ( 512, 512 );
+	if ( ! pixmap )
 	{
+		printf ( "Unable to create output image.\n" );
 		free ( mem );
-		return;
+		return nullptr;
 	}
+
+	prepare_output64 ( pixmap );
 
 	// Map RGB cube totals to the image
 	int		const	memtot = 64*64*64;
-	unsigned char * const	dest = im->get_canvas ();
+	unsigned char * const	dest = pixy_pixmap_get_canvas ( pixmap );
 
 	for ( int i = 0; i < memtot; i++ )
 	{
@@ -262,38 +244,38 @@ static void analyse_rgb_image64 (
 		dest[ x + y * 512 ] = (unsigned char)pix;
 	}
 
-	global.set_image ( im );
-
 	free ( mem );
+
+	return pixmap;
 }
 
-int pixyut_risa ()
+int Global::pixy_risa ()
 {
 	if ( ut_load_file () )
 	{
 		// Unable to load file - non-fatal error for 'risa'
 
-		printf ( "????? %s\n", global.s_arg );
+		printf ( "????? %s\n", s_arg );
 
 		return 0;
 	}
 
-	int			const	bpp = global.image->get_canvas_bpp ();
-	int			const	w = global.image->get_width ();
-	int			const	h = global.image->get_height ();
-	unsigned char	const * const	rgb = global.image->get_canvas ();
+	mtPixmap const * const pixmap = m_pixmap.get();
+	int	const	bpp = pixy_pixmap_get_bytes_per_pixel ( pixmap );
+	int	const	w = pixy_pixmap_get_width ( pixmap );
+	int	const	h = pixy_pixmap_get_height ( pixmap );
+	unsigned char	const * const	rgb = pixy_pixmap_get_canvas ( pixmap );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
 		printf ( "w=%-5i h=%-5i cols=%-3i bpp=%i%-3s",
 			w, h,
-			global.image->get_palette ()->get_color_total (),
+			pixy_pixmap_get_palette_size ( pixmap ),
 			bpp,
-			global.image->get_alpha () ? "+A" : "" );
+			pixy_pixmap_get_alpha ( pixmap ) ? "+A" : "" );
 	}
 
-	printf ( "%-5s %s\n", mtPixy::File::type_text (
-		(mtPixy::File::Type) global.i_ftype_in ), global.s_arg );
+	printf ( "%-5s %s\n", pixy_file_type_text ( i_ftype_in ), s_arg );
 
 	if ( bpp != 3 || ! rgb )
 	{
@@ -302,13 +284,20 @@ int pixyut_risa ()
 		return 0;
 	}
 
-	if ( global.i_verbose )
+	mtPixmap * im;
+
+	if ( i_verbose )
 	{
-		analyse_rgb_image ( rgb, w, h );
+		im = analyse_rgb_image ( rgb, w, h );
 	}
 	else
 	{
-		analyse_rgb_image64 ( rgb, w, h );
+		im = analyse_rgb_image64 ( rgb, w, h );
+	}
+
+	if ( im )
+	{
+		set_pixmap ( im );
 	}
 
 	return 0;

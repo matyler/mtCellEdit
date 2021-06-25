@@ -1,26 +1,9 @@
 #!/bin/bash
-# Build the header file for Qt4 or Qt5
-# M.Tyler 2018-12-16
+# Build the header file for Qt5 or Qt6
+# M.Tyler 2018-12-16 & 2020-12-16
 
 
 case "$1" in
-	"mtqex4.h" )
-		HEADER_GUARD=$(cat << EOF
-#ifndef MTQEX4_H_
-#define MTQEX4_H_
-EOF
-)
-		HEADER_INCLUDE="#include <QtGui>"
-		TABLEWIDGET_DEFINE=$(cat << EOF
-// tableWidget->horizontalHeader ()->setClickable
-#define QEX_SETCLICKABLE	setClickable
-
-// tableWidget->horizontalHeader()->setResizeMode
-#define QEX_RESIZEMODE		setResizeMode
-EOF
-)
-		;;
-
 	"mtqex5.h" )
 		HEADER_GUARD=$(cat << EOF
 #ifndef MTQEX5_H_
@@ -28,14 +11,15 @@ EOF
 EOF
 )
 		HEADER_INCLUDE="#include <QtWidgets>"
-		TABLEWIDGET_DEFINE=$(cat << EOF
-// tableWidget->horizontalHeader ()->setSectionsClickable
-#define QEX_SETCLICKABLE	setSectionsClickable
+		;;
 
-// tableWidget->horizontalHeader ()->setSectionResizeMode
-#define QEX_RESIZEMODE		setSectionResizeMode
+	"mtqex6.h" )
+		HEADER_GUARD=$(cat << EOF
+#ifndef MTQEX6_H_
+#define MTQEX6_H_
 EOF
 )
+		HEADER_INCLUDE="#include <QtWidgets>"
 		;;
 
 	* )	echo "Bad argument: '$1'"
@@ -50,7 +34,6 @@ do
 	case "$LINE" in
 		"@@HEADER_GUARD@@" )		LINE="$HEADER_GUARD";;
 		"@@HEADER_INCLUDE@@" )		LINE="$HEADER_INCLUDE";;
-		"@@TABLEWIDGET_DEFINE@@" )	LINE="$TABLEWIDGET_DEFINE";;
 	esac
 
 	echo "$LINE"

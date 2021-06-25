@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+. ./mtConf.txt
+
+
+APP_NAME="libmtGin"
+LIB_NAME="libmtgin"
+
+MTCF_INIT
+
+MTCF_PARSE_ARGS "$@"
+
+MTCF_PRINT_HELP
+MTCF_PRE_CONF
+
+MTCF_CHECK_LIBS mtkit mtpixy stdc++
+MTCF_PKGCONFIG "sdl2 gl sndfile"
+
+MTCF_POST_CONF
+MTCF_PRINT_CONF

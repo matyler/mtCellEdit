@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,80 +21,35 @@
 
 mtPixy::Brush::Brush ()
 	:
-	m_shapes	(),
-	m_patterns	(),
-	m_shapes_palette(),
-	m_patterns_palette (),
-	m_shapes_palette_zoom ( 1 ),
-	m_pattern_palette_zoom ( 1 ),
-	m_color_a	( 0, 0, 0 ),
-	m_color_b	( 0, 0, 0 ),
-	m_index_a	( 0 ),
-	m_index_b	( 0 ),
-	m_shape_num	( 0 ),
-	m_pattern_num	( 0 ),
-	m_spacing	( 1 ),
-	m_space_mod	( 0 ),
-	m_flow		( FLOW_MAX )
+	m_shape_mask	( pixy_pixmap_new_alpha ( SHAPE_SIZE, SHAPE_SIZE ) ),
+	m_pattern_idx	( pixy_pixmap_new_indexed( PATTERN_SIZE, PATTERN_SIZE)),
+	m_pattern_rgb	( pixy_pixmap_new_rgb ( PATTERN_SIZE, PATTERN_SIZE ) )
 {
-	m_shape_mask = mtPixy::Image::create ( mtPixy::Image::TYPE_ALPHA,
-		SHAPE_SIZE, SHAPE_SIZE );
-
-	m_pattern_idx = mtPixy::Image::create ( mtPixy::Image::TYPE_INDEXED,
-		PATTERN_SIZE, PATTERN_SIZE );
-
-	m_pattern_rgb = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB,
-		PATTERN_SIZE, PATTERN_SIZE );
 }
 
 mtPixy::Brush::~Brush ()
 {
-	delete m_shapes;
-	m_shapes = NULL;
-
-	delete m_patterns;
-	m_patterns = NULL;
-
-	delete m_shape_mask;
-	m_shape_mask = NULL;
-
-	delete m_pattern_idx;
-	m_pattern_idx = NULL;
-
-	delete m_pattern_rgb;
-	m_pattern_rgb = NULL;
-
-	delete m_shapes_palette;
-	m_shapes_palette = NULL;
-
-	delete m_patterns_palette;
-	m_patterns_palette = NULL;
 }
 
 int mtPixy::Brush::load_shapes (
 	char	const * const	fn
 	)
 {
-	mtPixy::Image	* ni;
-
-
-	ni = mtPixy::Image::load ( fn );
-	if ( ! ni )
+	mtPixy::Pixmap npix ( pixy_pixmap_load ( fn, nullptr ) );
+	if ( ! npix.get() )
 	{
 		return 1;
 	}
 
-	if (	ni->get_type () != mtPixy::Image::TYPE_INDEXED	||
-		ni->get_width () % SHAPE_SIZE != 0		||
-		ni->get_height () % SHAPE_SIZE != 0
+	if (	npix.get()->bpp != PIXY_PIXMAP_BPP_INDEXED	||
+		npix.get()->width % SHAPE_SIZE != 0		||
+		npix.get()->height % SHAPE_SIZE != 0
 		)
 	{
-		delete ni;
 		return 1;
 	}
 
-	delete m_shapes;
-	m_shapes = ni;
+	m_shapes.reset ( npix.release() );
 	m_shape_num = 0;
 
 	rebuild_shape_mask ();
@@ -106,26 +61,21 @@ int mtPixy::Brush::load_patterns (
 	char	const * const	fn
 	)
 {
-	mtPixy::Image	* ni;
-
-
-	ni = mtPixy::Image::load ( fn );
-	if ( ! ni )
+	mtPixy::Pixmap npix ( pixy_pixmap_load ( fn, nullptr ) );
+	if ( ! npix.get() )
 	{
 		return 1;
 	}
 
-	if (	ni->get_type () != mtPixy::Image::TYPE_INDEXED	||
-		ni->get_width () % PATTERN_SIZE != 0		||
-		ni->get_height () % PATTERN_SIZE != 0
+	if (	npix.get()->bpp != PIXY_PIXMAP_BPP_INDEXED	||
+		npix.get()->width % PATTERN_SIZE != 0		||
+		npix.get()->height % PATTERN_SIZE != 0
 		)
 	{
-		delete ni;
 		return 1;
 	}
 
-	delete m_patterns;
-	m_patterns = ni;
+	m_patterns.reset ( npix.release() );
 	m_pattern_num = 0;
 
 	rebuild_pattern_mask ();
@@ -136,7 +86,7 @@ int mtPixy::Brush::load_patterns (
 void mtPixy::Brush::set_color_ab (
 	unsigned char		const	idx_a,
 	unsigned char		const	idx_b,
-	mtPixy::Color	const * const	col
+	mtColor		const * const	col
 	)
 {
 	m_index_a = idx_a;
@@ -154,7 +104,7 @@ void mtPixy::Brush::set_color_ab (
 
 void mtPixy::Brush::set_color_a (
 	unsigned char		const	idx,
-	mtPixy::Color	const * const	col
+	mtColor		const * const	col
 	)
 {
 	m_index_a = idx;
@@ -167,7 +117,7 @@ void mtPixy::Brush::set_color_a (
 
 void mtPixy::Brush::set_color_b (
 	unsigned char		const	idx,
-	mtPixy::Color	const * const	col
+	mtColor		const * const	col
 	)
 {
 	m_index_b = idx;
@@ -182,16 +132,16 @@ int mtPixy::Brush::set_shape (
 	int	const	num
 	)
 {
-	if ( ! m_shapes )
+	if ( ! m_shapes.get() )
 	{
 		return 1;
 	}
 
-
-	int	const	totx = m_shapes->get_width() / SHAPE_SIZE;
-	int	const	toty = m_shapes->get_height() / SHAPE_SIZE;
+	int	const	totx = pixy_pixmap_get_width ( m_shapes.get() ) /
+				SHAPE_SIZE;
+	int	const	toty = pixy_pixmap_get_height ( m_shapes.get() ) /
+				SHAPE_SIZE;
 	int	const	mx = totx * toty - 1;
-
 
 	m_shape_num = MAX ( 0, num );
 	m_shape_num = MIN ( m_shape_num, mx );
@@ -206,19 +156,18 @@ int mtPixy::Brush::set_shape (
 	int	const	y
 	)
 {
-	if ( ! m_shapes )
+	if ( ! m_shapes.get() )
 	{
 		return 1;
 	}
 
-
-	int	const	totx = m_shapes->get_width() / SHAPE_SIZE;
+	int	const	totx = pixy_pixmap_get_width ( m_shapes.get() ) /
+				SHAPE_SIZE;
 	int	const	nx = ((x / m_shapes_palette_zoom) - SHAPE_PAD / 2 ) /
 				(SHAPE_SIZE + SHAPE_PAD);
 	int	const	ny = ((y / m_shapes_palette_zoom) - SHAPE_PAD / 2 ) /
 				(SHAPE_SIZE + SHAPE_PAD);
 	int	const	n = nx + ny * totx;
-
 
 	return set_shape ( n );
 }
@@ -227,13 +176,15 @@ int mtPixy::Brush::set_pattern (
 	int	const	num
 	)
 {
-	if ( ! m_patterns )
+	if ( ! m_patterns.get() )
 	{
 		return 1;
 	}
 
-	int	const	totx = m_patterns->get_width() / PATTERN_SIZE;
-	int	const	toty = m_patterns->get_height() / PATTERN_SIZE;
+	int	const	totx = pixy_pixmap_get_width ( m_patterns.get() ) /
+				PATTERN_SIZE;
+	int	const	toty = pixy_pixmap_get_height ( m_patterns.get() ) /
+				PATTERN_SIZE;
 	int	const	mx = totx * toty - 1;
 
 	m_pattern_num = MAX ( 0, num );
@@ -249,19 +200,18 @@ int mtPixy::Brush::set_pattern (
 	int	const	y
 	)
 {
-	if ( ! m_patterns )
+	if ( ! m_patterns.get() )
 	{
 		return 1;
 	}
 
-
-	int	const	totx = m_patterns->get_width() / PATTERN_SIZE;
+	int	const	totx = pixy_pixmap_get_width ( m_patterns.get()) /
+				PATTERN_SIZE;
 	int	const	nx = ((x / m_pattern_palette_zoom) - SHAPE_PAD / 2 ) /
 				(3 * PATTERN_SIZE + PATTERN_PAD);
 	int	const	ny = ((y / m_pattern_palette_zoom) - SHAPE_PAD / 2 ) /
 				(3 * PATTERN_SIZE + PATTERN_PAD);
 	int	const	n = nx + ny * totx;
-
 
 	return set_pattern ( n );
 }
@@ -303,28 +253,24 @@ void mtPixy::Brush::set_flow (
 }
 
 static void idx_rgb_blit (
-	unsigned char * const	dest,
-	int		const	drow,
-	unsigned char * const	src,
-	int		const	srow,
-	int		const	pxtot,
-	int		const	scale
+	unsigned char		* const	dest,
+	int			const	drow,
+	unsigned char	const * const	src,
+	int			const	srow,
+	int			const	pxtot,
+	int			const	scale
 	)
 {
-	int		a, x, y;
-	unsigned char	* s, * d;
-
-
-	for ( a = 0; a < scale * scale; a++ )
+	for ( int a = 0; a < scale * scale; a++ )
 	{
-		for ( y = 0; y < pxtot; y++ )
+		for ( int y = 0; y < pxtot; y++ )
 		{
-			s = src + srow * y;
-			d = dest + drow * y;
-			d += (a % scale) * pxtot * 3;
-			d += (a / scale) * drow * pxtot;
+			unsigned char const * s = src + srow * y;
+			unsigned char * d = dest + drow * y +
+				(a % scale) * pxtot * 3 +
+				(a / scale) * drow * pxtot;
 
-			for ( x = 0; x < pxtot; x++ )
+			for ( int x = 0; x < pxtot; x++ )
 			{
 				if ( 1 == *s++ )
 				{
@@ -343,87 +289,70 @@ static void idx_rgb_blit (
 	}
 }
 
-static mtPixy::Image * enlarge_image (
-	int		const	zoom,
-	mtPixy::Image	* const	i,
-	int		const	w,
-	int		const	h
+static void enlarge_image (
+	int	const	zoom,
+	mtPixy::Pixmap	&i,
+	int	const	w,
+	int	const	h
 	)
 {
 	if ( zoom <= 1 )
 	{
-		return i;
+		return;
 	}
 
-
-	mtPixy::Image	* iz;
-
-
-	iz = i->scale ( w * zoom, h * zoom, mtPixy::Image::SCALE_BLOCKY );
-	delete i;
-
-	return iz;
+	i.reset ( pixy_pixmap_scale ( i.get(), w * zoom, h * zoom,
+		PIXY_SCALE_BLOCKY ) );
 }
 
 int mtPixy::Brush::rebuild_shapes_palette (
 	int	const	zoom
 	)
 {
-	if ( ! m_shapes || zoom < 1 )
+	if ( zoom < 1 )
 	{
 		return 1;
 	}
 
-
-	int	const	sw = m_shapes->get_width ();
-	int	const	sh = m_shapes->get_height ();
+	int	const	sw = pixy_pixmap_get_width ( m_shapes.get() );
+	int	const	sh = pixy_pixmap_get_height ( m_shapes.get() );
 	int	const	swtot = sw / SHAPE_SIZE;
 	int	const	shtot = sh / SHAPE_SIZE;
 	int	const	stot = swtot * shtot;
 	int	const	iw = swtot * (SHAPE_SIZE + SHAPE_PAD);
 	int	const	ih = shtot * (SHAPE_SIZE + SHAPE_PAD);
-	mtPixy::Image	* i;
 
-
-	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, iw, ih );
-	if ( ! i )
-	{
-		return 1;
-	}
-
-
-	unsigned char * const	src = m_shapes->get_canvas ();
-	unsigned char * const	dest = i->get_canvas ();
-
+	mtPixy::Pixmap	i ( pixy_pixmap_new_rgb ( iw, ih ) );
+	unsigned char const * const src =pixy_pixmap_get_canvas(m_shapes.get());
+	unsigned char * const	dest = pixy_pixmap_get_canvas ( i.get() );
 
 	if ( ! src || ! dest )
 	{
-		delete i;
 		return 1;
 	}
 
 	for ( int a = 0; a < stot; a++ )
 	{
-		unsigned char * s = src;
-		s += SHAPE_SIZE * (a % swtot);
-		s += SHAPE_SIZE * (a / swtot) * sw;
+		unsigned char const * const s = src +
+			SHAPE_SIZE * (a % swtot) +
+			SHAPE_SIZE * (a / swtot) * sw;
 
-		unsigned char * d = dest + 3 * (SHAPE_PAD / 2) + 3 *
-			(SHAPE_PAD / 2) * iw;
-		d += 3 * (SHAPE_SIZE + SHAPE_PAD) * (a % swtot);
-		d += 3 * (SHAPE_SIZE + SHAPE_PAD) * (a / swtot) * iw;
+		unsigned char * const d = dest +
+			3 * (SHAPE_PAD / 2) +
+			3 * (SHAPE_PAD / 2) * iw +
+			3 * (SHAPE_SIZE + SHAPE_PAD) * (a % swtot) +
+			3 * (SHAPE_SIZE + SHAPE_PAD) * (a / swtot) * iw;
 
 		idx_rgb_blit ( d, 3 * iw, s, sw, SHAPE_SIZE, 1 );
 	}
 
-	i = enlarge_image ( zoom, i, iw, ih );
-	if ( ! i )
+	enlarge_image ( zoom, i, iw, ih );
+	if ( ! i.get() )
 	{
 		return 1;
 	}
 
-	delete m_shapes_palette;
-	m_shapes_palette = i;
+	m_shapes_palette.reset ( i.release() );
 	m_shapes_palette_zoom = zoom;
 
 	return 0;
@@ -433,60 +362,51 @@ int mtPixy::Brush::rebuild_patterns_palette (
 	int	const	zoom
 	)
 {
-	if ( ! m_patterns || zoom < 1 )
+	if ( zoom < 1 )
 	{
 		return 1;
 	}
 
-	int	const	sw = m_patterns->get_width ();
-	int	const	sh = m_patterns->get_height ();
+	int	const	sw = pixy_pixmap_get_width ( m_patterns.get() );
+	int	const	sh = pixy_pixmap_get_height ( m_patterns.get() );
 	int	const	swtot = sw / PATTERN_SIZE;
 	int	const	shtot = sh / PATTERN_SIZE;
 	int	const	stot = swtot * shtot;
 	int	const	iw = swtot * (3 * PATTERN_SIZE + PATTERN_PAD);
 	int	const	ih = shtot * (3 * PATTERN_SIZE + PATTERN_PAD);
-	mtPixy::Image	* i;
 
-
-	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, iw, ih );
-	if ( ! i )
-	{
-		return 1;
-	}
-
-
-	unsigned char * const	src = m_patterns->get_canvas ();
-	unsigned char * const	dest = i->get_canvas ();
-
+	mtPixy::Pixmap	i ( pixy_pixmap_new_rgb ( iw, ih ) );
+	unsigned char const * const src = pixy_pixmap_get_canvas (
+		m_patterns.get() );
+	unsigned char * const	dest = pixy_pixmap_get_canvas ( i.get() );
 
 	if ( ! src || ! dest )
 	{
-		delete i;
 		return 1;
 	}
 
 	for ( int a = 0; a < stot; a++ )
 	{
-		unsigned char * s = src;
-		s += PATTERN_SIZE * (a % swtot);
-		s += PATTERN_SIZE * (a / swtot) * sw;
+		unsigned char const * const s = src
+			+ PATTERN_SIZE * (a % swtot)
+			+ PATTERN_SIZE * (a / swtot) * sw;
 
-		unsigned char * d = dest + 3 * (PATTERN_PAD / 2) +
-			3 * (PATTERN_PAD / 2) * iw;
-		d += 3 * (3 * PATTERN_SIZE + PATTERN_PAD) * (a % swtot);
-		d += 3 * (3 * PATTERN_SIZE + PATTERN_PAD) * (a / swtot) * iw;
+		unsigned char * d = dest +
+			3 * (PATTERN_PAD / 2) +
+			3 * (PATTERN_PAD / 2) * iw +
+			3 * (3 * PATTERN_SIZE + PATTERN_PAD) * (a % swtot) +
+			3 * (3 * PATTERN_SIZE + PATTERN_PAD) * (a / swtot) * iw;
 
 		idx_rgb_blit ( d, 3 * iw, s, sw, PATTERN_SIZE, 3 );
 	}
 
-	i = enlarge_image ( zoom, i, iw, ih );
-	if ( ! i )
+	enlarge_image ( zoom, i, iw, ih );
+	if ( ! i.get() )
 	{
 		return 1;
 	}
 
-	delete m_patterns_palette;
-	m_patterns_palette = i;
+	m_patterns_palette.reset ( i.release() );
 	m_pattern_palette_zoom = zoom;
 
 	return 0;
@@ -494,25 +414,23 @@ int mtPixy::Brush::rebuild_patterns_palette (
 
 void mtPixy::Brush::rebuild_shape_mask ()
 {
-	if ( ! m_shape_mask || ! m_shapes )
-	{
-		return;
-	}
+	unsigned char const * src = pixy_pixmap_get_canvas (
+		m_shapes.get () );
 
-	unsigned char * src = m_shapes->get_canvas ();
-	unsigned char * dest = m_shape_mask->get_alpha ();
+	unsigned char * const dest = pixy_pixmap_get_alpha (
+		m_shape_mask.get () );
 
 	if ( src && dest )
 	{
-		int const sw = m_shapes->get_width ();
-		int const dw = m_shape_mask->get_width ();
+		int const sw = pixy_pixmap_get_width ( m_shapes.get () );
+		int const dw = pixy_pixmap_get_width ( m_shape_mask.get () );
 
 		src += SHAPE_SIZE * (m_shape_num % (sw / SHAPE_SIZE));
 		src += SHAPE_SIZE * (m_shape_num / (sw / SHAPE_SIZE)) * sw;
 
 		for ( int y = 0; y < SHAPE_SIZE; y++ )
 		{
-			unsigned char * s = src + sw * y;
+			unsigned char const * s = src + sw * y;
 			unsigned char * d = dest + dw * y;
 
 			for ( int x = 0; x < SHAPE_SIZE; x++ )
@@ -532,33 +450,26 @@ void mtPixy::Brush::rebuild_shape_mask ()
 
 void mtPixy::Brush::rebuild_pattern_mask ()
 {
-	if ( ! m_pattern_idx || ! m_pattern_rgb || ! m_patterns )
-	{
-		return;
-	}
+	unsigned char const * src = pixy_pixmap_get_canvas (
+		m_patterns.get ());
 
-
-	unsigned char	* src, * dest, * s, * d;
-	int		x, y, sw, dw;
-
-
-	src = m_patterns->get_canvas ();
-	dest = m_pattern_idx->get_canvas ();
+	unsigned char * dest = pixy_pixmap_get_canvas (
+		m_pattern_idx.get () );
 
 	if ( src && dest )
 	{
-		sw = m_patterns->get_width ();
-		dw = m_pattern_idx->get_width ();
+		int const sw = pixy_pixmap_get_width ( m_patterns.get () );
+		int const dw = pixy_pixmap_get_width ( m_pattern_idx.get () );
 
 		src += PATTERN_SIZE * (m_pattern_num % (sw / PATTERN_SIZE));
 		src += PATTERN_SIZE * (m_pattern_num / (sw / PATTERN_SIZE)) *sw;
 
-		for ( y = 0; y < PATTERN_SIZE; y++ )
+		for ( int y = 0; y < PATTERN_SIZE; y++ )
 		{
-			s = src + sw * y;
-			d = dest + dw * y;
+			unsigned char const	* s = src + sw * y;
+			unsigned char		* d = dest + dw * y;
 
-			for ( x = 0; x < PATTERN_SIZE; x++ )
+			for ( int x = 0; x < PATTERN_SIZE; x++ )
 			{
 				if ( 1 == *s++ )
 				{
@@ -572,23 +483,23 @@ void mtPixy::Brush::rebuild_pattern_mask ()
 		}
 	}
 
-	src = m_patterns->get_canvas ();
-	dest = m_pattern_rgb->get_canvas ();
+	src = pixy_pixmap_get_canvas ( m_patterns.get() );
+	dest = pixy_pixmap_get_canvas ( m_pattern_rgb.get() );
 
 	if ( src && dest )
 	{
-		sw = m_patterns->get_width ();
-		dw = m_pattern_rgb->get_width ();
+		int const sw = pixy_pixmap_get_width ( m_patterns.get() );
+		int const dw = pixy_pixmap_get_width ( m_pattern_rgb.get() );
 
 		src += PATTERN_SIZE * (m_pattern_num % (sw / PATTERN_SIZE));
 		src += PATTERN_SIZE * (m_pattern_num / (sw / PATTERN_SIZE)) *sw;
 
-		for ( y = 0; y < PATTERN_SIZE; y++ )
+		for ( int y = 0; y < PATTERN_SIZE; y++ )
 		{
-			s = src + sw * y;
-			d = dest + dw * y * 3;
+			unsigned char const	* s = src + sw * y;
+			unsigned char		* d = dest + dw * y * 3;
 
-			for ( x = 0; x < PATTERN_SIZE; x++ )
+			for ( int x = 0; x < PATTERN_SIZE; x++ )
 			{
 				if ( 1 == *s++ )
 				{
@@ -607,32 +518,29 @@ void mtPixy::Brush::rebuild_pattern_mask ()
 	}
 }
 
-mtPixy::Image * mtPixy::Brush::build_color_swatch (
+mtPixmap * mtPixy::Brush::build_color_swatch (
 	int	const	zoom
 	)
 {
-	mtPixy::Image	* i;
-	int	const	w = zoom * 3 * mtPixy::Brush::PATTERN_SIZE;
+	int	const	w = zoom * 3 * PATTERN_SIZE;
+	mtPixmap * const i = pixy_pixmap_new_rgb ( w, w );
 
-
-	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, w, w );
 	if ( ! i )
 	{
 		return NULL;
 	}
 
-	int			p;
 	int		const	tot = w * (w / 2);
-	unsigned char		* dest = i->get_canvas ();
+	unsigned char		* dest = pixy_pixmap_get_canvas ( i );
 
-	for ( p = 0; p < tot; p++ )
+	for ( int p = 0; p < tot; p++ )
 	{
 		*dest++ = m_color_a.red;
 		*dest++ = m_color_a.green;
 		*dest++ = m_color_a.blue;
 	}
 
-	for ( p = 0; p < tot; p++ )
+	for ( int p = 0; p < tot; p++ )
 	{
 		*dest++ = m_color_b.red;
 		*dest++ = m_color_b.green;
@@ -642,149 +550,116 @@ mtPixy::Image * mtPixy::Brush::build_color_swatch (
 	return i;
 }
 
-mtPixy::Image * mtPixy::Brush::build_shape_swatch (
+mtPixmap * mtPixy::Brush::build_shape_swatch (
 	int	const	zoom
 	)
 {
-	if ( ! m_shapes )
-	{
-		return NULL;
-	}
-
-	mtPixy::Image	* i;
-
-	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, SHAPE_SIZE,
-		SHAPE_SIZE );
-	if ( ! i )
-	{
-		return NULL;
-	}
-
-
-	int		const	sw = m_shapes->get_width ();
+	mtPixy::Pixmap	 i ( pixy_pixmap_new_rgb ( SHAPE_SIZE, SHAPE_SIZE ) );
+	int		const	sw = pixy_pixmap_get_width ( m_shapes.get() );
 	int		const	swtot = sw / SHAPE_SIZE;
-	unsigned char * const	src = m_shapes->get_canvas ();
-	unsigned char * const	dest = i->get_canvas ();
-	unsigned char		* s;
-
+	unsigned char const * const src =pixy_pixmap_get_canvas(m_shapes.get());
+	unsigned char * const	dest = pixy_pixmap_get_canvas ( i.get() );
 
 	if ( ! src || ! dest )
 	{
-		delete i;
 		return NULL;
 	}
 
-	s = src;
-	s += SHAPE_SIZE * (m_shape_num % swtot);
-	s += SHAPE_SIZE * (m_shape_num / swtot) * sw;
+	unsigned char const * const s = src + SHAPE_SIZE * (m_shape_num % swtot)
+		+ SHAPE_SIZE * (m_shape_num / swtot) * sw;
 
 	idx_rgb_blit ( dest, 3 * SHAPE_SIZE, s, sw, SHAPE_SIZE, 1 );
 
-	return enlarge_image ( zoom, i, i->get_width (), i->get_height () );
+	enlarge_image ( zoom, i, pixy_pixmap_get_width (i.get()),
+		pixy_pixmap_get_width (i.get()) );
+
+	return i.release();
 }
 
-static mtPixy::Image * prepare_pattern (
-	mtPixy::Image * const	patterns,
+static mtPixmap * prepare_pattern (
+	mtPixmap	* const	patterns,
 	int		const	pattern_num
 	)
 {
-	mtPixy::Image	* i;
-	int	const	w = mtPixy::Brush::PATTERN_SIZE;
-
-
-	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, 3 * w, 3 * w );
-	if ( ! i )
-	{
-		return NULL;
-	}
-
-
-	int		const	sw = patterns->get_width ();
+	int		const	w = mtPixy::Brush::PATTERN_SIZE;
+	mtPixy::Pixmap		i ( pixy_pixmap_new_rgb ( 3 * w, 3 * w ) );
+	int		const	sw = pixy_pixmap_get_width ( patterns );
 	int		const	swtot = sw / w;
-	unsigned char * const	src = patterns->get_canvas ();
-	unsigned char * const	dest = i->get_canvas ();
-	unsigned char		* s;
-
+	unsigned char const * const src = pixy_pixmap_get_canvas ( patterns );
+	unsigned char * const	dest = pixy_pixmap_get_canvas ( i.get() );
 
 	if ( ! src || ! dest )
 	{
-		delete i;
 		return NULL;
 	}
 
-	s = src;
-	s += w * (pattern_num % swtot);
-	s += w * (pattern_num / swtot) * sw;
+	unsigned char const * const s = src + w * (pattern_num % swtot)
+		+ w * (pattern_num / swtot) * sw;
 
 	idx_rgb_blit ( dest, 9 * w, s, sw, w, 3 );
 
-	return i;
+	return i.release();
 }
 
-mtPixy::Image * mtPixy::Brush::build_pattern_swatch (
+mtPixmap * mtPixy::Brush::build_pattern_swatch (
 	int	const	zoom
 	)
 {
-	if ( ! m_patterns )
+	mtPixy::Pixmap i ( prepare_pattern ( m_patterns.get(), m_pattern_num ));
+	if ( ! i.get() )
 	{
 		return NULL;
 	}
 
-	mtPixy::Image	* i = prepare_pattern ( m_patterns, m_pattern_num );
+	enlarge_image ( zoom, i, pixy_pixmap_get_width (i.get()),
+		pixy_pixmap_get_height (i.get()) );
+
+	return i.release();
+}
+
+mtPixmap * mtPixy::Brush::build_preview_swatch (
+	int	const	zoom
+	)
+{
+	int	const	w = zoom * 3 * PATTERN_SIZE;
+	mtPixmap * const i = pixy_pixmap_new_rgb ( w, w );
 
 	if ( ! i )
 	{
 		return NULL;
 	}
 
-	return enlarge_image ( zoom, i, i->get_width (), i->get_height () );
-}
-
-mtPixy::Image * mtPixy::Brush::build_preview_swatch (
-	int	const	zoom
-	)
-{
-	mtPixy::Image	* i;
-	int	const	w = zoom * 3 * mtPixy::Brush::PATTERN_SIZE;
-
-
-	i = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, w, w );
-	if ( ! i )
-	{
-		return NULL;
-	}
-
-	i->paint_canvas_rectangle ( *this, 0, 0, w, w );
+	paint_canvas_rectangle ( i, 0, 0, w, w );
 
 	return i;
 }
 
-mtPixy::Image * mtPixy::Brush::get_shape_mask ()
+mtPixmap * mtPixy::Brush::get_shape_mask ()
 {
-	return m_shape_mask;
+	return m_shape_mask.get();
 }
 
-mtPixy::Image * mtPixy::Brush::get_pattern_idx ()
+mtPixmap * mtPixy::Brush::get_pattern_idx ()
 {
-	return m_pattern_idx;
+	return m_pattern_idx.get();
 }
 
-mtPixy::Image * mtPixy::Brush::get_pattern_rgb ()
+mtPixmap * mtPixy::Brush::get_pattern_rgb ()
 {
-	return m_pattern_rgb;
+	return m_pattern_rgb.get();
 }
 
-mtPixy::Image * mtPixy::Brush::get_shapes_palette ()
+mtPixmap * mtPixy::Brush::get_shapes_palette ()
 {
-	return m_shapes_palette;
+	return m_shapes_palette.get();
 }
 
-mtPixy::Image * mtPixy::Brush::get_patterns_palette ()
+mtPixmap * mtPixy::Brush::get_patterns_palette ()
 {
-	return m_patterns_palette;
+	return m_patterns_palette.get();
 }
 
-mtPixy::Color mtPixy::Brush::get_color_a () const
+mtColor mtPixy::Brush::get_color_a () const
 {
 	return m_color_a;
 }
@@ -811,21 +686,19 @@ void mtPixy::Brush::render_cursor (
 	int		const	zs
 	)
 {
-	if ( ! m_shape_mask || ! m_pattern_rgb )
-	{
-		return;
-	}
+	unsigned char const * const alpha = pixy_pixmap_get_alpha (
+		m_shape_mask.get() );
 
-	unsigned char	* alpha = m_shape_mask->get_alpha ();
-	unsigned char	* canvas = m_pattern_rgb->get_canvas ();
+	unsigned char const * const canvas = pixy_pixmap_get_canvas (
+		m_pattern_rgb.get() );
 
 	if ( ! alpha || ! canvas )
 	{
 		return;
 	}
 
-	int	const	bw = m_shape_mask->get_width ();
-	int	const	bh = m_shape_mask->get_height ();
+	int	const	bw = pixy_pixmap_get_width ( m_shape_mask.get () );
+	int	const	bh = pixy_pixmap_get_height ( m_shape_mask.get () );
 	int	const	x = zs < 0 ?
 				((cx - bw/2) / -zs) - ox :
 				((cx - bw/2) * zs) - ox;

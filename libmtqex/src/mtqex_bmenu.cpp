@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2019 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,10 +24,6 @@ mtQEX::ButtonMenu::ButtonMenu ()
 	itemCurrent	( -1 )
 {
 	setMenu ( new QMenu );
-
-	signalMapper = new QSignalMapper ( this );
-	connect ( signalMapper, SIGNAL ( mapped ( int ) ),
-		this, SLOT ( optionClicked ( int ) ) );
 
 	setSizePolicy ( QSizePolicy ( QSizePolicy::Maximum,
 		QSizePolicy::Preferred ) );
@@ -149,13 +145,9 @@ void mtQEX::ButtonMenu::optionClicked (
 	setCurrentIndex ( i );
 }
 
-void mtQEX::ButtonMenu::addItem (
-	QString		t
-	)
+void mtQEX::ButtonMenu::addItem ( QString t )
 {
-	QAction * action = menu()->addAction ( t.replace ( "&", "&&" ) );
-
-
+	QAction * const action = menu()->addAction ( t.replace ( "&", "&&" ) );
 	if ( ! action )
 	{
 		return;
@@ -166,8 +158,12 @@ void mtQEX::ButtonMenu::addItem (
 		setCurrentIndex ( 0 );
 	}
 
-	connect ( action, SIGNAL( triggered ()), signalMapper, SLOT( map () ) );
-	signalMapper->setMapping ( action, count () - 1 );
+	int const i = count () - 1;
+
+	connect ( action, &QAction::triggered, [this,i]
+		{
+			optionClicked ( i );
+		} );
 }
 
 int mtQEX::ButtonMenu::currentIndex ()

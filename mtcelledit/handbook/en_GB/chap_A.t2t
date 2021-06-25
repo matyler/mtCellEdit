@@ -122,6 +122,9 @@ Here is a complete list of functions mtCellEdit understands when placed after an
 | acos         | NUM           | Inverse cosine
 | asin         | NUM           | Inverse sine
 | atan         | NUM           | Inverse tangent
+| atan2        |               | Inverse tangent (two arguments)
+|              | NUM           | x
+|              | NUM           | y
 | average      | RANGE         | Calculate average of all numbers in the range
 | ceil         | NUM           | Round a decimal number up.  e.g. ceil(2.1) = 3
 | cos          | NUM           | Cosine
@@ -134,7 +137,7 @@ Here is a complete list of functions mtCellEdit understands when placed after an
 |              | STRING        | Conditional test "<" "<=" ">" ">=" "=" "<>"
 |              | NUM           | Number to test each cell in the range with
 | date         |               | Get numerical representation of a date. date( 0, 1, 1 ) = 0
-|              | NUM           | Year 0..
+|              | NUM           | Year 0..5879609
 |              | NUM           | Month 1..12
 |              | NUM           | Day 1..31
 | day          | NUM           | Return day of month of a given numerical date
@@ -300,13 +303,13 @@ As with all software, mtCellEdit has some limitations.  In some cases any attemp
 
 ===A.6.1 Localization===[SEC61]
 
-mtCellEdit is entirely written in English, with all language and numerical notation being geared towards that locale.  There are many different languages and numerical systems that could be supported by a spreadsheet program, but to do so it would complicate the program, and the data files that the program creates.
+mtCellEdit is entirely written in English, with all language and numerical notation being geared towards that locale.  There are many different languages and numerical systems that could be supported by a spreadsheet program, but to do so would complicate the program and the data files that the program creates.
 
-For example, one of the rules I insist on with mtCellEdit is that whatever text the user enters into a cell this must be exactly what gets recorded in the saved file.  I have a particular dislike of programs that subvert user input via optimizations, or corrections (such as removing spaces in formulas or capitalization of certain letters).
+For example, one of the rules I insist on with mtCellEdit is whatever text the user enters into a cell this must be exactly what gets recorded in the saved file.  I have a particular dislike of programs that subvert user input via optimizations, or corrections (such as removing spaces in formulas or capitalization of certain letters).
 
-This causes a problem when saving data to a TSV file and moving the data between locales that use a different decimal point system.  For example if I have a TSV file with 1.23 in it, my English locale will interpret that as a decimal number.  However in a French locale this would not be recognised as a number and so would be treated as a text string.  Naturally the reverse would also be true with 1,23 being a decimal number in the French locale but not the English locale.
+This causes a problem when saving data to a TSV file and moving the data between locales that use a different decimal point system.  For example if I have a TSV file with 1.23 in it, my English locale will interpret that as a decimal number.  However in a French locale this would not be recognised as a number and would be treated as a text string.  Naturally the reverse would also be true with 1,23 being a decimal number in the French locale but not the English locale.
 
-In other words we have a problem regarding data portability and non-deterministic program behaviour.  From version 1.4.0 of mtCellEdit I avoid this problem by enforcing a C locale when the program starts, so all data is interpreted using the same standards whatever locale the operating system happens to be using. When not using the GUI and using libmtcelledit directly the calling program will need to set the locale to 'C' otherwise there will be undefined results.
+In other words we have a problem regarding data portability and non-deterministic program behaviour.  From version 1.4.0 of mtCellEdit I avoided this problem by enforcing a C locale when the program starts, so all data is interpreted using the same standards whatever locale the operating system happens to be using. When not using the GUI and using libmtcelledit directly the calling program will need to set the locale to 'C' otherwise there may be problems.
 
 Another example of localization regards right to left rendering of cells, and the use of exotic fonts and various font substitutions.  Even if I had the time and expertise to implement such features, this would dramatically bloat the program, and complicate many parts of the program structure.
 

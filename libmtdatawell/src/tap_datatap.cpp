@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,13 +21,12 @@
 
 mtDW::Tap::Tap ()
 	:
-	op	( new Tap::Op () )
+	m_op	( new Tap::Op () )
 {
 }
 
 mtDW::Tap::~Tap ()
 {
-	delete op;
 }
 
 int mtDW::Tap::decode (
@@ -121,7 +120,7 @@ int mtDW::Tap::encode (
 	mtDW::get_temp_filename ( temp_file, bottle_out );
 
 	// Get tap to delete this file after use
-	tap.op->set_soda_filename ( temp_file );
+	tap.m_op->set_soda_filename ( temp_file );
 
 	RETURN_ON_ERROR ( soda->encode ( butt, file_in, temp_file.c_str () ) )
 
@@ -136,12 +135,12 @@ int mtDW::Tap::encode (
 	case TapFile::TYPE_RGB:
 	case TapFile::TYPE_RGB_1:
 		{
-			mtPixy::Image * const image = tap.op->m_image.get();
+			mtPixmap const * const pixmap =tap.m_op->m_pixmap.get();
 
-			RETURN_ON_ERROR ( op->encode_image ( well, image,
+			RETURN_ON_ERROR ( m_op->encode_image ( well, pixmap,
 				temp_file.c_str () ) )
 
-			if ( image->save_png ( bottle_out, 6 ) )
+			if ( pixy_pixmap_save_png ( pixmap, bottle_out, 6 ) )
 			{
 				return report_error (ERROR_TAP_ENCODE_SAVE_PNG);
 			}
@@ -152,9 +151,9 @@ int mtDW::Tap::encode (
 	case TapFile::TYPE_SND:
 	case TapFile::TYPE_SND_1:
 		{
-			RETURN_ON_ERROR ( op->encode_audio (
-				tap.op->m_audio.get (), well, temp_file.c_str(),
-				bottle_out ) )
+			RETURN_ON_ERROR ( m_op->encode_audio (
+				tap.m_op->m_audio.get (), well,
+				temp_file.c_str(), bottle_out ) )
 
 			break;
 		}

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,34 +19,22 @@
 
 
 
-double Crul::normalize_angle ( double angle )
-{
-	angle = fmod ( angle, 360 );
-
-	if ( angle < 0 )
-	{
-		angle += 360;
-	}
-
-	return angle;
-}
-
 int Crul::get_float_rgb_int ( GLfloat const val )
 {
 	return mtkit_int_bound ( (int)round((double)val * 255.0), 0, 255);
 }
 
 void Crul::create_gl_grid (
-	std::vector<Crul::VertexGL> & lines,
-	int		const	count,
-	VertexGL	const	& v1,
-	VertexGL	const	& v2,
-	VertexGL	const	& v3,
-	VertexGL	const	& v4
+	std::vector<mtGin::GL::VertexRGB> & lines,
+	int			const	count,
+	mtGin::GL::VertexRGB	const	& v1,
+	mtGin::GL::VertexRGB	const	& v2,
+	mtGin::GL::VertexRGB	const	& v3,
+	mtGin::GL::VertexRGB	const	& v4
 	)
 {
 	GLfloat const tot = GLfloat(count);
-	VertexGL a, b;
+	mtGin::GL::VertexRGB a, b;
 
 	a.set_rgb ( v1 );
 	b.set_rgb ( v1 );
@@ -76,11 +64,11 @@ void Crul::create_gl_grid (
 }
 
 void Crul::create_gl_face (
-	std::vector<Crul::VertexGL> & vertices,
-	VertexGL	& v1,
-	VertexGL	& v2,
-	VertexGL	& v3,
-	VertexGL	& v4
+	std::vector<mtGin::GL::VertexRGBnormal> & vertices,
+	mtGin::GL::VertexRGBnormal	& v1,
+	mtGin::GL::VertexRGBnormal	& v2,
+	mtGin::GL::VertexRGBnormal	& v3,
+	mtGin::GL::VertexRGBnormal	& v4
 	)
 {
 	create_gl_triangle ( vertices, v1, v2, v3 );
@@ -88,30 +76,17 @@ void Crul::create_gl_face (
 }
 
 void Crul::create_gl_triangle (
-	std::vector<Crul::VertexGL> & vertices,
-	VertexGL	& v1,
-	VertexGL	& v2,
-	VertexGL	& v3
+	std::vector<mtGin::GL::VertexRGBnormal> & vertices,
+	mtGin::GL::VertexRGBnormal	& v1,
+	mtGin::GL::VertexRGBnormal	& v2,
+	mtGin::GL::VertexRGBnormal	& v3
 	)
 {
-	v1.normal ( v2, v3 );
+	v1.calc_normal ( v2, v3 );
 
 	vertices.push_back ( v1 );
 	vertices.push_back ( v2 );
 	vertices.push_back ( v3 );
-}
-
-Crul::Camera::Camera ()
-	:
-	m_id		( 0 ),
-	m_x		( CAM_A_X_DEFAULT ),
-	m_y		( CAM_A_Y_DEFAULT ),
-	m_z		( CAM_A_Z_DEFAULT ),
-	m_rotX		( CAM_A_XROT_DEFAULT ),
-	m_rotY		( CAM_A_YROT_DEFAULT ),
-	m_rotZ		( CAM_A_ZROT_DEFAULT ),
-	m_read_only	( false )
-{
 }
 
 double Crul::Line::get_length () const
@@ -149,7 +124,7 @@ double Crul::Line::get_angle_xy () const
 		return 90.0;
 	}
 
-	return (asin ( abs((double)(x2 - x1)) / len ) / M_PI * 180.0);
+	return (asin ( fabs((double)(x2 - x1)) / len ) / M_PI * 180.0);
 }
 
 double Crul::Line::get_angle_z () const
@@ -161,16 +136,16 @@ double Crul::Line::get_angle_z () const
 		return 90.0;
 	}
 
-	return (asin ( abs((double)(z2 - z1)) / len ) / M_PI * 180.0);
+	return (asin ( fabs((double)(z2 - z1)) / len ) / M_PI * 180.0);
 }
 
 int Crul::Line::get_rgb_int () const
 {
-	return mtPixy::rgb_2_int ( get_r_int (), get_g_int (), get_b_int () );
+	return pixy_rgb_2_int ( get_r_int (), get_g_int (), get_b_int () );
 }
 
 static void set_vcolor (
-	std::vector<Crul::VertexGL> &vs,
+	std::vector<mtGin::GL::VertexRGBnormal> &vs,
 	Crul::Line	const	&line,
 	GLfloat		const	m
 	)
@@ -184,7 +159,7 @@ static void set_vcolor (
 }
 
 static void set_xyz (
-	Crul::VertexGL	& v,
+	mtGin::GL::VertexRGBnormal & v,
 	GLfloat	const	x,
 	GLfloat	const	y,
 	GLfloat	const	z
@@ -196,7 +171,7 @@ static void set_xyz (
 }
 
 void Crul::Line::create_gl (
-	std::vector<Crul::VertexGL> & vertices,
+	std::vector<mtGin::GL::VertexRGBnormal> & vertices,
 	double		const	line_size
 	) const
 {
@@ -206,7 +181,7 @@ void Crul::Line::create_gl (
 
 	GLfloat const dzf = GLfloat(dz);
 
-	std::vector<Crul::VertexGL> vs (8);
+	std::vector<mtGin::GL::VertexRGBnormal> vs (8);
 
 	// Set up default centre values for either end
 	for ( size_t i = 0; i < 4; i++ )
@@ -281,27 +256,5 @@ z y
 	create_gl_face ( vertices, vs[4], vs[7], vs[3], vs[0] );
 	// Farside YZ axis
 	create_gl_face ( vertices, vs[1], vs[2], vs[6], vs[5] );
-}
-
-void Crul::VertexGL::normal ( VertexGL & p2, VertexGL & p3 )
-{
-	VertexGL const & p1 = *this;
-
-	// u = p2 - p1
-	GLfloat const ux = p2.x - p1.x;
-	GLfloat const uy = p2.y - p1.y;
-	GLfloat const uz = p2.z - p1.z;
-
-	// v = p3 - p1
-	GLfloat const vx = p3.x - p1.x;
-	GLfloat const vy = p3.y - p1.y;
-	GLfloat const vz = p3.z - p1.z;
-
-	nx = uy * vz - uz * vy;
-	ny = uz * vx - ux * vz;
-	nz = ux * vy - uy * vx;
-
-	p2.set_normal ( p1 );
-	p3.set_normal ( p1 );
 }
 

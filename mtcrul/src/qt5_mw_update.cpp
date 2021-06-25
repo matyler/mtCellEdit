@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,14 +15,9 @@
 	along with this program in the file COPYING.
 */
 
-#include "qt5_mw_update.h"
+#include "qt5_mw.h"
 
 
-
-void ThreadPtsExtent::run ()
-{
-	m_extents = m_cpts->extents_calculate ();
-}
 
 static void print_label (
 	QLabel	* const	label,
@@ -38,22 +33,10 @@ static void print_label (
 
 void Mainwindow::update_info ()
 {
+	std::string	const & st = m_fe.crul_db.get_dir ();
+	m_info_db->setText ( mtQEX::qstringFromC ( st.c_str () ) );
+
 	char		buf[256];
-	char	const	* cp;
-	std::string	st;
-
-	st = m_fe.crul_db.get_filename ();
-	cp = strrchr ( st.c_str (), MTKIT_DIR_SEP );
-
-	if ( ! cp )
-	{
-		m_info_file->setText ( mtQEX::qstringFromC ( st.c_str () ) );
-	}
-	else
-	{
-		m_info_file->setText ( mtQEX::qstringFromC ( cp + 1 ) );
-	}
-
 	snprintf ( buf, sizeof(buf), "%i", (int)m_fe.cloud.size () );
 	mtkit_strtothou ( buf, buf, (int)sizeof(buf), ',', '-', '.', 3, 0 );
 	m_info_points->setText ( buf );
@@ -63,13 +46,13 @@ void Mainwindow::update_info ()
 
 	if ( ! extents )
 	{
-		mtQEX::BusyDialog dialog ( this, "Calculating extents." );
-		ThreadPtsExtent work ( cpts );
+		mtQEX::BusyDialog dialog ( this, "Calculating extents.",
+			[this, cpts, &extents]()
+			{
+				extents = cpts->extents_calculate ();
+			});
 
-		work.start ();
-		dialog.wait_for_thread ( work );
-
-		extents = work.get_extents ();
+		dialog.wait_for_thread ();
 	}
 
 	if ( ! extents )
@@ -148,7 +131,7 @@ void Mainwindow::set_nudge ( int const i )
 	int const num = mtkit_int_bound ( i, Crul::VIEW_NUDGE_MIN,
 		Crul::VIEW_NUDGE_MAX );
 
-	m_prefs.set ( PREFS_VIEW_NUDGE_SIZE, num );
+	m_uprefs.set ( PREFS_VIEW_NUDGE_SIZE, num );
 
 	char buf[128];
 	double const val = pow ( 2, num );
@@ -168,7 +151,7 @@ void Mainwindow::set_point_size ( int const i )
 	int const num = mtkit_int_bound ( i, Crul::VIEW_POINT_SIZE_MIN,
 		Crul::VIEW_POINT_SIZE_MAX );
 
-	m_prefs.set ( PREFS_GL_POINT_SIZE, (double)num );
+	m_uprefs.set ( PREFS_GL_POINT_SIZE, (double)num );
 
 	char buf[128];
 	snprintf ( buf, sizeof(buf), "%i", num );
@@ -185,7 +168,7 @@ void Mainwindow::set_line_butt_size ( int const i )
 	int const num = mtkit_int_bound ( i, Crul::VIEW_LINE_BUTT_SIZE_MIN,
 		Crul::VIEW_LINE_BUTT_SIZE_MAX );
 
-	m_prefs.set ( PREFS_GL_LINE_BUTT_SIZE, (double)num );
+	m_uprefs.set ( PREFS_GL_LINE_BUTT_SIZE, (double)num );
 
 	char buf[128];
 	double const val = pow ( 2, i );
@@ -204,7 +187,7 @@ void Mainwindow::set_line_thickness ( int const i )
 	int const num = mtkit_int_bound ( i, Crul::VIEW_LINE_THICKNESS_MIN,
 		Crul::VIEW_LINE_THICKNESS_MAX );
 
-	m_prefs.set ( PREFS_GL_LINE_THICKNESS, (double)num );
+	m_uprefs.set ( PREFS_GL_LINE_THICKNESS, (double)num );
 
 	char buf[128];
 	snprintf ( buf, sizeof(buf), "%i", num );
@@ -226,26 +209,13 @@ void Mainwindow::update_ruler ()
 
 void Mainwindow::update_view_show_items ()
 {
-	act_view_show_antialiasing->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_ANTIALIASING ) );
-
-	act_view_show_crosshair->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_CROSSHAIR ) );
-
-	act_view_show_statusbar->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_STATUSBAR ) );
-
-	act_view_show_rulers->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_RULERS ) );
-
-	act_view_show_ruler_plane->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_RULER_PLANE ) );
-
-	act_view_show_cloud->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_CLOUD ) );
-
-	act_view_show_model->setChecked ( m_prefs.getInt
-		( PREFS_VIEW_SHOW_MODEL ) );
+	act_view_show_antialiasing->setChecked(m_mprefs.view_show_antialiasing);
+	act_view_show_crosshair->setChecked ( m_mprefs.view_show_crosshair );
+	act_view_show_statusbar->setChecked ( m_mprefs.view_show_statusbar );
+	act_view_show_rulers->setChecked ( m_mprefs.view_show_rulers );
+	act_view_show_ruler_plane->setChecked ( m_mprefs.view_show_ruler_plane);
+	act_view_show_cloud->setChecked ( m_mprefs.view_show_cloud );
+	act_view_show_model->setChecked ( m_mprefs.view_show_model );
 
 	press_view_show_antialiasing ();
 	press_view_show_crosshair ();

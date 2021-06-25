@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2017 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,13 +19,18 @@
 
 
 
-#ifdef U_TK_QT4
-	#include "mtqex4.h"
-#endif
-
 #ifdef U_TK_QT5
 	#include "mtqex5.h"
 #endif
+
+#ifdef U_TK_QT6
+	#include "mtqex6.h"
+#endif
+
+
+
+class privDialogText;
+class UPrefsWindow;
 
 
 
@@ -49,4 +54,36 @@ private:
 	QLineEdit	* textLineEdit;
 	QTextEdit	* textEdit;
 };
+
+
+
+class UPrefsWindow : public QDialog
+{
+	Q_OBJECT
+
+public:
+	UPrefsWindow (
+		QWidget * parent,
+		mtKit::UserPrefs & prefs,
+		QString title
+		);
+	~UPrefsWindow ();
+
+private:
+	void pressButtonEdit ();
+	void populateTable ();
+	void update_table_status_value ( int row );
+	std::string get_key ( int row, int * type = nullptr ) const;
+
+/// ----------------------------------------------------------------------------
+
+	QLineEdit	* m_filter_edit		= nullptr;
+	QLineEdit	* m_info_edit		= nullptr;
+	QTableWidget	* m_table_widget	= nullptr;
+	QPushButton	* m_button_reset	= nullptr;
+	QPushButton	* m_button_edit		= nullptr;
+
+	mtKit::UserPrefs & m_prefs;
+};
+
 

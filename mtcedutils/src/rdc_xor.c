@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014-2017 Mark Tyler
+	Copyright (C) 2014-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -84,13 +84,7 @@ error:
 	return res;
 }
 
-int create_xor (
-	mtArg	const * const	ARG_UNUSED ( mtarg ),
-	int		const	ARG_UNUSED ( arg ),
-	int		const	ARG_UNUSED ( argc ),
-	char	const * const	ARG_UNUSED ( argv[] ),
-	void		* const	ARG_UNUSED ( user_data )
-	)
+int create_xor ()
 {
 	if (	validate_arg_o ()		||
 		validate_arg_i ()		||

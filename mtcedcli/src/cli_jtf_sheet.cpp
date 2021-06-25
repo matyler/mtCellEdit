@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,16 +19,16 @@
 
 
 
-int jtf_delete_graph (
+int Backend::jtf_delete_graph (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	if ( ! backend.graph () )
+	if ( ! graph () )
 	{
 		return 2;
 	}
 
-	CedBook * const book = backend.file()->cubook->book;
+	CedBook * const book = file()->cubook->book;
 
 	if ( cui_graph_destroy ( book, book->prefs.active_graph ) )
 	{
@@ -37,27 +37,27 @@ int jtf_delete_graph (
 		return 2;
 	}
 
-	backend.graph ();		// Sets active_graph for us
+	graph ();		// Sets active_graph for us
 
 	return 0;
 }
 
 
-int jtf_delete_sheet (
+int Backend::jtf_delete_sheet (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = this->sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
-	int const res = cui_book_destroy_sheet ( backend.file()->cubook,
-		(char const *)sheet->book_tnode->key );
+	int const res = cui_book_destroy_sheet ( file()->cubook,
+		(char const *)sh->book_tnode->key );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res )
 	{
@@ -67,35 +67,35 @@ int jtf_delete_sheet (
 	return 0;
 }
 
-int jtf_duplicate_sheet (
+int Backend::jtf_duplicate_sheet (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = this->sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
 	CedSheet	* ns;
-	int	const	res = cui_book_duplicate_sheet ( backend.file()->cubook,
-				sheet, &ns );
+	int	const	res = cui_book_duplicate_sheet ( file()->cubook,
+				sh, &ns );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res )
 	{
 		return 2;
 	}
 
-	mtkit_strfreedup ( &backend.file()->cubook->book->prefs.active_sheet,
+	mtkit_strfreedup ( &file()->cubook->book->prefs.active_sheet,
 		(char const *)ns->book_tnode->key );
 
 	return 0;
 }
 
-static CedSheet * prep_insert (
+CedSheet * Backend::prep_insert (
 	char	const * const * const	args,
 	int				&r1,
 	int				&c1,
@@ -103,14 +103,14 @@ static CedSheet * prep_insert (
 	int				&c2
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = this->sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return NULL;
 	}
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
 	if ( args[0] )
 	{
@@ -121,36 +121,36 @@ static CedSheet * prep_insert (
 			return NULL;
 		}
 
-		if ( ! backend.clipboard()->sheet )
+		if ( ! clipboard()->sheet )
 		{
 			fprintf ( stderr, "No clipboard available.\n\n" );
 
 			return NULL;
 		}
 
-		r2 = r1 + backend.clipboard()->rows - 1;
-		c2 = c1 + backend.clipboard()->cols - 1;
+		r2 = r1 + clipboard()->rows - 1;
+		c2 = c1 + clipboard()->cols - 1;
 	}
 
-	return sheet;
+	return sh;
 }
 
-int jtf_insert_column (
+int Backend::jtf_insert_column (
 	char	const * const * const	args
 	)
 {
 	int		r1, c1, r2, c2;
-	CedSheet * const sheet = prep_insert ( args, r1, c1, r2, c2 );
+	CedSheet * const sh = prep_insert ( args, r1, c1, r2, c2 );
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
-	int const res = cui_sheet_insert_column ( backend.file()->cubook, sheet,
+	int const res = cui_sheet_insert_column ( file()->cubook, sh,
 		c1, c2 - c1 + 1 );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -159,27 +159,27 @@ int jtf_insert_column (
 		return 2;
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }
 
-int jtf_insert_row (
+int Backend::jtf_insert_row (
 	char	const * const * const	args
 	)
 {
 	int		r1, c1, r2, c2;
-	CedSheet * const sheet = prep_insert ( args, r1, c1, r2, c2 );
+	CedSheet * const sh = prep_insert ( args, r1, c1, r2, c2 );
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
-	int const res = cui_sheet_insert_row ( backend.file()->cubook, sheet,
+	int const res = cui_sheet_insert_row ( file()->cubook, sh,
 		r1, r2 - r1 + 1 );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -188,16 +188,16 @@ int jtf_insert_row (
 		return 2;
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }
 
-int jtf_new_book (
+int Backend::jtf_new_book (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	if ( cui_file_book_new ( backend.file() ) )
+	if ( cui_file_book_new ( file() ) )
 	{
 		fprintf ( stderr, "Unable to create new book.\n\n" );
 
@@ -207,11 +207,11 @@ int jtf_new_book (
 	return 0;
 }
 
-int jtf_new_sheet (
+int Backend::jtf_new_sheet (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	int	const	res = cui_file_sheet_add ( backend.file() );
+	int	const	res = cui_file_sheet_add ( file() );
 
 	if ( res == 1 )
 	{
@@ -219,7 +219,7 @@ int jtf_new_sheet (
 		return 2;
 	}
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res )
 	{
@@ -229,12 +229,12 @@ int jtf_new_sheet (
 	return 0;
 }
 
-int jtf_rename_graph (
+int Backend::jtf_rename_graph (
 	char	const * const * const	args
 	)
 {
-	CedBook		* const book = backend.file()->cubook->book;
-	CedBookFile	* const old = backend.graph ();
+	CedBook		* const book = file()->cubook->book;
+	CedBookFile	* const old = graph ();
 
 	if ( ! old )
 	{
@@ -264,21 +264,20 @@ int jtf_rename_graph (
 	return 0;
 }
 
-int jtf_rename_sheet (
+int Backend::jtf_rename_sheet (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
-	int const res = cui_book_page_rename ( backend.file()->cubook, sheet,
-		args[0] );
+	int const res = cui_book_page_rename ( file()->cubook, sh, args[0] );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if ( res )
 	{
@@ -288,13 +287,11 @@ int jtf_rename_sheet (
 	return 0;
 }
 
-int jtf_set_2dyear (
+int Backend::jtf_set_2dyear (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
-
-	if ( ! sheet )
+	if ( ! sheet() )
 	{
 		return 2;
 	}
@@ -331,14 +328,14 @@ int jtf_set_2dyear (
 		}
 	}
 
-	int const res = cui_sheet_2dyear ( backend.file(), year );
+	int const res = cui_sheet_2dyear ( file(), year );
 
 	if ( res > 0 )
 	{
 		fprintf ( stderr, "Unable to fix years.\n" );
 	}
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL	||
 		res == CUI_ERROR_LOCKED_SHEET	||
@@ -348,7 +345,7 @@ int jtf_set_2dyear (
 		return 2;			// Nothing changed
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;
 }

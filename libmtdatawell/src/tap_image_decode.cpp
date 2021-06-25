@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -66,13 +66,13 @@ static int decode_rgb (
 }
 
 int mtDW::Tap::Op::decode_image (
-	mtPixy::Image	* const	image,
+	mtPixmap const * const	image,
 	char	const * const	output,
 	int			& type
 	)
 {
-	uint64_t const pixels = (uint64_t)(image->get_width () *
-					image->get_height ());
+	uint64_t const pixels = (uint64_t)(pixy_pixmap_get_width (image) *
+		pixy_pixmap_get_height (image));
 
 	try
 	{
@@ -83,7 +83,9 @@ int mtDW::Tap::Op::decode_image (
 			return report_error ( ERROR_IMAGE_OPEN_OUTPUT );
 		}
 
-		if ( decode_rgb ( file, image->get_canvas (), pixels * 3 ) )
+		if ( decode_rgb ( file, pixy_pixmap_get_canvas (image),
+			pixels * 3 )
+			)
 		{
 			remove ( output );
 

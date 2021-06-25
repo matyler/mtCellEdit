@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015-2017 Mark Tyler
+	Copyright (C) 2015-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,7 +24,15 @@
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int parse_node (
 	mtUtreeNode	* const	node
 	);
+
+#ifdef __cplusplus
+}
+#endif
 

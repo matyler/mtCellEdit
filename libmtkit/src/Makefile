@@ -1,6 +1,6 @@
 include		../_conf.txt
 
-HEADER		:= mtkit.h
+HEADER		:= mtkit.h mtkit_sqlite.h
 OBJS		:= $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
 
@@ -28,7 +28,7 @@ install:
 uninstall:
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_NAME)
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_SONAME)
-		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
+		cd $(DESTDIR)$(HEAD_INSTALL); rm -f $(HEADER)
 
 clean:
 		rm -f *.o *.so.$(LIB_SONUM)

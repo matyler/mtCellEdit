@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,9 +20,6 @@
 
 
 
-// C++
-#include <vector>
-
 // C
 #include <stdlib.h>
 #include <string.h>
@@ -32,8 +29,7 @@
 #include <unistd.h>
 
 // System
-#include <sqlite3.h>
-#include <mtkit.h>
+#include <mtkit_sqlite.h>
 
 // Internal
 #include "static.h"
@@ -87,6 +83,7 @@
 
 
 class Backend;
+class MemPrefs;
 
 
 
@@ -94,11 +91,69 @@ class Backend;
 
 
 
+class MemPrefs
+{
+public:
+	MemPrefs () {}
+
+	std::string		crul_split_main;
+	double			gl_point_range		= 0.0;
+	double			gl_point_size		= 0.0;
+	double			gl_line_butt_size	= 0.0;
+	double			gl_line_thickness	= 0.0;
+	int			gl_light_camera		= 0;
+	double			gl_light_x		= 0.0;
+	double			gl_light_y		= 0.0;
+	double			gl_light_z		= 0.0;
+
+	int			cloud_rate_low		= 0;
+	int			cloud_rate_medium	= 0;
+	int			view_nudge_size		= 0;
+	int			view_split_on		= 0;
+	std::string		view_split_pos;
+	int			view_split_vert		= 0;
+
+	double			view_a_cam_x		= 0.0;
+	double			view_a_cam_y		= 0.0;
+	double			view_a_cam_z		= 0.0;
+	double			view_a_cam_xrot		= 0.0;
+	double			view_a_cam_yrot		= 0.0;
+	double			view_a_cam_zrot		= 0.0;
+
+	double			view_b_cam_x		= 0.0;
+	double			view_b_cam_y		= 0.0;
+	double			view_b_cam_z		= 0.0;
+	double			view_b_cam_xrot		= 0.0;
+	double			view_b_cam_yrot		= 0.0;
+	double			view_b_cam_zrot		= 0.0;
+
+	int			view_show_antialiasing	= 0;
+	int			view_show_cloud		= 0;
+	int			view_show_crosshair	= 0;
+	int			view_show_model		= 0;
+	int			view_show_ruler_plane	= 0;
+	int			view_show_rulers	= 0;
+	int			view_show_statusbar	= 0;
+
+	int			window_x		= 0;
+	int			window_y		= 0;
+	int			window_w		= 0;
+	int			window_h		= 0;
+	int			window_maximized	= 0;
+
+	mtKit::UPrefUIEdit	ui_editor;
+	mtKit::RecentFile	recent_crul_db;
+
+private:
+	MTKIT_RULE_OF_FIVE( MemPrefs )
+};
+
+
+
 class Backend
 {
 public:
 	Backend ();
-	~Backend ();
 
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running (start UI)
@@ -114,18 +169,22 @@ public:
 /// ----------------------------------------------------------------------------
 
 	mtKit::Exit		exit;
-	mtKit::Prefs		prefs;
-	mtKit::RecentFile	recent_crul_db;
+
+	// uprefs must be destroyed before mprefs, so it appears below it:
+	MemPrefs		mprefs;
+	mtKit::UserPrefs	uprefs;
 
 private:
 	void prefs_init ();
 
 /// ----------------------------------------------------------------------------
 
-	char		const *	m_db_path;
-	char		const *	m_prefs_filename;
+	char		const *	m_db_path		= nullptr;
+	char		const *	m_prefs_filename	= nullptr;
 
 	std::vector<char const *> m_cline_files;
+
+	MTKIT_RULE_OF_FIVE( Backend )
 };
 
 

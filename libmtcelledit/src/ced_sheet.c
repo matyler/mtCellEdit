@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -485,7 +485,7 @@ int ced_sheet_set_column_width (
 		column > CED_MAX_COLUMN		||
 		coltot < 1			||
 		coltot > CED_MAX_COLUMN		||
-		(column + coltot - 1) > CED_MAX_COLUMN
+		(column + coltot) > (CED_MAX_COLUMN + 1)
 		)
 	{
 		return 1;
@@ -901,34 +901,28 @@ static int colauto_cb (
 	)
 {
 	autocolSTATE	* const	state = (autocolSTATE *)user_data;
-	char		* txt = NULL;
-	int		ci;
-
 
 	if ( ! cell->text )
 	{
 		return 0;
 	}
 
-	txt = ced_cell_create_output ( cell, NULL );
-	if ( ! txt )
+	char buf[ CED_CELL_MAX_BYTES ];
+
+	if ( ced_cell_create_output ( cell, NULL, buf, sizeof(buf) ) )
 	{
 		return 0;
 	}
 
 	// Is this text larger than previous max for this column?
-	ci = col - state->col_start;
+	int const ci = col - state->col_start;
 
-
-	size_t		w = strlen ( txt );
-
+	size_t const w = strlen ( buf );
 
 	if ( w < INT_MAX )
 	{
 		state->width_list[ci] = MAX ( (int)w, state->width_list[ci] );
 	}
-
-	free ( txt );
 
 	return 0;
 }
@@ -983,7 +977,7 @@ int ced_sheet_set_column_width_list (
 		col > CED_MAX_COLUMN			||
 		coltot < 1				||
 		coltot > CED_MAX_COLUMN			||
-		(col + coltot - 1) > CED_MAX_COLUMN	||
+		(col + coltot) > (CED_MAX_COLUMN + 1)	||
 		! width_list
 		)
 	{

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017-2018 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -315,6 +315,7 @@ void mtKit::ChunkFile::Save::close ()
 	}
 }
 
+/*
 void mtKit::ChunkFile::Save::set_encoding_deflate (
 	int	const	level,
 	int	const	model
@@ -326,6 +327,7 @@ void mtKit::ChunkFile::Save::set_encoding_deflate (
 	m_deflate_level = MAX ( MTKIT_DEFLATE_LEVEL_MIN,
 		MIN ( MTKIT_DEFLATE_LEVEL_MAX, level ) );
 }
+*/
 
 int mtKit::ChunkFile::Save::put_chunk (
 	uint8_t	const * const	buf,

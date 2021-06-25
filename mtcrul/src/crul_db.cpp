@@ -19,6 +19,10 @@
 
 
 
+#define DB_FILENAME "db.sqlite"
+
+
+
 Crul::DB::DB ()
 {
 }
@@ -27,14 +31,14 @@ Crul::DB::~DB ()
 {
 }
 
-int Crul::DB::open ( std::string const & filename )
+int Crul::DB::open ( std::string const & dir )
 {
-	if ( m_db.open ( filename ) )
+	if ( m_db.open ( dir + MTKIT_DIR_SEP + DB_FILENAME ) )
 	{
 		return 1;
 	}
 
-	m_filename = filename;
+	m_dir = dir + MTKIT_DIR_SEP;
 
 	int const version = m_db.get_version ();
 
@@ -59,23 +63,6 @@ int Crul::DB::open ( std::string const & filename )
 /// any migration of data as required.
 
 ///	CACHE	----------------------------------------------------------------
-
-	m_db.exec_sql ( "CREATE TABLE IF NOT EXISTS " DB_TABLE_CACHE_PTS " ( "
-		DB_FIELD_ID " INTEGER, "
-		DB_FIELD_ITEM " INTEGER, "
-		"PRIMARY KEY( " DB_FIELD_ID ", " DB_FIELD_ITEM " )"
-		" );" );
-	m_db.add_column_field ( DB_TABLE_CACHE_PTS, DB_FIELD_MEM,
-		"BLOB" );
-
-	m_db.exec_sql ( "CREATE TABLE IF NOT EXISTS " DB_TABLE_CACHE_PTS_MOD
-		" ( "
-		DB_FIELD_ID " INTEGER, "
-		DB_FIELD_ITEM " INTEGER, "
-		"PRIMARY KEY( " DB_FIELD_ID ", " DB_FIELD_ITEM " )"
-		" );" );
-	m_db.add_column_field ( DB_TABLE_CACHE_PTS_MOD, DB_FIELD_MEM,
-		"BLOB" );
 
 	m_db.exec_sql ( "CREATE TABLE IF NOT EXISTS " DB_TABLE_CACHE_PTS_IDX
 		" ( " DB_FIELD_ID " INTEGER PRIMARY KEY );" );
@@ -136,7 +123,7 @@ void Crul::DB::clear_cache_index ( int const id )
 {
 	mtKit::SqliteStmt stmt ( m_db );
 
-	char const * sql =
+	char const * const sql =
 		"DELETE FROM "	DB_TABLE_CACHE_PTS_IDX
 		" WHERE "	DB_FIELD_ID	" = ?1";
 

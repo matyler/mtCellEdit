@@ -1,10 +1,10 @@
 include		../_conf.txt
 
 OBJS_BE		:= $(patsubst %.cpp,%.o,$(wildcard be*.cpp))
-OBJS_MOC	:= $(patsubst %.h,moc_%.o,$(wildcard qt4*.h))
-OBJS_QT4	:= $(patsubst %.cpp,%.o,$(wildcard qt4*.cpp))
-OBJS_QT4	:= $(sort $(OBJS_BE) $(OBJS_MOC) $(OBJS_QT4))
-OBJS_QT5	:= $(OBJS_QT4)
+OBJS_MOC	:= $(patsubst %.h,moc_%.o,$(wildcard qt5*.h))
+OBJS_QT5	:= $(patsubst %.cpp,%.o,$(wildcard qt5*.cpp))
+OBJS_QT5	:= $(sort $(OBJS_BE) $(OBJS_MOC) $(OBJS_QT5))
+OBJS_QT6	:= $(OBJS_QT5)
 
 .PHONY:		all install uninstall clean
 
@@ -12,15 +12,15 @@ OBJS_QT5	:= $(OBJS_QT4)
 all:		$(BIN_NAME)
 
 
-mtdatawell-qt4:	$(OBJS_QT4)
-		$(CXX) $^ -o $@ $(LDFLAGS)
-
 mtdatawell-qt5:	$(OBJS_QT5)
 		$(CXX) $^ -o $@ $(LDFLAGS)
 
-$(OBJS_QT4):	*.h
+mtdatawell-qt6:	$(OBJS_QT6)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS_QT5):	*.h
+
+$(OBJS_QT6):	*.h
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule

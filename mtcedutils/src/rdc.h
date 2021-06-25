@@ -15,16 +15,20 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <string.h>
 #include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
 
+#include <mtkit.h>
 #include <mtcelledit.h>
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 typedef struct rdcPadFile	rdcPadFile;
@@ -68,13 +72,13 @@ int validate_arg_password_len	( void );
 
 // Action calls
 
-int create_matrix	(mtArg const *, int, int, char const * const *, void *);
-int create_passwords	(mtArg const *, int, int, char const * const *, void *);
-int create_prng		(mtArg const *, int, int, char const * const *, void *);
-int create_shuffle	(mtArg const *, int, int, char const * const *, void *);
-int create_unshuffle	(mtArg const *, int, int, char const * const *, void *);
-int create_xor		(mtArg const *, int, int, char const * const *, void *);
-int print_analysis	(mtArg const *, int, int, char const * const *, void *);
+int create_matrix	( void );
+int create_passwords	( void );
+int create_prng		( void );
+int create_shuffle	( void );
+int create_unshuffle	( void );
+int create_xor		( void );
+int print_analysis	( void );
 
 // No validation of the arg_* values is done in the functions below so it must
 // be done in the main Action calls above.
@@ -99,4 +103,10 @@ int rdc_pad_read (
 int rdc_pad_close (
 	rdcPadFile	* padfile
 	);
+
+
+
+#ifdef __cplusplus
+}
+#endif
 

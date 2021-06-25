@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -81,8 +81,8 @@ int mtPixy::PolySelOverlay::add ()
 	return 0;
 }
 
-mtPixy::Image * mtPixy::PolySelOverlay::copy (
-	Image	* const	src,
+mtPixmap * mtPixy::PolySelOverlay::copy (
+	mtPixmap const * const src,
 	int		&x,
 	int		&y,
 	int		&w,
@@ -94,27 +94,24 @@ mtPixy::Image * mtPixy::PolySelOverlay::copy (
 		return NULL;
 	}
 
-	Image * mask = create_mask ( x, y, w, h );
-	if ( ! mask )
+	mtPixy::Pixmap mask ( create_mask ( x, y, w, h ) );
+	if ( ! mask.get() )
 	{
 		return NULL;
 	}
 
-	Image * im = src->resize ( x, y, w, h );
-	if ( ! im )
+	mtPixy::Pixmap pixmap ( pixy_pixmap_resize ( src, x, y, w, h ) );
+	if ( ! pixmap.get() )
 	{
-		delete mask;
 		return NULL;
 	}
 
-	if ( im->move_alpha_destroy ( mask ) )
+	if ( pixy_pixmap_move_alpha ( pixmap.get(), mask.get() ) )
 	{
-		delete im;
-		delete mask;
 		return NULL;
 	}
 
-	return im;
+	return pixmap.release();
 }
 
 
@@ -299,7 +296,7 @@ void PolyState::line (
 	}
 }
 
-mtPixy::Image * mtPixy::PolySelOverlay::create_mask (
+mtPixmap * mtPixy::PolySelOverlay::create_mask (
 	int		&x,
 	int		&y,
 	int		&w,
@@ -313,22 +310,20 @@ mtPixy::Image * mtPixy::PolySelOverlay::create_mask (
 
 	get_xywh ( x, y, w, h );
 
-	Image * const imask = mtPixy::Image::create ( mtPixy::Image::TYPE_ALPHA,
-		w, h );
-	if ( ! imask )
+	mtPixy::Pixmap imask ( pixy_pixmap_new_alpha ( w, h ) );
+	if ( ! imask.get() )
 	{
 		return NULL;
 	}
 
-	unsigned char * const dst = imask->get_alpha ();
+	unsigned char * const dst = imask.get()->alpha;
 	if ( ! dst )
 	{
-		delete imask;
 		return NULL;
 	}
 
 	PolyState ( *this, dst, x, y, w, h );
 
-	return imask;
+	return imask.release();
 }
 

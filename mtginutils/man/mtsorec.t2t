@@ -1,0 +1,39 @@
+= NAME =
+@BIN_NAME@ - sound recorder
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ]... [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ records audio and stores the result in a WAV file.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-dev** INTEGER
+	Record from this audio input device. Default is -1 which auto-detects.
+
+**-gui**
+	Start the GUI:  Space pauses; Escape stops;
+
+**-ldev**
+	List audio devices.
+
+**-prefs** STRING
+	Use this file for GUI program preferences (e.g. window position).
+
+**-v**
+	Verbose.
+
+
+= EXAMPLE =
+**@BIN_NAME@** /tmp/output.wav -gui -dev 2
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Default file used for storing user preferences.

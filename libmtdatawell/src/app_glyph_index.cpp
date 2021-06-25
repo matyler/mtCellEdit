@@ -89,15 +89,7 @@ void mtDW::GlyphIndex::add_root_nodes ( std::string const &nodes )
 			throw 123;
 		}
 
-		std::string st;
-
-		if ( mtKit::string_from_data( st, src + i, (size_t)glyph_len ) )
-		{
-			std::cerr << "GlyphIndex::add_root_nodes "
-				<< "unable to create glyph string - '"
-				<< nodes << "'\n";
-			throw 123;
-		}
+		std::string st ( (char const *)(src + i), (size_t)glyph_len );
 
 		if ( m_nodes.end () != m_nodes.find ( st ) )
 		{

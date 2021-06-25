@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -107,7 +107,8 @@ int Crul::Cloud::load_pts (
 
 		db->clear_cache ();
 
-		std::vector<PointGL> * cloud_high = m_cpts_high.get_points ();
+		std::vector<mtGin::GL::VertexRGB> * cloud_high =
+			m_cpts_high.get_points ();
 
 		while ( 1 )
 		{
@@ -116,7 +117,7 @@ int Crul::Cloud::load_pts (
 				break;
 			}
 
-			PointGL xyzrgb;
+			mtGin::GL::VertexRGB xyzrgb;
 
 			double	x, y, z;
 			int	intensity, r, g, b;
@@ -298,7 +299,7 @@ public:
 		double g,
 		double b
 		);
-	int to_vector ( std::vector<Crul::PointGL> * const dest );
+	int to_vector ( std::vector<mtGin::GL::VertexRGB> * const dest );
 
 	double xyz_sample ( double xyz ) const;
 
@@ -362,13 +363,13 @@ double pCloud::xyz_sample ( double const xyz ) const
 	double const m = fmod ( xyz, m_lim );
 	double delta;
 
-	if ( abs(m) <= m_lim_half )
+	if ( fabs(m) <= m_lim_half )
 	{
 		delta = -m;
 	}
 	else
 	{
-		delta = m_lim - abs(m);
+		delta = m_lim - fabs(m);
 
 		if ( m < 0 )
 		{
@@ -379,9 +380,9 @@ double pCloud::xyz_sample ( double const xyz ) const
 	return (GLfloat)(xyz + delta);
 }
 
-int pCloud::to_vector ( std::vector<Crul::PointGL> * const dest )
+int pCloud::to_vector ( std::vector<mtGin::GL::VertexRGB> * const dest )
 {
-	Crul::PointGL rec;
+	mtGin::GL::VertexRGB rec;
 
 	std::map<pCloudNkey, pCloudNdata>::iterator it;
 
@@ -407,7 +408,7 @@ int pCloud::to_vector ( std::vector<Crul::PointGL> * const dest )
 
 
 int Crul::Cloud::resample_cloud (
-	std::vector<Crul::PointGL> * const dest,
+	std::vector<mtGin::GL::VertexRGB> * const dest,
 	int	const	rate
 	)
 {
@@ -415,7 +416,8 @@ int Crul::Cloud::resample_cloud (
 
 	// Pack cloud points into resampled map
 
-	std::vector<Crul::PointGL> const & cloud = * m_cpts_high.get_points ();
+	std::vector<mtGin::GL::VertexRGB> const & cloud =
+		* m_cpts_high.get_points ();
 
 	for ( auto && v : cloud )
 	{

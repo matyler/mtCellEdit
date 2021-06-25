@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,5 +15,5 @@
 	along with this program in the file COPYING.
 */
 
-#define	MT_COPYRIGHT_YEARS	"2004-2020"
+#define	MT_COPYRIGHT_YEARS	"2004-2021"
 

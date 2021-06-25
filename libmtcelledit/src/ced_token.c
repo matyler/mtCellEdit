@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1522,6 +1522,15 @@ static int trunc_func (
 	return round_trunc_real ( funcs, 0 );
 }
 
+static int atan2_func (
+	CedFuncState	* const	funcs
+	)
+{
+	FUNC_RESULT = atan2 ( ARGNUM ( 1 ), ARGNUM ( 0 ) );
+
+	return 0;
+}
+
 #define MATH_FUNC( NAME ) \
 	static int NAME##_func ( CedFuncState * const	funcs ) \
 	{ \
@@ -1572,6 +1581,7 @@ static CedToken const token_funcs[] = {
 {"acos",	CED_ARGSET_NUM,		acos_func,	0 },
 {"asin",	CED_ARGSET_NUM,		asin_func,	0 },
 {"atan",	CED_ARGSET_NUM,		atan_func,	0 },
+{"atan2",	CED_ARGSET_NUM_NUM,	atan2_func,	0 },
 {"average",	CED_ARGSET_CELLRANGE,	average,	CED_TOKEN_FLAG_VOLATILE },
 {"ceil",	CED_ARGSET_NUM,		ceil_func,	0 },
 {"cos",		CED_ARGSET_NUM,		cos_func,	0 },

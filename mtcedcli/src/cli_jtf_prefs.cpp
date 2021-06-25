@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,43 +19,27 @@
 
 
 
-int Backend::prefs_init ()
+void Backend::prefs_init ()
 {
-	mtPrefTable	const prefs_table[] = {
-{ MAIN_ROW_PAD,			MTKIT_PREF_TYPE_INT, "1", NULL, NULL, 0, NULL, NULL },
-{ MAIN_FONT_NAME,		MTKIT_PREF_TYPE_STR, "Sans", NULL, NULL, 0, NULL, NULL },
-{ MAIN_FONT_SIZE,		MTKIT_PREF_TYPE_INT, "12", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_WIDTH,	MTKIT_PREF_TYPE_INT, "297", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_HEIGHT,	MTKIT_PREF_TYPE_INT, "210", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_MARGIN_X,	MTKIT_PREF_TYPE_INT, "10", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_MARGIN_Y,	MTKIT_PREF_TYPE_INT, "10", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_HEADER_LEFT, MTKIT_PREF_TYPE_OPTION, "2", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_HEADER_CENTRE, MTKIT_PREF_TYPE_OPTION, "0", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_HEADER_RIGHT, MTKIT_PREF_TYPE_OPTION, "3", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_FOOTER_LEFT, MTKIT_PREF_TYPE_OPTION, "6", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_FOOTER_CENTRE, MTKIT_PREF_TYPE_OPTION, "0", NULL, NULL, 0, NULL, NULL },
-{ CUI_INIFILE_PAGE_FOOTER_RIGHT, MTKIT_PREF_TYPE_OPTION, "4", NULL, NULL, 0, NULL, NULL },
-{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-};
-
-
-	m_prefs = mtkit_prefs_new ( prefs_table );
-	if ( ! m_prefs )
-	{
-		fprintf ( stderr, "Unable to create state preferences.\n\n" );
-
-		return 1;
-	}
-
-	return 0;
-}
-
-int Backend::prefs_free ()
-{
-	mtkit_prefs_destroy ( m_prefs );
-	m_prefs = NULL;
-
-	return 0;
+	m_uprefs.add_int ( MAIN_ROW_PAD, m_row_pad, 1 );
+	m_uprefs.add_string ( MAIN_FONT_NAME, m_font_name, "Sans" );
+	m_uprefs.add_int ( MAIN_FONT_SIZE, m_font_size, 12 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_WIDTH, m_page_width, 297 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_HEIGHT, m_page_height, 210 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_MARGIN_X, m_page_margin_x, 10 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_MARGIN_Y, m_page_margin_y, 10 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_HEADER_LEFT, m_page_header_left,
+		2, 0, 6 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_HEADER_CENTRE, m_page_header_centre,
+		0, 0, 6 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_HEADER_RIGHT, m_page_header_right,
+		3, 0, 6 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_FOOTER_LEFT, m_page_footer_left,
+		6, 0, 6 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_FOOTER_CENTRE, m_page_footer_centre,
+		0, 0, 6 );
+	m_uprefs.add_int ( CUI_INIFILE_PAGE_FOOTER_RIGHT, m_page_footer_right,
+		4, 0, 6 );
 }
 
 typedef struct
@@ -90,11 +74,11 @@ static int match_chvoidp (
 	return 1;			// Not found
 }
 
-int jtf_set_prefs_book (
+int Backend::jtf_set_prefs_book (
 	char	const * const * const	args
 	)
 {
-	CedBookPrefs	* const bp = &backend.file()->cubook->book->prefs;
+	CedBookPrefs	* const bp = &file()->cubook->book->prefs;
 	void		* vp;
 	charVOIDp const table_s[] = {
 			{ "active_sheet", &bp->active_sheet },
@@ -139,13 +123,13 @@ int jtf_set_prefs_book (
 	return 0;
 }
 
-int jtf_set_prefs_cell (
+int Backend::jtf_set_prefs_cell (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
@@ -199,20 +183,20 @@ int jtf_set_prefs_cell (
 	CedSheet	* tmp_sheet = NULL;
 	int		r1, r2, c1, c2;
 
-	if ( cui_cellprefs_init ( sheet, &r1, &c1, &r2, &c2, &tmp_sheet ) )
+	if ( cui_cellprefs_init ( sh, &r1, &c1, &r2, &c2, &tmp_sheet ) )
 	{
 		fprintf ( stderr, "Error setting up temp sheet\n\n" );
 
 		return 2;
 	}
 
-	int const res = cui_cellprefs_change ( backend.file()->cubook, sheet,
+	int const res = cui_cellprefs_change ( file()->cubook, sh,
 		r1, c1, r2, c2, tmp_sheet, pref_id, charp, num );
 
 	ced_sheet_destroy ( tmp_sheet );
 	tmp_sheet = NULL;
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -231,11 +215,11 @@ int jtf_set_prefs_cell (
 	return 0;
 }
 
-int jtf_set_prefs_cellborder (
+int Backend::jtf_set_prefs_cellborder (
 	char	const * const * const	args
 	)
 {
-	if ( ! backend.sheet() )
+	if ( ! sheet() )
 	{
 		return 2;
 	}
@@ -249,9 +233,9 @@ int jtf_set_prefs_cellborder (
 		return 2;
 	}
 
-	int const res = cui_cellprefs_border ( backend.file(), num );
+	int const res = cui_cellprefs_border ( file(), num );
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	if (	res == CUI_ERROR_LOCKED_CELL ||
 		res == CUI_ERROR_NO_CHANGES
@@ -270,13 +254,13 @@ int jtf_set_prefs_cellborder (
 	return 0;
 }
 
-int jtf_set_prefs_sheet (
+int Backend::jtf_set_prefs_sheet (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
@@ -290,7 +274,7 @@ int jtf_set_prefs_sheet (
 	}
 
 	void		* vp;
-	CedSheetPrefs	* const sp = &sheet->prefs;
+	CedSheetPrefs	* const sp = &sh->prefs;
 	charVOIDp const table[] = {
 			{ "cursor_r1", &sp->cursor_r1 },
 			{ "cursor_c1", &sp->cursor_c1 },
@@ -320,21 +304,17 @@ int jtf_set_prefs_sheet (
 	return 0;
 }
 
-int jtf_set_prefs_state (
+int Backend::jtf_set_prefs_state (
 	char	const * const * const	args
 	)
 {
 	if ( 0 == strcmp ( args[0], MAIN_FONT_NAME ) )
 	{
-		if ( mtkit_prefs_set_str ( backend.prefs(), args[0], args[1] ) )
-		{
-			goto error;
-		}
+		prefs().set ( args[0], args[1] );
 	}
 	else
 	{
-		int		num;
-
+		int num;
 
 		// The state is purely ints or options with no limits
 		if ( mtKit::cli_parse_int ( args[1], num, 0, -1 ) )
@@ -342,25 +322,17 @@ int jtf_set_prefs_state (
 			return 2;
 		}
 
-		if ( mtkit_prefs_set_int ( backend.prefs(), args[0], num ) )
-		{
-			goto error;
-		}
+		prefs().set ( args[0], num );
 	}
 
 	return 0;
-
-error:
-	fprintf ( stderr, "Error setting state preference\n\n" );
-
-	return 2;
 }
 
-int jtf_print_prefs_book (
+int Backend::jtf_print_prefs_book (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	CedBookPrefs	* const bp = &backend.file()->cubook->book->prefs;
+	CedBookPrefs	* const bp = &file()->cubook->book->prefs;
 
 	if ( bp->active_sheet )
 	{
@@ -388,56 +360,47 @@ int jtf_print_prefs_book (
 	return 0;
 }
 
-int jtf_print_prefs_sheet (
+int Backend::jtf_print_prefs_sheet (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 2;
 	}
 
-	CedSheetPrefs * const sp = &sheet->prefs;
+	CedSheetPrefs * const p = &sh->prefs;
 
-	printf ( "cursor_r1 = %i\n", sp->cursor_r1 );
-	printf ( "cursor_c1 = %i\n", sp->cursor_c1 );
-	printf ( "cursor_r2 = %i\n", sp->cursor_r2 );
-	printf ( "cursor_c2 = %i\n", sp->cursor_c2 );
-	printf ( "split_r1 = %i\n", sp->split_r1 );
-	printf ( "split_r2 = %i\n", sp->split_r2 );
-	printf ( "split_c1 = %i\n", sp->split_c1 );
-	printf ( "split_c2 = %i\n", sp->split_c2 );
-	printf ( "start_row = %i\n", sp->start_row );
-	printf ( "start_col = %i\n", sp->start_col );
-	printf ( "locked = %i\n", sp->locked );
+	printf ( "cursor_r1 = %i\n", p->cursor_r1 );
+	printf ( "cursor_c1 = %i\n", p->cursor_c1 );
+	printf ( "cursor_r2 = %i\n", p->cursor_r2 );
+	printf ( "cursor_c2 = %i\n", p->cursor_c2 );
+	printf ( "split_r1 = %i\n", p->split_r1 );
+	printf ( "split_r2 = %i\n", p->split_r2 );
+	printf ( "split_c1 = %i\n", p->split_c1 );
+	printf ( "split_c2 = %i\n", p->split_c2 );
+	printf ( "start_row = %i\n", p->start_row );
+	printf ( "start_col = %i\n", p->start_col );
+	printf ( "locked = %i\n", p->locked );
 
 	return 0;
 }
 
-static int cb_scan_state (
-	mtTreeNode	* const	node,
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	mtPrefValue	* iv = (mtPrefValue *)node->data;
-
-
-	printf ( "%s = '%s'\n", (char *)node->key, iv->value );
-
-	return 0;	// continue
-}
-
-int jtf_print_prefs_state (
+int Backend::jtf_print_prefs_state (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	if ( mtkit_tree_scan ( mtkit_prefs_get_tree ( backend.prefs () ),
-		cb_scan_state, NULL, 0 ) )
-	{
-		fprintf ( stderr, "Problem scanning state preferences\n\n" );
-	}
+	prefs().scan_prefs ( []( mtKit::PrefType ARG_UNUSED(type),
+		std::string	const & key,
+		std::string	const & ARG_UNUSED(type_name),
+		std::string	const & var_value,
+		bool			ARG_UNUSED(var_default)
+		)
+		{
+			std::cout << key << " = '" << var_value << "'\n";
+		} );
 
 	return 0;
 }

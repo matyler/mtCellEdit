@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include <sqlite3.h>
+#include <mtkit_sqlite.h>
 
 #include "mtdatawell.h"
 
@@ -51,49 +51,13 @@ int remove_dir (
 class ByteBuf
 {
 public:
-	inline ByteBuf ()
-		:
-		m_buf (),
-		m_size (0),
-		m_tot (0),
-		m_pos (0)
-	{}
+	ByteBuf ();
+	explicit ByteBuf ( size_t const size );
 
-	inline explicit ByteBuf ( size_t const size )
-		:
-		m_buf ( (uint8_t *)calloc ( size, sizeof(uint8_t) ) ),
-		m_size ( size ),
-		m_tot (0),
-		m_pos (0)
-	{
-		if ( ! m_buf )
-		{
-			throw 123;
-		}
-	}
+	~ByteBuf ();
 
-	inline ~ByteBuf () { set ( NULL, 0 ); }
-
-	inline int allocate ( size_t const size )
-	{
-		if ( size < 1 )
-		{
-			set ( NULL, 0 );
-			return 0;
-		}
-
-		set ( (uint8_t *)calloc ( size, sizeof(uint8_t) ), size );
-		return m_buf == NULL ? 1 : 0;
-	}
-
-	inline void set ( uint8_t * const buf, size_t const size )
-	{
-		free ( m_buf );
-		m_buf = buf;
-		m_size = size;
-		m_tot = 0;
-		m_pos = 0;
-	}
+	int allocate ( size_t size );
+	void set ( uint8_t * buf, size_t size );
 
 	int save ( std::string const &filename ) const;
 	void load_fill ( std::string const &filename );
@@ -108,15 +72,12 @@ public:
 	inline void set_pos ( size_t const pos ) { m_pos = pos; }
 
 private:
-	uint8_t		* m_buf;
-	size_t		m_size;
-	size_t		m_tot;		// Current items in array
-	size_t		m_pos;		// Current position in array
+	uint8_t		* m_buf = nullptr;
+	size_t		m_size = 0;
+	size_t		m_tot = 0;	// Current items in array
+	size_t		m_pos = 0;	// Current position in array
 
-/// ----------------------------------------------------------------------------
-
-	ByteBuf ( const ByteBuf & );		// Disable copy constructor
-	ByteBuf & operator = (const ByteBuf &);	// Disable = operator
+	MTKIT_RULE_OF_FIVE( ByteBuf )
 };
 
 
@@ -268,6 +229,8 @@ enum
 	ERROR_WELL_SAVE_FILE_INSANITY	,
 	ERROR_WELL_SAVE_FILE_OPEN	,
 	ERROR_WELL_SAVE_FILE_WRITE	,
+
+	ERROR_MAX			,
 
 	ERROR_NONE			= 0
 };

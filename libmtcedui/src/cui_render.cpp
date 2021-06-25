@@ -28,7 +28,6 @@ static int cui_ren_cellwidth (		// Pixel width of this column
 
 /// CAIRO
 
-typedef struct mrenSTATE mrenSTATE;
 struct mrenSTATE
 {
 	int		row_start,
@@ -58,7 +57,7 @@ struct mrenSTATE
 			* col_x,
 			* col_w
 			;
-	mtPixy::Image	* image;
+	mtPixy::Pixmap	m_image;
 
 	FILE		* fp;
 
@@ -91,14 +90,12 @@ mrenSTATE::mrenSTATE ()
 	cur_col2	( 0 ),
 	col_x		(),
 	col_w		(),
-	image		(),
 	fp		()
 {
 }
 
 
 
-typedef struct outSTATE	outSTATE;
 struct outSTATE
 {
 	mrenSTATE	mren_state;
@@ -238,9 +235,9 @@ static int export_cairo_output_back_cb (
 
 	if ( cell->prefs )
 	{
-		r = mtPixy::int_2_red ( cell->prefs->color_background );
-		g = mtPixy::int_2_green ( cell->prefs->color_background );
-		b = mtPixy::int_2_blue ( cell->prefs->color_background );
+		r = pixy_int_2_red ( cell->prefs->color_background );
+		g = pixy_int_2_green ( cell->prefs->color_background );
+		b = pixy_int_2_blue ( cell->prefs->color_background );
 	}
 
 	// Geometry of this cell
@@ -483,7 +480,7 @@ static int export_cairo_output_fore_cb (
 	)
 {
 	outSTATE	* const	state = static_cast<outSTATE *>(user_data);
-	char		* new_text = NULL, * txt;
+	char		cbuf[2000];
 	int		r = 0, g = 0, b = 0, text_style = 0;
 	double		x, y, xo, vis_right;
 
@@ -509,9 +506,9 @@ static int export_cairo_output_fore_cb (
 		col >= state->mren_state.c1
 		)		// Border must exist in visible range
 	{
-		r = mtPixy::int_2_red ( cell->prefs->border_color );
-		g = mtPixy::int_2_green ( cell->prefs->border_color );
-		b = mtPixy::int_2_blue ( cell->prefs->border_color );
+		r = pixy_int_2_red ( cell->prefs->border_color );
+		g = pixy_int_2_green ( cell->prefs->border_color );
+		b = pixy_int_2_blue ( cell->prefs->border_color );
 
 		cairo_set_line_width ( state->cr, 1 );
 		cairo_set_source_rgb ( state->cr, r / 255.0, g / 255.0,
@@ -528,19 +525,18 @@ static int export_cairo_output_fore_cb (
 		return 0;
 	}
 
-	txt = ced_cell_create_output ( cell, &state->mren_state.justify );
-	if ( ! txt )
+
+	if ( ced_cell_create_output ( cell, &state->mren_state.justify, cbuf,
+		sizeof(cbuf) ) )
 	{
 		return 1;
 	}
 
-	new_text = txt;
-
 	if ( cell->prefs )
 	{
-		r = mtPixy::int_2_red ( cell->prefs->color_foreground );
-		g = mtPixy::int_2_green ( cell->prefs->color_foreground );
-		b = mtPixy::int_2_blue ( cell->prefs->color_foreground );
+		r = pixy_int_2_red ( cell->prefs->color_foreground );
+		g = pixy_int_2_green ( cell->prefs->color_foreground );
+		b = pixy_int_2_blue ( cell->prefs->color_foreground );
 
 		text_style = cell->prefs->text_style;
 	}
@@ -550,7 +546,7 @@ static int export_cairo_output_fore_cb (
 	}
 
 	cairo_set_source_rgb ( state->cr, r / 255.0, g / 255.0, b / 255.0 );
-	pango_layout_set_text ( state->p_layout, txt, -1 );
+	pango_layout_set_text ( state->p_layout, cbuf, -1 );
 
 	cui_font_set_attr ( state->p_layout, text_style );
 
@@ -643,7 +639,6 @@ static int export_cairo_output_fore_cb (
 
 finish:
 	cairo_reset_clip ( state->cr );
-	free ( new_text );
 
 	return 0;			// Continue
 }
@@ -1403,7 +1398,7 @@ error:
 }
 
 static int export_pdf_paged (
-	mtPrefs		* const	prefs_file,
+	mtKit::UserPrefs const	& uprefs,
 	CedSheet	* const	sheet,
 	int		const	filetype,
 	char	const	* const	filename,
@@ -1415,34 +1410,23 @@ static int export_pdf_paged (
 {
 	CuiRenPage	page;
 
-	mtBulkInt table_i[] = {
-		{ CUI_INIFILE_PAGE_WIDTH,		&page.width },
-		{ CUI_INIFILE_PAGE_HEIGHT,		&page.height },
-		{ CUI_INIFILE_PAGE_MARGIN_X,		&page.margin_x },
-		{ CUI_INIFILE_PAGE_MARGIN_Y,		&page.margin_y },
-		{ CUI_INIFILE_PAGE_FOOTER_LEFT,		&page.footer[0] },
-		{ CUI_INIFILE_PAGE_FOOTER_CENTRE,	&page.footer[1] },
-		{ CUI_INIFILE_PAGE_FOOTER_RIGHT,	&page.footer[2] },
-		{ CUI_INIFILE_PAGE_HEADER_LEFT,		&page.header[0] },
-		{ CUI_INIFILE_PAGE_HEADER_CENTRE,	&page.header[1] },
-		{ CUI_INIFILE_PAGE_HEADER_RIGHT,	&page.header[2] },
-		{ NULL, NULL }
-		};
-
-
-	memset ( &page, 0, sizeof(page) );
-
-	if ( mtkit_prefs_bulk_get ( prefs_file, table_i, NULL, NULL ) )
-	{
-		return 1;
-	}
+	page.width = uprefs.get_int ( CUI_INIFILE_PAGE_WIDTH );
+	page.height = uprefs.get_int ( CUI_INIFILE_PAGE_HEIGHT );
+	page.margin_x = uprefs.get_int ( CUI_INIFILE_PAGE_MARGIN_X );
+	page.margin_y = uprefs.get_int ( CUI_INIFILE_PAGE_MARGIN_Y );
+	page.footer[0] = uprefs.get_int ( CUI_INIFILE_PAGE_FOOTER_LEFT );
+	page.footer[1] = uprefs.get_int ( CUI_INIFILE_PAGE_FOOTER_CENTRE );
+	page.footer[2] = uprefs.get_int ( CUI_INIFILE_PAGE_FOOTER_RIGHT );
+	page.header[0] = uprefs.get_int ( CUI_INIFILE_PAGE_HEADER_LEFT );
+	page.header[1] = uprefs.get_int ( CUI_INIFILE_PAGE_HEADER_CENTRE );
+	page.header[2] = uprefs.get_int ( CUI_INIFILE_PAGE_HEADER_RIGHT );
 
 	return cui_ren_export_pdf_paged ( sheet, filetype, filename,
 		gui_filename, &page, row_pad, font_name, font_size );
 }
 
 int cui_export_output (
-	mtPrefs		* const	prefs_file,
+	mtKit::UserPrefs const	& uprefs,
 	CedSheet	* const	sheet,
 	char	const	* const	filename,
 	char	const	*	gui_filename,
@@ -1482,7 +1466,7 @@ int cui_export_output (
 			CED_FILE_TYPE_OUTPUT_HTML );
 
 	case CUI_SHEET_EXPORT_PDF_PAGED:
-		return export_pdf_paged ( prefs_file, sheet, filetype,
+		return export_pdf_paged ( uprefs, sheet, filetype,
 			filename, gui_filename, row_pad, font_name, font_size );
 	}
 
@@ -2073,13 +2057,13 @@ static int main_background_ren_cb (
 
 	unsigned char color[3];
 
-	color[0] = (unsigned char)mtPixy::int_2_red (
+	color[0] = (unsigned char)pixy_int_2_red (
 		cell->prefs->color_background );
 
-	color[1] = (unsigned char)mtPixy::int_2_green (
+	color[1] = (unsigned char)pixy_int_2_green (
 		cell->prefs->color_background );
 
-	color[2] = (unsigned char)mtPixy::int_2_blue (
+	color[2] = (unsigned char)pixy_int_2_blue (
 		cell->prefs->color_background );
 
 	unsigned char * dest = state->rgb + 3 * (state->mx - state->x);
@@ -2094,7 +2078,7 @@ static int main_background_ren_cb (
 	return 0;			// Continue
 }
 
-// Render the current mtPixy::Image
+// Render the current Pixmap
 static void write_ren_text (
 	mrenSTATE	* const	state,
 	int		const	pos_x,
@@ -2124,20 +2108,22 @@ static void write_ren_text (
 	{
 		if ( cell->prefs )
 		{
-			color[0] = (unsigned char)mtPixy::int_2_red (
+			color[0] = (unsigned char)pixy_int_2_red (
 					cell->prefs->color_foreground );
 
-			color[1] = (unsigned char)mtPixy::int_2_green (
+			color[1] = (unsigned char)pixy_int_2_green (
 					cell->prefs->color_foreground );
 
-			color[2] = (unsigned char)mtPixy::int_2_blue (
+			color[2] = (unsigned char)pixy_int_2_blue (
 					cell->prefs->color_foreground );
 		}
 	}
 
+	mtPixmap const * const pixmap = state->m_image.get();
+
 	cui_ren_mem_to_rgb ( state->mem, mx, 0,
-		state->image->get_width (),
-		state->image->get_height (),
+		pixy_pixmap_get_width ( pixmap ),
+		pixy_pixmap_get_height ( pixmap ),
 		pos_x, pos_w,
 		color[0], color[1], color[2],
 		state->rgb, state->x, 0,
@@ -2201,10 +2187,8 @@ static void prepare_ren_expansion (
 		state->justify == CED_CELL_JUSTIFY_LEFT
 		)
 	{
-		int		im_width;
-
-
-		im_width = state->image->get_width ();
+		int const im_width = pixy_pixmap_get_width (
+			state->m_image.get() );
 
 		// Only ever attempt to expand if the text has already been
 		// truncated to the right.
@@ -2353,42 +2337,37 @@ somehwere.
 	}
 }
 
-// Create an mtPixy::Image for this cell text +
+// Create an mtPixmap for this cell text +
 // set mx position based on justification
 static int prepare_ren_text (
 	mrenSTATE	* const	state,
 	CedCell		* const	cell
 	)
 {
-	int		res = 1, w, text_style = 0;
+	char		cbuf[ 2000 ];
 
-	char * new_text = ced_cell_create_output ( cell, &state->justify );
+	ced_cell_create_output ( cell, &state->justify, cbuf, sizeof(cbuf) );
 
-	if ( cell->prefs )
-	{
-		text_style = cell->prefs->text_style;
-	}
-
+	int	const	text_style = cell->prefs ? cell->prefs->text_style : 0;
 
 	font_set_attr ( state->viewren->font, text_style );
 	state->viewren->font->set_row_pad ( state->viewren->row_pad );
-	state->image = state->viewren->font->render_image ( new_text,
-		CUI_CELL_MAX_PIXELS );
-	if ( ! state->image )
+	state->m_image.reset ( state->viewren->font->render_pixmap ( cbuf,
+		CUI_CELL_MAX_PIXELS ) );
+	if ( ! state->m_image.get() )
 	{
-		goto finish;
+		return 1;
 	}
 
-	state->mem = state->image->get_alpha ();
+	state->mem = pixy_pixmap_get_alpha ( state->m_image.get() );
 	if ( ! state->mem )
 	{
-		delete state->image;
-		state->image = NULL;
+		state->m_image.reset ( nullptr );
 
-		goto finish;
+		return 1;
 	}
 
-	w = state->image->get_width ();
+	int const w = pixy_pixmap_get_width ( state->m_image.get() );
 
 	switch ( state->justify )
 	{
@@ -2406,12 +2385,7 @@ static int prepare_ren_text (
 		break;
 	}
 
-	res = 0;		// Success
-
-finish:
-	free ( new_text );
-
-	return res;
+	return 0;
 }
 
 static int expose_left_ren_cb (
@@ -2443,7 +2417,7 @@ static int expose_left_ren_cb (
 		return 1;		// Problem / Nothing to do
 	}
 
-	int const w = state->image->get_width ();
+	int const w = pixy_pixmap_get_width ( state->m_image.get() );
 
 	// Is the text going to be visible?
 	if ( (state->mx + w) > pos_x )
@@ -2465,8 +2439,7 @@ static int expose_left_ren_cb (
 			state->c1 );
 	}
 
-	delete state->image;
-	state->image = NULL;
+	state->m_image.reset ( nullptr );
 
 	return 1;
 }
@@ -2633,13 +2606,13 @@ static int main_text_ren_cb (
 			col > state->cur_col2
 			)
 		{
-			rgb[0] = (unsigned char)mtPixy::int_2_red (
+			rgb[0] = (unsigned char)pixy_int_2_red (
 				cell->prefs->border_color );
 
-			rgb[1] = (unsigned char)mtPixy::int_2_green (
+			rgb[1] = (unsigned char)pixy_int_2_green (
 				cell->prefs->border_color );
 
-			rgb[2] = (unsigned char)mtPixy::int_2_blue (
+			rgb[2] = (unsigned char)pixy_int_2_blue (
 				cell->prefs->border_color );
 		}
 
@@ -2701,8 +2674,7 @@ static int main_text_ren_cb (
 				cell, state->c2 );
 		}
 
-		delete state->image;
-		state->image = NULL;
+		state->m_image.reset ( nullptr );
 
 		return 1;
 	}
@@ -2715,7 +2687,7 @@ static int main_text_ren_cb (
 		goto finish;
 	}
 
-	pos_w = state->image->get_width ();
+	pos_w = pixy_pixmap_get_width ( state->m_image.get() );
 
 	// Clipping on left
 	if ( state->mx < (state->col_x[ col - state->c1 ]) )
@@ -2735,20 +2707,22 @@ static int main_text_ren_cb (
 
 	// If we have clipped see if this can be clawed back by expanding over
 	// adjacent cell(s)
-
-	if ( pos_w != state->image->get_width () )
 	{
-		prepare_ren_expansion ( state, pos_x, pos_w, row, col, cell,
-			col );
-	}
-	else
-	{
-		write_ren_text ( state, pos_x, pos_w, row, col, cell,
-			state->mx );
+		int const nw = pixy_pixmap_get_width ( state->m_image.get() );
+
+		if ( pos_w != nw )
+		{
+			prepare_ren_expansion ( state, pos_x, pos_w, row, col,
+				cell, col );
+		}
+		else
+		{
+			write_ren_text ( state, pos_x, pos_w, row, col, cell,
+				state->mx );
+		}
 	}
 
-	delete state->image;
-	state->image = NULL;
+	state->m_image.reset ( nullptr );
 
 finish:
 	return 0;			// Continue
@@ -2962,9 +2936,8 @@ int cui_ren_expose_row_header (
 			{ 255, 255, 255 }
 			},
 			* dest, * mem, * rgb;
-	int		c = 0, cur1, cur2, image_h, image_w,
+	int		c = 0, cur1, cur2,
 			i, j, mx, my, rown, r1, r2, togo, yy;
-	mtPixy::Image	* image;
 
 
 	rgb = (unsigned char *)calloc ( (size_t)(w * h * 3), 1 );
@@ -3023,18 +2996,16 @@ int cui_ren_expose_row_header (
 	{
 		snprintf ( txt, sizeof ( txt ), "%i", i );
 
-		image = viewren->font->render_image ( txt, 0 );
-		if ( ! image )
+		mtPixy::Pixmap const pixmap ( viewren->font->render_pixmap (
+			txt, 0 ) );
+		if ( ! pixmap.get() )
 		{
 			continue;
 		}
 
-		mem = image->get_alpha ();
+		mem = pixy_pixmap_get_alpha ( pixmap.get() );
 		if ( ! mem )
 		{
-			delete image;
-			image = NULL;
-
 			continue;
 		}
 
@@ -3047,8 +3018,8 @@ int cui_ren_expose_row_header (
 			c = 3;
 		}
 
-		image_w = image->get_width ();
-		image_h = image->get_height ();
+		int const image_w = pixy_pixmap_get_width ( pixmap.get() );
+		int const image_h = pixy_pixmap_get_height ( pixmap.get() );
 
 		mx = (viewren->row_header_width - image_w) / 2;
 		my = cui_ren_y_from_row ( row_start, viewren, i );
@@ -3056,9 +3027,6 @@ int cui_ren_expose_row_header (
 			0, image_w,
 			col[c][0], col[c][1], col[c][2],
 			rgb, x, yy, w, h );
-
-		delete image;
-		image = NULL;
 	}
 
 	callback ( x, y, w, h, rgb, callback_data );
@@ -3090,10 +3058,8 @@ int cui_ren_expose_column_header (
 			* dest, * mem, * rgb;
 	int		c = 0, c1, c2,
 			* col_x	= NULL, * col_w	= NULL,
-			coln, cwidth, cur1, cur2, image_w, image_h,
+			coln, cwidth, cur1, cur2,
 			i, j, mx, mxo, mxw, my, togo;
-	mtPixy::Image	* image;
-
 
 	rgb = (unsigned char *)calloc ( (size_t)(w * h * 3), 1 );
 	if ( ! rgb )
@@ -3172,18 +3138,16 @@ int cui_ren_expose_column_header (
 	{
 		snprintf ( txt, sizeof ( txt ), "%i", i );
 
-		image = viewren->font->render_image ( txt, 0 );
-		if ( ! image )
+		mtPixy::Pixmap const pixmap ( viewren->font->render_pixmap (
+			txt, 0 ) );
+		if ( ! pixmap.get() )
 		{
 			continue;
 		}
 
-		mem = image->get_alpha ();
+		mem = pixy_pixmap_get_alpha ( pixmap.get() );
 		if ( ! mem )
 		{
-			delete image;
-			image = NULL;
-
 			continue;
 		}
 
@@ -3200,8 +3164,8 @@ int cui_ren_expose_column_header (
 		cwidth = col_w[ i - c1 ];
 		mx = col_x[ i - c1 ];
 
-		image_w = image->get_width ();
-		image_h = image->get_height ();
+		int const image_w = pixy_pixmap_get_width ( pixmap.get() );
+		int const image_h = pixy_pixmap_get_height ( pixmap.get() );
 
 		if ( image_w > cwidth )
 		{
@@ -3221,9 +3185,6 @@ int cui_ren_expose_column_header (
 			mxo, mxw,
 			col[c][0], col[c][1], col[c][2],
 			rgb, x, y, w, h );
-
-		delete image;
-		image = NULL;
 	}
 
 	callback ( x, y, w, h, rgb, callback_data );

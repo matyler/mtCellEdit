@@ -22,18 +22,13 @@
 
 
 
-#define DB_SCHEMA_VERSION	17
+#define DB_SCHEMA_VERSION	18
 
-#define DB_TABLE_CACHE_PTS	"Cache_Points"
 #define DB_TABLE_CACHE_PTS_IDX	"Cache_Points_Index"
-#define DB_TABLE_CACHE_PTS_MOD	"Cache_Points_Model"
 #define DB_TABLE_RULER_LIST	"Ruler_List"
 #define DB_TABLE_CAMERA_LIST	"Camera_List"
 
 #define DB_FIELD_ID		"ID"
-#define DB_FIELD_ITEM		"Item"
-#define DB_FIELD_MEM		"Mem"
-
 #define DB_FIELD_NAME		"Name"
 #define DB_FIELD_TOTAL		"Total"
 
@@ -59,8 +54,6 @@
 #define DB_NAME_MEDIUM		"Medium"
 #define DB_NAME_HIGH		"High"
 #define DB_NAME_MODEL		"Model"
-
-#define DB_ITEM_SIZE		100000
 
 
 

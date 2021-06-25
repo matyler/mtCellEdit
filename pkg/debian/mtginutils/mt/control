@@ -1,0 +1,13 @@
+Source: mtginutils
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtpixy, libmtcelledit, libmtgin, libsdl2-dev
+Standards-Version: 3.9.3
+Homepage: http://ced.marktyler.org/
+
+Package: mtginutils
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: MT Graphical Interface Nexus Utils
+ .

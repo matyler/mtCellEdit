@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2018 Mark Tyler
+	Copyright (C) 2012-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@
 
 
 
-#include "mtkit.h"
+#include "mtkit_sqlite.h"
 
 
 
@@ -51,31 +51,80 @@
 extern "C" {
 #endif
 
-mtUtreeNode * mtkit_utree_load_file (
-	mtUtreeNode		* parent,	// NULL = create new root
-	char		const	* filename,
-	int			* errors,	// Put error flag here,
-						// NULL = don't. Result
-						// 0 = success
-	int			* filetype	// MTKIT_FILE_OUT_*
-	);
-	// NULL = nothing loaded, else something loaded
-
-mtUtreeNode * mtkit_utree_new_text (
-	mtUtreeNode		* parent,
-	char		const	* text
-	);
-
-int mtkit_utree_save_file (
-	mtUtreeNode		* node,		// Node to save
-	char		const	* filename,
-	int			output,		// MTKIT_UTREE_OUTPUT_*
-	int			filetype	// MTKIT_FILE_*
-	);
-
 #ifdef __cplusplus
 }
 #endif
+
+
+
+#ifdef __cplusplus
+
+namespace mtKit
+{
+
+
+
+class CliItem
+{
+public:
+	CliItem (
+		std::string const & key,
+		CliFunc func,
+		int arg_min,
+		int arg_max,
+		std::string const & arg_help,
+		int arg_scale
+		)
+		:
+		m_key		( key ),
+		m_func		( func ),
+		m_arg_min	( arg_min ),
+		m_arg_max	( arg_max ),
+		m_arg_help	( arg_help ),
+		m_arg_scale	( arg_scale )
+		{}
+	~CliItem () {}
+
+	int add_item ( CliItem * item ); // "item" deleted on fail.
+
+	int set_data (
+		CliFunc func,		// NULL = Don't set
+		int arg_min,
+		int arg_max,
+		char const * arg_help,	// NULL = Don't set
+		int arg_scale
+		);
+
+	CliItem * find ( std::string const & key ) const;
+	CliItem const * match_args (
+		char const * const * argv,
+		int * cli_error,
+		int * ncargs
+		) const;
+	int callback ( char const * const * argv ) const;
+	int print_help () const;
+	int print_help_item () const;
+
+private:
+	std::string	const	m_key;
+	CliFunc			m_func;
+	int			m_arg_min;
+	int			m_arg_max;
+	std::string		m_arg_help;
+	int			m_arg_scale;
+
+	std::map< std::string, std::unique_ptr<CliItem> > m_items;
+
+	MTKIT_RULE_OF_FIVE( CliItem )
+};
+
+
+
+}	// namespace mtKit
+
+
+
+#endif	// __cplusplus
 
 
 

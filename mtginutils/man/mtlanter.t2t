@@ -1,0 +1,64 @@
+= NAME =
+@BIN_NAME@ - Landscape terraformer explorer
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ]... [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ visually explores an OpenGL scene containing a terraformed landscape.
+Left mouse click to move the camera in that given direction, right click to tilt the camera in that direction.
+Use the **Arrow Keys** to move, with **Shift** to move more quickly, or the
+**Ctrl** key to shift the view in that direction.
+The **F1** key prints the current position to stdout.
+The **s** key dumps the current image to the user's home directory.
+The **Home** key returns to the start position.
+The **Escape** key terminates the program, when not processing.
+The **End** key Redraws the current view.
+Zoom in and out using the keys **Page Up**, **Page Down**, with **Shift** to speed this up.
+In animation mode, the **Escape** key terminates the job.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-dir** STRING
+	Output directory for saving animation frames.
+
+**-fps** INTEGER
+	Frames per second of the animation (10 to 120). Default = 60.
+
+**-oh** INTEGER
+	Fix output pixmap height (128 to 15360). Default = 0, which allows the window to resize.
+
+**-ow** INTEGER
+	Fix output pixmap width (128 to 15360). Default = 0, which allows the window to resize.
+
+**-prefs** STRING
+	Use this file for GUI program preferences (e.g. window position).
+
+**-savemap** STRING
+	Save the map data to this TSV file.
+
+**-seed** INTEGER
+	Set the PRNG seed to this before generating the landscape. Default = 0.
+
+**-size** INTEGER
+	Set the size of the landscape (4 to 10). Default = 6 : (1 << 6)+1 = 65 rows.
+
+**-tsv** STRING
+	Create an animation using this TSV file.
+
+**-v**
+	Verbose.
+
+
+= EXAMPLE =
+**@BIN_NAME@** -ow 1920 -oh 1080 -tsv test/lanter_001_lights.tsv
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Default file used for storing user preferences.

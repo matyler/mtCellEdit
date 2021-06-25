@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2018 Mark Tyler
+	Copyright (C) 2004-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -86,6 +86,7 @@ mtPixy::Font::Font (
 	int		const	size
 	)
 	:
+	m_font_data	( new FontData ( name ) ),
 	m_height	( 0 ),
 	m_width		( 0 ),
 	m_baseline	( 0 ),
@@ -95,15 +96,11 @@ mtPixy::Font::Font (
 	m_style_strikethrough ( 0 ),
 	m_style_row_pad	( 0 )
 {
-	m_font_data = new FontData ( name );
-
 	set_size ( size );
 }
 
 mtPixy::Font::~Font ()
 {
-	delete m_font_data;
-	m_font_data = NULL;
 }
 
 int mtPixy::Font::set_size (
@@ -167,7 +164,7 @@ void mtPixy::Font::set_row_pad (
 	m_style_row_pad = row_pad;
 }
 
-mtPixy::Image * mtPixy::Font::render_image (
+mtPixmap * mtPixy::Font::render_pixmap (
 	char	const	* const	utf8,
 	int		const	max_width
 	)
@@ -178,7 +175,7 @@ mtPixy::Image * mtPixy::Font::render_image (
 	}
 
 
-	mtPixy::Image	* image = NULL;
+	mtPixmap	* image = NULL;
 	unsigned char	* mem = NULL;
 	FT_Bitmap	bitmap;
 	int		w=0, h=0,basel=0;
@@ -232,7 +229,7 @@ mtPixy::Image * mtPixy::Font::render_image (
 		return NULL;
 	}
 
-	image = mtPixy::Image::from_data ( mtPixy::Image::TYPE_ALPHA, w, h,
+	image = pixy_pixmap_from_data ( PIXY_PIXMAP_BPP_ALPHA_ONLY, w, h,
 		NULL, mem );
 	if ( ! image )
 	{

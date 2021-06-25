@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2017 Mark Tyler
+	Copyright (C) 2011-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,85 +15,112 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <string.h>
-
 #include <mtkit.h>
 #include <mtcelledit.h>
 
 
 
-typedef struct
+typedef std::function<int()>	FunCB;
+
+
+
+class Global
 {
-	int
-			i_csv,		// Input data format: 0 = tsv 1 = csv
-			i_clock,	// 0 = clockwise 1 = anti
-			i_dest[4],	// Start row, last row, start col,
-					// end col
-			i_error,	// 0 = success 1 = error
-			i_ftype_in,
-			i_ftype_out,	// If CED_FILE_TYPE_NONE use i_ftype_in
-			i_num,		// 0 = Text 1 = Number
-			i_rowcol,	// 0 = row 1 = col
-			i_range[4],	// Start row, last row, start col,
-					// end col
-			i_start,
-			i_case,		// 0 = Case insenstive
-					// 1 = Case sensitive
-			i_total,
-			i_tmp,		// Temp scratch for several args
-			i_verbose,	// 1 = verbose 0 = normal
-			i_wildcard	// 0 = none 1 = use * and ? as wildcards
-			;
+public:
+	Global ();
+	~Global ();
 
-	char	const	* s_arg;	// Current command line argument
+	int init ();
+	int command_line ( int argc, char const * const argv[] );
 
-	CedSheet	* sheet;	// Current sheet
-} GLOBAL;
+private:
+	enum
+	{
+		ERROR_LOAD_FILE		= 1,
+		ERROR_LIBMTCELLEDIT	= 2
+	};
 
+	int load_file ();	// Loads sheet file (name in
+				// global.s_arg). Can be a sheet only
+				// (tsv|csv|ledger).
+		// 0 = success. Failure is not sent to stderr, but i_error is
+		// set.
 
+	void set_sheet ( CedSheet * sh );
 
-// Note: must match ff_errtab in main.c
-enum
-{
-	ERROR_LOAD_FILE		= 1,
-	ERROR_LIBMTCELLEDIT	= 2
+	int ced_append ();
+	int ced_cat ();
+	int ced_clear ();
+	int ced_cut ();
+	int ced_diff ();
+	int ced_eval ();
+	int ced_find ();
+	int ced_flip ();
+	int ced_fuzzmap ();
+	int ced_insert ();
+	int ced_ls ();
+	int ced_paste ();
+	int ced_rotate ();
+	int ced_set ();
+	int ced_sort ();
+	int ced_transpose ();
+
+	void set_function ( char const * name );
+
+	int print_help ();
+	int print_version ();
+
+	int parse_cellrange ( int idata[4] );
+
+	int argcb_com ();
+	int argcb_dest ();
+	int argcb_range ();
+	int argcb_i ();
+	int argcb_o ();
+	int argcb_otype ();
+	int argcb_recalc ();
+
+	int file_func ( char const * filename );
+
+	FunCB get_function ( std::string const & txt ) const;
+	std::string get_error_message ( int err ) const;
+	int get_filetype ();
+
+/// ----------------------------------------------------------------------------
+
+	int i_csv	= 0;	// Input data format: 0 = tsv 1 = csv
+	int i_clock	= 0;	// 0 = clockwise 1 = anti
+	int i_dest[4]	= {0};	// Start row, last row, start col, end col
+	int i_error	= 0;	// 0 = success 1 = error
+	int i_ftype_in	= 0;
+	int i_ftype_out	= 0;	// If CED_FILE_TYPE_NONE use i_ftype_in
+	int i_num	= 0;	// 0 = Text 1 = Number
+	int i_rowcol	= 0;	// 0 = row 1 = col
+	int i_range[4]	= {0};	// Start row, last row, start col, end col
+	int i_start	= 0;
+	int i_case	= 0;	// 0 = Case insenstive, 1 = Case sensitive
+	int i_total	= 0;
+	int i_tmp	= 0;	// Temp scratch for several args
+	int i_verbose	= 0;	// 1 = verbose 0 = normal
+	int i_wildcard	= 0;	// 0 = none 1 = use * and ? as wildcards
+
+	char	const	* s_arg = nullptr;	// Current command line argument
+
+	CedSheet	* m_sheet = nullptr;	// Current sheet
+
+	char	const *	m_filename_a = nullptr;		// Diff
+	char	const *	m_filename_b = nullptr;
+
+	char	const *	m_dict_filename = nullptr;	// Fuzzmap
+	int		m_dict_range[4] = {0};
+
+	FunCB		m_function = nullptr;
+	std::string	m_function_name;
+
+	std::map< std::string, FunCB > jump_table;
+	std::map< std::string, int > ft_table;
+	std::map< int, std::string > err_table;
+
+	MTKIT_RULE_OF_FIVE( Global )
 };
-
-
-
-extern GLOBAL		global;
-
-
-
-int ut_load_file ( void );		// Loads sheet file (name in
-					// global.s_arg). Can be a sheet only
-					// (tsv|csv|ledger).
-	// 0 = success. Failure is not sent to stderr, but global.i_error is
-	// set.
-
-void set_global_sheet ( CedSheet * sheet );
-
-/*	Command functions
-
-	Return 0 = success.
-	Return > 0 = Generic error to be reported by caller (main.c ff_errtab).
-*/
-
-int cedut_append ( void );
-int cedut_cat ( void );
-int cedut_clear ( void );
-int cedut_cut ( void );
-int cedut_diff ( void );
-int cedut_eval ( void );
-int cedut_find ( void );
-int cedut_flip ( void );
-int cedut_fuzzmap ( void );
-int cedut_insert ( void );
-int cedut_ls ( void );
-int cedut_paste ( void );
-int cedut_rotate ( void );
-int cedut_set ( void );
-int cedut_sort ( void );
-int cedut_transpose ( void );
 

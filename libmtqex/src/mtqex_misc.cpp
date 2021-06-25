@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2018 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -117,41 +117,24 @@ bool mtQEX::ArrowFilter::eventFilter (
 }
 
 int mtQEX::qt_set_state (
-	mtKit::Prefs	* const	pr,
-	char	const	* const	key,
-	QByteArray	* const	qb
+	mtKit::UserPrefs	& prefs,
+	char	const * const	key,
+	QByteArray		& qba
 	)
 {
-	int	const	l = qb->size ();
-
-
-	if ( l < 1 )
-	{
-		return 1;
-	}
-
-	char * txt = (char *)malloc ( (size_t)(l) * 2 + 1 );
-	if ( ! txt )
-	{
-		return 1;
-	}
-
-
+	int	const	len = qba.size ();
 	char	const	* const hex = "0123456789abcdef";
-	char	const	*	src = qb->constData ();
-	char		*	dest = txt;
+	char	const	* const	src = qba.constData ();
 
+	std::string	out;
 
-	for ( int i = 0; i < l; i++, src++ )
+	for ( int i = 0; i < len; i++ )
 	{
-		*dest++ = hex[ src[0] & 15 ];
-		*dest++ = hex[ (src[0] >> 4) & 15 ];
+		out += hex[ src[i] & 15 ];
+		out += hex[ (src[i] >> 4) & 15 ];
 	}
 
-	dest[0] = 0;
-
-	pr->set ( key, txt );
-	free ( txt );
+	prefs.set ( key, out );
 
 	return 0;
 }
@@ -172,27 +155,28 @@ static int read_hex ( char const ch )
 }
 
 int mtQEX::qt_get_state (
-	mtKit::Prefs	* const	pr,
-	char	const	* const	key,
-	QByteArray	* const	qb
+	mtKit::UserPrefs	& prefs,
+	char	const * const	key,
+	QByteArray		& qba
 	)
 {
-	char	const	* const txt = pr->getString ( key );
+	std::string	const	& str = prefs.get_string ( key );
+	char	const * const	txt = str.c_str ();
 
 
-	if ( ! txt || txt[0] == 0 )
+	if ( txt[0] == 0 )
 	{
 		return 1;
 	}
 
-	qb->clear ();
+	qba.clear ();
 
 
-	size_t		const	l = strlen ( txt ) / 2;
-	char	const	*	src = txt;
+	size_t	const	len = str.size () / 2;
+	char	const	* src = txt;
 
 
-	for ( size_t i = 0; i < l; i++ )
+	for ( size_t i = 0; i < len; i++ )
 	{
 		int const a = read_hex ( *src++ );
 		if ( a < 0 )
@@ -206,41 +190,14 @@ int mtQEX::qt_get_state (
 			return 1;
 		}
 
-		qb->append ( (char)( a + (b<<4) ) );
+		qba.append ( (char)( a + (b<<4) ) );
 	}
 
 	return 0;
 }
 
-QPixmap * mtQEX::qpixmap_from_pixyimage (
-	mtPixy::Image	* i
-	)
-{
-	if ( ! i || ! i->get_canvas () )
-	{
-		return NULL;
-	}
-
-
-	QPixmap		* pixmap;
-	QImage		* qi = new QImage ( (const uchar *)i->get_canvas (),
-				i->get_width (), i->get_height (),
-				i->get_width () * 3, QImage::Format_RGB888 );
-
-
-	pixmap = new QPixmap;
-	if ( pixmap )
-	{
-		pixmap->convertFromImage ( *qi );
-	}
-
-	delete qi;
-
-	return pixmap;
-}
-
-mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
-	QPixmap		* const	pm
+QPixmap * mtQEX::qpixmap_from_pixypixmap (
+	mtPixmap const * const pm
 	)
 {
 	if ( ! pm )
@@ -248,28 +205,42 @@ mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
 		return NULL;
 	}
 
+	std::unique_ptr<QImage> const qi ( new QImage (
+		(uchar const *)pixy_pixmap_get_canvas ( pm ),
+		pixy_pixmap_get_width ( pm ), pixy_pixmap_get_height ( pm ),
+		pixy_pixmap_get_width ( pm ) * 3, QImage::Format_RGB888 ) );
+
+	QPixmap * const qpixmap = new QPixmap;
+	qpixmap->convertFromImage ( *qi.get() );
+
+	return qpixmap;
+}
+
+mtPixmap * mtQEX::pixypixmap_from_qpixmap (
+	QPixmap	 const * const	pm
+	)
+{
+	if ( ! pm )
+	{
+		return NULL;
+	}
 
 	int	const	w = pm->width ();
 	int	const	h = pm->height ();
 
-	mtPixy::Image * const im = mtPixy::Image::create (
-		mtPixy::Image::TYPE_RGB, w, h );
-
-	if ( ! im )
+	mtPixy::Pixmap im ( pixy_pixmap_new_rgb ( w, h ) );
+	if ( ! im.get() )
 	{
 		return NULL;
 	}
 
-	unsigned char * const dst = im->get_canvas ();
+	unsigned char * const dst = pixy_pixmap_get_canvas ( im.get() );
 	if ( ! dst )
 	{
-		delete im;
 		return NULL;
 	}
 
-
 	QImage		qi = pm->toImage ();
-
 
 	for ( int y = 0; y < h; y++ )
 	{
@@ -291,7 +262,7 @@ mtPixy::Image * mtQEX::pixyimage_from_qpixmap (
 		}
 	}
 
-	return im;
+	return im.release();
 }
 
 QAction * mtQEX::menu_init (
@@ -323,9 +294,6 @@ QAction * mtQEX::menu_init (
 
 void mtQEX::process_qt_pending ()
 {
-	while ( QCoreApplication::hasPendingEvents () )
-	{
-		QCoreApplication::processEvents ();
-	}
+	QCoreApplication::processEvents ();
 }
 

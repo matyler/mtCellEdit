@@ -11,12 +11,10 @@
 
 In order to compile and run mtPixy you must have several packages already present on your system:
 
-- A GNU toolchain (gcc, make, gawk, etc).
+- A GNU toolchain (gcc, gmake, gawk, etc).
 - Qt version 5.
 - txt2tags.
-- Cairo (version 1.6 or later).
-- Pango (version 1.22 or later).
-- libpng (version 1.2 or later).
+- Inkscape (to build the GUI app icons)
 
 
 These must also include library headers, which some operating systems provide in separate packages.
@@ -25,7 +23,7 @@ mtPixy then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
 | libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
-| libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
+| libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo, librsvg | The core pixel engine, including all file handling and general operations. |
 | libmtQEX      | libmtKit, Qt5    | Various Qt function utilities including preferences editor. |
 
 The other optional parts of the suite have these dependencies:
@@ -154,6 +152,28 @@ To remove these items you would use:
 ```
 ./build_install.sh libmtkit libmtpixy remove
 ```
+
+
+
+===3.5.1 Local Installation===[SEC51]
+Sometimes it is desirable not to install the program files on the system, and instead install somewhere else using the --prefix= configure script argument such as:
+
+- ~/test_a/usr
+- ~/test_b/usr
+- ~/test_c/usr
+
+
+This could be because a user does not have permission to install on the system, or because you want to have different test versions all using different versions of the core libraries.
+
+In this case you must use the **build_local.sh** script like this:
+
+```
+DIR="$HOME/test/usr"; ./build_local.sh \
+	--preconf "LDFLAGS=-Wl,-rpath=$DIR/lib" \
+	--conf "--disable-man --prefix=$DIR"
+```
+
+For a longer example see the file: ./pkg/README.txt
 
 
 

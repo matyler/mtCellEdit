@@ -7,7 +7,7 @@
 
 =2. Introduction=
 
-mtPixy is a lightweight image editing program that I created from scratch. It is a small, no frills program which is designed to handle simple day to day tasks. I have put the most important facilities I want into a small customized program which means I can avoid the problems of larger programs such as slow operating speeds and overcomplicated user interfaces.
+mtPixy is a lightweight pixel editing program that I created from scratch. It is a small, no frills program which is designed to handle simple day to day tasks. I have put the most important facilities I want into a small customized program which means I can avoid the problems of larger programs such as slow operating speeds and overcomplicated user interfaces.
 
 mtPixy is designed to work on GNU/Linux operating systems, and has been tested using x86_32, x86_64, and ARM_32 hardware platforms.
 
@@ -27,7 +27,7 @@ I have always wanted mtPixy to be small, light, and reliable as I think these ar
 
 - **Small** means a codebase with each part being small enough to manage easily.
 
- - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, e.g. porting to a new widget toolkit.
+ - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, such as porting to a new widget toolkit library.
 
 - **Light** means resource frugal.
 
@@ -50,10 +50,11 @@ An important decision I have taken is to release it as free software using the G
 | **Date**   | **Version** | **Description** |
 | 2016-7-12  | 0.0         | Project started. |
 | 2017-2-24  | 3.0         | First feature complete version. |
-| 2018-2-25  | 3.1         | Minor improvements |
-| 2018-8-25  | 3.2         | Minor improvements |
-| 2019-5-25  | 3.3         | Minor improvements |
-| 2020-6-25  | 3.4         | Minor improvements |
+| 2018-2-25  | 3.1         | Minor improvements. |
+| 2018-8-25  | 3.2         | Minor improvements. |
+| 2019-5-25  | 3.3         | Minor improvements. |
+| 2020-6-25  | 3.4         | Minor improvements. |
+| 2021-6-25  | 3.5         | Minor improvements. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

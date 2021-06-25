@@ -78,7 +78,7 @@ int Crul::Model::import_file (
 				continue;
 			}
 
-			VertexGL p1, p2, p3;
+			mtGin::GL::VertexRGBnormal p1, p2, p3;
 
 			p1.x = GLfloat (x1);
 			p1.y = GLfloat (y1);
@@ -97,7 +97,7 @@ int Crul::Model::import_file (
 			p3.z = GLfloat (z3);
 			p3.set_rgb ( p1 );
 
-			p1.normal ( p2, p3 );
+			p1.calc_normal ( p2, p3 );
 
 			m_pts.push_back ( p1 );
 			m_pts.push_back ( p2 );

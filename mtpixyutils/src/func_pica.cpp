@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -84,34 +84,34 @@ static int analyse_image_cells (
 	return 0;
 }
 
-int pixyut_pica ()
+int Global::pixy_pica ()
 {
 	if ( ut_load_file () )
 	{
 		// Unable to load file - non-fatal error for 'rida'
 
-		printf ( "????? %s\n", global.s_arg );
+		printf ( "????? %s\n", s_arg );
 
 		return 0;
 	}
 
-	int			const	bpp = global.image->get_canvas_bpp ();
-	int			const	w = global.image->get_width ();
-	int			const	h = global.image->get_height ();
-	int const coltot = global.image->get_palette ()->get_color_total ();
-	unsigned char		* const	mem = global.image->get_canvas ();
+	mtPixmap const * const pixmap = m_pixmap.get();
+	int	const	bpp = pixy_pixmap_get_bytes_per_pixel ( pixmap );
+	int	const	w = pixy_pixmap_get_width ( pixmap );
+	int	const	h = pixy_pixmap_get_height ( pixmap );
+	int	const	coltot = pixy_pixmap_get_palette_size ( pixmap );
+	unsigned char * const	mem = pixy_pixmap_get_canvas ( pixmap );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
 		printf ( "w=%-5i h=%-5i cols=%-3i bpp=%i%-3s",
 			w, h,
 			coltot,
 			bpp,
-			global.image->get_alpha () ? "+A" : "" );
+			pixy_pixmap_get_alpha ( pixmap ) ? "+A" : "" );
 	}
 
-	printf ( "%-5s %s\n", mtPixy::File::type_text (
-		(mtPixy::File::Type) global.i_ftype_in ), global.s_arg );
+	printf ( "%-5s %s\n", pixy_file_type_text ( i_ftype_in ), s_arg );
 
 	if ( bpp != 1 || ! mem )
 	{

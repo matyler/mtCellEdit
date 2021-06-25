@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ static void encode_rgb (
 
 int mtDW::Tap::Op::encode_image (
 	Well		* const	well,
-	mtPixy::Image	* const	image,
+	mtPixmap const * const	image,
 	char	const * const	input
 	)
 {
@@ -63,8 +63,8 @@ int mtDW::Tap::Op::encode_image (
 
 	buf.set ( (uint8_t *)mem, (size_t)tot );
 
-	uint64_t const pixels = (uint64_t)(image->get_width () *
-					image->get_height ());
+	uint64_t const pixels = (uint64_t)(pixy_pixmap_get_width (image) *
+					pixy_pixmap_get_height (image));
 	uint64_t const done = buf.get_size () * (24 / 3);
 	uint64_t const todo = pixels * 3 - done;
 
@@ -73,7 +73,7 @@ int mtDW::Tap::Op::encode_image (
 		return report_error ( ERROR_IMAGE_TOO_SMALL );
 	}
 
-	encode_rgb ( image->get_canvas (), buf.get_buf (), tot );
+	encode_rgb ( pixy_pixmap_get_canvas (image), buf.get_buf (), tot );
 
 	if ( todo < 1 || ! well )
 	{
@@ -93,7 +93,7 @@ int mtDW::Tap::Op::encode_image (
 
 	well->get_data ( buf.get_buf (), (size_t)bytes );
 
-	uint8_t * dst = image->get_canvas () + done;
+	uint8_t * dst = pixy_pixmap_get_canvas (image) + done;
 	uint8_t const * const src = buf.get_buf ();
 
 	if ( major > 0 )

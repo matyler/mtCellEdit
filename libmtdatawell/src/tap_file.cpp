@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,15 +21,13 @@
 
 mtDW::TapFile::TapFile ()
 	:
-	op		( new TapFile::Op () )
+	m_op		( new TapFile::Op () )
 {
 }
 
 mtDW::TapFile::~TapFile ()
 {
-	op->delete_soda_filename ();
-
-	delete op;
+	m_op->delete_soda_filename ();
 }
 
 int mtDW::TapFile::open_info (
@@ -37,23 +35,24 @@ int mtDW::TapFile::open_info (
 	int			& type
 	)
 {
-	op->m_capacity = 0;
-	op->m_image.reset ( mtPixy::Image::load ( filename ) );
-	mtPixy::Image * const image = op->m_image.get ();
+	m_op->m_capacity = 0;
+	m_op->m_pixmap.reset ( pixy_pixmap_load ( filename, NULL ) );
+	mtPixmap const * const image = m_op->m_pixmap.get ();
 
 	if ( image )
 	{
-		if ( image->get_type () != mtPixy::Image::TYPE_RGB )
+		if ( pixy_pixmap_get_bytes_per_pixel ( image ) !=
+			PIXY_PIXMAP_BPP_RGB )
 		{
-			op->m_image.reset ( NULL );
+			m_op->m_pixmap.reset ( NULL );
 
 			return report_error ( ERROR_IMAGE_INVALID_BOTTLE );
 		}
 
-		size_t const w = (size_t)image->get_width ();
-		size_t const h = (size_t)image->get_height ();
+		size_t const w = (size_t)pixy_pixmap_get_width (image);
+		size_t const h = (size_t)pixy_pixmap_get_height (image);
 
-		op->m_capacity = (w * h) * 3 / 8;
+		m_op->m_capacity = (w * h) * 3 / 8;
 
 		type = TYPE_RGB;
 		return 0;
@@ -61,12 +60,12 @@ int mtDW::TapFile::open_info (
 
 	try
 	{
-		op->m_audio.reset ( new TapAudioRead () );
-		TapAudioRead * const audio = op->m_audio.get ();
+		m_op->m_audio.reset ( new TapAudioRead () );
+		TapAudioRead * const audio = m_op->m_audio.get ();
 
 		if ( 0 == audio->open ( filename ) )
 		{
-			op->m_capacity =(size_t)audio->get_read_capacity ();
+			m_op->m_capacity =(size_t)audio->get_read_capacity ();
 
 			type = TYPE_SND;
 			return 0;
@@ -76,7 +75,7 @@ int mtDW::TapFile::open_info (
 	{
 	}
 
-	op->m_audio.reset ( NULL );
+	m_op->m_audio.reset ( NULL );
 
 	// Future additions go here
 
@@ -104,7 +103,7 @@ int mtDW::TapFile::open_soda (
 	case TYPE_RGB:
 		{
 			RETURN_ON_ERROR( Tap::Op::decode_image (
-				op->m_image.get (), tmp_file.c_str (), type ) )
+				m_op->m_pixmap.get(), tmp_file.c_str (), type ))
 
 			if ( TYPE_RGB == type )
 			{
@@ -112,7 +111,7 @@ int mtDW::TapFile::open_soda (
 				return 0;
 			}
 
-			op->set_soda_filename ( tmp_file );
+			m_op->set_soda_filename ( tmp_file );
 
 			return 0;
 		}
@@ -128,7 +127,7 @@ int mtDW::TapFile::open_soda (
 				return 0;
 			}
 
-			op->set_soda_filename ( tmp_file );
+			m_op->set_soda_filename ( tmp_file );
 
 			return 0;
 		}
@@ -143,11 +142,11 @@ int mtDW::TapFile::open_soda (
 
 size_t mtDW::TapFile::get_capacity () const
 {
-	return op->m_capacity;
+	return m_op->m_capacity;
 }
 
 std::string const & mtDW::TapFile::get_soda_filename () const
 {
-	return op->m_soda_file;
+	return m_op->m_soda_file;
 }
 

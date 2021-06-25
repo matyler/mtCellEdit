@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -57,7 +57,8 @@ struct FuzzWord
 
 FuzzFile * fuzz_file_new (
 	char	const	* filename,
-	int	const	* range
+	int	const	* range,
+	int		csv
 	);
 
 void fuzz_file_destroy (

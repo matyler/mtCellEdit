@@ -1,0 +1,23 @@
+# Maintainer: Mark Tyler <mt@marktyler.org>
+pkgname=libmtqex6
+pkgver
+pkgrel=@MT_RELVER@
+pkgdesc="Qt6 Dialogs and Utility Functions"
+arch=('i686' 'x86_64' 'arm')
+license=('GPL3')
+depends=('qt6-base' 'libmtkit' 'libmtpixy')
+source=($pkgname-$pkgver.tar.gz)
+md5sums
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  @MT_CONF@ --use-qt6
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+}

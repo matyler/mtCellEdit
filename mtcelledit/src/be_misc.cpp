@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -117,35 +117,19 @@ int be_titlebar_text (
 	return 0;
 }
 
-void Backend::remember_last_dir (
-	char	const	* const	filename
-	)
+void Backend::remember_last_dir ( char const * const filename )
 {
-	char		* frst = strdup ( filename );
+	char const * const pos = strrchr ( filename, MTKIT_DIR_SEP );
 
-
-	if ( ! frst )
+	if ( pos )
 	{
-		preferences.set ( GUI_INIFILE_LAST_DIR, filename );
-
-		return;
+		uprefs.set ( PREFS_LAST_DIR, std::string ( filename,
+			(size_t)(pos - filename) ) );
 	}
-
-
-	char		* c = strrchr ( frst, MTKIT_DIR_SEP );
-
-
-	if ( c )
-	{
-		c[0] = 0;		// Strip off filename
-		preferences.set ( GUI_INIFILE_LAST_DIR, frst );
-	}
-
-	free ( frst );
 }
 
 int Backend::register_project (
-	CuiFile		* const	file
+	CuiFile	const * const	file
 	)
 {
 	if ( ! file->name )
@@ -155,7 +139,7 @@ int Backend::register_project (
 
 	remember_last_dir ( file->name );
 
-	recent_file.set_filename ( file->name );
+	mprefs.recent_file.set ( file->name );
 
 	return 0;
 }

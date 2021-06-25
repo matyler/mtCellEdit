@@ -18,10 +18,6 @@
 #include "mtpts2ply.h"
 
 
-class Backend;
-
-
-
 // Functions return: 0 = success, NULL = fail; unless otherwise stated.
 
 
@@ -29,7 +25,11 @@ class Backend;
 class Backend
 {
 public:
-	Backend ( int argc, char const * const * argv );
+	Backend ( int const argc, char const * const * const argv )
+	:
+	m_argc		( argc ),
+	m_argv		( argv )
+	{}
 
 	int command_line ();
 		// 0 = Continue running
@@ -37,7 +37,6 @@ public:
 
 	int load_pts_file ( char const * filename );
 
-	inline int get_tmp () const		{ return m_tmp; }
 	inline int get_file_tot () const	{ return m_file_tot; };
 
 /// ----------------------------------------------------------------------------
@@ -51,82 +50,18 @@ private:
 	int			const	m_argc;
 	char	const * const * const	m_argv;
 
-	int		m_tmp;
-	int		m_file_tot;
-	char	const *	m_txt;
+	int		m_tmp		= 0;
+	int		m_file_tot	= 0;
+	char	const *	m_txt		= nullptr;
 };
 
 
 
-Backend::Backend (
-	int			const	argc,
-	char	const * const * const	argv
-	)
-	:
-	m_argc		( argc ),
-	m_argv		( argv ),
-	m_tmp		( 0 ),
-	m_file_tot	( 0 ),
-	m_txt		( NULL )
-{
-}
-
-static int file_func (
-	char	const * const	filename,
-	void		* const	user_data
-	)
-{
-	Backend * backend = static_cast<Backend *>(user_data);
-
-	backend->load_pts_file ( filename );
-
-	return 0;		// Continue parsing
-}
-
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const * const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
-
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
-
-	fprintf ( stderr, "\n" );
-
-	return 0;		// Keep parsing
-}
-
-static int set_limit (
-	mtArg	const *	const	ARG_UNUSED ( mtarg ),
-	int		const	ARG_UNUSED ( arg ),
-	int		const	ARG_UNUSED ( argc ),
-	char	const * const	ARG_UNUSED ( argv[] ),
-	void		* const	user_data
-	)
-{
-	Backend * backend = static_cast<Backend *>(user_data);
-
-	return backend->cloud.set_limit ( backend->get_tmp () ) ? 1 : 0;
-}
-
 static int set_format (
-	mtArg	const *	const	ARG_UNUSED ( mtarg ),
-	int		const	arg,
-	int		const	ARG_UNUSED ( argc ),
-	char	const * const	argv[],
-	void		* const	user_data
+	Backend		* const backend,
+	char	const * const	input
 	)
 {
-	Backend * backend = static_cast<Backend *>(user_data);
-
 	int format = pCloud::FORMAT_PLY;
 	mtKit::CharInt	const ctab[] = {
 		{ "ply",	pCloud::FORMAT_PLY },
@@ -134,9 +69,9 @@ static int set_format (
 		{ NULL, 0 }
 		};
 
-	if ( mtKit::cli_parse_charint ( argv[ arg ], ctab, format ) )
+	if ( mtKit::cli_parse_charint ( input, ctab, format ) )
 	{
-		std::cerr << "No such format name: " << argv[ arg ] << "\n";
+		std::cerr << "No such format name: " << input << "\n";
 
 		return 1;
 	}
@@ -144,50 +79,41 @@ static int set_format (
 	return backend->cloud.set_format ( format ) ? 1 : 0;
 }
 
-static int set_slices (
-	mtArg	const *	const	ARG_UNUSED ( mtarg ),
-	int		const	ARG_UNUSED ( arg ),
-	int		const	ARG_UNUSED ( argc ),
-	char	const * const	ARG_UNUSED ( argv[] ),
-	void		* const	user_data
-	)
-{
-	Backend * backend = static_cast<Backend *>(user_data);
-
-	return backend->cloud.set_slices ( backend->get_tmp () );
-}
-
-static int set_output (
-	mtArg	const *	const	ARG_UNUSED ( mtarg ),
-	int		const	arg,
-	int		const	ARG_UNUSED ( argc ),
-	char	const * const	argv[],
-	void		* const	user_data
-	)
-{
-	Backend * backend = static_cast<Backend *>(user_data);
-
-	backend->cloud.set_output_filename ( argv[ arg ] );
-
-	return 0;
-}
-
 int Backend::command_line ()
 {
 	int	show_version	= 0;
 
-	mtArg	const	arg_list[] = {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ "n",		MTKIT_ARG_INT, &m_tmp, 0, set_limit },
-		{ "o",		MTKIT_ARG_STRING, &m_txt, 0, set_output },
-		{ "slices",	MTKIT_ARG_INT, &m_tmp, 0, set_slices },
-		{ "format",	MTKIT_ARG_STRING, &m_txt, 0, set_format },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args ( [this]( char const * const filename )
+		{
+			load_pts_file ( filename );
+			return 0;
+		} );
 
+	args.add ( "-help",	show_version, 2 );
+	args.add ( "-version",	show_version, 1 );
 
-	mtkit_arg_parse( m_argc, m_argv, arg_list, file_func, error_func, this);
+	args.add ( "n", m_tmp, [this]
+		{
+			return (cloud.set_limit ( m_tmp ) ? 1 : 0);
+		} );
+
+	args.add ( "o", m_txt, [this]
+		{
+			cloud.set_output_filename ( m_txt );
+			return 0;
+		} );
+
+	args.add ( "slices", m_tmp, [this]
+		{
+			return cloud.set_slices ( m_tmp );
+		} );
+
+	args.add ( "format",	m_txt, [this]
+		{
+			return set_format ( this, m_txt );
+		} );
+
+	args.parse ( m_argc, m_argv );
 
 	if ( show_version )
 	{

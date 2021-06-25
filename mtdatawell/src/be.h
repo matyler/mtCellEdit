@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@
 
 
 class Backend;
+class MemPrefs;
 
 
 
@@ -56,11 +57,30 @@ class Backend;
 
 
 
+class MemPrefs
+{
+public:
+	int			window_x		= 0;
+	int			window_y		= 0;
+	int			window_w		= 0;
+	int			window_h		= 0;
+	int			window_maximized	= 0;
+
+	std::string		last_directory;
+	std::string		help_file;
+	std::string		help_browser;
+
+	mtKit::UPrefUIEdit	ui_prefs;
+
+	mtKit::RecentFile	recent_db;
+	mtKit::RecentFile	recent_dir;
+};
+
+
+
 class Backend
 {
 public:
-	Backend ();
-
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running (start UI)
 		// 1 = Terminate program, returning exit.value()
@@ -81,17 +101,18 @@ public:
 	mtDW::Homoglyph		hg_index;
 	mtDW::Utf8Font		font_index;
 	mtKit::Exit		exit;
-	mtKit::Prefs		prefs;
-	mtKit::RecentFile	recent_db;
-	mtKit::RecentFile	recent_dir;
+
+	// uprefs must be destroyed before mprefs, so it appears below it:
+	MemPrefs		mprefs;
+	mtKit::UserPrefs	uprefs;
 
 private:
 	void		prefs_init ();
 
 /// ----------------------------------------------------------------------------
 
-	char		const *	m_db_path;
-	char		const *	m_prefs_filename;
+	char		const *	m_db_path		= nullptr;
+	char		const *	m_prefs_filename	= nullptr;
 
 	std::vector<char const *> m_cline_files;
 };

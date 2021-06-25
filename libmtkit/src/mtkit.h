@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,13 +20,14 @@
 
 
 
-// gcc 4.8 needs these in a C++ context
+// gcc 4.8 (CentOS 7) needs these in a C++ context
 #define __STDC_LIMIT_MACROS
 #define __STDC_FORMAT_MACROS
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <limits.h>
 #include <inttypes.h>
 
@@ -36,16 +37,10 @@
 extern "C" {
 #endif
 
-typedef struct mtArg		mtArg;
 typedef struct mtBulkDouble	mtBulkDouble;
 typedef struct mtBulkInt	mtBulkInt;
 typedef struct mtBulkStr	mtBulkStr;
 typedef struct mtFile		mtFile;
-typedef struct mtPrefTable	mtPrefTable;
-typedef struct mtPrefValue	mtPrefValue;
-typedef struct mtPrefTrans	mtPrefTrans;
-typedef struct mtPrefs		mtPrefs;
-typedef struct mtString		mtString;
 typedef struct mtTree		mtTree;
 typedef struct mtTreeNode	mtTreeNode;
 typedef struct mtUtreeNode	mtUtreeNode;
@@ -107,56 +102,6 @@ enum
 
 enum
 {
-	MTKIT_PREF_TYPE_NONE,
-
-	MTKIT_PREF_TYPE_INT,		// If opt used: "min	max"
-					// else = +/-1000000
-	MTKIT_PREF_TYPE_BOOL,		// Stored as int: 0 = false 1 = true
-	MTKIT_PREF_TYPE_RGB,		// Stored as int: (((R) << 16) +
-					// ((G) << 8) + (B))
-	MTKIT_PREF_TYPE_OPTION,		// Stored as int: 0 = o1 1 = o2
-					// opt = "o1	o2	..."
-	MTKIT_PREF_TYPE_DOUBLE,		// If opt used: "min	max	step"
-					// else = +/-1000000,0.001
-	MTKIT_PREF_TYPE_STR,		// NUL terminated string.  If opt used,
-					// it sets the max chars
-	MTKIT_PREF_TYPE_STR_MULTI,	// NUL terminated multi line string.
-	MTKIT_PREF_TYPE_FILE,		// Stored as string: implies that file
-					// picker can be used
-	MTKIT_PREF_TYPE_DIR,		// Same as filename but picker only
-					// stores directory
-
-	MTKIT_PREF_TYPE_TOTAL
-};
-
-enum
-{
-	MTKIT_ARG_NONE,
-
-	MTKIT_ARG_SWITCH,		// Switch - No data follows
-	MTKIT_ARG_INT,			// Integer follows in next argument
-	MTKIT_ARG_STRING,		// String follows in next argument
-	MTKIT_ARG_DOUBLE,		// Double precision float follows in
-					// next argument
-	MTKIT_ARG_TOTAL
-};
-
-enum
-{
-	MTKIT_ARG_ERROR_NONE,
-
-	MTKIT_ARG_ERROR_UNKNOWN,	// Switch in arguments not found in list
-	MTKIT_ARG_ERROR_DATA,		// Data passed in extra argument not
-					// recognised
-	MTKIT_ARG_ERROR_TERMINATED,	// Premature termination - extra
-					// argument expected
-	MTKIT_ARG_ERROR_BAD_TYPE,	// Bad argument type found in list
-
-	MTKIT_ARG_ERROR_TOTAL
-};
-
-enum
-{
 	MTKIT_ZIP_OK_DONT_FREE	=	-10,	// When loading, user callback
 						// can keep memory
 	MTKIT_ZIP_STOP		=	-1,
@@ -198,40 +143,6 @@ typedef int (* mtTreeFuncScan) (	// Don't add/remove anything from the
 	);
 	// 0 = continue
 	// 1 = stop
-
-typedef void (* mtPrefCB) (		// Called when a preference changes
-	mtPrefValue	* piv,
-	int		callback_data,
-	void		* callback_ptr
-	);
-
-typedef int (* mtArgFunc) (		// Called after an argument is actioned
-	mtArg		const *	mtarg,	// Argument encountered
-	int			arg,	// Arg number
-	int			argc,	// Total args
-	char	const *	const *	argv,	// Arg list
-	void			* user_data
-	);
-	// 0 = continue parsing
-	// 1 = Stop
-
-typedef int (* mtArgFileFunc) (		// Callback for when a filename is
-					// encountered
-	char	const *	filename,
-	void		* user_data
-	);
-	// 0 = continue parsing
-	// 1 = Stop
-
-typedef int (* mtArgErrorFunc) (	// Callback for when an error occurs
-	int			error,	// Error number
-	int			arg,	// Arg number that causes the error
-	int			argc,
-	char	const *	const *	argv,
-	void			* user_data
-	);
-	// 0 = continue parsing
-	// 1 = Stop
 
 typedef int (* mtZipLoadFunc) (
 	char	const	* name,
@@ -299,69 +210,6 @@ struct mtTree
 	mtTreeNode	* root;
 	mtTreeFuncCmp	cmp;		// Compares 2 node keys
 	mtTreeFuncDel	del;		// Destroys key/value data
-};
-
-
-
-/*
-	Prefs tables terminated by name = NULL.
-	If (bulk.var == NULL) it is skipped.
-*/
-
-struct mtPrefTable
-{
-	char	const	* key;		// Unique index, valid chars:
-					// (a-z A-Z 0-9 _ - . : ) or
-					// (anything < 0) checked using
-					// mtkit_utree_valid_name ()
-	int	const	type;		// As MTKIT_PREF_TYPE_*
-	char	const	* def;		// Default value
-	char	const	* description;	// Human readable description for user
-	mtPrefCB	callback;	// Called when preference changes
-	int	const	callback_data;	// Callback data
-	char	const	* opt;		// Used for options in an option list
-	void		* callback_ptr;	// Callback pointer
-};
-
-/*
-	opt is also used by double in the prefs GUI for:
-	double: decimal places || min, max, decimal places
-	By default: min = -1000000, max = 1000000, dp = 3
-	Checking is *NOT* done on loading prefs from a file.
-*/
-
-struct mtPrefValue			// Each data pointer in an mtPrefs tree
-{					// node points to this
-	char		* value;	// Allocated string for current value
-
-	// Allocated by duplicating the info from mtPrefTable item
-	char		* key;
-	int		type;
-	char		* def;
-	char		* description;
-	mtPrefCB	callback;
-	int		callback_data;
-	char		* opt;
-	void		* callback_ptr;
-};
-
-struct mtPrefTrans
-{
-	char	const	* dest;
-	char	const	* src;		// Key names.  If either is NULL, stop.
-};
-
-struct mtArg
-{
-	char		const *	argument;
-					// String passed as argument after '-'
-	int		const	type;	// Type of argument
-	void			* variable;
-					// Pointer to variable to change
-	int		const	value;	// Value to place in integer variable
-					// for ARG_TYPE_SWITCH
-	mtArgFunc	const	callback;
-					// Called after an argument is actioned
 };
 
 
@@ -522,31 +370,6 @@ char * mtkit_set_filename_extension (
 	// NULL = use "filename" in its current state
 	// !NULL = allocated string to use with ext_a extension
 
-mtString * mtkit_string_new (
-	char	const	* cs		// C String or NULL
-	);
-
-int mtkit_string_destroy (
-	mtString	* str
-	);
-
-char * mtkit_string_destroy_get_buf (	// Destroy mtString, give buffer to
-	mtString	* str		// caller.
-	);
-
-char const * mtkit_string_get_buf (
-	mtString	* str
-	);
-
-size_t mtkit_string_get_len (
-	mtString	* str
-	);
-
-int mtkit_string_append (
-	mtString	* str,
-	char	const	* cs		// C String
-	);
-
 char * mtkit_string_join (
 	char	const	* sta,
 	char	const	* stb,
@@ -565,6 +388,7 @@ int mtkit_strnncat (			// dest = dest + src
 	char	const	* src,		// possibly truncated.
 	size_t		destSize	// destSize > 0.  All args checked.
 	);
+	// 0 = success, 1 = arg error, -1 = too long
 
 int mtkit_strtod (			// Read in a string as a double
 	char	const	* input,	// Input string to parse NUL terminated
@@ -594,15 +418,6 @@ char * mtkit_strtok (			// Extract the n'th token and create a
 	int		ntok		// n'th token (0 = first)
 	);
 	// Pointer to newly allocated string
-
-int mtkit_strtok_num (			// Extract the n'th token and convert it
-					// to a double
-	char	const	* input,	// Input string, NUL terminated
-	char	const	* delim,	// List of character delimeters, NUL
-					// terminated
-	int		n,		// n'th token (0 = first)
-	double		* result	// Put result here
-	);
 
 char * mtkit_strcasestr (		// Find a string in another string
 					// regardless of case
@@ -890,9 +705,26 @@ mtUtreeNode * mtkit_utree_load_mem (
 	);
 	// NULL = nothing loaded, else something loaded
 
+mtUtreeNode * mtkit_utree_load_file (
+	mtUtreeNode		* parent,	// NULL = create new root
+	char		const	* filename,
+	int			* errors,	// Put error flag here,
+						// NULL = don't. Result
+						// 0 = success
+	int			* filetype	// MTKIT_FILE_OUT_*
+	);
+	// NULL = nothing loaded, else something loaded
+
 mtFile * mtkit_utree_save_file_mem (
 	mtUtreeNode	* node,		// Node to save
 	int		output		// MTKIT_UTREE_OUTPUT_*
+	);
+
+int mtkit_utree_save_file (
+	mtUtreeNode		* node,		// Node to save
+	char		const	* filename,
+	int			output,		// MTKIT_UTREE_OUTPUT_*
+	int			filetype	// MTKIT_FILE_*
 	);
 
 mtUtreeNode * mtkit_utree_new_root (	// Create new root node
@@ -902,6 +734,11 @@ mtUtreeNode * mtkit_utree_new_root (	// Create new root node
 mtUtreeNode * mtkit_utree_new_element (
 	mtUtreeNode		* parent,
 	char		const	* name
+	);
+
+mtUtreeNode * mtkit_utree_new_text (
+	mtUtreeNode		* parent,
+	char		const	* text
 	);
 
 mtUtreeNode * mtkit_utree_get_node (	// Find a child of this node that has
@@ -974,146 +811,6 @@ char * mtkit_utree_create_name (	// Quote out \ & " characters
 	char	const	* input
 	);
 
-mtPrefs * mtkit_prefs_new (		// Create new prefs structure
-	mtPrefTable	const	* table	// Table to add (NULL = don't)
-	);
-
-int mtkit_prefs_destroy (		// Destroy a prefs structure
-	mtPrefs		* prefs
-	);
-
-int mtkit_prefs_block_callback (	// Stop all callbacks
-	mtPrefs		* prefs
-	);
-
-int mtkit_prefs_unblock_callback (	// Restart callbacks after blocking
-	mtPrefs		* prefs
-	);
-
-int mtkit_prefs_set_callback (		// Change callback & user data
-	mtPrefs		* prefs,
-	char	const	* key,
-	mtPrefCB	callback,
-	void		* callback_ptr
-	);
-
-int mtkit_prefs_get_int (		// Retrieve an integer
-	mtPrefs		* prefs,
-	char	const	* key,
-	int		* value		// Put the value here
-	);
-
-int mtkit_prefs_get_double (
-	mtPrefs		* prefs,
-	char	const	* key,
-	double		* value		// Put the value here
-	);
-
-int mtkit_prefs_get_str (
-	mtPrefs		* prefs,
-	char	const	* key,
-	char	const	** value	// Put the value here
-	);
-
-int mtkit_prefs_set_default (		// Set to default
-	mtPrefs		* prefs,
-	char	const	* key
-	);
-
-int mtkit_prefs_set_int (		// Set an integer
-	mtPrefs		* prefs,
-	char	const	* key,
-	int		value
-	);
-
-int mtkit_prefs_set_double (
-	mtPrefs		* prefs,
-	char	const	* key,
-	double		value
-	);
-
-int mtkit_prefs_set_str (
-	mtPrefs		* prefs,
-	char	const	* key,
-	char	const	* value
-	);
-
-char const * mtkit_prefs_type_text (	// Return a static string
-					// representation of type
-	int		type
-	);
-
-/*
-This puts a value into a string.  Simple direct conversion for
-string/numerical types but does fiddly work for boolean, RGB, and option types.
-*/
-void mtkit_prefs_get_str_val (
-	mtPrefValue		* piv,		// Item
-	char		const	* value,	// Value to convert
-	char			* buf,		// Destination buffer
-	size_t			buf_size	// Bytes in buffer
-	);
-
-int mtkit_prefs_bulk_get (		// Get a bunch of values (missing items
-					// skipped)
-	mtPrefs			* prefs,
-	mtBulkInt	const	* table_i,	// NULL = skip
-	mtBulkDouble	const	* table_d,	// NULL = skip
-	mtBulkStr	const	* table_s	// NULL = skip.  All strings
-						// created via mtkit_strfreedup
-	);
-
-int mtkit_prefs_bulk_set (		// Set a bunch of values
-	mtPrefs			* prefs,
-	mtBulkInt	const	* table_i,	// NULL = skip
-	mtBulkDouble	const	* table_d,	// NULL = skip
-	mtBulkStr	const	* table_s	// NULL = skip
-	);
-
-/*
-	Tables terminated by name = NULL.
-	If (bulk.var == NULL) it is skipped.
-*/
-
-int mtkit_prefs_value_mirror (		// Copy values from src to dest (all
-					// items in table)
-	mtPrefs			* dest,
-	mtPrefs			* src,
-	mtPrefTable	const	* table
-	);
-
-int mtkit_prefs_value_copy (		// Copy values from src to dest (all
-					// items in table)
-	mtPrefs			* dest,
-	mtPrefs			* src,
-	mtPrefTrans	const	* table
-	);
-
-mtTree * mtkit_prefs_get_tree (		// Return core tree structure
-	mtPrefs		* prefs
-	);
-
-int mtkit_arg_parse (
-	int			argc,
-	char	const *	const *	argv,
-	mtArg	const *		arg_list,
-				// Terminated when
-				// arg_list[].argument == NULL
-
-	mtArgFileFunc		file_func,
-				// Callback for when a filename is
-				// encountered. NULL = skip
-
-	mtArgErrorFunc		error_func,
-				// Callback for error. NULL = skip
-
-	void			* user_data
-				// Passed to all callbacks
-	);
-	// 0 = success
-	// 1 = fail
-	// 2 = callback termination
-
 int mtkit_arg_int_boundary_check (
 	char	const	* arg_name,
 	int		arg_val,
@@ -1160,6 +857,8 @@ double mtkit_double_bound (
 	);
 	// Return num within bounds
 	// num=-inf, return min; num=+inf, return max; num=NaN, return min;
+
+double mtkit_angle_normalize ( double degrees );
 
 /*
 The following code is a simple implementation of the ZIP file format.
@@ -1234,12 +933,12 @@ DEFLATE_* is for fine tuning zlib for a specific use case.
 
 enum
 {
-	MTKIT_DEFLATE_LEVEL_MIN	= 	0,	// No compression
+	MTKIT_DEFLATE_LEVEL_MIN		= 0,	// No compression
 					// 1=Fastest, but worst compression
 	MTKIT_DEFLATE_LEVEL_DEFAULT	= 6,
-	MTKIT_DEFLATE_LEVEL_MAX	= 	9,	// Slow, but best compression
+	MTKIT_DEFLATE_LEVEL_MAX		= 9,	// Slow, but best compression
 
-	MTKIT_DEFLATE_MODEL_MIN	= 	0,
+	MTKIT_DEFLATE_MODEL_MIN		= 0,
 	MTKIT_DEFLATE_MODEL_DEFAULT	= 0,	// Normal, e.g. text
 	MTKIT_DEFLATE_MODEL_FILTERED	= 1,	// Input has been filtered
 	MTKIT_DEFLATE_MODEL_HUFFMAN	= 2,	// No string match,encoding only
@@ -1266,22 +965,34 @@ int mtkit_mem_inflate (
 
 
 
-int mtkit_int32_unpack (		// Unpack integer from little endian
-	unsigned char	const	* mem
-	);
-
-void mtkit_int32_pack (			// Pack integer into little endian
-	unsigned char	* const	mem,
-	int			num
-	);
-
-
-
 #ifdef __cplusplus
 }
 
-#include <iostream>		// Needed for std::string
+#include <iostream>		// std::string
+#include <functional>		// std::function
+#include <memory>		// std::unique_ptr
+#include <map>
 #include <vector>
+
+
+
+#define MTKIT_RULE_OF_FIVE( CLASS )				\
+	CLASS ( CLASS const & )			= delete;	\
+	CLASS & operator = (CLASS const &)	= delete;	\
+	CLASS ( CLASS && )			= delete;	\
+	CLASS & operator = (CLASS &&)		= delete;
+
+
+
+#define MTKIT_PREFS_COL1	"prefs.col1"
+#define MTKIT_PREFS_COL2	"prefs.col2"
+#define MTKIT_PREFS_COL3	"prefs.col3"
+#define MTKIT_PREFS_COL4	"prefs.col4"
+
+#define MTKIT_PREFS_WINDOW_X	"prefs.window_x"
+#define MTKIT_PREFS_WINDOW_Y	"prefs.window_y"
+#define MTKIT_PREFS_WINDOW_W	"prefs.window_w"
+#define MTKIT_PREFS_WINDOW_H	"prefs.window_h"
 
 
 
@@ -1315,6 +1026,8 @@ int string_strip_extension (		// Case insensitive
 
 
 
+class Arg;
+class ArgBase;
 class ArithEncode;
 class ArithDecode;
 class BitPackRead;
@@ -1328,21 +1041,62 @@ class CliTab;
 class Exit;
 class FileLock;
 class LineFileRead;
-class Prefs;
 class Random;
 class RecentFile;
+class UPref;
+class UPrefBase;
+class UPrefUIEdit;
+class UserPrefs;
 
 namespace ByteCube {}
 namespace ChunkFile {}
 
+enum PrefType
+{
+	ERROR		= -1,
+
+	INT		= 0,
+	BOOL,
+	RGB,
+	OPTION,
+
+	DOUBLE,
+
+	STRING,
+	STRING_MULTI,
+	FILENAME,
+	DIRECTORY
+};
+
+
+
 typedef struct CharInt		CharInt;
 
-typedef int (* CliFunc) (
-	char const * const * args	// NULL terminated argument list
-	);
+typedef std::function<int(char const * const * args)>		CliFunc;
+	// args: NULL terminated argument list
 	// 0 = Success
 	// 1 = Fail (CliTab::parse reports error)
 	// 2 = Fail (this function reports error)
+
+// All int Arg function callbacks return: 0=Continue; 1=Stop
+typedef std::function<int()>					ArgCB;
+
+typedef std::function<void( int arg, int argc,
+	char const * const * argv )>				ArgErrorCB;
+
+typedef std::function<int( char const * filename )>		ArgFileCB;
+
+typedef std::function<void()> UPrefCB;
+
+typedef std::function<void(
+	PrefType		type,
+	std::string	const & key,
+	std::string	const & type_name,
+	std::string	const & var_value,
+	bool			var_default
+	)> UPrefScanCB;
+
+typedef std::function<void( std::string const & opt_value )> UPrefOptScanCB;
 
 
 
@@ -1354,45 +1108,68 @@ struct CharInt
 
 
 
-class CliItem
+class ArgBase
 {
 public:
-	CliItem ();
-	~CliItem ();
+	virtual ~ArgBase () {}
+	virtual int action ( int & argi, int argc, char const * const * argv )
+		const = 0;
+};
 
-	int add_item ( CliItem * item );
-		// 0 = Added, 1 = Error, 2 = Already exists
 
-	int set_data (
-		char const * key,	// NULL = Don't set
-		CliFunc func,		// NULL = Don't set
-		int arg_min,
-		int arg_max,
-		char const * arg_help,	// NULL = Don't set
-		int arg_scale
+
+class Arg
+{
+public:
+	explicit Arg (
+		ArgFileCB file_func = nullptr,
+		ArgErrorCB error_func = nullptr
 		);
 
-	CliItem * find_item ( char const * command ) const;
-	CliItem const * match_args (
-		char const * const * argv,
-		int * cli_error,
-		int * ncargs
-		) const;
-	int callback ( char const * const * argv ) const;
-	int print_help () const;
-	int print_help_item () const;
+	void add ( char const * arg,			ArgCB cb );
+	void add ( char const * arg, int &var,		ArgCB cb = nullptr );
+	void add ( char const * arg, double &var,	ArgCB cb = nullptr );
+	void add ( char const * arg, std::string &var,	ArgCB cb = nullptr );
+	void add ( char const * arg, char const *& var, ArgCB cb = nullptr );
+	void add ( char const * arg, int &var, int val, ArgCB cb = nullptr );
+
+	int parse ( int argc, char const * const * argv ) const;
+	enum	// Parse return values
+	{
+		ARG_OK			= 0,
+		ARG_ERROR		= 1,
+		ARG_CALLBACK_EXIT	= 2
+	};
 
 private:
 
-	char		* m_key;
-	CliFunc		m_func;
-	int		m_arg_min;
-	int		m_arg_max;
-	char		* m_arg_help;
-	int		m_arg_scale;
+	void add ( char const * argument, ArgBase const * node );
 
-	// Key = (char const *)(m_key), data = (CliTabItem *)
-	mtTree		* m_tree;
+	void emit_error (
+		int argi,
+		int argc,
+		char const * const * argv
+		) const;
+
+/// ----------------------------------------------------------------------------
+
+	ArgFileCB	const	m_func_file;
+	ArgErrorCB	const	m_func_error;
+
+	struct cmp_key
+	{
+		bool operator () ( char const * a, char const * b ) const
+		{
+			return (strcmp(a, b) < 0);
+		}
+	};
+/*
+NOTE - I use (char const *) internally because that is the data that goes in,
+and it's also what comes out the other side so to use std::string is needlessly
+wasteful in conversions.
+*/
+
+	std::map<char const *, std::unique_ptr<ArgBase const>, cmp_key> m_arg;
 };
 
 
@@ -1416,7 +1193,9 @@ public:
 	int print_help ( char const * const * argv ) const;
 
 private:
-	CliItem		m_root;
+	std::unique_ptr<CliItem> const m_root;
+
+	MTKIT_RULE_OF_FIVE( CliTab )
 };
 
 
@@ -1424,12 +1203,12 @@ private:
 class Exit
 {
 public:
-	Exit () : m_value (0), m_aborted (false)	{};
+	Exit () : m_value (0), m_aborted (false) {}
 
-	inline void abort ()		{ m_aborted = true; };
-	inline bool aborted () const	{ return m_aborted; };
-	inline void set_value ( int v )	{ m_value = v; };
-	inline int value () const	{ return m_value; };
+	inline void abort ()		{ m_aborted = true; }
+	inline bool aborted () const	{ return m_aborted; }
+	inline void set_value ( int v )	{ m_value = v; }
+	inline int value () const	{ return m_value; }
 
 private:
 	int		m_value;	// Return when program exits
@@ -1438,73 +1217,34 @@ private:
 
 
 
-class Prefs
-{
-public:
-	Prefs ();
-	~Prefs ();			// save() on destruction
-
-	int initWindowPrefs ();		// Initialize default prefs for
-					// preferences window
-					// Call this before load ()
-
-	int load (
-		char const * filename,	// If NULL use bin_name
-		char const * bin_name	// ~/.config/bin_name/prefs.txt
-		);
-	int save ();
-
-	mtPrefs * getPrefsMem ();
-
-	int addTable ( mtPrefTable const * table );
-
-	int getInt ( char const * key );
-	double getDouble ( char const * key );
-	char const * getString ( char const * key );
-
-	void set ( char const * key, int value );
-	void set ( char const * key, double value );
-	void set ( char const * key, char const * value );
-
-private:
-	mtPrefs		* m_mem;
-	char		* m_filename;
-};
-
-
-
 class RecentFile
 {
 public:
-	explicit RecentFile ( char const * prefix, int tot = 20 );
-	~RecentFile ();
+	void init (
+		mtKit::UserPrefs & prefs,
+		char const * prefix,
+		size_t items		// TOTAL_MIN <= items <= TOTAL_MAX
+		);
 
-	int init_prefs ( mtKit::Prefs * pr );
+	enum
+	{
+		TOTAL_MIN = 2,
+		TOTAL_MAX = 1000
+	};
 
-	char const * get_filename ( int idx ) const;
-	void set_filename ( char const * name ) const;
+	std::string filename ( size_t idx ) const;	// 1..m_items.size()
+	std::string filename () const { return filename (1); }
+
+	std::string directory ( size_t idx ) const;	// 1..m_items.size()
+	std::string directory () const { return directory (1); }
+
+	void set ( std::string const & name );
 
 private:
-	void set_filename_idx ( int idx, char const * name ) const;
-	char * create_key ( int idx ) const;
-
-/// ----------------------------------------------------------------------------
-
-	int	const	m_total;
-	char	* const	m_prefs_prefix;
-	mtKit::Prefs	* m_prefs;
+	std::vector< std::string > m_items;
 };
 
 
-
-int prefsInitWindowPrefs (	// Initialize default prefs for preferences
-	mtPrefs	* prefs		// window. Call this before load ()
-	);
-
-int prefsWindowMirrorPrefs (
-	mtPrefs		* dest,
-	mtPrefs		* src
-	);
 
 int cli_parse_int (
 	char	const *	input,
@@ -1624,11 +1364,12 @@ public:
 	void close ();
 
 	// User requested encoding (can be overridden by the library).
+/*
 	void set_encoding_deflate (
 		int level,		// mtKit::DEFLATE_LEVEL_*
 		int model		// mtKit::DEFLATE_MODEL_*
 		);
-
+*/
 	int put_chunk (
 		uint8_t const * buf,
 		uint32_t buflen,
@@ -1739,7 +1480,7 @@ public:
 
 	int write ( int byte, int bit_tot );
 	unsigned char const * get_buf () const;
-	size_t get_buf_len () const;	// Bytes written (0=nothing)
+//	size_t get_buf_len () const;	// Bytes written (0=nothing)
 
 private:
 	int buf_expand ();
@@ -1759,8 +1500,8 @@ public:
 	BitPackRead ( unsigned char const * mem, size_t memlen );
 
 	int read ( int &byte, int bit_tot );
-	void restart ( unsigned char const * mem, size_t memlen );
-	size_t bytes_left () const;
+//	void restart ( unsigned char const * mem, size_t memlen );
+//	size_t bytes_left () const;
 
 private:
 	unsigned char	const * m_mem_start;
@@ -1799,8 +1540,8 @@ protected:
 class ByteFileRead
 {
 public:
-	ByteFileRead ();
-	~ByteFileRead ();
+	ByteFileRead ()		{}
+	~ByteFileRead ()	{ close (); }
 
 	int open ( char const * filename, uint64_t pos );
 	void close ();
@@ -1815,8 +1556,10 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	FILE		* m_fp;
-	uint64_t	m_pos;
+	FILE		* m_fp	= nullptr;
+	uint64_t	m_pos	= 0;
+
+	MTKIT_RULE_OF_FIVE( ByteFileRead )
 };
 
 
@@ -1824,12 +1567,12 @@ private:
 class ByteFileWrite
 {
 public:
-	ByteFileWrite ();
-	~ByteFileWrite ();
+	ByteFileWrite ()	{}
+	~ByteFileWrite ()	{ close (); }
 
 	int open ( char const * filename );
 	void close ();
-	int write ( void * mem, size_t len );
+	int write ( void const * mem, size_t len );
 	inline FILE * get_fp () const { return m_fp; }
 
 private:
@@ -1837,7 +1580,9 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	FILE		* m_fp;
+	FILE		* m_fp = nullptr;
+
+	MTKIT_RULE_OF_FIVE( ByteFileWrite )
 };
 
 
@@ -1942,199 +1687,137 @@ private:
 
 
 
-#ifdef SQLITE_VERSION
-
-/*
-This is only in the mtKit API if the caller has used #include <sqlite3.h> before
-#include <mtkit.h>
-*/
-
-class Sqlite;
-class SqliteAddRecord;
-class SqliteAddRecordField;
-class SqliteGetRecord;
-class SqliteStmt;
-class SqliteTransaction;
-
-
-
-class Sqlite
+class UPrefUIEdit
 {
 public:
-	inline Sqlite () : m_db () {}
-	inline ~Sqlite () { set_sqlite3 ( NULL ); }
+	int	col1 = 0;
+	int	col2 = 0;
+	int	col3 = 0;
+	int	col4 = 0;
 
-	int open ( std::string const & filename );
-	void set_sqlite3 ( sqlite3 * db );
-	inline sqlite3 * get_sqlite3 () const { return m_db; };
-
-	inline int exec_sql ( std::string const & sql ) const
-		{ return exec_sql ( sql.c_str () ); };
-	int exec_sql ( char const * const sql ) const;
-
-	// RULE: table/field names must be alphanumeric only (e.g. no spaces)
-	int add_table ( std::string const & name ) const;
-	int add_column_field (
-		std::string const & table_name,
-		std::string const & field_name,
-		std::string const & field_type	// TEXT, REAL, INTEGER, BLOB
-		) const;
-
-	int empty_table ( std::string const & table ) const;
-	int count_rows ( std::string const & table ) const;
-
-	int get_version () const;
-	void set_version ( int version );
-
-	void archive_table ( char const * table, int suffix ) const;
-
-	void vacuum () const;		// Reduce size of disk file
-
-protected:
-	sqlite3		* m_db;
+	int	window_x = 0;
+	int	window_y = 0;
+	int	window_w = 0;
+	int	window_h = 0;
 };
 
 
 
-class SqliteStmt
+class UPrefBase
 {
 public:
-	explicit SqliteStmt ( Sqlite const & db );
-	~SqliteStmt ();
-
-	int prepare ( std::string const & sql );
-	int step ();
-	int reset ();
-	int bind_text ( int item, char const * text );
-	int bind_blob ( int item, void const * mem, int mem_len );
-	int bind_int64 ( int item, sqlite3_int64 num );
-	int bind_real ( int item, double num );
-
-/// ----------------------------------------------------------------------------
-
-	Sqlite	const & m_db;
-	sqlite3_stmt	* stmt;
-	int		err;
+	virtual ~UPrefBase () {}
 };
 
 
 
-class SqliteAddRecordField
+class UserPrefs
 {
 public:
-	enum
-	{
-		FIELD_TEXT,
-		FIELD_BLOB,
-		FIELD_INTEGER,
-		FIELD_REAL
-	};
+	UserPrefs ();
+	~UserPrefs ();
 
-	SqliteAddRecordField ()
-		:
-		m_type		( FIELD_INTEGER ),
-		m_mem_value	( NULL ),
-		m_mem_len	( 0 ),
-		m_int_value	( 0 ),
-		m_real_value	( 0.0 )
-	{}
+	void add_int ( char const * key,
+		int & variable,
+		int default_value,
+		int min = 0,
+		int max = 0
+		);
 
-/// ----------------------------------------------------------------------------
+	void add_bool ( char const * key,
+		int & variable,
+		int default_value
+		);
 
-	int		m_type;
-	char	const *	m_mem_value;
-	size_t		m_mem_len;
-	sqlite3_int64	m_int_value;
-	double		m_real_value;
-};
+	void add_rgb ( char const * key,
+		int & variable,
+		int default_value
+		);
 
+	void add_option ( char const * key,
+		int & variable,
+		int default_value,
+		std::vector<std::string> items	// std::move
+		);
 
+	void add_double ( char const * key,
+		double & variable,
+		double default_value,
+		double min = 0.0,
+		double max = 0.0
+		);
 
-class SqliteAddRecord		// All items throw on fail
-{
-public:
-	// NOTE: all text/memory values must be valid when insert is called.
+	void add_string ( char const * key,
+		std::string & variable,
+		char const * default_value,
+		size_t max = 0
+		);
 
-	SqliteAddRecord ( Sqlite const & db, char const * table );
+	void add_string_multi ( char const * key,
+		std::string & variable,
+		char const * default_value
+		);
 
-	void add_field ( char const * name );
-	void end_field ();
+	void add_filename ( char const * key,
+		std::string & variable,
+		char const * default_value
+		);
 
-	void set_text ( char const * value );
-	void set_blob ( char const * value, size_t value_len );
-	void set_integer ( sqlite3_int64 value );
-	void set_real ( double value );
+	void add_directory ( char const * key,
+		std::string & variable,
+		char const * default_value
+		);
 
-	void insert_record ();
+	// Prefs UI editor window geometry
+	void add_ui_defaults ( UPrefUIEdit & data );
+
+	int load ( char const * filename, char const * bin_name = nullptr );
+	int save () const;
+
+	// These 4 set functions will emit any callback on success if cb=true:
+	// used by prefs editor to potentially update the UI.
+	void set ( char const * key, int val, bool cb = true );
+	void set ( char const * key, double val, bool cb = true );
+	void set ( char const * key, std::string const & val, bool cb = true );
+	void set_default_value ( char const * key, bool cb = true );
+
+	void set_callback ( char const * key, UPrefCB cb );
+	void set_description ( char const * key, std::string const & info );
+	void set_invisible ( char const * key );
+
+	std::string get_description ( char const * key ) const;
+	bool is_default ( char const * key ) const;
+	std::string get_ui_string ( char const * key ) const;
+
+	int get_int ( char const * key ) const;
+	void get_int_range ( char const * key, int & min, int & max ) const;
+
+	double get_double ( char const * key ) const;
+	void get_double_range ( char const * key, double & min, double & max )
+		const;
+
+	size_t get_string_max ( char const * key ) const;
+	std::string const & get_string ( char const * key ) const;
+	std::string const & get_string ( std::string const & key ) const
+	{ return get_string ( key.c_str() ); }
+
+	void scan_prefs ( UPrefScanCB callback ) const;
+	void scan_options ( char const * key, UPrefOptScanCB callback ) const;
 
 private:
-	SqliteStmt		m_stmt;
-	Sqlite		const	& m_db;
-	std::string		m_sql;
-	std::vector<SqliteAddRecordField> m_field;
-	size_t			m_field_num;
-};
+	void add_pref ( char const * key, UPref * pref );
 
+	UPref * get_pref ( char const * key );
+	UPref const * get_pref ( char const * key ) const;
 
-
-class SqliteTransaction
-{
-public:
-	inline explicit SqliteTransaction ( Sqlite const & db )
-		:
-		m_db		( db )
-	{
-		m_db.exec_sql ( "BEGIN TRANSACTION" );
-	}
-
-	inline ~SqliteTransaction ()
-	{
-		m_db.exec_sql ( "COMMIT" );
-	}
-
-protected:
-	Sqlite	const	& m_db;
-};
-
-
-
-class SqliteGetRecord
-{
-public:
-	SqliteGetRecord ( Sqlite & db, std::string const & sql ); // throws
-	~SqliteGetRecord ();
-
-	int next ();
-		// 0 = Record found, 1 = None found
-
-	inline int get_field_num () const { return m_field_num; }
-
-	int get_type ();
-		// = SQLITE_< INTEGER | FLOAT | TEXT | BLOB | NULL >
-
-	/* The following functions all return:
-		0 = Success
-		1 = NULL
-		2 = Other type mismatch
-	*/
-	int get_blob ( void const ** mem, int & memlen );
-	int get_blob_text ( std::string & res ); // blob/text -> String
-	int get_text ( std::string & res );
-	int get_int ( int & res );
-	int get_int64 ( int64_t & res );
-	int get_double ( double & res );
+	// Class handles raw pointers so use rule of five to avoid misuse.
+	MTKIT_RULE_OF_FIVE( UserPrefs )
 
 /// ----------------------------------------------------------------------------
 
-	SqliteStmt	stmt;
-
-private:
-	int		m_field_num;
+	std::map< std::string const, std::unique_ptr<UPrefBase> > m_map;
+	std::string m_filename;
 };
-
-
-
-#endif	// #ifdef SQLITE_VERSION
 
 
 

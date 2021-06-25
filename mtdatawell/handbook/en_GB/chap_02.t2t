@@ -39,7 +39,7 @@ I have always wanted mtDataWell to be small, light, and reliable as I think thes
 
 - **Small** means a codebase with each part being small enough to manage easily.
 
- - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, e.g. porting to a new widget toolkit.
+ - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, such as porting to a new widget toolkit library.
 
 - **Light** means resource frugal.
 
@@ -60,8 +60,9 @@ An important decision I have taken is to release it as free software using the G
 | **Date**   | **Version** | **Description** |
 | 2018-5-18  | 0.0         | Project started. |
 | 2018-8-25  | 3.2         | mtDWCLI published. |
-| 2019-5-25  | 3.3         | mtDataWell published. |
+| 2019-5-25  | 3.3         | mtDataWell added. |
 | 2020-6-25  | 3.4         | mtDWUtils added. |
+| 2021-6-25  | 3.5         | Minor improvements. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

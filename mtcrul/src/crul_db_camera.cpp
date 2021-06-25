@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -63,11 +63,8 @@ int Crul::DB::load_cameras ( std::map<int, Crul::Camera> * const map )
 
 			cam.set_id ( id );
 			cam.set_label ( label );
-			cam.set_x ( x );
-			cam.set_y ( y );
-			cam.set_z ( z );
-			cam.set_rotX ( rotX );
-			cam.set_rotZ ( rotZ );
+			cam.set_position ( x, y, z );
+			cam.set_angle ( rotX, 0, rotZ );
 			cam.set_read_only ( prot ? true : false );
 
 			map->insert (std::pair<int,Crul::Camera>(id,cam));
@@ -77,22 +74,20 @@ int Crul::DB::load_cameras ( std::map<int, Crul::Camera> * const map )
 
 		cam.set_id ( 1 );
 		cam.set_label ( "Default A" );
-		cam.set_x ( Crul::CAM_A_X_DEFAULT );
-		cam.set_y ( Crul::CAM_A_Y_DEFAULT );
-		cam.set_z ( Crul::CAM_A_Z_DEFAULT );
-		cam.set_rotX ( Crul::CAM_A_XROT_DEFAULT );
-		cam.set_rotZ ( Crul::CAM_A_ZROT_DEFAULT );
+		cam.set_position ( Crul::CAM_A_X_DEFAULT, Crul::CAM_A_Y_DEFAULT,
+			Crul::CAM_A_Z_DEFAULT );
+		cam.set_angle ( Crul::CAM_A_XROT_DEFAULT, 0,
+			Crul::CAM_A_ZROT_DEFAULT );
 		cam.set_read_only ( true );
 
 		map->insert( std::pair<int, Crul::Camera>(cam.get_id(), cam) );
 
 		cam.set_id ( 2 );
 		cam.set_label ( "Default B" );
-		cam.set_x ( Crul::CAM_B_X_DEFAULT );
-		cam.set_y ( Crul::CAM_B_Y_DEFAULT );
-		cam.set_z ( Crul::CAM_B_Z_DEFAULT );
-		cam.set_rotX ( Crul::CAM_B_XROT_DEFAULT );
-		cam.set_rotZ ( Crul::CAM_B_ZROT_DEFAULT );
+		cam.set_position ( Crul::CAM_B_X_DEFAULT, Crul::CAM_B_Y_DEFAULT,
+			Crul::CAM_B_Z_DEFAULT );
+		cam.set_angle ( Crul::CAM_B_XROT_DEFAULT, 0,
+			Crul::CAM_B_ZROT_DEFAULT );
 		cam.set_read_only ( true );
 
 		map->insert( std::pair<int, Crul::Camera>(cam.get_id(), cam) );
@@ -139,8 +134,8 @@ int Crul::DB::save_cameras ( std::map<int, Crul::Camera> const * const map )
 			rec.set_real ( cam.get_x() );
 			rec.set_real ( cam.get_y() );
 			rec.set_real ( cam.get_z() );
-			rec.set_real ( cam.get_rotX() );
-			rec.set_real ( cam.get_rotZ() );
+			rec.set_real ( cam.get_rot_x() );
+			rec.set_real ( cam.get_rot_z() );
 			rec.set_integer ( cam.get_read_only() ? 1 : 0 );
 			rec.insert_record ();
 		}

@@ -85,44 +85,35 @@ static int get_cell_type (
 	return CELL_TYPE_GENERAL_NUMBER;
 }
 
-char * ced_cell_create_output (
-	CedCell		* const	cell,
-	int		* const	hjustify
+int ced_cell_create_output (
+	CedCell	const	* const	cell,
+	int		* const	hjustify,
+	char		* const out,
+	size_t		const	outlen
 	)
 {
+	out[0] = 0;
+
+	if ( ! cell || ! cell->text )
+	{
+		return 1;
+	}
+
 	char		txt [ CELL_TXT_SIZE ];
 	char		buf [ 128 ];
 	char		* fmt_ddt = NULL;
 	char		* thou = NULL;
-	int		ctype;
 	int		justify = 0;
 	int		dp = 0;
 	int		nz = 0;
-	mtString	* str;
-
-
-	if ( ! cell || ! cell->text )
-	{
-		return NULL;
-	}
-
-	str = mtkit_string_new ( NULL );
-	if ( ! str )
-	{
-		return NULL;
-	}
-
-	ctype = get_cell_type ( cell );
+	int	const	ctype = get_cell_type ( cell );
 
 	if ( ctype == CELL_TYPE_ERROR )
 	{
-		int e = (int)cell->value;
-
+		int const e = (int)cell->value;
 
 		justify = CED_CELL_JUSTIFY_LEFT;
-		snprintf ( txt, sizeof ( txt ), "Err:%i,%i", e%1000, e/1000 );
-
-		mtkit_string_append ( str, txt );
+		snprintf ( out, outlen, "Err:%i,%i", e%1000, e/1000 );
 
 		goto finish;
 	}
@@ -133,7 +124,10 @@ char * ced_cell_create_output (
 		cell->prefs->text_prefix[0]
 		)
 	{
-		mtkit_string_append ( str, cell->prefs->text_prefix );
+		if ( mtkit_strnncat ( out, cell->prefs->text_prefix, outlen ) )
+		{
+			goto finish_long;
+		}
 	}
 
 	justify = CED_CELL_JUSTIFY_RIGHT;		// Default
@@ -151,7 +145,10 @@ char * ced_cell_create_output (
 	case CELL_TYPE_TEXT:
 		justify = CED_CELL_JUSTIFY_LEFT;
 
-		mtkit_string_append ( str, cell->text );
+		if ( mtkit_strnncat ( out, cell->text, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		break;
 
@@ -179,11 +176,17 @@ char * ced_cell_create_output (
 				'-', '.', 3, 0 );
 		}
 
-		mtkit_string_append ( str, txt );
+		if ( mtkit_strnncat ( out, txt, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		if ( ctype == CELL_TYPE_PERCENTAGE )
 		{
-			mtkit_string_append ( str, "%" );
+			if ( mtkit_strnncat ( out, "%", outlen ) )
+			{
+				goto finish_long;
+			}
 		}
 
 		break;
@@ -192,7 +195,10 @@ char * ced_cell_create_output (
 		snprintf ( buf, sizeof ( buf ), "%%.%i" PRIx64, nz );
 		snprintf ( txt, sizeof ( txt ), buf, (uint64_t)cell->value );
 
-		mtkit_string_append ( str, txt );
+		if ( mtkit_strnncat ( out, txt, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		break;
 
@@ -253,7 +259,10 @@ char * ced_cell_create_output (
 			}
 		}
 
-		mtkit_string_append ( str, txt );
+		if ( mtkit_strnncat ( out, txt, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		break;
 
@@ -261,7 +270,10 @@ char * ced_cell_create_output (
 		snprintf ( buf, sizeof ( buf ), "%%.%ie", dp );
 		snprintf ( txt, sizeof ( txt ), buf, cell->value );
 
-		mtkit_string_append ( str, txt );
+		if ( mtkit_strnncat ( out, txt, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		break;
 
@@ -435,7 +447,10 @@ char * ced_cell_create_output (
 			}
 		}
 
-		mtkit_string_append ( str, txt );
+		if ( mtkit_strnncat ( out, txt, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		break;
 
@@ -449,7 +464,10 @@ char * ced_cell_create_output (
 				thou[0], '-', '.', 3, 0 );
 		}
 
-		mtkit_string_append ( str, txt );
+		if ( mtkit_strnncat ( out, txt, outlen ) )
+		{
+			goto finish_long;
+		}
 
 		break;
 	}
@@ -459,7 +477,10 @@ char * ced_cell_create_output (
 		cell->prefs->text_suffix[0]
 		)
 	{
-		mtkit_string_append ( str, cell->prefs->text_suffix );
+		if ( mtkit_strnncat ( out, cell->prefs->text_suffix, outlen ) )
+		{
+			goto finish_long;
+		}
 	}
 
 finish:
@@ -476,12 +497,11 @@ finish:
 		}
 	}
 
-	if ( mtkit_string_get_len ( str ) > CED_CELL_MAX_BYTES )
-	{
-		mtkit_string_destroy ( str );
+	return 0;		// Success
 
-		return strdup ( "Err:11,0" );
-	}
+finish_long:
 
-	return mtkit_string_destroy_get_buf ( str );
+	snprintf ( out, outlen, "Err:11,0" );
+
+	return -1;		// Text too long
 }

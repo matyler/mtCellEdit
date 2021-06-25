@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -57,9 +57,9 @@ void Crul::Ruler::set_line (
 
 void Crul::Ruler::set_line_rgb ( int const rgb )
 {
-	m_line.r = GLfloat ( mtPixy::int_2_red  (rgb) / 255.0 );
-	m_line.g = GLfloat ( mtPixy::int_2_green(rgb) / 255.0 );
-	m_line.b = GLfloat ( mtPixy::int_2_blue (rgb) / 255.0 );
+	m_line.r = GLfloat ( pixy_int_2_red  (rgb) / 255.0 );
+	m_line.g = GLfloat ( pixy_int_2_green(rgb) / 255.0 );
+	m_line.b = GLfloat ( pixy_int_2_blue (rgb) / 255.0 );
 }
 
 int Crul::Ruler::change_length (
@@ -114,7 +114,7 @@ void Crul::Ruler::set_line_rgb (
 }
 
 void Crul::Ruler::create_ends_gl (
-	std::vector<Crul::VertexGL> & vertices,
+	std::vector<mtGin::GL::VertexRGBnormal> & vertices,
 	double		const	end_size
 	) const
 {
@@ -155,10 +155,10 @@ void Crul::Ruler::create_ends_gl (
 }
 
 static void delta_plane_xy (
-	Crul::VertexGL	& p1,
-	Crul::VertexGL	& p2,
-	Crul::VertexGL	& p3,
-	Crul::VertexGL	& p4,
+	mtGin::GL::VertexRGB	& p1,
+	mtGin::GL::VertexRGB	& p2,
+	mtGin::GL::VertexRGB	& p3,
+	mtGin::GL::VertexRGB	& p4,
 	GLfloat	const	delta
 	)
 {
@@ -169,10 +169,10 @@ static void delta_plane_xy (
 }
 
 static void delta_plane_xz (
-	Crul::VertexGL	& p1,
-	Crul::VertexGL	& p2,
-	Crul::VertexGL	& p3,
-	Crul::VertexGL	& p4,
+	mtGin::GL::VertexRGB	& p1,
+	mtGin::GL::VertexRGB	& p2,
+	mtGin::GL::VertexRGB	& p3,
+	mtGin::GL::VertexRGB	& p4,
 	GLfloat	const	delta
 	)
 {
@@ -183,10 +183,10 @@ static void delta_plane_xz (
 }
 
 static void delta_plane_yz (
-	Crul::VertexGL	& p1,
-	Crul::VertexGL	& p2,
-	Crul::VertexGL	& p3,
-	Crul::VertexGL	& p4,
+	mtGin::GL::VertexRGB	& p1,
+	mtGin::GL::VertexRGB	& p2,
+	mtGin::GL::VertexRGB	& p3,
+	mtGin::GL::VertexRGB	& p4,
 	GLfloat	const	delta
 	)
 {
@@ -197,11 +197,11 @@ static void delta_plane_yz (
 }
 
 void Crul::Ruler::create_plane_gl (
-	std::vector<Crul::VertexGL> & lines,
+	std::vector<mtGin::GL::VertexRGB> & lines,
 	double		const	plane_range
 	) const
 {
-	VertexGL p1, p2, p3, p4;	// Top left, going clockwise
+	mtGin::GL::VertexRGB p1, p2, p3, p4; // Top left, going clockwise
 
 	GLfloat const delta = GLfloat ( plane_range );
 

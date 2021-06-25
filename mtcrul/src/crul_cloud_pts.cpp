@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ Crul::PtsExtent const * Crul::CloudPTS::extents_calculate ()
 		return & m_extent;
 	}
 
-	PointGL const * const src = m_points.data ();
+	mtGin::GL::VertexRGB const * const src = m_points.data ();
 
 	m_extent.x_min = src[0].x;
 	m_extent.x_max = src[0].x;

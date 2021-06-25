@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -83,45 +83,24 @@ int main (
 	return backend.exit.value ();
 }
 
-Backend::Backend ()
-	:
-	m_file_tot	( 1000 ),
-	m_file_size_min	( 1000 ),
-	m_file_size_max	( 100000 ),
-	m_quiet		( 0 ),
-	m_db_path	( NULL ),
-	m_output_path	( NULL )
-{
-}
-
-Backend::~Backend ()
-{
-}
-
-static int arg_file (
-	char	const * const	ARG_UNUSED ( filename ),
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	return 0;			// Continue
-}
-
 int Backend::command_line (
 	int			const	argc,
 	char	const * const * const	argv
 	)
 {
-	mtArg	const	arg_list[] = {
-		{ "db",		MTKIT_ARG_STRING, &m_db_path, 0, NULL },
-		{ "path",	MTKIT_ARG_STRING, &m_output_path, 0, NULL },
-		{ "tot",	MTKIT_ARG_INT, &m_file_tot, 0, NULL },
-		{ "min",	MTKIT_ARG_INT, &m_file_size_min, 0, NULL },
-		{ "max",	MTKIT_ARG_INT, &m_file_size_max, 0, NULL },
-		{ "quiet",	MTKIT_ARG_SWITCH, &m_quiet, 1, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args ( []( char const * const ARG_UNUSED(filename) )
+		{
+			return 0;	// Continue
+		} );
 
-	mtkit_arg_parse ( argc, argv, arg_list, arg_file, NULL, NULL );
+	args.add ( "db",	m_db_path );
+	args.add ( "path",	m_output_path );
+	args.add ( "tot",	m_file_tot );
+	args.add ( "min",	m_file_size_min );
+	args.add ( "max",	m_file_size_max );
+	args.add ( "quiet",	m_quiet, 1 );
+
+	args.parse ( argc, argv );
 
 	return 0;			// Continue
 }

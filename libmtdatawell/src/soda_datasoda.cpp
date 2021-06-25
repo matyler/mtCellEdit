@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,13 +21,12 @@
 
 mtDW::Soda::Soda ( char const * const path )
 	:
-	op		( new Soda::Op ( path ) )
+	m_op		( new Soda::Op ( path ) )
 {
 }
 
 mtDW::Soda::~Soda ()
 {
-	delete op;
 }
 
 int mtDW::Soda::decode (
@@ -54,7 +53,7 @@ int mtDW::Soda::encode (
 	char	const * const	output
 	) const
 {
-	return op->encode ( butt, input, output );
+	return m_op->encode ( butt, input, output );
 }
 
 int mtDW::Soda::multi_encode (
@@ -64,27 +63,26 @@ int mtDW::Soda::multi_encode (
 	char	const * const * const	otp_names
 	) const
 {
-	return op->multi_encode ( butt, input, output, otp_names );
+	return m_op->multi_encode ( butt, input, output, otp_names );
 }
 
 void mtDW::Soda::set_mode ( int m ) const
 {
-	return op->set_mode ( m );
+	return m_op->set_mode ( m );
 }
 
 int mtDW::Soda::get_mode () const
 {
-	return op->get_mode ();
+	return m_op->get_mode ();
 }
 
 mtDW::SodaTransaction::SodaTransaction ( Soda & soda )
 	:
-	op	( new SodaTransaction::Op ( soda.op->m_db ) )
+	m_op	( new SodaTransaction::Op ( soda.m_op->m_db ) )
 {
 }
 
 mtDW::SodaTransaction::~SodaTransaction ()
 {
-	delete op;
 }
 

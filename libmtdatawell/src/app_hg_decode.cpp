@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019 Mark Tyler
+	Copyright (C) 2019-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -107,16 +107,15 @@ int FileOps::decode_hg_file ()
 
 	while ( src < end )
 	{
-		std::string glyph;
 		int glyph_len = mtkit_utf8_offset ( src, 1 );
 
-		if (	glyph_len < 1 ||
-			mtKit::string_from_data( glyph, src, (size_t)glyph_len )
-			)
+		if ( glyph_len < 1 )
 		{
 			std::cerr << "Problem with input UTF-8\n";
 			return 1;
 		}
+
+		std::string const glyph ( (char const *)src, (size_t)glyph_len);
 
 		int node_tot = 0;
 		int const index = m_hg_index->get_index(glyph, NULL, &node_tot);

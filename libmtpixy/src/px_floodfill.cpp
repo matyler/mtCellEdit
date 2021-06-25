@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
 	along with this program in the file COPYING.
 */
 
-#include <memory>
 #include "private.h"
 
 
@@ -117,167 +116,28 @@ int FloodStack::pop (
 	return 0;
 }
 
-mtPixy::Image * mtPixy::Image::flood_fill_prepare_alpha (
-	int	const	x,
-	int	const	y
+
+
+/// ----------------------------------------------------------------------------
+
+
+
+static void flood_fill_internal (
+	mtPixmap	* const	pixmap,
+	mtPixmap	* const	im,
+	int		const	x,
+	int		const	y
 	)
-{
-	if ( x < 0 || y < 0 || x >= m_width || y >= m_height )
-	{
-		return NULL;
-	}
-
-	std::unique_ptr<Image> alpha( create( TYPE_ALPHA, m_width, m_height));
-
-	if ( ! alpha.get () )
-	{
-		return NULL;
-	}
-
-	unsigned char	const * const	can = m_canvas;
-	unsigned char		* const	alp = alpha.get ()->m_alpha;
-
-	if ( ! can || ! alp )
-	{
-		return NULL;
-	}
-
-	int	const	tot = m_width * m_height;
-	int		i;
-
-	if ( m_type == TYPE_INDEXED )
-	{
-		unsigned char const pix = can[ x + y * m_width ];
-
-
-		for ( i = 0; i < tot; i++ )
-		{
-			if ( can[i] == pix )
-			{
-				alp[i] = 1;
-			}
-			else
-			{
-				alp[i] = 0;
-			}
-		}
-	}
-	else if ( m_type == TYPE_RGB )
-	{
-		unsigned char const r = can[ 3 * (x + y * m_width) + 0 ];
-		unsigned char const g = can[ 3 * (x + y * m_width) + 1 ];
-		unsigned char const b = can[ 3 * (x + y * m_width) + 2 ];
-
-
-		for ( i = 0; i < tot; i++ )
-		{
-			if (	can[3 * i + 0] == r &&
-				can[3 * i + 1] == g &&
-				can[3 * i + 2] == b
-				)
-			{
-				alp[i] = 1;
-			}
-			else
-			{
-				alp[i] = 0;
-			}
-		}
-	}
-	else
-	{
-		return NULL;
-	}
-
-	try
-	{
-		flood_fill_internal ( alpha.get (), x, y );
-	}
-	catch ( ... )
-	{
-		return NULL;
-	}
-
-	// Make all 1's become 0 as they weren't filled
-	for ( i = 0; i < tot; i++ )
-	{
-		if ( alp[i] == 1 )
-		{
-			alp[i] = 0;
-		}
-	}
-
-	return alpha.release ();
-}
-
-int mtPixy::Image::paint_flood_fill (
-	Brush		&bru,
-	int	const	x,
-	int	const	y
-	)
-{
-	std::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
-	if ( ! alpha.get () )
-	{
-		return 1;
-	}
-
-	alpha.get ()->paint_flow ( bru );
-
-	return paste_alpha_pattern ( alpha.get (), bru, 0, 0 );
-}
-
-int mtPixy::Image::lasso (
-	int	const	x,
-	int	const	y
-	)
-{
-	std::unique_ptr<Image> alpha ( flood_fill_prepare_alpha ( x, y ) );
-	if ( ! alpha.get () )
-	{
-		return 1;
-	}
-
-	int	const	pixtot = m_width * m_height;
-
-	if ( ! m_alpha )
-	{
-		if ( create_alpha () || ! m_alpha )
-		{
-			return 1;
-		}
-
-		memset ( m_alpha, 255, (size_t)pixtot );
-	}
-
-	unsigned char const * const src = alpha.get ()->m_alpha;
-
-	for ( int i = 0; i < pixtot; i++ )
-	{
-		if ( src[ i ] == 255 )
-		{
-			m_alpha[ i ] = 0;
-		}
-	}
-
-	return 0;
-}
-
-void mtPixy::Image::flood_fill_internal (
-	Image	* const	im,
-	int	const	x,
-	int	const	y
-	) const
 {
 	FloodStack	stack;
-	unsigned char	* const	al = im->get_alpha ();
+	unsigned char	* const	al = pixy_pixmap_get_alpha ( im );
 
 	if ( ! al )
 	{
 		return;
 	}
 
-	unsigned char	* pix = al + y * m_width;
+	unsigned char	* pix = al + y * pixmap->width;
 	int		minx = x;
 	int		maxx = x;
 	int		xp, yy = y, xp_min, xp_max;
@@ -295,7 +155,7 @@ void mtPixy::Image::flood_fill_internal (
 	}
 
 	// Expand to the right if possible
-	while ( maxx < (m_width - 1) )
+	while ( maxx < (pixmap->width - 1) )
 	{
 		if ( 1 != pix[ maxx + 1 ] )
 		{
@@ -311,19 +171,19 @@ void mtPixy::Image::flood_fill_internal (
 		pix[ xp ] = 255;
 	}
 
-	if ( (yy - 1) >= 0 )
+	if ( yy >= 1 )
 	{
 		stack.push ( yy - 1, minx, maxx );
 	}
 
-	if ( (yy + 1) < m_height )
+	if ( (yy + 1) < pixmap->height )
 	{
 		stack.push ( yy + 1, minx, maxx );
 	}
 
 	while ( 0 == stack.pop ( yy, minx, maxx ) )
 	{
-		pix = al + yy * m_width;
+		pix = al + yy * pixmap->width;
 		int seg = 0;
 
 		if ( 1 == pix[ minx ] )
@@ -343,7 +203,7 @@ void mtPixy::Image::flood_fill_internal (
 		if ( 1 == pix[ maxx ] )
 		{
 			// Expand to the right if possible
-			while ( maxx < (m_width - 1) )
+			while ( maxx < (pixmap->width - 1) )
 			{
 				if ( 1 != pix[ maxx + 1 ] )
 				{
@@ -379,13 +239,13 @@ void mtPixy::Image::flood_fill_internal (
 					// Segment finish
 					seg = 0;
 
-					if ( (yy - 1) >= 0 )
+					if ( yy >= 1 )
 					{
 						stack.push ( yy - 1,
 							xp_min, xp_max );
 					}
 
-					if ( (yy + 1) < m_height )
+					if ( (yy + 1) < pixmap->height )
 					{
 						stack.push ( yy + 1,
 							xp_min, xp_max );
@@ -397,16 +257,172 @@ void mtPixy::Image::flood_fill_internal (
 		// Finish off final segment
 		if ( seg == 1 )
 		{
-			if ( (yy - 1) >= 0 )
+			if ( yy >= 1 )
 			{
 				stack.push ( yy - 1, xp_min, xp_max );
 			}
 
-			if ( (yy + 1) < m_height )
+			if ( (yy + 1) < pixmap->height )
 			{
 				stack.push ( yy + 1, xp_min, xp_max );
 			}
 		}
 	}
+}
+
+static mtPixmap * flood_fill_prepare_alpha (
+	mtPixmap	* const	pixmap,
+	int		const	x,
+	int		const	y
+	)
+{
+	if (	! pixmap
+		|| x < 0
+		|| y < 0
+		|| x >= pixmap->width
+		|| y >= pixmap->height
+		)
+	{
+		return NULL;
+	}
+
+	mtPixy::Pixmap alpha ( pixy_pixmap_new_alpha ( pixmap->width,
+		pixmap->height ) );
+
+	if ( ! alpha.get () )
+	{
+		return NULL;
+	}
+
+	unsigned char const * const can = pixmap->canvas;
+	unsigned char * const alp = pixy_pixmap_get_alpha ( alpha.get() );
+
+	if ( ! can || ! alp )
+	{
+		return NULL;
+	}
+
+	int	const	tot = pixmap->width * pixmap->height;
+	int		i;
+
+	if ( pixmap->bpp == PIXY_PIXMAP_BPP_INDEXED )
+	{
+		unsigned char const pix = can[ x + y * pixmap->width ];
+
+
+		for ( i = 0; i < tot; i++ )
+		{
+			if ( can[i] == pix )
+			{
+				alp[i] = 1;
+			}
+			else
+			{
+				alp[i] = 0;
+			}
+		}
+	}
+	else if ( pixmap->bpp == PIXY_PIXMAP_BPP_RGB )
+	{
+		unsigned char const r = can[ 3 * (x + y * pixmap->width) + 0];
+		unsigned char const g = can[ 3 * (x + y * pixmap->width) + 1];
+		unsigned char const b = can[ 3 * (x + y * pixmap->width) + 2];
+
+
+		for ( i = 0; i < tot; i++ )
+		{
+			if (	can[3 * i + 0] == r &&
+				can[3 * i + 1] == g &&
+				can[3 * i + 2] == b
+				)
+			{
+				alp[i] = 1;
+			}
+			else
+			{
+				alp[i] = 0;
+			}
+		}
+	}
+	else
+	{
+		return NULL;
+	}
+
+	try
+	{
+		flood_fill_internal ( pixmap, alpha.get (), x, y );
+	}
+	catch ( ... )
+	{
+		return NULL;
+	}
+
+	// Make all 1's become 0 as they weren't filled
+	for ( i = 0; i < tot; i++ )
+	{
+		if ( alp[i] == 1 )
+		{
+			alp[i] = 0;
+		}
+	}
+
+	return alpha.release ();
+}
+
+int mtPixy::paint_flood_fill (
+	mtPixmap * const pixmap,
+	Brush		&brush,
+	int	const	x,
+	int	const	y
+	)
+{
+	mtPixy::Pixmap const alpha ( flood_fill_prepare_alpha ( pixmap, x, y ));
+	if ( ! alpha.get () )
+	{
+		return 1;
+	}
+
+	pixy_paint_flow ( alpha.get(), brush.get_flow() );
+
+	return mtPixy::paste_alpha_pattern ( pixmap, alpha.get(), brush, 0, 0 );
+}
+
+int pixy_lasso (
+	mtPixmap	* const	pixmap,
+	int		const	x,
+	int		const	y
+	)
+{
+	mtPixy::Pixmap const alpha ( flood_fill_prepare_alpha ( pixmap, x, y ));
+	if ( ! alpha.get () )
+	{
+		return 1;
+	}
+
+	int	const	pixtot = pixmap->width * pixmap->height;
+
+	if ( ! pixmap->alpha )
+	{
+		if ( pixy_pixmap_create_alpha ( pixmap ) || ! pixmap->alpha )
+		{
+			return 1;
+		}
+
+		memset ( pixmap->alpha, 255, (size_t)pixtot );
+	}
+
+	unsigned char const * const src = pixy_pixmap_get_alpha ( alpha.get() );
+	unsigned char * const	dest = pixmap->alpha;
+
+	for ( int i = 0; i < pixtot; i++ )
+	{
+		if ( src[ i ] == 255 )
+		{
+			dest[ i ] = 0;
+		}
+	}
+
+	return 0;
 }
 

@@ -91,13 +91,13 @@ public:
 
 	static int encode_image (
 		Well * well,
-		mtPixy::Image * image,
+		mtPixmap const * image,
 		char const * input	// Soda file
 		);
 		// Returns error code.  Interpret via get_error_text()
 
 	static int decode_image (
-		mtPixy::Image * image,
+		mtPixmap const * image,
 		char const * output,	// Soda file
 		int &type
 		);
@@ -138,7 +138,7 @@ public:
 
 	std::string	m_soda_file;	// Temp file (0 size = no Soda)
 
-	std::unique_ptr<mtPixy::Image> m_image;
+	mtPixy::Pixmap	m_pixmap;
 	std::unique_ptr<TapAudioRead> m_audio;
 
 	size_t		m_capacity;

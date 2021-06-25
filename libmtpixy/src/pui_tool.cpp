@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -89,13 +89,14 @@ int mtPixyUI::File::paint_brush_start (
 	m_tool_mode = TOOL_MODE_PAINTING;
 	brush.set_space_mod ( 0 );
 
-	int res = m_image->paint_brush ( brush, x, y, x, y, dirty_x, dirty_y,
+	mtPixmap * const pixmap = get_pixmap ();
+	int res = brush.paint_brush ( pixmap, x, y, x, y, dirty_x, dirty_y,
 		dirty_w, dirty_h );
 
 	if ( 0 == res )
 	{
-		palette_mask.protect ( m_undo_stack.get_current_image (),
-			m_image, dirty_x, dirty_y, dirty_w, dirty_h );
+		palette_mask.protect ( m_undo_stack.get_pixmap(), pixmap,
+			dirty_x, dirty_y, dirty_w, dirty_h );
 	}
 
 	m_brush_x = x;
@@ -126,15 +127,14 @@ int mtPixyUI::File::paint_brush_to (
 		return 1;
 	}
 
-
-	int res = m_image->paint_brush ( brush, m_brush_x, m_brush_y, x, y,
+	mtPixmap * const pixmap = get_pixmap ();
+	int res = brush.paint_brush ( pixmap, m_brush_x, m_brush_y, x, y,
 		dirty_x, dirty_y, dirty_w, dirty_h, true );
-
 
 	if ( 0 == res )
 	{
-		palette_mask.protect ( m_undo_stack.get_current_image (),
-			m_image, dirty_x, dirty_y, dirty_w, dirty_h );
+		palette_mask.protect ( m_undo_stack.get_pixmap(), pixmap,
+			dirty_x, dirty_y, dirty_w, dirty_h );
 	}
 
 	m_brush_x = x;
@@ -159,7 +159,7 @@ int mtPixyUI::File::paint_brush_finish ()
 	{
 		m_tool_mode = TOOL_MODE_PAINT;
 
-		m_undo_stack.add_next_step ( m_image );
+		m_undo_stack.add_next_step ( get_pixmap () );
 	}
 
 	return 0;
@@ -172,19 +172,19 @@ int mtPixyUI::File::paint_line (
 	int	const	y2
 	)
 {
+	mtPixmap * const pixmap = get_pixmap ();
 	int		dx, dy, dw, dh;
-	int	const	res = m_image->paint_brush ( brush, x1, y1, x2, y2,
-				dx, dy, dw, dh );
-
+	int	const	res = brush.paint_brush( pixmap, x1, y1, x2, y2, dx, dy,
+				dw, dh );
 
 	if ( 0 == res )
 	{
-		palette_mask.protect ( m_undo_stack.get_current_image (),
-			m_image, dx, dy, dw, dh );
+		palette_mask.protect ( m_undo_stack.get_pixmap(), pixmap,
+			dx, dy, dw, dh );
 
 		m_modified = 1;
 
-		m_undo_stack.add_next_step ( m_image );
+		m_undo_stack.add_next_step ( pixmap );
 	}
 
 	return res;
@@ -195,17 +195,19 @@ int mtPixyUI::File::flood_fill (
 	int	const	y
 	)
 {
-	if ( palette_mask.is_masked ( m_image, x, y ) )
+	mtPixmap * const pixmap = get_pixmap ();
+
+	if ( palette_mask.is_masked ( pixmap, x, y ) )
 	{
 		return 0;
 	}
 
-	if ( m_image->paint_flood_fill ( brush, x, y ) )
+	if ( mtPixy::paint_flood_fill ( pixmap, brush, x, y ) )
 	{
 		return 1;
 	}
 
-	m_undo_stack.add_next_step ( m_image );
+	m_undo_stack.add_next_step ( pixmap );
 
 	m_modified = 1;
 
@@ -219,18 +221,19 @@ int mtPixyUI::File::get_pixel_info (
 	unsigned char		&pixel_green,
 	unsigned char		&pixel_blue,
 	int			&pixel_index
-	)
+	) const
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
-	unsigned char		* const	canvas = m_image->get_canvas ();
-	int			const	imw = m_image->get_width ();
-	int			const	imh = m_image->get_height ();
-	mtPixy::Palette		* const pal = m_image->get_palette ();
-	mtPixy::Color		* const col = pal->get_color ();
+	unsigned char	* const	canvas = pixmap->canvas;
+	int		const	imw = pixmap->width;
+	int		const	imh = pixmap->height;
+	mtPalette const * const pal = &pixmap->palette;
+	mtColor	const * const	col = &pal->color[0];
 
 	if (	! canvas		||
 		canvas_x < 0		||
@@ -242,7 +245,7 @@ int mtPixyUI::File::get_pixel_info (
 		return 1;
 	}
 
-	int			const	bpp = m_image->get_canvas_bpp ();
+	int			const	bpp = pixmap->bpp;
 	unsigned char	const * const	s = canvas + bpp *
 						(canvas_x + canvas_y * imw);
 
@@ -258,7 +261,8 @@ int mtPixyUI::File::get_pixel_info (
 		pixel_red	= s[0];
 		pixel_green	= s[1];
 		pixel_blue	= s[2];
-		pixel_index	= pal->get_color_index ( s[0], s[1], s[2] );
+		pixel_index	= pixy_palette_get_color_index ( pal,
+					s[0], s[1], s[2] );
 	}
 
 	return 0;
@@ -266,21 +270,21 @@ int mtPixyUI::File::get_pixel_info (
 
 int mtPixyUI::File::rectangle_fill ()
 {
+	mtPixmap * const pixmap = get_pixmap ();
 	int		x, y, w, h;
 
 	rectangle_overlay.get_xywh ( x, y, w, h );
 
-	if ( m_image->paint_rectangle ( brush, x, y, w, h ) )
+	if ( brush.paint_rectangle ( pixmap, x, y, w, h ) )
 	{
 		return 1;
 	}
 
-	palette_mask.protect ( m_undo_stack.get_current_image (), m_image, x, y,
-		w, h );
+	palette_mask.protect ( m_undo_stack.get_pixmap(), pixmap, x, y, w, h );
 
 	m_modified = 1;
 
-	m_undo_stack.add_next_step ( m_image );
+	m_undo_stack.add_next_step ( pixmap );
 
 	return 0;
 }
@@ -310,19 +314,19 @@ int mtPixyUI::File::rectangle_outline ()
 
 int mtPixyUI::File::polygon_fill ()
 {
+	mtPixmap * const pixmap = get_pixmap ();
 	int		x, y, w, h;
 
-	if ( m_image->paint_polygon ( brush, polygon_overlay, x, y, w, h ) )
+	if ( brush.paint_polygon ( pixmap, polygon_overlay, x, y, w, h ) )
 	{
 		return 1;
 	}
 
-	palette_mask.protect ( m_undo_stack.get_current_image (), m_image, x, y,
-		w, h );
+	palette_mask.protect ( m_undo_stack.get_pixmap(), pixmap, x, y, w, h );
 
 	m_modified = 1;
 
-	m_undo_stack.add_next_step ( m_image );
+	m_undo_stack.add_next_step ( pixmap );
 
 	return 0;
 }
@@ -357,7 +361,8 @@ int mtPixyUI::File::polygon_outline ()
 
 int mtPixyUI::File::select_all ()
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap ();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
@@ -365,8 +370,8 @@ int mtPixyUI::File::select_all ()
 	int xx, yy, ww, hh;
 
 	rectangle_overlay.set_start ( 0, 0 );
-	rectangle_overlay.set_end ( m_image->get_width () - 1,
-		m_image->get_height () - 1, xx, yy, ww, hh );
+	rectangle_overlay.set_end ( pixmap->width - 1, pixmap->height - 1,
+		xx, yy, ww, hh );
 
 	m_tool_mode = mtPixyUI::File::TOOL_MODE_SELECTED_RECTANGLE;
 
@@ -375,25 +380,26 @@ int mtPixyUI::File::select_all ()
 
 int mtPixyUI::File::selection_copy (
 	Clipboard	&clipboard
-	)
+	) const
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap ();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
 	int		xx = 0, yy = 0, w = 1, h = 1;
-	mtPixy::Image	* clp = NULL;
+	mtPixmap	* clp = NULL;
 
 	switch ( m_tool_mode )
 	{
 	case TOOL_MODE_SELECTED_RECTANGLE:
 		rectangle_overlay.get_xywh ( xx, yy, w, h );
-		clp = m_image->resize ( xx, yy, w, h );
+		clp = pixy_pixmap_resize ( pixmap, xx, yy, w, h);
 		break;
 
 	case TOOL_MODE_SELECTED_POLYGON:
-		clp = polygon_overlay.copy ( m_image, xx, yy, w, h );
+		clp = polygon_overlay.copy( pixmap, xx, yy, w,h);
 		break;
 
 	default:
@@ -405,9 +411,9 @@ int mtPixyUI::File::selection_copy (
 		return 1;
 	}
 
-	if ( clipboard.set_image ( clp, xx, yy ) )
+	if ( clipboard.set_pixmap ( clp, xx, yy ) )
 	{
-		delete clp;
+		pixy_pixmap_destroy ( &clp );
 		return 1;
 	}
 
@@ -497,7 +503,8 @@ int mtPixyUI::File::clipboard_rotate_clockwise (
 		return 1;
 	}
 
-	return rectangle_overlay.set_paste ( m_image, clipboard.get_image () );
+	return rectangle_overlay.set_paste ( get_pixmap(),
+		clipboard.get_pixmap () );
 }
 
 int mtPixyUI::File::clipboard_rotate_anticlockwise (
@@ -509,7 +516,8 @@ int mtPixyUI::File::clipboard_rotate_anticlockwise (
 		return 1;
 	}
 
-	return rectangle_overlay.set_paste ( m_image, clipboard.get_image () );
+	return rectangle_overlay.set_paste ( get_pixmap(),
+		clipboard.get_pixmap () );
 }
 
 int mtPixyUI::File::clipboard_render_text (
@@ -523,13 +531,15 @@ int mtPixyUI::File::clipboard_render_text (
 	int		const	eff_strikethrough
 	)
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap ();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
-	mtPixy::Image * im = mtPixy::text_render_paste (
-		m_image->get_type (), brush, txt, font_name, size,
+	mtPixmap * im = mtPixy::text_render_paste (
+		pixy_pixmap_get_bytes_per_pixel ( pixmap ),
+		brush, txt, font_name, size,
 		eff_bold, eff_italic,
 		eff_underline ?
 			mtPixy::Font::STYLE_UNDERLINE_SINGLE :
@@ -541,9 +551,9 @@ int mtPixyUI::File::clipboard_render_text (
 		return 1;
 	}
 
-	if ( clipboard.set_image ( im, 0, 0, true ) )
+	if ( clipboard.set_pixmap ( im, 0, 0, true ) )
 	{
-		delete im;
+		pixy_pixmap_destroy ( &im );
 		return 1;
 	}
 

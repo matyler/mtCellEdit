@@ -19,24 +19,23 @@
 
 
 
-int dwut_dechg ()
+int Global::dw_dechg ()
 {
-	std::string	filename ( global.s_o );
+	std::string	filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 
 	mtKit::string_strip_extension ( filename, "txt" );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
 	std::string	info;
 
-	if ( global.hg_index.file_decode ( global.s_arg, filename.c_str (),
-		info ) )
+	if ( hg_index.file_decode ( s_arg, filename.c_str (), info ) )
 	{
 		std::cerr << info << "\n";
 		return ERROR_HG_DECODE;
@@ -45,33 +44,32 @@ int dwut_dechg ()
 	return 0;
 }
 
-int dwut_enchg ()
+int Global::dw_enchg ()
 {
-	if ( ! global.s_bottle )
+	if ( ! s_bottle )
 	{
 		return ERROR_BOTTLE_MISSING;
 	}
 
-	std::string	filename ( global.s_o );
+	std::string	filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 	filename += ".txt";
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
 	std::string	info;
-	mtDW::Well * const well = global.db.get_well ();
+	mtDW::Well * const well = db.get_well ();
 
-	if ( global.hg_index.file_encode ( global.s_bottle, global.s_arg,
-		filename.c_str (), well, info )
-		)
+	if ( hg_index.file_encode ( s_bottle, s_arg, filename.c_str (), well,
+		info ) )
 	{
 		std::cerr << info << "\n";
-		global.exit.set_value ( 1 );
+		exit.set_value ( 1 );
 		return ERROR_HG_ENCODE;
 	}
 

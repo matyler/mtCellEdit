@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "qt5_mw_file.h"
+#include "qt5_mw.h"
 
 
 
@@ -64,63 +64,49 @@ void Frontend::load_db_state ()
 	crul_db.load_cameras ( & camera_map );
 }
 
-void ThreadOpenDB::run ()
-{
-	m_fe.save_db_state ();
-
-	m_error = m_fe.crul_db.open ( m_filename );
-
-	if ( 0 == m_error )
-	{
-		m_fe.load_db_state ();
-	}
-}
-
 int Mainwindow::database_load ( std::string const & path )
 {
-	ThreadOpenDB		work	( path, m_fe );
-	mtQEX::BusyDialog	dialog	( this, "Opening Database." );
+	int error = 0;
+	mtQEX::BusyDialog	dialog	( this, "Opening Database.",
+		[this, &error, &path]()
+		{
+			m_fe.save_db_state ();
 
-	work.start ();
-	dialog.wait_for_thread ( work );
+			error = m_fe.crul_db.open ( path );
 
-	if ( 0 == work.error () )
+			if ( 0 == error )
+			{
+				m_fe.load_db_state ();
+			}
+		});
+	dialog.wait_for_thread ();
+
+	if ( 0 == error )
 	{
-		m_fe.backend.recent_crul_db.set_filename ( path.c_str () );
+		recent_crul_db.set ( path );
 	}
 
-	init_db_success ( work.error () );
+	init_db_success ( error );
 
-	return work.error ();
+	return error;
 }
 
 void Mainwindow::press_file_open_db ()
 {
-	QFileDialog dialog ( this, "Open Database" );
+	QString const filename = QFileDialog::getExistingDirectory (
+		this, "Open Database", m_fe.crul_db.get_dir().c_str(),
+		QFileDialog::DontUseNativeDialog | QFileDialog::ShowDirsOnly );
 
-	dialog.setFileMode ( QFileDialog::AnyFile );
-	dialog.setOptions ( QFileDialog::DontUseNativeDialog );
-	dialog.setAcceptMode ( QFileDialog::AcceptOpen );
 
-	while ( dialog.exec () )
+	if ( ! filename.isEmpty () )
 	{
-		QString filename = mtQEX::get_filename ( dialog );
-
-		if ( filename.isEmpty () )
-		{
-			continue;
-		}
-
-		if ( 0 == database_load ( filename.toUtf8 ().data () ) )
-		{
-			break;
-		}
+		database_load ( filename.toUtf8 ().data () );
 	}
 }
 
-void Mainwindow::press_file_recent ( int const i )
+void Mainwindow::press_file_recent ( size_t const i )
 {
-	std::string filename ( m_fe.backend.recent_crul_db.get_filename ( i ) );
+	std::string const filename ( m_mprefs.recent_crul_db.filename (i) );
 
 	if ( filename.size () > 0 )
 	{
@@ -132,10 +118,10 @@ void Mainwindow::update_recent_db_menu ()
 {
 	char buf[ PATH_MAX ];
 
-	for ( int i = 0; i < PREFS_CRUL_RECENT_DB_TOTAL; i++ )
+	for ( size_t i = 0; i < PREFS_CRUL_RECENT_DB_TOTAL; i++ )
 	{
 		if ( 1 == mtkit_snip_filename (
-			m_fe.backend.recent_crul_db.get_filename ( i + 1 ),
+			m_mprefs.recent_crul_db.filename ( i + 1 ).c_str(),
 			buf, sizeof ( buf ), 80 )
 			)
 		{
@@ -152,27 +138,21 @@ void Mainwindow::update_recent_db_menu ()
 	}
 }
 
-void ThreadLoadModel::run ()
-{
-	m_fe.model.load_db_pts ( & m_fe.crul_db );
-}
-
 void Mainwindow::load_model_from_db ()
 {
-	ThreadLoadModel		work ( m_fe );
-	mtQEX::BusyDialog	dialog ( this, "Loading Model." );
-
-	work.start ();
-	dialog.wait_for_thread ( work );
+	mtQEX::BusyDialog	dialog ( this, "Loading Model.",
+		[this]()
+		{
+			m_fe.model.load_db_pts ( & m_fe.crul_db );
+		});
+	dialog.wait_for_thread ();
 
 	// Must be done in GUI thread
-	m_fe.model_gl.populate ( m_fe.model.get_pts () );
+	m_fe.model_gl.populate (
+		m_fe.model.get_pts().data(),
+		m_fe.model.get_pts().size()
+		);
 	update_gl_view ();
-}
-
-void ThreadLoadPts::run ()
-{
-	m_fe.cloud.set_resolution ( m_type, & m_fe.crul_db );
 }
 
 void Mainwindow::load_cloud_from_db ( int type )
@@ -182,14 +162,16 @@ void Mainwindow::load_cloud_from_db ( int type )
 		type = get_selected_resolution ();
 	}
 
-	ThreadLoadPts		work ( m_fe, type );
-	mtQEX::BusyDialog	dialog ( this, "Loading Points." );
+	mtQEX::BusyDialog	dialog ( this, "Loading Points.",
+		[this, type]()
+		{
+			m_fe.cloud.set_resolution ( type, & m_fe.crul_db );
+		});
 
-	work.start ();
-	dialog.wait_for_thread ( work );
+	dialog.wait_for_thread ();
 
 	// Must be done in GUI thread
-	m_fe.cloud_gl.populate ( &m_fe.cloud );
+	m_fe.cloud_gl.populate ( m_fe.cloud.data(), m_fe.cloud.size() );
 	populate_gl_rulers ();
 	update_gl_view ();
 }

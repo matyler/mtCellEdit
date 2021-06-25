@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		MT Pixel Engine
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libpng-devel libjpeg62-devel giflib-devel pango-devel cairo-devel
-Requires:		libmtkit libpng16-16 libjpeg62 libgif7 pango cairo
+BuildRequires:		libmtkit libpng-devel libjpeg62-devel giflib-devel pango-devel cairo-devel librsvg2-devel
+Requires:		libmtkit libpng16-16 libjpeg62 libgif7 pango cairo librsvg2
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

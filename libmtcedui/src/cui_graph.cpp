@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2018 Mark Tyler
+	Copyright (C) 2011-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -104,9 +104,9 @@ struct renSTATE
 			c1, c2,
 			tmp_i_a;
 
-	char		* text,
-			* data_txt;
+	char		* data_txt;
 
+	char		cbuf[ 2000 ];
 
 	double		scale;		// Zoom: 1 = 100% (10% .. 1000%)
 
@@ -188,7 +188,6 @@ renSTATE::renSTATE ()
 	c1		( 0 ),
 	c2		( 0 ),
 	tmp_i_a		( 0 ),
-	text		(),
 	data_txt	(),
 	scale		( 0.0 ),
 	surface		(),
@@ -196,6 +195,8 @@ renSTATE::renSTATE ()
 	font_desc	(),
 	p_layout	()
 {
+	cbuf[0] = 0;
+
 	ink_rect.x = 0;
 	ink_rect.y = 0;
 	ink_rect.width = 0;
@@ -425,7 +426,6 @@ static int gr_utree_get_defaults (
 
 	mtTreeNode	* tn;
 	mtBulkStr const table_s[] = {
-		{ "text",		&state->text		},
 		{ "data",		&state->data_txt	},
 		{ NULL,			NULL }
 		};
@@ -457,9 +457,16 @@ static int gr_utree_get_defaults (
 		if absent */
 	}
 
-	mtkit_strfreedup ( &state->text, NULL );
 	mtkit_strfreedup ( &state->data_txt, NULL );
 	mtkit_utree_bulk_get ( node, NULL, NULL, table_s );
+
+	char const * val = nullptr;
+	if (	mtkit_utree_get_attribute_str ( node, "text", &val )	||
+		mtkit_strnncpy ( state->cbuf, val, sizeof(state->cbuf) )
+		)
+	{
+		state->cbuf[0] = 0;
+	}
 
 	gr_utree_bulk_parse ( state->sheet, node, table_d );
 
@@ -481,17 +488,18 @@ static void gr_set_rgb (
 	)
 {
 	cairo_set_source_rgb ( state->cr,
-		(double)mtPixy::int_2_red ( rgb ) / 255.0,
-		(double)mtPixy::int_2_green ( rgb ) / 255.0,
-		(double)mtPixy::int_2_blue ( rgb ) / 255.0
+		(double)pixy_int_2_red ( rgb ) / 255.0,
+		(double)pixy_int_2_green ( rgb ) / 255.0,
+		(double)pixy_int_2_blue ( rgb ) / 255.0
 		);
 }
 
 static void gr_render_text (
-	renSTATE	* const	state
+	renSTATE	* const	state,
+	char	const	* const	txt
 	)
 {
-	if ( ! state->text || state->text_color < 0 )
+	if ( ! txt || state->text_color < 0 )
 	{
 		return;
 	}
@@ -501,7 +509,7 @@ static void gr_render_text (
 	cairo_save ( state->cr );
 
 	cairo_translate ( state->cr, state->x, state->y );
-	pango_layout_set_text ( state->p_layout, state->text, -1 );
+	pango_layout_set_text ( state->p_layout, txt, -1 );
 
 	pango_font_description_set_weight ( state->font_desc,
 		PANGO_WEIGHT_NORMAL );
@@ -689,15 +697,16 @@ static void gr_justify_box (
 }
 
 static int gr_get_text_extents (
-	renSTATE	* const	state
+	renSTATE	* const	state,
+	char	const * const	txt
 	)
 {
-	if ( ! state->text )
+	if ( ! txt )
 	{
 		return 0;		// Nothing to do
 	}
 
-	pango_layout_set_text ( state->p_layout, state->text, -1 );
+	pango_layout_set_text ( state->p_layout, txt, -1 );
 	pango_font_description_set_weight ( state->font_desc,
 		PANGO_WEIGHT_NORMAL );
 	pango_font_description_set_size ( state->font_desc,
@@ -1031,10 +1040,12 @@ static int read_xycoords (
 	// Convert logical coordinates to physical page coordinates
 	gr_logical_to_physical ( state );
 
-	free ( state->text );
-	state->text = NULL;
 	cell = ced_sheet_get_cell ( state->sheet, row, col + 4 );
-	state->text = ced_cell_create_output ( cell, NULL );
+	if ( ced_cell_create_output ( cell, NULL, state->cbuf,
+		sizeof(state->cbuf) ) )
+	{
+		return 1;
+	}
 
 	return 0;			// Success
 }
@@ -1064,7 +1075,7 @@ static int scan_box_cb (
 		gr_render_ellipse ( state );
 	}
 
-	if ( ! gr_get_text_extents ( state ) )
+	if ( ! gr_get_text_extents ( state, state->cbuf ) )
 	{
 		return 0;
 	}
@@ -1075,7 +1086,7 @@ static int scan_box_cb (
 	state->y2 -= state->y_pad;
 
 	gr_justify_box ( state );
-	gr_render_text ( state );
+	gr_render_text ( state, state->cbuf );
 
 	return 0;			// Continue
 }
@@ -1145,7 +1156,7 @@ static int plotline_scan_cb (
 
 	gr_render_line ( state );
 
-	if ( ! gr_get_text_extents ( state ) )
+	if ( ! gr_get_text_extents ( state, state->cbuf ) )
 	{
 		return 0;
 	}
@@ -1229,7 +1240,7 @@ static int plotline_scan_cb (
 	}
 
 	gr_justify_box ( state );
-	gr_render_text ( state );
+	gr_render_text ( state, state->cbuf );
 
 	state->x_justify = xj;
 	state->y_justify = yj;
@@ -1599,21 +1610,12 @@ static int renfunc_plot_y_axis_grid (
 
 ///	AXIS
 
-static void get_x_axis_label_height (
-	renSTATE	* const	state
-	)
+static void get_x_axis_label_height ( renSTATE * const state )
 {
-	char		* tmp = state->text;
-
-
-	state->text = strdup ( "123" );
 	state->h = 0;
 
-	gr_get_text_extents ( state );
+	gr_get_text_extents ( state, "123" );
 	state->h += state->size + state->y_pad;
-
-	free ( state->text );
-	state->text = tmp;
 }
 
 static int setup_axis_cell (
@@ -1686,11 +1688,10 @@ static void get_next_axis_cell (
 	renSTATE	* const	state
 	)
 {
-	CedCell		* cell;
+	CedCell const * const cell = ced_sheet_get_cell( state->sheet, state->r,
+		state->c );
 
-
-	cell = ced_sheet_get_cell ( state->sheet, state->r, state->c );
-	state->text = ced_cell_create_output ( cell, NULL );
+	ced_cell_create_output ( cell, NULL, state->cbuf, sizeof(state->cbuf) );
 
 	state->r += state->r1;
 	state->c += state->c1;
@@ -1702,20 +1703,14 @@ static void render_x_axis_labels (
 	CedCell		* const	cell
 	)
 {
-	double		x,
-			xx1,
-			xx2;
-	char		* oldtxt = state->text;
 	CedCell		* newcell = NULL;
-
-
 
 	setup_axis_cell ( state, cell, &newcell );
 
-	xx1 = MIN ( state->x_axis1, state->x_axis2 );
-	xx2 = MAX ( state->x_axis1, state->x_axis2 );
+	double const xx1 = MIN ( state->x_axis1, state->x_axis2 );
+	double const xx2 = MAX ( state->x_axis1, state->x_axis2 );
 
-	for ( x = xx1; x <= xx2; x += state->gap )
+	for ( double x = xx1; x <= xx2; x += state->gap )
 	{
 		if ( x == xx2 && state->x_justify > 0 )
 		{
@@ -1728,19 +1723,21 @@ static void render_x_axis_labels (
 		if ( newcell )
 		{
 			newcell->value = x;
-			state->text = ced_cell_create_output ( newcell, NULL );
+
+			ced_cell_create_output ( newcell, NULL, state->cbuf,
+				sizeof(state->cbuf) );
 		}
 		else
 		{
 			get_next_axis_cell ( state );
 		}
 
-		if ( ! state->text )
+		if ( ! state->cbuf[0] )
 		{
 			continue;
 		}
 
-		if ( gr_get_text_extents ( state ) )
+		if ( gr_get_text_extents ( state, state->cbuf ) )
 		{
 			// Logical -> physical
 			state->x1 = state->plot_x1 +
@@ -1755,11 +1752,8 @@ static void render_x_axis_labels (
 			state->y2 = state->y1 + state->h;
 
 			gr_justify_box ( state );
-			gr_render_text ( state );
+			gr_render_text ( state, state->cbuf );
 		}
-
-		free ( state->text );
-		state->text = NULL;
 	}
 
 	if ( newcell )
@@ -1767,8 +1761,6 @@ static void render_x_axis_labels (
 		ced_cell_destroy ( newcell );
 		newcell = NULL;
 	}
-
-	state->text = oldtxt;
 }
 
 static void render_y_axis_labels (
@@ -1777,12 +1769,10 @@ static void render_y_axis_labels (
 	CedCell		* const	cell
 	)
 {
-	double		y,
-			yy1,
-			yy2,
-			max_width = 0;
-	char		* oldtxt = state->text;
+	double		max_width = 0;
 	CedCell		* newcell = NULL;
+	double	const	yy1 = MIN ( state->y_axis1, state->y_axis2 );
+	double	const	yy2 = MAX ( state->y_axis1, state->y_axis2 );
 
 
 	if ( state->gap <= 0 )
@@ -1792,27 +1782,26 @@ static void render_y_axis_labels (
 
 	setup_axis_cell ( state, cell, &newcell );
 
-	yy1 = MIN ( state->y_axis1, state->y_axis2 );
-	yy2 = MAX ( state->y_axis1, state->y_axis2 );
-
-	for ( y = yy1; y <= yy2; y += state->gap )
+	for ( double y = yy1; y <= yy2; y += state->gap )
 	{
 		if ( newcell )
 		{
 			newcell->value = y;
-			state->text = ced_cell_create_output ( newcell, NULL );
+
+			ced_cell_create_output ( newcell, NULL, state->cbuf,
+				sizeof(state->cbuf) );
 		}
 		else
 		{
 			get_next_axis_cell ( state );
 		}
 
-		if ( ! state->text )
+		if ( ! state->cbuf[0] )
 		{
 			continue;
 		}
 
-		if ( gr_get_text_extents ( state ) )
+		if ( gr_get_text_extents ( state, state->cbuf ) )
 		{
 			max_width = MAX ( state->w, max_width );
 
@@ -1825,11 +1814,8 @@ static void render_y_axis_labels (
 				state->h / 2;
 
 			gr_justify_box ( state );
-			gr_render_text ( state );
+			gr_render_text ( state, state->cbuf );
 		}
-
-		free ( state->text );
-		state->text = NULL;
 	}
 
 	if ( newcell )
@@ -1839,7 +1825,6 @@ static void render_y_axis_labels (
 	}
 
 finish:
-	state->text = oldtxt;
 
 	if ( pass == 1 )
 	{
@@ -1933,7 +1918,7 @@ static int renfunc_plot_x_axis (
 		return 1;
 	}
 
-	if ( gr_get_text_extents ( state ) )
+	if ( gr_get_text_extents ( state, state->cbuf ) )
 	{
 		// We have text to render
 
@@ -1961,7 +1946,7 @@ static int renfunc_plot_x_axis (
 			state->y1 = state->y2 - state->plot_x_axis_text_height;
 
 			gr_justify_box ( state );
-			gr_render_text ( state );
+			gr_render_text ( state, state->cbuf );
 		}
 	}
 
@@ -2041,7 +2026,7 @@ static int renfunc_plot_x_axis_top (
 		return 1;
 	}
 
-	if ( gr_get_text_extents ( state ) )
+	if ( gr_get_text_extents ( state, state->cbuf ) )
 	{
 		// We have text to render
 
@@ -2070,7 +2055,7 @@ static int renfunc_plot_x_axis_top (
 				state->plot_x_axis_top_text_height;
 
 			gr_justify_box ( state );
-			gr_render_text ( state );
+			gr_render_text ( state, state->cbuf );
 		}
 	}
 
@@ -2140,15 +2125,10 @@ static void get_y_axis_label_width (
 	mtUtreeNode	* const	node
 	)
 {
-	char		* tmp = state->text;
-
-
 	render_y_axis_labels ( state, 1,
 		get_label_format_cell ( state, node ) );
 
 	state->w += state->size + state->x_pad;
-
-	state->text = tmp;
 }
 
 static int renfunc_plot_y_axis (
@@ -2168,7 +2148,7 @@ static int renfunc_plot_y_axis (
 
 	cairo_rotate ( state->cr, -M_PI/2 );
 
-	if ( gr_get_text_extents ( state ) )
+	if ( gr_get_text_extents ( state, state->cbuf ) )
 	{
 		// We have text to render
 
@@ -2205,7 +2185,7 @@ static int renfunc_plot_y_axis (
 			state->x = -state->y - state->ink_rect.width;
 			state->y = temp;
 
-			gr_render_text ( state );
+			gr_render_text ( state, state->cbuf );
 		}
 	}
 
@@ -2299,7 +2279,7 @@ static int renfunc_plot_y_axis_right (
 
 	cairo_rotate ( state->cr, -M_PI/2 );
 
-	if ( gr_get_text_extents ( state ) )
+	if ( gr_get_text_extents ( state, state->cbuf ) )
 	{
 		// We have text to render
 
@@ -2337,7 +2317,7 @@ static int renfunc_plot_y_axis_right (
 			state->x = -state->y - state->ink_rect.width;
 			state->y = temp;
 
-			gr_render_text ( state );
+			gr_render_text ( state, state->cbuf );
 		}
 	}
 
@@ -2521,7 +2501,7 @@ static int execute_node (
 		return 0;
 	}
 
-	int const fn_table_size = (int)sizeof(fn_table) / sizeof(fn_table[0]);
+	int const fn_table_size = (int)(sizeof(fn_table) / sizeof(fn_table[0]));
 	int a = 0;
 	int c = fn_table_size - 1;
 
@@ -2763,18 +2743,17 @@ static void renstate_destroy (
 		state->p_layout = NULL;
 	}
 
-	mtkit_strfreedup ( &state->text, NULL );
 	mtkit_strfreedup ( &state->data_txt, NULL );
 }
 
-mtPixy::Image * cui_graph_render_image (
+mtPixmap * cui_graph_render_pixmap (
 	CedBook		* const	book,
 	char	const	* const	graph_name,
 	int		* const	breakpoint,
 	double		const	scale
 	)
 {
-	mtPixy::Image	* image = NULL;
+	mtPixmap	* image = NULL;
 	renSTATE	state;
 
 
@@ -2794,7 +2773,7 @@ mtPixy::Image * cui_graph_render_image (
 		goto error;
 	}
 
-	image = mtPixy::image_from_cairo ( state.surface );
+	image = pixy_pixmap_from_cairo ( state.surface );
 	if ( ! image )
 	{
 		if ( breakpoint )
@@ -2811,7 +2790,6 @@ error:
 
 	return image;
 }
-
 
 int cui_graph_render_file (
 	CedBook		* const	book,

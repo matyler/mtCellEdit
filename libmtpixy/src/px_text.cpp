@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
 
 
-mtPixy::Image * mtPixy::text_render_preview (
-	Image::Type		const	type,
+mtPixmap * mtPixy::text_render_preview_pixmap (
+	int			const	bpp,
 	char		const * const	utf8,
 	char		const * const	font_name,
 	int			const	size,
@@ -34,33 +34,33 @@ mtPixy::Image * mtPixy::text_render_preview (
 
 	font.set_style ( bold, italics, underline, strikethrough );
 
-	Image * im = font.render_image ( utf8, 0 );
+	mtPixmap * const im = font.render_pixmap ( utf8, 0 );
 	if ( ! im )
 	{
 		return NULL;
 	}
 
-	if ( im->create_rgb_canvas () )
+	mtPixy::Pixmap pixmap ( im );	// Auto cleanup on leaving scope
+
+	if ( pixy_pixmap_create_rgb_canvas ( im ) )
 	{
-		delete im;
 		return NULL;
 	}
 
-	unsigned char * alp = im->get_alpha ();
-	unsigned char * can = im->get_canvas ();
-	size_t	const	pixtot = (size_t)( im->get_width() * im->get_height() );
+	unsigned char * alp = im->alpha;
+	unsigned char * can = im->canvas;
+	size_t	const	pixtot = (size_t)( im->width * im->height );
 
 	if ( ! alp || ! can )
 	{
-		delete im;
 		return NULL;
 	}
 
 	memset ( can, 255, 3 * pixtot );
 
-	switch ( type )
+	switch ( bpp )
 	{
-	case Image::TYPE_INDEXED:
+	case PIXY_PIXMAP_BPP_INDEXED:
 		for ( size_t i = 0; i < pixtot; i++ )
 		{
 			if ( alp[i] > 127 )
@@ -72,7 +72,7 @@ mtPixy::Image * mtPixy::text_render_preview (
 		}
 		break;
 
-	case Image::TYPE_RGB:
+	case PIXY_PIXMAP_BPP_RGB:
 		for ( size_t i = 0; i < pixtot; i++ )
 		{
 			can[ 3*i + 0 ] = (unsigned char)(255 - alp[ i ]);
@@ -85,13 +85,13 @@ mtPixy::Image * mtPixy::text_render_preview (
 		break;
 	}
 
-	im->destroy_alpha ();
+	pixy_pixmap_destroy_alpha ( im );
 
-	return im;
+	return pixmap.release();
 }
 
-mtPixy::Image * mtPixy::text_render_paste (
-	Image::Type		const	type,
+mtPixmap * mtPixy::text_render_paste (
+	int			const	bpp,
 	Brush				&bru,
 	char		const * const	utf8,
 	char		const * const	font_name,
@@ -106,26 +106,24 @@ mtPixy::Image * mtPixy::text_render_paste (
 
 	font.set_style ( bold, italics, underline, strikethrough );
 
-	Image * im = font.render_image ( utf8, 0 );
-	if ( ! im )
+	mtPixy::Pixmap pixmap ( font.render_pixmap ( utf8, 0 ) );
+	if ( ! pixmap.get() )
 	{
 		return NULL;
 	}
 
-	switch ( type )
+	switch ( bpp )
 	{
-	case Image::TYPE_INDEXED:
-		if ( im->create_indexed_canvas () )
+	case PIXY_PIXMAP_BPP_INDEXED:
+		if ( pixy_pixmap_create_indexed_canvas ( pixmap.get() ) )
 		{
-			delete im;
 			return NULL;
 		}
 		break;
 
-	case Image::TYPE_RGB:
-		if ( im->create_rgb_canvas () )
+	case PIXY_PIXMAP_BPP_RGB:
+		if ( pixy_pixmap_create_rgb_canvas ( pixmap.get() ) )
 		{
-			delete im;
 			return NULL;
 		}
 		break;
@@ -134,9 +132,10 @@ mtPixy::Image * mtPixy::text_render_paste (
 		break;
 	}
 
-	im->paint_canvas_rectangle ( bru, 0, 0, im->get_width (),
-		im->get_height () );
+	bru.paint_canvas_rectangle ( pixmap.get(), 0, 0,
+		pixy_pixmap_get_width ( pixmap.get() ),
+		pixy_pixmap_get_height ( pixmap.get() ) );
 
-	return im;
+	return pixmap.release();
 }
 

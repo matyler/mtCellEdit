@@ -28,27 +28,36 @@ class ImagePair;
 
 
 
+typedef std::function<int()>	FunCB;
+
+
+
 class ImagePair
 {
 public:
-	int open_file ( char const * filename );
-		// 0 = Loaded 2nd image + duplicated A into global.image
-		// 1 = Loaded 1st image or an error
+	int open_file (
+		char const * filename,
+		int & i_ftype_in,
+		mtPixmap ** img
+		);
+		// -1 = Loaded 1st image
+		// 0 = Loaded 2nd image + duplicated A into img
+		// 1 = Error
 
-	inline mtPixy::Image * get_image_a () { return m_image_a.get (); }
-	inline mtPixy::Image * get_image_b () { return m_image_b.get (); }
+	inline mtPixmap * get_pixmap_a () const { return m_pixmap_a.get (); }
+	inline mtPixmap * get_pixmap_b () const	{ return m_pixmap_b.get (); }
 
 private:
-	bool both_loaded ();	// Both images exist
-	bool both_match ();
+	bool both_loaded () const;	// Both images exist
+	bool both_match () const;
 		// Both images exist, have canvas, same type/geometry
 
-	int prepare_output ();
+	int prepare_output ( mtPixmap ** dup ) const;
 
 /// ----------------------------------------------------------------------------
 
-	std::unique_ptr<mtPixy::Image> m_image_a;
-	std::unique_ptr<mtPixy::Image> m_image_b;
+	mtPixy::Pixmap	m_pixmap_a;
+	mtPixy::Pixmap	m_pixmap_b;
 };
 
 
@@ -57,60 +66,105 @@ class Global
 {
 public:
 	Global ();
-	void set_image ( mtPixy::Image * im );
+	~Global ();
+
+	int init ();
+	int command_line ( int argc, char const * const argv[] );
+
+private:
+	enum
+	{
+		ERROR_LOAD_FILE		= 1,
+		ERROR_LIBMTPIXY		= 2,
+		ERROR_BAD_PALETTE	= 3
+	};
+
+
+	void set_pixmap ( mtPixmap * pixmap );
+
+	int ut_load_file ();	// Loads image file (name in
+				// global.s_arg).
+		// 0 = success. Failure is not sent to stderr, but i_error is
+		// set.
+
+/*	Command functions
+
+	Return 0 = success.
+	Return > 0 = Generic error to be reported by caller (Global::file_func)
+*/
+	int pixy_cmp ();
+	int pixy_delta ();
+	int pixy_fade ();
+	int pixy_ls ();
+	int pixy_new ();
+	int pixy_pica ();
+	int pixy_resize ();
+	int pixy_riba ();
+	int pixy_rida ();
+	int pixy_risa ();
+	int pixy_scale ();
+	int pixy_twit ();
+
+	void set_function ( char const * name );
+
+	int print_help ();
+	int print_version ();
+
+	int argcb_com ();
+	int argcb_i ();
+	int argcb_o ();
+	int argcb_otype ();
+	int argcb_imtype ();
+
+	int file_func ( char const * filename );
+
+	FunCB get_function ( std::string const & txt ) const;
+	std::string get_error_message ( int err ) const;
+	int get_filetype ();
+	int get_imtype ();
 
 /// ----------------------------------------------------------------------------
 
-	int
-			i_comp_png,
-			i_comp_jpeg,
-			i_error,	// 0 = success 1 = error
-			i_fps,
-			i_frame0,
-			i_ftype_in,
-			i_ftype_out,	// If PIXY_FILE_TYPE_NONE use i_ftype_in
-			i_height,
-			i_image_type,
-			i_palette,	// 0=default 1=grey 2-6=uniform
-			i_scale,	// 0=default 1=blocky (RGB)
-			i_seconds,
-			i_tmp,
-			i_verbose,	// 1 = verbose 0 = normal
-			i_width,
-			i_x,
-			i_y
-			;
+	int	i_comp_png	= 6;
+	int	i_comp_jpeg	= 85;
+	int	i_error		= 0;	// 0 = success 1 = error
+	int	i_fps		= 60;
+	int	i_frame0	= 0;
+	int	i_ftype_in	= PIXY_FILE_TYPE_BMP;
+	int	i_ftype_out	= PIXY_FILE_TYPE_NONE;
+				// If PIXY_FILE_TYPE_NONE use i_ftype_in
+	int	i_height	= 100;
+	int	i_image_type	= PIXY_PIXMAP_BPP_INDEXED;
+	int	i_palette	= 0;	// 0=default 1=grey 2-6=uniform
+	int	i_scale		= 0;	// 0=default 1=blocky (RGB)
+	int	i_seconds	= 1;
+	int	i_tmp		= 0;
+	int	i_verbose	= 0;	// 1 = verbose 0 = normal
+	int	i_width		= 100;
+	int	i_x		= 0;
+	int	i_y		= 0;
 
-	char	const	* s_dir;
-	char	const	* s_prefix;
+	char	const	* s_dir	= "";
+	char	const	* s_prefix = "";
 
-	char	const	* s_arg;	// Current command line argument
+	char	const	* s_arg	= nullptr; // Current command line argument
 
-	mtPixy::Image	* image;	// Current image
+	mtPixy::Pixmap	m_pixmap;	// Current pixmap
 
-	ImagePair	image_pair;	// 2 working images
+	ImagePair	m_image_pair;	// 2 working images
+
+	FunCB		m_function = nullptr;
+	std::string	m_function_name;
+
+	std::map< std::string, FunCB > jump_table;
+	std::map< std::string, int > ft_table;
+	std::map< std::string, int > im_type_table;
+	std::map< int, std::string > err_table;
+
+	MTKIT_RULE_OF_FIVE( Global )
 };
 
 
-
-// Note: must match ff_errtab in main.c
-enum
-{
-	ERROR_LOAD_FILE		= 1,
-	ERROR_LIBMTPIXY		= 2,
-	ERROR_BAD_PALETTE	= 3
-};
-
-
-
-extern Global		global;
-
-
-
-int ut_load_file ();			// Loads image file (name in
-					// global.s_arg).
-	// 0 = success. Failure is not sent to stderr, but global.i_error is
-	// set.
 
 int * create_cube_analysis (
 	int			i,	// 8=full cube 1=corners of cube
@@ -118,24 +172,4 @@ int * create_cube_analysis (
 	int			w,
 	int			h
 	);
-
-
-/*	Command functions
-
-	Return 0 = success.
-	Return > 0 = Generic error to be reported by caller (main.c ff_errtab).
-*/
-
-int pixyut_cmp ();
-int pixyut_delta ();
-int pixyut_fade ();
-int pixyut_ls ();
-int pixyut_new ();
-int pixyut_pica ();
-int pixyut_resize ();
-int pixyut_riba ();
-int pixyut_rida ();
-int pixyut_risa ();
-int pixyut_scale ();
-int pixyut_twit ();
 

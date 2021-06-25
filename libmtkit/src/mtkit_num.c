@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,24 +18,6 @@
 #include "private.h"
 
 
-
-int mtkit_int32_unpack (
-	unsigned char	const * const	mem
-	)
-{
-	return ( mem[0] + (mem[1] << 8) + (mem[2] << 16) + (mem[3] << 24) );
-}
-
-void mtkit_int32_pack (
-	unsigned char	* const	mem,
-	int		const	num
-	)
-{
-	mem[0] = (unsigned char)(num);
-	mem[1] = (unsigned char)(num >> 8);
-	mem[2] = (unsigned char)(num >> 16);
-	mem[3] = (unsigned char)(num >> 24);
-}
 
 int mtkit_int_bound (
 	int	const	num,
@@ -63,5 +45,17 @@ double mtkit_double_bound (
 	}
 
 	return MAX( MIN( num, max ), min );
+}
+
+double mtkit_angle_normalize ( double degrees )
+{
+	degrees = fmod ( degrees, 360 );
+
+	if ( degrees < 0 )
+	{
+		degrees += 360;
+	}
+
+	return degrees;
 }
 

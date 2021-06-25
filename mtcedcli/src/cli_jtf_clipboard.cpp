@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -32,13 +32,11 @@ enum
 
 
 
-static int transform_clipboard (
-	int	const	item
-	)
+int Backend::transform_clipboard ( int const item )
 {
-	CedSheet	* sheet = backend.clipboard()->sheet;
+	CedSheet	* sh = clipboard()->sheet;
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		fprintf ( stderr, "No clipboard exists.\n\n" );
 
@@ -48,55 +46,54 @@ static int transform_clipboard (
 	switch ( item )
 	{
 	case CLIP_TRANSPOSE:
-		sheet = ced_sheet_transpose ( sheet );
+		sh = ced_sheet_transpose ( sh );
 		break;
 
 	case CLIP_FLIP_HORIZONTAL:
-		sheet = ced_sheet_flip_horizontal ( sheet );
+		sh = ced_sheet_flip_horizontal ( sh );
 		break;
 
 	case CLIP_FLIP_VERTICAL:
-		sheet = ced_sheet_flip_vertical ( sheet );
+		sh = ced_sheet_flip_vertical ( sh );
 		break;
 
 	case CLIP_ROTATE_CLOCKWISE:
-		sheet = ced_sheet_rotate_clockwise ( sheet );
+		sh = ced_sheet_rotate_clockwise ( sh );
 		break;
 
 	case CLIP_ROTATE_ANTICLOCKWISE:
-		sheet = ced_sheet_rotate_anticlockwise ( sheet );
+		sh = ced_sheet_rotate_anticlockwise ( sh );
 		break;
 
 	default:
 		goto fail;
 	}
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		goto fail;
 	}
 
-	if (	cui_clip_flush ( backend.clipboard() )	||
-		backend.clipboard()->sheet )
+	if (	cui_clip_flush ( clipboard() ) || clipboard()->sheet )
 	{
-		ced_sheet_destroy ( sheet );
-		sheet = NULL;
+		ced_sheet_destroy ( sh );
+		sh = NULL;
 
 		goto fail;
 	}
 
-	backend.clipboard()->sheet = sheet;
-	sheet = NULL;
+	clipboard()->sheet = sh;
+	sh = NULL;
 
 	if ( item != CLIP_FLIP_HORIZONTAL && item != CLIP_FLIP_VERTICAL )
 	{
-		int	tmp = backend.clipboard()->rows;
+		int const tmp = clipboard()->rows;
 
 
 		// X/Y Geometry has been swapped
 
-		backend.clipboard()->rows = backend.clipboard()->cols;
-		backend.clipboard()->cols = tmp;
+		clipboard()->rows = clipboard()->cols;
+		clipboard()->cols = tmp;
 	}
 
 	return 0;
@@ -107,46 +104,46 @@ fail:
 	return 2;
 }
 
-int jtf_clip_flip_h (
+int Backend::jtf_clip_flip_h (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return transform_clipboard ( CLIP_FLIP_HORIZONTAL );
 }
 
-int jtf_clip_flip_v (
+int Backend::jtf_clip_flip_v (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return transform_clipboard ( CLIP_FLIP_VERTICAL );
 }
 
-int jtf_clip_rotate_a (
+int Backend::jtf_clip_rotate_a (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return transform_clipboard ( CLIP_ROTATE_ANTICLOCKWISE );
 }
 
-int jtf_clip_rotate_c (
+int Backend::jtf_clip_rotate_c (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return transform_clipboard ( CLIP_ROTATE_CLOCKWISE );
 }
 
-int jtf_clip_transpose (
+int Backend::jtf_clip_transpose (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return transform_clipboard ( CLIP_TRANSPOSE );
 }
 
-int jtf_clip_load (
+int Backend::jtf_clip_load (
 	char	const * const * const	args
 	)
 {
-	if ( cui_clip_load_temp_file ( backend.clipboard (), args[0] ) )
+	if ( cui_clip_load_temp_file ( clipboard (), args[0] ) )
 	{
 		fprintf ( stderr, "jtf_clip_load: Unable to load clipboard.\n\n"
 			);
@@ -157,11 +154,11 @@ int jtf_clip_load (
 	return 0;
 }
 
-int jtf_clip_save (
+int Backend::jtf_clip_save (
 	char	const * const * const	args
 	)
 {
-	if ( cui_clip_save_temp_file ( backend.clipboard (), args[0] ) )
+	if ( cui_clip_save_temp_file ( clipboard (), args[0] ) )
 	{
 		fprintf ( stderr, "jtf_clip_save: Unable to save clipboard.\n\n"
 			);
@@ -172,9 +169,9 @@ int jtf_clip_save (
 	return 0;
 }
 
-static int copy_selection_to_clip ()
+int Backend::copy_selection_to_clip ()
 {
-	if ( cui_clip_copy ( backend.file(), backend.clipboard() ) )
+	if ( cui_clip_copy ( file(), clipboard() ) )
 	{
 		fprintf ( stderr,
 			"copy_selection_to_clip: Unable to copy selection.\n\n"
@@ -186,7 +183,7 @@ static int copy_selection_to_clip ()
 	return 0;		// Success
 }
 
-int jtf_copy (
+int Backend::jtf_copy (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -206,10 +203,18 @@ static int copy_output_scan (
 	void		* const	ARG_UNUSED ( user_data )
 	)
 {
-	char * const txt = ced_cell_create_output ( cell, NULL );
+	char buf[ 2000 ];
+	ced_cell_create_output ( cell, NULL, buf, sizeof(buf) );
 
 	free ( cell->text );
-	cell->text = txt;
+	if ( buf[0] )
+	{
+		cell->text = strdup ( buf );
+	}
+	else
+	{
+		cell->text = nullptr;
+	}
 
 	cell->type = CED_CELL_TYPE_TEXT_EXPLICIT;
 	cell->value = 0;
@@ -217,7 +222,7 @@ static int copy_output_scan (
 	return 0;
 }
 
-int jtf_copy_output (
+int Backend::jtf_copy_output (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -226,7 +231,7 @@ int jtf_copy_output (
 		return 2;
 	}
 
-	if ( ced_sheet_scan_area ( backend.clipboard()->sheet, 1, 1, 0, 0,
+	if ( ced_sheet_scan_area ( clipboard()->sheet, 1, 1, 0, 0,
 		copy_output_scan, NULL )
 		)
 	{
@@ -272,7 +277,7 @@ static int copy_value_scan (
 	return 0;
 }
 
-int jtf_copy_values (
+int Backend::jtf_copy_values (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -281,7 +286,7 @@ int jtf_copy_values (
 		return 2;
 	}
 
-	if ( ced_sheet_scan_area ( backend.clipboard()->sheet, 1, 1, 0, 0,
+	if ( ced_sheet_scan_area ( clipboard()->sheet, 1, 1, 0, 0,
 		copy_value_scan, NULL ) )
 	{
 		fprintf ( stderr,
@@ -293,23 +298,19 @@ int jtf_copy_values (
 	return 0;
 }
 
-static int clear_selection (
-	int	const	mode
-	)
+int Backend::clear_selection ( int const mode )
 {
-	CedSheet * const sheet = backend.sheet ();
+	CedSheet * const sh = sheet ();
 
-	if ( ! sheet )
+	if ( ! sh )
 	{
 		return 1;
 	}
 
-	int const r = MIN ( sheet->prefs.cursor_r1, sheet->prefs.cursor_r2 );
-	int const c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
-	int const rtot = 1 + abs ( sheet->prefs.cursor_r1 -
-		sheet->prefs.cursor_r2 );
-	int const ctot = 1 + abs ( sheet->prefs.cursor_c1 -
-		sheet->prefs.cursor_c2 );
+	int const r = MIN ( sh->prefs.cursor_r1, sh->prefs.cursor_r2 );
+	int const c = MIN ( sh->prefs.cursor_c1, sh->prefs.cursor_c2 );
+	int const rtot = 1 + abs ( sh->prefs.cursor_r1 - sh->prefs.cursor_r2 );
+	int const ctot = 1 + abs ( sh->prefs.cursor_c1 - sh->prefs.cursor_c2 );
 
 	if ( r < 1 || c < 1 )
 	{
@@ -317,10 +318,10 @@ static int clear_selection (
 	}
 
 	{
-		int const res = cui_sheet_clear_area ( backend.file()->cubook,
-			sheet, r, c, rtot, ctot, mode );
+		int const res = cui_sheet_clear_area ( file()->cubook, sh, r, c,
+			rtot, ctot, mode );
 
-		backend.undo_report_updates ( res );
+		undo_report_updates ( res );
 
 		if (	res == CUI_ERROR_LOCKED_CELL ||
 			res == CUI_ERROR_NO_CHANGES
@@ -330,7 +331,7 @@ static int clear_selection (
 		}
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;		// Success
 
@@ -340,7 +341,7 @@ fail:
 	return 1;
 }
 
-int jtf_cut (
+int Backend::jtf_cut (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -353,7 +354,7 @@ int jtf_cut (
 	return 0;
 }
 
-int jtf_clear (
+int Backend::jtf_clear (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -365,7 +366,7 @@ int jtf_clear (
 	return 0;
 }
 
-int jtf_clear_content (
+int Backend::jtf_clear_content (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -377,7 +378,7 @@ int jtf_clear_content (
 	return 0;
 }
 
-int jtf_clear_prefs (
+int Backend::jtf_clear_prefs (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -389,43 +390,38 @@ int jtf_clear_prefs (
 	return 0;
 }
 
-static CedSheet * obtain_paste ()
+int Backend::paste_clipboard_at_cursor ( int const mode )
 {
-	CedSheet * const sheet = backend.sheet ();
-
-	if ( ! sheet )
+	auto obtain_paste = [this]()
 	{
-		return NULL;
-	}
+		if ( ! sheet () )
+		{
+			return 1;
+		}
 
-	if ( ! backend.clipboard()->sheet )
-	{
-		fprintf ( stderr, "obtain_paste: No clipboard.\n\n" );
-		return NULL;
-	}
+		if ( ! clipboard()->sheet )
+		{
+			fprintf ( stderr, "obtain_paste: No clipboard.\n\n" );
+			return 1;
+		}
 
-	return sheet;
-}
+		return 0;
+	};
 
-static int paste_clipboard_at_cursor (
-	int	const	mode
-	)
-{
-	if ( ! obtain_paste () )
+	if ( obtain_paste () )
 	{
 		goto fail;		// No paste or sheet found
 	}
 
 	{
-		int const res = cui_clip_paste ( backend.file(),
-			backend.clipboard(), mode );
+		int const res = cui_clip_paste ( file(), clipboard(), mode );
 
 		if ( res == 1 )
 		{
 			goto fail;
 		}
 
-		backend.undo_report_updates ( res );
+		undo_report_updates ( res );
 
 		if (	res == CUI_ERROR_LOCKED_CELL	||
 			res == CUI_ERROR_LOCKED_SHEET	||
@@ -436,7 +432,7 @@ static int paste_clipboard_at_cursor (
 		}
 	}
 
-	backend.update_changes_chores ();
+	update_changes_chores ();
 
 	return 0;				// Paste committed
 
@@ -445,21 +441,21 @@ fail:
 	return 2;
 }
 
-int jtf_paste (
+int Backend::jtf_paste (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return paste_clipboard_at_cursor ( 0 );
 }
 
-int jtf_paste_content (
+int Backend::jtf_paste_content (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return paste_clipboard_at_cursor ( CED_PASTE_CONTENT );
 }
 
-int jtf_paste_prefs (
+int Backend::jtf_paste_prefs (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {

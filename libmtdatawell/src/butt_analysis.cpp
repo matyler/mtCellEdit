@@ -30,35 +30,35 @@ mtDW::OTPanalysis::OTPanalysis (
 	Butt	&butt
 	)
 	:
-	op		( new OTPanalysis::Op ( butt ) )
+	m_op		( new OTPanalysis::Op ( butt ) )
 {
 }
 
 mtDW::OTPanalysis::~OTPanalysis ()
 {
-	delete op;
 }
 
 int mtDW::OTPanalysis::init (
-	std::unique_ptr<mtPixy::Image> &im_8bit,
-	std::unique_ptr<mtPixy::Image> &im_16bit
+	mtPixy::Pixmap	&im_8bit,
+	mtPixy::Pixmap	&im_16bit
 	)
 {
-	im_8bit.reset ( mtPixy::Image::create ( mtPixy::Image::TYPE_INDEXED,
-		IMAGE_8BIT_WIDTH, IMAGE_8BIT_HEIGHT ) );
+	im_8bit.reset ( pixy_pixmap_new_indexed ( IMAGE_8BIT_WIDTH,
+		IMAGE_8BIT_HEIGHT ) );
 
-	im_16bit.reset ( mtPixy::Image::create ( mtPixy::Image::TYPE_INDEXED,
-		IMAGE_16BIT_WIDTH, IMAGE_16BIT_HEIGHT ) );
+	im_16bit.reset ( pixy_pixmap_new_indexed ( IMAGE_16BIT_WIDTH,
+		IMAGE_16BIT_HEIGHT ) );
 
 	if ( ! im_8bit.get () || ! im_16bit.get () )
 	{
 		return report_error ( ERROR_HEAP_EMPTY );
 	}
 
-	im_8bit.get ()->get_palette ()->set_uniform ( 6 );
+	mtPalette	* const pal8 = pixy_pixmap_get_palette ( im_8bit.get());
+	pixy_palette_set_uniform ( pal8, 6 );
 
-	mtPixy::Palette	* const pal = im_16bit.get ()->get_palette ();
-	mtPixy::Color	* const col = pal->get_color ();
+	mtPalette	* const pal16 = pixy_pixmap_get_palette(im_16bit.get());
+	mtColor		* const col = &pal16->color[0];
 
 	col[0].red	= 0;
 	col[0].green	= 0;
@@ -67,42 +67,42 @@ int mtDW::OTPanalysis::init (
 	col[255].green	= 0;
 	col[255].blue	= 0;
 
-	pal->set_color_total ( 256 );
-	pal->create_gradient ( 0, 255 );
+	pixy_palette_set_size ( pal16, 256 );
+	pixy_palette_create_gradient ( pal16, 0, 255 );
 
 	return 0;
 }
 
 int mtDW::OTPanalysis::analyse_bucket (
-	mtPixy::Image	* const	image_8bit,
-	mtPixy::Image	* const	image_16bit,
+	mtPixmap const * const	image_8bit,
+	mtPixmap const * const	image_16bit,
 	int		const	bucket
 	) const
 {
-	op->clear_tables ();
+	m_op->clear_tables ();
 
-	int res = op->analyse_bucket ( bucket );
+	int res = m_op->analyse_bucket ( bucket );
 
 	if ( 0 == res )
 	{
-		res = op->analyse_finish ( image_8bit, image_16bit );
+		res = m_op->analyse_finish ( image_8bit, image_16bit );
 	}
 
 	return res;
 }
 
 int mtDW::OTPanalysis::analyse_all_buckets (
-	mtPixy::Image	* const	image_8bit,
-	mtPixy::Image	* const	image_16bit
+	mtPixmap const * const	image_8bit,
+	mtPixmap const * const	image_16bit
 	) const
 {
-	op->clear_tables ();
+	m_op->clear_tables ();
 
-	int res = op->analyse_all_buckets ();
+	int res = m_op->analyse_all_buckets ();
 
 	if ( 0 == res )
 	{
-		res = op->analyse_finish ( image_8bit, image_16bit );
+		res = m_op->analyse_finish ( image_8bit, image_16bit );
 	}
 
 	return res;
@@ -110,24 +110,24 @@ int mtDW::OTPanalysis::analyse_all_buckets (
 
 void mtDW::OTPanalysis::get_bit_percents ( double &b1, double list[8] ) const
 {
-	b1 = op->m_bit_1;
+	b1 = m_op->m_bit_1;
 
-	memcpy ( list, op->m_bit_list, sizeof(op->m_bit_list) );
+	memcpy ( list, m_op->m_bit_list, sizeof(m_op->m_bit_list) );
 }
 
 double mtDW::OTPanalysis::get_byte_mean () const
 {
-	return op->m_byte_mean;
+	return m_op->m_byte_mean;
 }
 
 double const * mtDW::OTPanalysis::get_byte_list () const
 {
-	return op->m_byte_list;
+	return m_op->m_byte_list;
 }
 
 int64_t mtDW::OTPanalysis::get_bucket_size () const
 {
-	return op->m_bucket_size;
+	return m_op->m_bucket_size;
 }
 
 
@@ -239,16 +239,28 @@ int mtDW::OTPanalysis::Op::analyse_all_buckets ()
 }
 
 int mtDW::OTPanalysis::Op::analyse_finish (
-	mtPixy::Image * const image_8bit,
-	mtPixy::Image * const image_16bit
+	mtPixmap const * const	image_8bit,
+	mtPixmap const * const	image_16bit
 	)
 {
-	if (	! image_8bit						||
-		! image_16bit						||
-		image_8bit->get_width () != IMAGE_8BIT_WIDTH		||
-		image_8bit->get_height () != IMAGE_8BIT_HEIGHT		||
-		image_16bit->get_width () != IMAGE_16BIT_WIDTH		||
-		image_16bit->get_height () != IMAGE_16BIT_HEIGHT
+	if (	! image_8bit	||
+		! image_16bit
+		)
+	{
+		return report_error ( ERROR_ANALYSIS_INSANITY );
+	}
+
+	int const w[2] = {	pixy_pixmap_get_width ( image_8bit ),
+				pixy_pixmap_get_width ( image_16bit )
+			};
+	int const h[2] = {	pixy_pixmap_get_height ( image_8bit ),
+				pixy_pixmap_get_height ( image_16bit )
+			};
+
+	if (	w[0] != IMAGE_8BIT_WIDTH	||
+		h[0] != IMAGE_8BIT_HEIGHT	||
+		w[1] != IMAGE_16BIT_WIDTH	||
+		h[1] != IMAGE_16BIT_HEIGHT
 		)
 	{
 		return report_error ( ERROR_ANALYSIS_INSANITY );
@@ -272,9 +284,7 @@ int mtDW::OTPanalysis::Op::analyse_finish (
 			((double)m_bucket_size);
 	}
 
-	unsigned char * canvas;
-
-	canvas = image_8bit->get_canvas ();
+	unsigned char * canvas = pixy_pixmap_get_canvas ( image_8bit );
 	if ( ! canvas )
 	{
 		return report_error ( ERROR_ANALYSIS_INSANITY );
@@ -324,7 +334,7 @@ int mtDW::OTPanalysis::Op::analyse_finish (
 		canvas[ x + y*IMAGE_8BIT_WIDTH ] = GREEN_PIXEL;
 	}
 
-	canvas = image_16bit->get_canvas ();
+	canvas = pixy_pixmap_get_canvas ( image_16bit );
 	if ( ! canvas )
 	{
 		return report_error ( ERROR_ANALYSIS_INSANITY );

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,14 +25,16 @@
 
 
 
-#ifdef U_TK_QT4
-	#include <mtqex4.h>
-#endif
-
 #ifdef U_TK_QT5
 	#include <mtqex5.h>
 #endif
 
+#ifdef U_TK_QT6
+	#include <mtqex6.h>
+#endif
+
+
+#include <QOpenGLWidget>
 
 
 #endif		// QT5_H

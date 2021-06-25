@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2019 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -148,5 +148,47 @@ QString privDialogText::getText ()
 	}
 
 	return QString ();
+}
+
+void mtQEX::DialogAbout::add_info (
+	char	const * const	title,
+	char	const * const	message
+	)
+{
+	QTextEdit * const text = new QTextEdit;
+
+	m_tab_widget->addTab ( text, title );
+
+	text->setAcceptRichText ( false );
+	text->setReadOnly ( true );
+	text->setText ( message );
+}
+
+mtQEX::DialogAbout::DialogAbout (
+	QWidget		* const	parent,
+	char	const * const	title
+	)
+	:
+	QDialog		( parent )
+{
+	setWindowTitle ( title );
+	setModal ( true );
+
+	resize ( 600, 600 );
+
+	QVBoxLayout * vbox_main = new QVBoxLayout;
+	setLayout ( vbox_main );
+
+	m_tab_widget = new QTabWidget;
+	vbox_main->addWidget ( m_tab_widget );
+
+/// ----------------------------------------------------------------------------
+
+	QDialogButtonBox * button_box = new QDialogButtonBox (
+		QDialogButtonBox::Close );
+
+	vbox_main->addWidget ( button_box );
+
+	connect ( button_box, SIGNAL ( rejected () ), this, SLOT ( reject () ));
 }
 

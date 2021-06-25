@@ -33,10 +33,6 @@
 
 
 
-@@TABLEWIDGET_DEFINE@@
-
-
-
 #include <mtkit.h>
 #include <mtpixy.h>
 
@@ -48,45 +44,17 @@ namespace mtQEX
 class ArrowFilter;
 class BusyDialog;
 class ButtonMenu;
+class DialogAbout;
 class Image;
 class ImageArea;
-class PrefsWindow;
 class SaveFileDialog;
+class Thread;
 
 
 
-class PrefsWindow : public QDialog
-{
-	Q_OBJECT
+typedef std::function<void()> ThreadFunc;
 
-public:
-	PrefsWindow ( mtPrefs * prefsMem, QString title );
-	~PrefsWindow ();
 
-private slots:
-	void pressButtonFilter ();
-	void pressButtonReset ();
-	void pressButtonEdit ();
-	void pressButtonClose ();
-	void tableCellActivated ( int row, int column );
-	void tableCellChanged (
-		int currentRow,
-		int currentColumn,
-		int previousRow,
-		int previousColumn
-		);
-
-private:
-	QLineEdit	* filterEdit;
-	QLineEdit	* infoEdit;
-	QTableWidget	* tableWidget;
-	QPushButton	* buttonReset;
-	QPushButton	* buttonEdit;
-
-	mtPrefs		* prefs;
-
-	void		populateTable ();
-};
 
 /*
 Allow arrow keys to move focus properly inside a grid layout of buttons.
@@ -117,16 +85,17 @@ public:
 	Image ();
 	~Image ();
 
-	mtPixy::Image * getImage ();
 	int getZoom ();
-	void setImage ( mtPixy::Image * im );
 	int setZoom ( int z );
 	void update ();
 
+	void setPixmap ( mtPixmap * pixmap );
+	mtPixmap * getPixmap ();
+
 private:
-	ImageArea	* area;
-	mtPixy::Image	* image;
-	int		zoom;
+	ImageArea	* const m_area;
+	mtPixy::Pixmap	m_pixmap;
+	int		m_zoom;
 };
 
 class ImageArea : public QWidget
@@ -137,9 +106,11 @@ public:
 	explicit ImageArea ( Image * par );
 
 private:
-	void		paintEvent ( QPaintEvent * ev );
+	void		paintEvent ( QPaintEvent * ev )		override;
 
-	Image		* qi;
+/// ----------------------------------------------------------------------------
+
+	Image	* const	qi;
 };
 
 class ButtonMenu : public QPushButton
@@ -171,7 +142,6 @@ private slots:
 	void optionClicked ( int i );
 
 private:
-	QSignalMapper	* signalMapper;
 	int		itemCurrent;
 };
 
@@ -196,19 +166,34 @@ private:
 
 
 
+class Thread : public QThread
+{
+public:
+	explicit Thread ( ThreadFunc func ) : m_func (func) {}
+	void run () override { if ( m_func ) m_func (); }
+private:
+	ThreadFunc	m_func;
+};
+
+
+
 class BusyDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	BusyDialog ( QWidget * parent = NULL, char const * message = NULL );
+	explicit BusyDialog (
+		QWidget		* parent = nullptr,
+		char	const	* message = nullptr,
+		ThreadFunc	func = nullptr
+		);
 	~BusyDialog ();
 
 	void show_abort () const;
 	inline bool aborted () const { return m_busy.aborted (); }
 	mtKit::Busy * get_busy () { return &m_busy; }
 
-	void wait_for_thread ( QThread &thread );
+	void wait_for_thread ( QThread * thread = nullptr );
 
 public slots:
 	void accept ();
@@ -222,12 +207,37 @@ private slots:
 
 private:
 	mtKit::Busy		m_busy;
-	QProgressBar		* m_progress;
-	QDialogButtonBox	* m_button_box;
-	bool			m_default;
+	QProgressBar		* m_progress	= nullptr;
+	QDialogButtonBox	* m_button_box	= nullptr;
+	bool			m_default	= true;
+	ThreadFunc	const	m_thread_func	= nullptr;
 };
 
 
+
+class DialogAbout : public QDialog
+{
+	Q_OBJECT
+
+public:
+	DialogAbout ( QWidget * parent, char const * title );
+
+	void add_info ( char const * title, char const * message );
+
+private:
+	QTabWidget * m_tab_widget = nullptr;
+};
+
+
+
+/// Utility functions
+
+
+void prefs_window (
+	QWidget * parent,
+	mtKit::UserPrefs & prefs,
+	QString const & title
+	);
 
 QString qstringFromC (
 	char const * cstring,	// If not NUL terminated cstring, set
@@ -256,13 +266,13 @@ int dialogText (		// Multiple line text entry
 	// 1 = Ignore
 
 // Used on app shutdown to store dock/toolbar positions.
-int qt_set_state ( mtKit::Prefs * pr, char const * key, QByteArray * qb );
+int qt_set_state ( mtKit::UserPrefs & prefs, char const * key, QByteArray &qba);
 
 // Used on app startup to restore dock/toolbar positions.
-int qt_get_state ( mtKit::Prefs * pr, char const * key, QByteArray * qb );
+int qt_get_state ( mtKit::UserPrefs & prefs, char const * key, QByteArray &qba);
 
-QPixmap * qpixmap_from_pixyimage ( mtPixy::Image * i );
-mtPixy::Image * pixyimage_from_qpixmap ( QPixmap * pm );
+QPixmap * qpixmap_from_pixypixmap ( mtPixmap const * pm );
+mtPixmap * pixypixmap_from_qpixmap ( QPixmap const * pm );
 
 // If this file exists, get the user to confirm the save operation
 int message_file_overwrite ( QWidget * parent, QString const &filename );
@@ -297,28 +307,6 @@ void set_minimum_width (
 
 
 }
-
-
-
-/*
-
-You must set these up in the static lists somewhere if you don't use
-mtKit::Prefs::initWindowPrefs or mtKit::prefsInitWindowPrefs:
-(if you don't you will forever live with defaults!)
-NOTE: These do not appear in the editable list.
-
-{ "prefs.col1",		MTKIT_PREF_TYPE_INT, "0" },
-{ "prefs.col2",		MTKIT_PREF_TYPE_INT, "0" },
-{ "prefs.col3",		MTKIT_PREF_TYPE_INT, "0" },
-{ "prefs.col4",		MTKIT_PREF_TYPE_INT, "0" },
-
-{ "prefs.window_x",	MTKIT_PREF_TYPE_INT, "50" },
-{ "prefs.window_y",	MTKIT_PREF_TYPE_INT, "50" },
-{ "prefs.window_w",	MTKIT_PREF_TYPE_INT, "800" },
-{ "prefs.window_h",	MTKIT_PREF_TYPE_INT, "600" },
-
-*/
-
 
 
 #endif		// MTQEX*_H_

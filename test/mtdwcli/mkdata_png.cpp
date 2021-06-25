@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
 
 
-#define PATTERNS_FILE	"/usr/share/mtpixy-qt4/patterns/default.png"
-#define SHAPES_FILE	"/usr/share/mtpixy-qt4/shapes/default.png"
+#define PATTERNS_FILE	"/usr/share/mtpixy-qt5/patterns/default.png"
+#define SHAPES_FILE	"/usr/share/mtpixy-qt5/shapes/default.png"
 
 
 
@@ -36,20 +36,19 @@ CreatePNG::CreatePNG ( char const * const path, mtKit::Random & random )
 	filename += MTKIT_DIR_SEP;
 	filename += "bottle.png";
 
-	m_image.reset ( mtPixy::Image::create ( mtPixy::Image::TYPE_RGB,
-		IMAGE_WIDTH, IMAGE_HEIGHT ) );
+	m_pixmap.reset ( pixy_pixmap_new_rgb ( IMAGE_WIDTH, IMAGE_HEIGHT ) );
 
-	if ( ! m_image.get () )
+	if ( ! m_pixmap.get () )
 	{
-		std::cerr << "Unable to create image.\n";
+		std::cerr << "Unable to create pixmap.\n";
 
 		throw 123;
 	}
 
 	m_brush.reset ( new mtPixy::Brush () );
 
-	if (	m_brush.get ()->load_shapes ( SHAPES_FILE )	||
-		m_brush.get ()->load_patterns ( PATTERNS_FILE )
+	if (	m_brush->load_shapes ( SHAPES_FILE )	||
+		m_brush->load_patterns ( PATTERNS_FILE )
 		)
 	{
 		std::cerr << "Unable to load shapes and patterns.\n";
@@ -57,10 +56,10 @@ CreatePNG::CreatePNG ( char const * const path, mtKit::Random & random )
 		throw 123;
 	}
 
-	m_palette = m_image.get ()->get_palette ();
-	m_palette->set_color_total ( 256 );
+	m_palette = pixy_pixmap_get_palette ( m_pixmap.get () );
+	pixy_palette_set_size ( m_palette, 256 );
 
-	m_color = m_palette->get_color ();
+	m_color = &m_palette->color[0];
 
 	for ( int i = 0; i < 256; i++ )
 	{
@@ -69,16 +68,17 @@ CreatePNG::CreatePNG ( char const * const path, mtKit::Random & random )
 		m_color[i].blue	= (unsigned char)m_random.get_int ( 256 );
 	}
 
-	m_image.get ()->palette_sort ( 0, 255, mtPixy::Image::SORT_HUE, false );
+	pixy_pixmap_palette_sort ( m_pixmap.get (), 0, 255,
+		PIXY_PALETTE_SORT_HUE, 0 );
 
-	m_brush.get ()->set_shape ( 0 );
-	m_brush.get ()->set_pattern ( 0 );
-	m_brush.get ()->set_spacing ( 0 );
-	m_brush.get ()->set_color_a ( 0, m_color );
+	m_brush->set_shape ( 0 );
+	m_brush->set_pattern ( 0 );
+	m_brush->set_spacing ( 0 );
+	m_brush->set_color_a ( 0, m_color );
 
 	paint_rectangles ();
 
-	if ( m_image.get ()->save_png ( filename.c_str (), 6 ) )
+	if ( pixy_pixmap_save_png ( m_pixmap.get (), filename.c_str (), 6 ) )
 	{
 		std::cerr << "Unable to save image to file " << filename <<"\n";
 	}
@@ -96,7 +96,6 @@ void CreatePNG::paint_rectangles ()
 	int const tih = IMAGE_HEIGHT + rh;
 
 	mtPixy::Brush & brush = *m_brush.get ();
-	mtPixy::Image * const image = m_image.get ();
 
 	for ( int i = 0; i < 1000; i++ )
 	{
@@ -113,7 +112,7 @@ void CreatePNG::paint_rectangles ()
 		int const w = m_random.get_int ( rw );
 		int const h = m_random.get_int ( rh );
 
-		image->paint_rectangle ( brush, x, y, w, h );
+		brush.paint_canvas_rectangle ( m_pixmap.get(), x, y, w, h );
 	}
 }
 

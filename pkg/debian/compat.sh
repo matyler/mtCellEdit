@@ -7,6 +7,6 @@
 for DIR in */mt
 do
 	FILENAME=$DIR/compat
-	echo "9" > $FILENAME
+	echo "10" > $FILENAME
 done
 

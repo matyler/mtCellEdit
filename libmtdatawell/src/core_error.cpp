@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -43,17 +43,7 @@ int report_error ( int const error )
 	return error;
 }
 
-
-
-struct ErrItem
-{
-	int		const	code;
-	char	const * const	text;
-};
-
-
-
-static const ErrItem err_table[] = {
+static std::map<int, char const *> const err_table = {
 
 	{ ERROR_ANALYSIS_INSANITY,	"Analysis sanity failure" },
 
@@ -139,8 +129,6 @@ static const ErrItem err_table[] = {
 
 char const * mtDW::get_error_text ( int const error )
 {
-	static int const err_tot = sizeof(err_table) / sizeof(err_table[0]);
-
 #ifdef DEBUG
 
 	// DEBUG mode checks to ensure the table is correctly formed
@@ -153,53 +141,31 @@ char const * mtDW::get_error_text ( int const error )
 
 		check = 1;
 
-		for ( int i = 1; i < err_tot; i++ )
-		{
-			if ( err_table[i].code <= err_table[i - 1].code )
-			{
-				std::cerr << "err_table poorly formed at "
-					<< "i=" << i << " "
-					<< "code=" << err_table[i].code
-					<< "\n";
+		size_t const size = err_table.size ();
+		size_t const expected = (size_t)(ERROR_MAX - ERROR_MIN);
 
-				exit ( 1 );
-			}
+		if ( size != expected )
+		{
+			std::cerr << "err_table poorly formed."
+				<< "size=" << size << " "
+				<< "expected=" << expected
+				<< "\n";
+
+			exit ( 1 );
 		}
 
-		std::cerr << "Error table is valid: " << err_tot <<" items\n\n";
+		std::cerr << "Error table is valid: " << size <<" items\n\n";
 	}
 
 #endif
 
 
 
-	if ( error > ERROR_MIN && error < ERROR_NONE )
+	auto const it = err_table.find ( error );
+
+	if ( it != err_table.end () )
 	{
-		// Binary search to find the error code text
-		int a = 0;
-		int b = err_tot - 1;
-
-		while ( a <= b )
-		{
-			int const m = (a + b) / 2;
-
-			// Descending list (negate for ascending list)
-			int const cmp = (error - err_table[m].code);
-
-			if ( cmp == 0 )
-			{
-				return err_table[m].text;	// Found
-			}
-
-			if ( cmp < 0 )
-			{
-				b = m - 1;
-			}
-			else	// cmp > 0
-			{
-				a = m + 1;
-			}
-		}
+		return it->second;
 	}
 
 	return "Unknown";

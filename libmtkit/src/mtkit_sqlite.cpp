@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -14,8 +14,6 @@
 	You should have received a copy of the GNU General Public License
 	along with this program in the file COPYING.
 */
-
-#include <sqlite3.h>
 
 #include "private.h"
 
@@ -56,16 +54,6 @@ int mtKit::Sqlite::exec_sql ( char const * const sql ) const
 	std::cerr << "ERROR executing SQL!! - " << sql << "\n";
 
 	return 1;
-}
-
-int mtKit::Sqlite::add_table ( std::string const & name ) const
-{
-	std::string sql ( "CREATE TABLE IF NOT EXISTS " );
-
-	sql += name;
-	sql += "(id INTEGER PRIMARY KEY)";
-
-	return exec_sql ( sql );
 }
 
 int mtKit::Sqlite::add_column_field (
@@ -354,6 +342,7 @@ int mtKit::SqliteGetRecord::get_type ()
 	return sqlite3_column_type ( stmt.stmt, m_field_num );
 }
 
+/*
 int mtKit::SqliteGetRecord::get_blob (
 	void	const ** mem,
 	int		& memlen
@@ -381,6 +370,7 @@ int mtKit::SqliteGetRecord::get_blob (
 
 	return 0;
 }
+*/
 
 int mtKit::SqliteGetRecord::get_blob_text ( std::string & res )
 {
@@ -403,7 +393,7 @@ int mtKit::SqliteGetRecord::get_blob_text ( std::string & res )
 	void const * const data = sqlite3_column_blob ( stmt.stmt, m_field_num);
 	int const size = sqlite3_column_bytes ( stmt.stmt, m_field_num );
 
-	mtKit::string_from_data ( res, data, (size_t)size );
+	res = std::string ( (char const *)data, (size_t)size );
 
 	m_field_num++;
 
@@ -432,7 +422,7 @@ int mtKit::SqliteGetRecord::get_text (
 	int const size = sqlite3_column_bytes ( stmt.stmt, m_field_num );
 	void const * const data = sqlite3_column_blob ( stmt.stmt, m_field_num);
 
-	mtKit::string_from_data ( res, data, (size_t)size );
+	res = std::string ( (char const *)data, (size_t)size );
 
 	m_field_num++;
 

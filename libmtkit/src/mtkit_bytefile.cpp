@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,18 +22,6 @@
 /// READ -----------------------------------------------------------------------
 
 
-
-mtKit::ByteFileRead::ByteFileRead ()
-	:
-	m_fp	(),
-	m_pos	( 0 )
-{
-}
-
-mtKit::ByteFileRead::~ByteFileRead ()
-{
-	close ();
-}
 
 int mtKit::ByteFileRead::open (
 	char	const * const	filename,
@@ -106,15 +94,6 @@ void mtKit::ByteFileRead::set_file ( FILE * const fp )
 
 
 
-mtKit::ByteFileWrite::ByteFileWrite () : m_fp ()
-{
-}
-
-mtKit::ByteFileWrite::~ByteFileWrite ()
-{
-	close ();
-}
-
 int mtKit::ByteFileWrite::open ( char const * const filename )
 {
 	if ( ! filename )
@@ -140,8 +119,8 @@ void mtKit::ByteFileWrite::close ()
 }
 
 int mtKit::ByteFileWrite::write (
-	void	* const	mem,
-	size_t	const	len
+	void	const * const	mem,
+	size_t		const	len
 	)
 {
 	if ( ! m_fp || ! mem || len < 1 )

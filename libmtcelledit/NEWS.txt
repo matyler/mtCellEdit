@@ -1,6 +1,9 @@
-3.1	2018-2-25
+3.5	2021-6-25
 
-	* Moved to C.
+	* atan2 function added.
+	* BUGFIX - stat_sheet_load_csv_mem include newlines in cell if in quotes.
+
+3.1	2018-2-25
 
 3.0	2017-2-24
 

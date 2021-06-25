@@ -6,6 +6,8 @@
 # Print commands
 set x+
 
+# FIXME - nothing to do as we only need the SVG file
+exit 0
 
 case $(inkscape --version) in
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,170 +19,92 @@
 
 
 
-mtKit::RecentFile::RecentFile (
+void mtKit::RecentFile::init (
+	mtKit::UserPrefs	& prefs,
 	char	const * const	prefix,
-	int		const	tot
-	)
-	:
-	m_total		( tot ),
-	m_prefs_prefix	( strdup ( prefix ) ),
-	m_prefs		()
-{
-}
-
-mtKit::RecentFile::~RecentFile ()
-{
-	free ( m_prefs_prefix );
-}
-
-int mtKit::RecentFile::init_prefs (
-	mtKit::Prefs	* const	pr
+	size_t		const	items
 	)
 {
-	if ( m_prefs )
+	if (	m_items.size() > 0
+		|| items < TOTAL_MIN
+		|| items > TOTAL_MAX
+		|| ! prefix
+		)
 	{
-		return 1;
+		std::cerr << "mtKit::RecentFile::init arg error\n";
+		return;		// Only initialize once and with proper args!
 	}
 
-	m_prefs = pr;
+	m_items.resize ( items );
 
-
-	mtPrefTable	prefs_table[] = {
-		{ "", MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
-		{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-		};
-
-
-	for ( int i = 1; i <= m_total; i++ )
+	for ( size_t i = 0; i < items; i++ )
 	{
-		char * key = create_key ( i );
+		char buf[20];
+		snprintf ( buf, sizeof(buf), ".%03i", (int)(i+1) );
 
-		prefs_table[0].key = key;
-		m_prefs->addTable ( prefs_table );
+		std::string key ( prefix );
+		key += buf;
 
-		free ( key );
-		key = NULL;
+		prefs.add_string ( key.c_str(), m_items[i], "" );
+		prefs.set_invisible ( key.c_str() );
 	}
-
-	return 0;
 }
 
-char * mtKit::RecentFile::create_key (
-	int	const	idx
-	) const
+std::string mtKit::RecentFile::filename ( size_t const idx ) const
 {
-	if ( idx < 1 || idx > m_total )
+	if ( m_items.size() < idx || idx < 1 )
 	{
-		return NULL;
+		return "";
 	}
 
-
-	char cbuf[20];
-
-	snprintf ( cbuf, sizeof(cbuf), ".%03i", idx );
-
-	return mtkit_string_join ( m_prefs_prefix, cbuf, NULL, NULL );
+	return m_items[ idx - 1 ];
 }
 
-char const * mtKit::RecentFile::get_filename (
-	int	const	idx
-	) const
+std::string mtKit::RecentFile::directory ( size_t const idx ) const
 {
-	char		* const	key = create_key ( idx );
-	char	const * const	val = m_prefs->getString ( key );
+	std::string dir = filename ( idx ) ;
 
-	free ( key );
+	size_t const sep = dir.rfind ( '/' );
 
-	return val;
-}
-
-void mtKit::RecentFile::set_filename (
-	char	const * const	name
-	) const
-{
-	if ( ! name )
+	if ( sep != std::string::npos )
 	{
-		return;
+		dir.resize ( sep );
 	}
 
-	int i;
+	return dir;
+}
 
-	// Search for a current use of this filename
-	for ( i = 1; i <= m_total; i++ )
+
+void mtKit::RecentFile::set ( std::string const & name )
+{
+	if ( m_items.size() < 1 )
 	{
-		char * key = create_key ( i );
+		return;		// Nothing to do
+	}
 
-		if ( ! key )
-		{
-			return;
-		}
+	size_t const tot = m_items.size() - 1;
+		// Don't bother to check last item, it will always be lost.
 
-		char const * const val = m_prefs->getString ( key );
+	size_t i = 0;
 
-		free ( key );
-		key = NULL;
-
-		if ( ! val )
-		{
-			return;
-		}
-
-		if ( 0 == strcmp ( val, name ) )
+	for ( ; i < tot; i++ )
+	{
+		if ( name == m_items[i] )
 		{
 			break;
 		}
 	}
 
-
-	// We need to duplicate 'name' now as it may be released from prefs
-	char * dnam = strdup ( name );
-	if ( ! dnam )
+	if ( 0 == i )
 	{
-		return;
+		return;		// Nothing to do, as it's already in place
 	}
 
-	// Shift items to accommodate the new most recent item
-	for ( i = i - 1; i >= 1; i-- )
+	for ( ; i > 0; i-- )
 	{
-		char * key = create_key ( i );
-		if ( ! key )
-		{
-			goto finish;
-		}
-
-		char const * const val = m_prefs->getString ( key );
-
-		free ( key );
-		key = NULL;
-
-		if ( ! val )
-		{
-			goto finish;
-		}
-
-		set_filename_idx ( i + 1, val );
+		m_items[i] = m_items[i - 1];
 	}
 
-	set_filename_idx ( 1, dnam );
-
-finish:
-	free ( dnam );
-}
-
-void mtKit::RecentFile::set_filename_idx (
-	int		const	idx,
-	char	const * const	name
-	) const
-{
-	char * key = create_key ( idx );
-
-	if ( ! key )
-	{
-		return;
-	}
-
-	m_prefs->set ( key, name );
-	free ( key );
-	key = NULL;
+	m_items[0] = name;
 }
 

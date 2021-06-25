@@ -366,8 +366,8 @@ static CedSheet * stat_sheet_load_csv_mem (
 			int quotes = 0;
 
 			// Find closing "
-			while (	s2[0] != '\n' &&
-				s2[0] != '\r' &&
+			while (	/*s2[0] != '\n' &&
+				s2[0] != '\r' &&*/
 				s2[0] != '\0' )
 			{
 				if ( s2[0] == '"' )
@@ -935,19 +935,17 @@ static int export_tsv_output_cb (
 	)
 {
 	outSTATE	* const	state = (outSTATE *)user_data;
-	char			* txt = NULL;
-	int			res = 1;
-
 
 	if ( ! cell->text )
 	{
 		return 0;
 	}
 
-	txt = ced_cell_create_output ( cell, NULL );
-	if ( ! txt )
+	char buf[ CED_CELL_MAX_BYTES ];
+
+	if ( ced_cell_create_output ( cell, NULL, buf, sizeof(buf) ) )
 	{
-		goto error;
+		return 1;	// Stop
 	}
 
 	// Is this a new row?
@@ -960,7 +958,7 @@ static int export_tsv_output_cb (
 			row - state->r )
 			)
 		{
-			goto error;
+			return 1;	// Stop
 		}
 
 		state->r = row;
@@ -970,7 +968,7 @@ static int export_tsv_output_cb (
 	if ( send_n_chars ( state->mtfp, state->txt_buf, '\t',
 		col - state->c ) )
 	{
-		goto error;
+		return 1;	// Stop
 	}
 
 	state->c = col;
@@ -980,21 +978,16 @@ static int export_tsv_output_cb (
 		// Output ' if requested
 		if ( mtkit_file_write ( state->mtfp, "'", 1 ) )
 		{
-			goto error;
+			return 1;	// Stop
 		}
 	}
 
-	if ( mtkit_file_write_string ( state->mtfp, txt ) )
+	if ( mtkit_file_write_string ( state->mtfp, buf ) )
 	{
-		goto error;
+		return 1;	// Stop
 	}
 
-	res = 0;		// Continue
-
-error:
-	free ( txt );
-
-	return res;
+	return 0;		// Continue
 }
 
 static int export_tsv (
@@ -1086,18 +1079,13 @@ static int export_html_output_cb (
 	void		* const	user_data
 	)
 {
-	outSTATE	* const	state = (outSTATE *)user_data;
-	char			* txt = NULL,
-				* txt_html = NULL;
-	int			res = 1,
-				align = 0;
-
+	outSTATE * const state = (outSTATE *)user_data;
+	char		* txt_html = NULL;
+	int		res = 1, align = 0;
+	char		buf[ CED_CELL_MAX_BYTES ];
 
 	// We do this early to get the alignment position
-	if ( cell->text )
-	{
-		txt = ced_cell_create_output ( cell, &align );
-	}
+	ced_cell_create_output ( cell, &align, buf, sizeof(buf) );
 
 	// Is this a new row?
 	if ( state->r < row )
@@ -1262,14 +1250,14 @@ static int export_html_output_cb (
 
 	// OUTPUT THE TEXT
 
-	if ( ! txt )
+	if ( ! buf[0] )
 	{
 		// Ensure empty cells have borders
 		txt_html = strdup ( "&nbsp;" );
 	}
 	else
 	{
-		txt_html = mtkit_strtohtml ( txt );
+		txt_html = mtkit_strtohtml ( buf );
 	}
 
 	if ( ! txt_html )
@@ -1339,7 +1327,6 @@ static int export_html_output_cb (
 	res = 0;		// Continue
 
 error:
-	free ( txt );
 	free ( txt_html );
 
 	return res;

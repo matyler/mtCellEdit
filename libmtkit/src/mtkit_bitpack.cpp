@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -116,6 +116,7 @@ unsigned char const * mtKit::BitPackWrite::get_buf () const
 	return m_buf;
 }
 
+/*
 size_t mtKit::BitPackWrite::get_buf_len () const
 {
 	if ( 0 == m_bit_next )
@@ -125,6 +126,7 @@ size_t mtKit::BitPackWrite::get_buf_len () const
 
 	return (size_t)(m_cwl - m_buf + 1);
 }
+*/
 
 int mtKit::BitPackWrite::buf_expand ()
 {
@@ -233,6 +235,7 @@ int mtKit::BitPackRead::read (
 	return 0;
 }
 
+/*
 void mtKit::BitPackRead::restart (
 	unsigned char	const * const	mem,
 	size_t			const	memlen
@@ -253,4 +256,5 @@ size_t mtKit::BitPackRead::bytes_left () const
 
 	return (size_t)(m_memlim - m_mem - 1 + (0==m_bit_next ? 1 : 0 ) );
 }
+*/
 

@@ -2,6 +2,7 @@ include		../_conf.txt
 
 HEADER		:= mtpixy.h
 OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
+OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
 
 .PHONY:		all install uninstall clean
 

@@ -31,6 +31,7 @@
 
 
 class Backend;
+class MemPrefs;
 
 
 
@@ -40,6 +41,7 @@ class Backend;
 #define PREFS_WINDOW_W			"main.window_w"
 #define PREFS_WINDOW_H			"main.window_h"
 #define PREFS_WINDOW_STATE		"main.window.state"
+#define PREFS_WINDOW_FILE_LIST_SPLIT	"main.window.file_list.split"
 
 #define PREFS_CANVAS_EASEL_RGB		"canvas.easel.rgb"
 #define PREFS_CANVAS_ZOOM_GRID_GREY	"canvas.zoom.grid.grey"
@@ -55,6 +57,7 @@ class Backend;
 #define PREFS_FILE_NEW_WIDTH		"file.new.width"
 #define PREFS_FILE_NEW_HEIGHT		"file.new.height"
 #define PREFS_FILE_NEW_TYPE		"file.new.type"
+#define PREFS_FILE_NEW_PALETTE_FILE	"file.new.palette.file"
 #define PREFS_FILE_NEW_PALETTE_NUM	"file.new.palette.num"
 #define PREFS_FILE_NEW_PALETTE_TYPE	"file.new.palette.type"
 
@@ -97,36 +100,93 @@ from within this program.
 
 
 
+class MemPrefs
+{
+public:
+	int			window_x		= 0;
+	int			window_y		= 0;
+	int			window_w		= 0;
+	int			window_h		= 0;
+	int			window_maximized	= 0;
+	double			window_file_list_split	= 0.5;
+	std::string		window_state;
+
+	int			cursor_nudge_pixels	= 0;
+	double			cursor_brush_opacity	= 0;
+
+	int			canvas_easel_rgb	= 0;
+	int			canvas_zoom_grid_grey	= 0;
+	int			canvas_zoom_grid_show	= 0;
+
+	int			file_recent_maxlen	= 0;
+	int			file_new_width		= 0;
+	int			file_new_height		= 0;
+	int			file_new_type		= 0;
+	int			file_compression_jpeg	= 0;
+	int			file_compression_png	= 0;
+	std::string		file_new_palette_file;
+	int			file_new_palette_num	= 0;
+	int			file_new_palette_type	= 0;
+
+	std::string		help_file;
+	std::string		help_browser;
+
+	double			palette_number_opacity	= 0;
+
+	int			ui_scale		= 0;
+	int			ui_scale_palette	= 0;
+
+	std::string		text_font_name;
+	int			text_font_size		= 0;
+	int			text_font_bold		= 0;
+	int			text_font_italic	= 0;
+	int			text_font_underline	= 0;
+	int			text_font_strikethrough	= 0;
+
+	std::string		text_entry;
+
+	int			undo_mb_max		= 0;
+	int			undo_steps_max		= 0;
+
+	mtKit::UPrefUIEdit	ui_editor;
+	mtKit::RecentFile	recent_image;
+};
+
+
+
 class Backend
 {
 public:
 	Backend ();
-	~Backend ();
 
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running
 		// 1 = Terminate program with 0
 
 	char const * get_cline_filename () const;
+	std::vector< char const * > const & get_cline_files () const
+	{ return m_cline_files; }
+
 	int get_cline_screenshot () const;
 	int get_ui_scale () const;
-	int get_ui_scale_palette ();
-	void get_titlebar_text ( char * buf, size_t buflen );
+	int get_ui_scale_palette () const;
+	std::string get_titlebar_text ();
 
 	void detect_ui_scale ( int menu_height );
 	void calc_ui_scale ();
 
-	char * get_last_directory ();	// Caller must free the result after use
+	std::string get_last_directory () const;
 
 /// ----------------------------------------------------------------------------
 
 	mtPixyUI::Clipboard	clipboard;
 	mtPixyUI::File		file;
 
-	mtPixy::Palette		palette;	// For Palette->Store/Restore
+	mtPalette		palette;	// For Palette->Store/Restore
 
-	mtKit::Prefs		prefs;
-	mtKit::RecentFile	recent_image;
+	// uprefs must be destroyed before mprefs, so it appears below it:
+	MemPrefs		mprefs;
+	mtKit::UserPrefs	uprefs;
 
 private:
 	void prefs_init ();
@@ -134,11 +194,12 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	int		m_ui_scale;
-	int		m_ui_scale_detected;
-	int		m_screenshot;
+	int		m_ui_scale		= 0;
+	int		m_ui_scale_detected	= 1;
+	int		m_screenshot		= 0;
 
-	char	const *	m_cline_filename;
-	char	const *	m_prefs_filename;
+	char	const *	m_prefs_filename	= nullptr;
+
+	std::vector< char const * > m_cline_files;
 };
 

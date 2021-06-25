@@ -1,3 +1,7 @@
+3.5	2021-6-25
+
+	* BUGFIX: WellPrefs: PRNG/file tot now retained between sessions.
+
 3.4	2020-6-25
 
 	* BUGFIX: FileStream::read() now handles zero length files properly.

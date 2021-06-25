@@ -139,12 +139,12 @@ MTCF_PARSE_ARG1()
 			ENABLE_DESKTOP=
 			;;
 
-	"--use-qt4" )	ENABLE_TK="qt4"
-			BIN_SUFFIX="-qt4"
-			;;
-
 	"--use-qt5" )	ENABLE_TK="qt5"
 			BIN_SUFFIX="-qt5"
+			;;
+
+	"--use-qt6" )	ENABLE_TK="qt6"
+			BIN_SUFFIX="-qt6"
 			;;
 
 	"" )		;;
@@ -206,8 +206,8 @@ EOF
 	if [ "$ENABLE_TK" != "" ]
 	then
 cat << EOF
---use-qt4 ............. Compile Qt4 version
 --use-qt5 ............. Compile Qt5 version (default)
+--use-qt6 ............. Compile Qt6 version
 EOF
 	fi
 
@@ -243,7 +243,16 @@ MTCF_PRE_CONF()
 		L_EX="-lm -s"
 
 		CFLAGS+=" -std=gnu11"
-		CXXFLAGS+=" -std=gnu++11"
+
+		case "$ENABLE_TK" in
+			qt6 )
+				CXXFLAGS+=" -std=gnu++17"
+			;;
+
+			* )
+				CXXFLAGS+=" -std=gnu++11"
+			;;
+		esac
 		;;
 	"YES" )
 		I_EX="-fsanitize=undefined $DEBUG_I_EX"
@@ -295,11 +304,11 @@ MTCF_ENABLE_QT()
 MTCF_ENABLE_QT_QEX ()
 {
 	case "$ENABLE_TK" in
-	qt4 )
-		MTCF_CHECK_LIBS "mtqex4"
-		;;
 	qt5 )
 		MTCF_CHECK_LIBS "mtqex5"
+		;;
+	qt6 )
+		MTCF_CHECK_LIBS "mtqex6"
 		;;
 	esac
 }
@@ -374,15 +383,15 @@ MTCF_POST_CONF()
 	> $CONF_FILE
 
 	case "$ENABLE_TK" in
-	qt4 )
-		MTCF_PKGCONFIG "QtGui"
-		I_EX+=" -DU_TK_QT4"
-		MT_GET_MOC_4
-		;;
 	qt5 )
 		MTCF_PKGCONFIG "Qt5Widgets"
 		I_EX+=" -DU_TK_QT5"
 		MT_GET_MOC_5
+		;;
+	qt6 )
+		MTCF_PKGCONFIG "Qt6Widgets"
+		I_EX+=" -DU_TK_QT6"
+		MT_GET_MOC_6
 		;;
 	esac
 
@@ -465,19 +474,6 @@ MTCF_PRINT_CONF()
 }
 
 
-MT_GET_MOC_4()
-{
-	if hash moc-qt4 2>/dev/null
-	then
-		MOC="moc-qt4"
-	else
-		MOC="moc"
-	fi
-
-	MOC="$MOC $(pkg-config QtGui --cflags)"
-}
-
-
 MT_GET_MOC_5()
 {
 	if hash moc-qt5 2>/dev/null
@@ -489,3 +485,16 @@ MT_GET_MOC_5()
 
 	MOC="$MOC $(pkg-config Qt5Widgets --cflags)"
 }
+
+MT_GET_MOC_6()
+{
+	if hash moc-qt6 2>/dev/null
+	then
+		MOC="moc-qt6"
+	else
+		MOC="moc"
+	fi
+
+	MOC="$MOC $(pkg-config Qt6Widgets --cflags)"
+}
+

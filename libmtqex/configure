@@ -18,15 +18,15 @@ MTCF_CHECK_LIBS mtkit mtpixy stdc++
 
 
 case "$ENABLE_TK" in
-qt4 )
-	TK_OBJ="moc_mtqex4.o"
-	LIB_NAME="libmtqex4"
-	HEADER_NAME="mtqex4.h"
-	;;
 qt5 )
 	TK_OBJ="moc_mtqex5.o"
 	LIB_NAME="libmtqex5"
 	HEADER_NAME="mtqex5.h"
+	;;
+qt6 )
+	TK_OBJ="moc_mtqex6.o"
+	LIB_NAME="libmtqex6"
+	HEADER_NAME="mtqex6.h"
 	;;
 esac
 

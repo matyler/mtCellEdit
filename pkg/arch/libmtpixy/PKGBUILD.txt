@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="MT Pixel Engine"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('libmtkit' 'cairo' 'pango' 'freetype2' 'libpng' 'giflib' 'libjpeg')
+depends=('libmtkit' 'cairo' 'pango' 'librsvg' 'freetype2' 'libpng' 'giflib' 'libjpeg')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

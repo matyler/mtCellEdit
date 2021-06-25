@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,28 +19,29 @@
 
 
 
-int jtf_canvas_flip_h (
+int Backend::jtf_canvas_flip_h (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().flip_horizontally () );
+	return operation_update ( file().flip_horizontally () );
 }
 
-int jtf_canvas_flip_v (
+int Backend::jtf_canvas_flip_v (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().flip_vertically () );
+	return operation_update ( file().flip_vertically () );
 }
 
-int jtf_canvas_indexed (
+int Backend::jtf_canvas_indexed (
 	char	const * const *	const	args
 	)
 {
 	mtKit::CharInt	const	chint_tab[] = {
-			{ "none",	mtPixy::Image::DITHER_NONE },
-			{ "basic",	mtPixy::Image::DITHER_BASIC },
-			{ "floyd",	mtPixy::Image::DITHER_FLOYD },
+			{ "none",	PIXY_DITHER_NONE },
+			{ "basic",	PIXY_DITHER_BASIC },
+			{ "average",	PIXY_DITHER_AVERAGE },
+			{ "floyd",	PIXY_DITHER_FLOYD },
 			{ NULL, 0 }
 			};
 	int		dither;
@@ -50,39 +51,89 @@ int jtf_canvas_indexed (
 		return 1;
 	}
 
-	return operation_update( backend.file().convert_to_indexed (
-		(mtPixy::Image::DitherType)dither ) );
+	return operation_update( file().convert_to_indexed ( dither ) );
 }
 
-int jtf_canvas_rgb (
+int Backend::jtf_canvas_rgb (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().convert_to_rgb () );
+	return operation_update ( file().convert_to_rgb () );
 }
 
-int jtf_canvas_rotate_a (
+int Backend::jtf_canvas_rotate_a (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().rotate_anticlockwise () );
+	return operation_update ( file().rotate_anticlockwise () );
 }
 
-int jtf_canvas_rotate_c (
+int Backend::jtf_canvas_rotate_c (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().rotate_clockwise () );
+	return operation_update ( file().rotate_clockwise () );
 }
 
-int jtf_delete_alpha (
+int Backend::jtf_delete_alpha (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().destroy_alpha () );
+	return operation_update ( file().destroy_alpha () );
 }
 
-int jtf_effect_bacteria (
+int Backend::jtf_effect_bacteria (
+	char	const * const *	const	args
+	)
+{
+	int	tot;
+
+	if ( mtKit::cli_parse_int ( args[0], tot, 1, 100 ) )
+	{
+		return 1;
+	}
+
+	return operation_update ( file().effect_bacteria ( tot ) );
+}
+
+int Backend::jtf_effect_crt (
+	char	const * const *	const	args
+	)
+{
+	int	scale;
+
+	if ( mtKit::cli_parse_int ( args[0], scale,
+		PIXY_EFFECT_CRT_SCALE_MIN,
+		PIXY_EFFECT_CRT_SCALE_MAX ) )
+	{
+		return 1;
+	}
+
+	return operation_update ( file().effect_crt ( scale ) );
+}
+
+int Backend::jtf_effect_edge_detect (
+	char	const * const *	const	ARG_UNUSED ( args )
+	)
+{
+	return operation_update ( file().effect_edge_detect () );
+}
+
+int Backend::jtf_effect_emboss (
+	char	const * const *	const	ARG_UNUSED ( args )
+	)
+{
+	return operation_update ( file().effect_emboss () );
+}
+
+int Backend::jtf_effect_invert (
+	char	const * const *	const	ARG_UNUSED ( args )
+	)
+{
+	return operation_update ( file().effect_invert () );
+}
+
+int Backend::jtf_effect_sharpen (
 	char	const * const *	const	args
 	)
 {
@@ -93,31 +144,10 @@ int jtf_effect_bacteria (
 		return 1;
 	}
 
-	return operation_update ( backend.file().effect_bacteria ( tot ) );
+	return operation_update ( file().effect_sharpen ( tot ) );
 }
 
-int jtf_effect_edge_detect (
-	char	const * const *	const	ARG_UNUSED ( args )
-	)
-{
-	return operation_update ( backend.file().effect_edge_detect () );
-}
-
-int jtf_effect_emboss (
-	char	const * const *	const	ARG_UNUSED ( args )
-	)
-{
-	return operation_update ( backend.file().effect_emboss () );
-}
-
-int jtf_effect_invert (
-	char	const * const *	const	ARG_UNUSED ( args )
-	)
-{
-	return operation_update ( backend.file().effect_invert () );
-}
-
-int jtf_effect_sharpen (
+int Backend::jtf_effect_soften (
 	char	const * const *	const	args
 	)
 {
@@ -128,24 +158,10 @@ int jtf_effect_sharpen (
 		return 1;
 	}
 
-	return operation_update ( backend.file().effect_sharpen ( tot ) );
+	return operation_update ( file().effect_soften ( tot ) );
 }
 
-int jtf_effect_soften (
-	char	const * const *	const	args
-	)
-{
-	int	tot;
-
-	if ( mtKit::cli_parse_int( args[0], tot, 1, 100 ) )
-	{
-		return 1;
-	}
-
-	return operation_update ( backend.file().effect_soften ( tot ) );
-}
-
-int jtf_effect_trans_color (
+int Backend::jtf_effect_trans_color (
 	char	const * const *	const	args
 	)
 {
@@ -162,11 +178,11 @@ int jtf_effect_trans_color (
 		return 1;
 	}
 
-	return backend.file().effect_transform_color ( gamma, brightness,
+	return file().effect_transform_color ( gamma, brightness,
 		contrast, saturation, hue, posterize );
 }
 
-int jtf_resize (
+int Backend::jtf_resize (
 	char	const * const *	const	args
 	)
 {
@@ -181,18 +197,18 @@ int jtf_resize (
 		return 1;
 	}
 
-	return operation_update ( backend.file().resize ( x, y, w, h ) );
+	return operation_update ( file().resize ( x, y, w, h ) );
 }
 
-int jtf_scale (
+int Backend::jtf_scale (
 	char	const * const *	const	args
 	)
 {
-	mtPixy::Image::ScaleType	type = mtPixy::Image::SCALE_BLOCKY;
-	int				w, h;
+	int	type = PIXY_SCALE_BLOCKY;
+	int	w, h;
 
-	if (	mtKit::cli_parse_int ( args[0], w, 1, 32767 )		||
-		mtKit::cli_parse_int ( args[1], h, 1, 32767 )
+	if (	mtKit::cli_parse_int ( args[0], w, 1, PIXY_PIXMAP_WIDTH_MAX ) ||
+		mtKit::cli_parse_int ( args[1], h, 1, PIXY_PIXMAP_HEIGHT_MAX )
 		)
 	{
 		return 1;
@@ -202,7 +218,7 @@ int jtf_scale (
 	{
 		int		t;
 		mtKit::CharInt	const	chint_tab[] = {
-				{ "smooth",	mtPixy::Image::SCALE_SMOOTH },
+				{ "smooth",	PIXY_SCALE_SMOOTH },
 				{ NULL, 0 }
 				};
 
@@ -211,9 +227,9 @@ int jtf_scale (
 			return 1;
 		}
 
-		type = (mtPixy::Image::ScaleType)t;
+		type = t;
 	}
 
-	return operation_update ( backend.file().scale ( w, h, type ) );
+	return operation_update ( file().scale ( w, h, type ) );
 }
 

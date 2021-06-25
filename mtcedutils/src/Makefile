@@ -18,7 +18,9 @@ APPS		:=		\
 		cedtranspose	\
 
 OBJS_CED	:= $(sort $(patsubst %.c,%.o,$(wildcard ced*.c)))
+OBJS_CED	:= $(sort $(patsubst %.cpp,%.o,$(wildcard ced*.cpp)) $(OBJS_CED))
 OBJS_RDC	:= $(sort $(patsubst %.c,%.o,$(wildcard rdc*.c)))
+OBJS_RDC	:= $(sort $(patsubst %.cpp,%.o,$(wildcard rdc*.cpp)) $(OBJS_RDC))
 BINS		:= cedutils mtrdc mtnetlog
 
 .PHONY:		all install uninstall clean
@@ -28,17 +30,17 @@ all:		$(BINS)
 
 
 cedutils:	$(OBJS_CED)
-		$(CC) $^ -o $@ $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
-$(OBJS_CED):	ced.h ced_fuzzmap.h
+$(OBJS_CED):	ced*.h
 
 mtrdc:		$(OBJS_RDC)
-		$(CC) $^ -o $@ $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS_RDC):	rdc.h
 
 mtnetlog:	mtnetlog.o
-		$(CC) $^ -o $@ $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule

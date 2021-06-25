@@ -1,5 +1,5 @@
 #!/bin/bash
-# Package up parts of mtcelledit distribution into Arch XZ files
+# Package up parts of mtcelledit distribution into Arch PKG files
 # by Mark Tyler, 2011-9-22
 
 
@@ -11,13 +11,13 @@ MT_flush_func()
 		arch/*/PKGBUILD		\
 		arch/*/pkg		\
 		arch/*/src		\
-		arch/*/*.pkg.tar.xz	\
+		arch/*/*.pkg.tar.*	\
 
 	rm -vrf arch/*/*.tar.gz		\
 		arch/*/PKGBUILD		\
 		arch/*/pkg		\
 		arch/*/src		\
-		arch/*/*.pkg.tar.xz	\
+		arch/*/*.pkg.tar.*	\
 
 }
 
@@ -62,7 +62,7 @@ MT_build_app_func()
 		;;
 	esac
 
-	PKGFILE=$PKG*.pkg.tar.xz
+	PKGFILE=$PKG*.pkg.tar.*
 
 	echo
 	echo $PKGFILE

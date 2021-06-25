@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,14 +20,9 @@
 
 
 Backend::Backend ()
-	:
-	recent_image	( PREFS_FILE_RECENT_IMAGE, 20 ),
-	m_ui_scale	( 0 ),
-	m_ui_scale_detected ( 1 ),
-	m_screenshot	( 0 ),
-	m_cline_filename(),
-	m_prefs_filename()
 {
+	pixy_palette_init ( &palette );
+
 	std::string path;
 
 	mtKit::get_data_dir ( path, DATA_INSTALL "/" DATA_NAME
@@ -47,24 +42,17 @@ Backend::Backend ()
 	}
 }
 
-Backend::~Backend ()
-{
-	prefs.save ();
-}
-
 int Backend::get_ui_scale () const
 {
 	return m_ui_scale;
 }
 
-int Backend::get_ui_scale_palette ()
+int Backend::get_ui_scale_palette () const
 {
-	return get_ui_scale_generic ( prefs.getInt ( PREFS_UI_SCALE_PALETTE ) );
+	return get_ui_scale_generic ( mprefs.ui_scale_palette );
 }
 
-int Backend::get_ui_scale_generic (
-	int		num
-	) const
+int Backend::get_ui_scale_generic ( int num ) const
 {
 	if ( 0 == num )
 	{
@@ -82,13 +70,11 @@ int Backend::get_ui_scale_generic (
 
 void Backend::calc_ui_scale ()
 {
-	m_ui_scale = prefs.getInt ( PREFS_UI_SCALE );
+	m_ui_scale = mprefs.ui_scale;
 
 	if ( m_ui_scale )
 	{
 		// User has specified a scale factor in the prefs
-		m_ui_scale = MAX ( m_ui_scale, 1 );
-		m_ui_scale = MIN ( m_ui_scale, 10 );
 	}
 	else
 	{
@@ -97,9 +83,7 @@ void Backend::calc_ui_scale ()
 	}
 }
 
-void Backend::detect_ui_scale (
-	int	const	menu_height
-	)
+void Backend::detect_ui_scale ( int const menu_height )
 {
 	m_ui_scale_detected = 1 + menu_height / 16;
 	m_ui_scale_detected = MAX ( m_ui_scale_detected, 1 );
@@ -108,97 +92,80 @@ void Backend::detect_ui_scale (
 	calc_ui_scale ();
 }
 
-void Backend::get_titlebar_text (
-	char		* const	buf,
-	size_t		const	buflen
-	)
+std::string Backend::get_titlebar_text ()
 {
-	char		* fname = NULL;
+	char	const * const	f = file.get_filename ();
+	std::string	const	fullname ( f ? f : "" );
+	size_t		const	fullname_sep = fullname.rfind ( MTKIT_DIR_SEP );
 
+	std::string txt;
 
-	if ( file.get_filename () )
+	if ( fullname.size() > 0 )
 	{
-		fname = mtkit_utf8_from_cstring ( file.get_filename () );
-	}
-
-	if ( fname )
-	{
-		char	const	* fn;
-
-
-		fn = strrchr ( fname, MTKIT_DIR_SEP );
-
-		if ( ! fn )
+		if ( fullname_sep == std::string::npos )
 		{
-			fn = fname;
+			txt = fullname;
 		}
 		else
 		{
-			fn ++;
+			txt = std::string ( fullname, fullname_sep + 1 );
 		}
-
-		mtkit_strnncpy ( buf, fn, buflen );
 	}
 	else
 	{
-		mtkit_strnncpy ( buf, "Untitled", buflen );
+		txt = "Untitled";
 	}
 
 	if ( file.get_modified () )
 	{
-		mtkit_strnncat ( buf, " (Modified)", buflen );
+		txt += " (Modified)";
 	}
 
-	mtkit_strnncat ( buf, " [", buflen );
-	mtkit_strnncat ( buf, mtPixy::File::type_text ( file.get_filetype () ),
-		buflen );
-	mtkit_strnncat ( buf, "] ", buflen );
+	txt += " [";
+	txt += pixy_file_type_text ( file.get_filetype () );
+	txt += "]";
 
-	if ( fname )
+	if ( fullname_sep != std::string::npos )
 	{
-		char	* const	tmp = strrchr ( fname, MTKIT_DIR_SEP );
+		txt += " - ";
+		txt += std::string ( fullname, 0, fullname_sep );
+	}
 
+	txt += "    ";
+	txt += VERSION;
 
-		if ( tmp )
+/*
+	size_t chop = 100;
+
+	if ( txt.size() > chop )
+	{
+		// Check that we aren't chopping up a UTF-8 character midway
+		if ( mtkit_utf8_string_legal ( (unsigned char const *)
+			txt.c_str(), txt.size() )
+			)
 		{
-			tmp[1] = 0;
+			while (1)
+			{
+				auto const ch = (unsigned char)txt[ chop ];
+
+				if ( ch < 0x80 || ch > 0xBF )
+				{
+					break;
+				}
+
+				chop++;
+			}
 		}
 
-		mtkit_strnncat ( buf, " - ", buflen );
-		mtkit_strnncat ( buf, fname, buflen );
-
-		free ( fname );
-		fname = NULL;
+		txt.resize ( chop );
 	}
+*/
 
-	mtkit_strnncat ( buf, "    ", buflen );
-	mtkit_strnncat ( buf, VERSION, buflen );
+	return txt;
 }
 
-char * Backend::get_last_directory ()
+std::string Backend::get_last_directory () const
 {
-	char const * const cf = prefs.getString ( PREFS_FILE_RECENT_IMAGE
-		".001" );
-
-	if ( ! cf )
-	{
-		return NULL;
-	}
-
-	char * dir = strdup ( cf );
-
-	if ( ! dir )
-	{
-		return NULL;
-	}
-
-	char * const sep = strrchr ( dir, '/' );
-
-	if ( sep )
-	{
-		sep[0] = 0;
-	}
-
-	return dir;
+	return mprefs.recent_image.directory ();
 }
 

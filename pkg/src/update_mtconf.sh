@@ -1,49 +1,70 @@
 #!/bin/bash
 # Update core files to each package
-# Mark Tyler 2013-2-8
+# Mark Tyler 2013-2-8 & 2021-6-11
+
+
+CWD="$(pwd)"
 
 
 # On error exit
 set -e
 
-
 . ./src/apps_list.txt
 
 
-MTCONF=src/mtConf.txt
-MTDESK=src/builddesktop.sh
-MTMAN=src/buildman.sh
-MTPY=src/buildpy.sh
+SCAN_FILES()
+{
+	GLOB=$1
+	SRC=$2
 
+	if ls $GLOB 1> /dev/null 2>&1; then
+#		echo "files/dirs do exist: $GLOB"
 
-for PKG in test $APPS_DIR_ALL
-do
-	echo	cp -av $MTCONF ../$PKG
-		cp -av $MTCONF ../$PKG
+		FILES=$(ls $GLOB)
+
+		echo "FILES=$FILES"
+
+		for DIR in $(dirname $FILES | sort -u)
+		do
+			echo	cp -av $SRC $DIR
+				cp -av $SRC $DIR
+			echo
+		done
+#	else
+#		echo "files/dirs do not exist: $GLOB"
+	fi
+
 	echo
-done
+}
 
 
-for DIR in ../*/desktop/
-do
-	echo	cp -av $MTDESK $DIR
-		cp -av $MTDESK $DIR
+SCAN_DIRS()
+{
+	GLOB=$1
+	SRC=$2
+
+	for DIR in $GLOB
+	do
+		if [[ -d "$DIR" ]]; then
+#			echo "dir does exist: $DIR"
+
+			echo	cp -av $SRC $DIR
+				cp -av $SRC $DIR
+			echo
+#		else
+#			echo "dir does not exist: $DIR"
+		fi
+	done
+
 	echo
-done
+}
 
 
-for DIR in ../*/man/
-do
-	echo	cp -av $MTMAN $DIR
-		cp -av $MTMAN $DIR
-	echo
-done
+cd $CWD/..
 
+SCAN_DIRS	"test $APPS_DIR_ALL"	"src/mtConf.txt"
+SCAN_DIRS	"*/desktop/"		"src/builddesktop.sh"
+SCAN_DIRS	"*/man/"		"src/buildman.sh"
+SCAN_FILES	"*/src/*.py"		"src/buildpy.sh"
 
-for DIR in $(dirname ../*/src/*.py | sort -u)
-do
-	echo	cp -av $MTPY $DIR
-		cp -av $MTPY $DIR
-	echo
-done
 

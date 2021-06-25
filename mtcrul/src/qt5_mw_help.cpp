@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "qt5_mw_help.h"
+#include "qt5_mw.h"
 
 
 
@@ -26,31 +26,9 @@ void Mainwindow::press_help_about_qt ()
 
 void Mainwindow::press_help_about ()
 {
-	DialogAbout ( this );
-}
+	mtQEX::DialogAbout dialog ( this, VERSION );
 
-DialogAbout::DialogAbout ( Mainwindow * const mw )
-	:
-	QDialog		( mw )
-{
-	setWindowTitle ( "About" );
-	setModal ( true );
-
-	resize ( 600, 600 );
-
-	QVBoxLayout * vbox_main = new QVBoxLayout;
-	setLayout ( vbox_main );
-
-	QTextEdit	* text;
-
-	QTabWidget * tabWidget = new QTabWidget;
-	vbox_main->addWidget ( tabWidget );
-
-	text = new QTextEdit;
-	tabWidget->addTab ( text, "General" );
-	text->setAcceptRichText ( false );
-	text->setReadOnly ( true );
-	text->setText (
+	dialog.add_info ( "General",
 	"mtCrul - Mark Tyler's point Cloud RULer\n"
 	"\n"
 	"A tool for exploring and measuring point clouds.\n"
@@ -58,11 +36,7 @@ DialogAbout::DialogAbout ( Mainwindow * const mw )
 	"https://www.marktyler.org/"
 		);
 
-	text = new QTextEdit;
-	tabWidget->addTab ( text, "Workflow" );
-	text->setAcceptRichText ( false );
-	text->setReadOnly ( true );
-	text->setText (
+	dialog.add_info ( "Workflow",
 	"1. Create a new database somewhere on disk: File->Open\n"
 	"\n"
 	"2. Load in the PTS point cloud data: Edit->Import PTS"
@@ -70,11 +44,7 @@ DialogAbout::DialogAbout ( Mainwindow * const mw )
 	"3. Load in the model data: Edit->Import Model"
 		);
 
-	text = new QTextEdit;
-	tabWidget->addTab ( text, "Camera Mode" );
-	text->setAcceptRichText ( false );
-	text->setReadOnly ( true );
-	text->setText (
+	dialog.add_info ( "Camera Mode",
 	"--------\n"
 	"Keyboard\n"
 	"--------\n"
@@ -102,11 +72,7 @@ DialogAbout::DialogAbout ( Mainwindow * const mw )
 		);
 
 
-	text = new QTextEdit;
-	tabWidget->addTab ( text, "Ruler Mode" );
-	text->setAcceptRichText ( false );
-	text->setReadOnly ( true );
-	text->setText (
+	dialog.add_info ( "Ruler Mode",
 	"--------\n"
 	"Keyboard\n"
 	"--------\n"
@@ -131,11 +97,7 @@ DialogAbout::DialogAbout ( Mainwindow * const mw )
 	"\n"
 		);
 
-	text = new QTextEdit;
-	tabWidget->addTab ( text, "License" );
-	text->setAcceptRichText ( false );
-	text->setReadOnly ( true );
-	text->setText (
+	dialog.add_info ( "License",
 		VERSION"\n"
 	"\n"
 	"Copyright (C) " MT_COPYRIGHT_YEARS " Mark Tyler.\n"
@@ -154,17 +116,6 @@ DialogAbout::DialogAbout ( Mainwindow * const mw )
 	"along with this program.  If not, see http://www.gnu.org/licenses/\n"
 		);
 
-/// ----------------------------------------------------------------------------
-
-	QDialogButtonBox * button_box = new QDialogButtonBox (
-		QDialogButtonBox::Close );
-
-
-	vbox_main->addWidget ( button_box );
-
-	connect ( button_box, SIGNAL ( rejected () ), this, SLOT ( reject () ));
-
-	show ();
-	exec ();
+	dialog.exec ();
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2018 Mark Tyler
+	Copyright (C) 2009-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -894,13 +894,15 @@ int ced_cell_prefs_destroy (
 	CedCellPrefs	* prefs
 	);
 
-char * ced_cell_create_output (		// Create new string for output text in
+int ced_cell_create_output (		// Create new string for output text in
 					// this cell
-	CedCell		* cell,
-	int		* hjustify	// NULL = Don't use else contains
+	CedCell	const	* cell,
+	int		* hjustify,	// NULL = Don't use else contains
 					// CED_CELL_JUSTIFY_*
+	char		* out,		// out[0]=0 always set, even on error
+	size_t		outlen		// Size of out buffer
 	);
-	// NULL = nothing/error
+	// 0 = Success, 1 = error, -1 = text too long
 
 void ced_sheet_cursor_max_min (		// All args must be valid !
 	CedSheet	* sheet,	// r1,c1,r2,c2 can be

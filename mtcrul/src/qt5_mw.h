@@ -24,6 +24,7 @@
 
 
 
+class DialogLabelEdit;
 class Frontend;
 class Mainwindow;
 
@@ -52,9 +53,9 @@ public:
 	std::map<int, Crul::Camera> camera_map;
 	std::map<int, Crul::Ruler> ruler_map;
 
-	CloudQtGL	cloud_gl;
-	RulerQtGL	ruler_gl;
-	ModelQtGL	model_gl;
+	mtGin::GL::Points	cloud_gl;
+	RulerQtGL		ruler_gl;
+	mtGin::GL::Triangles	model_gl;
 };
 
 
@@ -74,7 +75,7 @@ private slots:
 ///	MENUS
 
 	void press_file_open_db ();
-	void press_file_recent ( int i );
+	void press_file_recent ( size_t i );
 	void press_file_quit ();
 
 	void press_edit_mode_camera ();
@@ -272,7 +273,7 @@ private:
 	QPushButton	* m_button_rul_edit;
 	QPushButton	* m_button_rul_hide_all;
 
-	QLabel		* m_info_file;
+	QLineEdit	* m_info_db;
 	QLabel		* m_info_points;
 	QLabel		* m_info_resolution;
 	QLabel		* m_info_x;
@@ -284,7 +285,28 @@ private:
 
 	Frontend	& m_fe;
 
-	mtKit::Prefs	& m_prefs;
+	mtKit::UserPrefs	& m_uprefs;
+	MemPrefs	const	& m_mprefs;
+	mtKit::RecentFile	& recent_crul_db;
+};
+
+
+
+class DialogLabelEdit : public QDialog
+{
+	Q_OBJECT
+
+public:
+	DialogLabelEdit (
+		Mainwindow	* mw,
+		char	const	* title,
+		char	const	* label
+		);
+
+	int get_text ( std::string & text );	// 0=Cancelled 1=Confirmed
+
+private:
+	QLineEdit	* m_edit;
 };
 
 

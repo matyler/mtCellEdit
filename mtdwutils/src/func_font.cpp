@@ -19,24 +19,23 @@
 
 
 
-int dwut_decfont ()
+int Global::dw_decfont ()
 {
-	std::string	filename ( global.s_o );
+	std::string	filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 
 	mtKit::string_strip_extension ( filename, "txt" );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
 	std::string	info;
 
-	if ( global.font_index.file_clean ( global.s_arg, filename.c_str (),
-		info ) )
+	if ( font_index.file_clean ( s_arg, filename.c_str (), info ) )
 	{
 		std::cerr << info << "\n";
 		return ERROR_FONT_DECODE;
@@ -45,37 +44,35 @@ int dwut_decfont ()
 	return 0;
 }
 
-int dwut_encfont ()
+int Global::dw_encfont ()
 {
 	int	const	min = mtDW::Utf8Font::TYPE_MIN;
 	int	const	max = mtDW::Utf8Font::TYPE_MAX;
-	int	const	type = global.i_font;
+	int	const	type = i_font;
 
 	if ( mtkit_arg_int_boundary_check ( "-font", type, min, max ) )
 	{
-		global.exit.set_value ( 1 );
+		exit.set_value ( 1 );
 		return ERROR_FONT_ENCODE;
 	}
 
-	std::string filename ( global.s_o );
+	std::string filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 	filename += ".txt";
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
 	std::string	info;
 
-	if ( global.font_index.file_encode ( global.s_arg, type,
-		filename.c_str (), info )
-		)
+	if ( font_index.file_encode ( s_arg, type, filename.c_str (), info ) )
 	{
 		std::cerr << info << "\n";
-		global.exit.set_value ( 1 );
+		exit.set_value ( 1 );
 		return ERROR_FONT_ENCODE;
 	}
 

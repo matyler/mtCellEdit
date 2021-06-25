@@ -21,20 +21,19 @@
 
 mtQEX::BusyDialog::BusyDialog (
 	QWidget		* const	parent,
-	char	const * const	message
+	char	const * const	message,
+	ThreadFunc	const	func
 	)
 	:
 	QDialog		( parent ),
-	m_progress	(),
-	m_button_box	(),
-	m_default	( true )
+	m_thread_func	( func )
 {
 	setModal ( true );
 	setWindowTitle ( "Please Wait" );
 	setMinimumWidth ( 300 );
 
 	QVBoxLayout * vbox = new QVBoxLayout;
-	vbox->setMargin ( 5 );
+	vbox->setContentsMargins ( 5, 5, 5, 5 );
 	setLayout ( vbox );
 
 	if ( message )
@@ -79,8 +78,16 @@ void mtQEX::BusyDialog::show_abort () const
 	m_button_box->show ();
 }
 
-void mtQEX::BusyDialog::wait_for_thread ( QThread &thread )
+void mtQEX::BusyDialog::wait_for_thread ( QThread * thread )
 {
+	Thread	work ( m_thread_func );
+
+	if ( ! thread )
+	{
+		thread = & work;
+		work.start ();
+	}
+
 	do
 	{
 		if ( m_default )
@@ -112,7 +119,7 @@ void mtQEX::BusyDialog::wait_for_thread ( QThread &thread )
 			m_progress->setValue ( m_busy.get_value () );
 		}
 
-	} while ( thread.isRunning () );
+	} while ( thread->isRunning () );
 }
 
 void mtQEX::BusyDialog::accept ()

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -85,10 +85,7 @@ static void id_print_ascii (
 		id_ascii[2], id_ascii[3] );
 }
 
-static int file_func (
-	char	const * const	filename,
-	void		* const	ARG_UNUSED ( user_data )
-	)
+static int file_func ( char const * const filename )
 {
 	puts ( filename );
 
@@ -145,39 +142,16 @@ finish:
 	return 0;		// Continue parsing
 }
 
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const * const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
-
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
-
-	fprintf ( stderr, "\n" );
-
-	return 0;		// Keep parsing
-}
-
 int Backend::command_line ()
 {
 	int	show_version	= 0;
 
-	mtArg	const	arg_list[] = {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args ( file_func );
 
+	args.add ( "-help",	show_version, 2 );
+	args.add ( "-version",	show_version, 1 );
 
-	mtkit_arg_parse( m_argc, m_argv, arg_list, file_func, error_func, NULL);
+	args.parse ( m_argc, m_argv );
 
 	if ( show_version )
 	{

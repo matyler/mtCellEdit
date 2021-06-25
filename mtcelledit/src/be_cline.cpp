@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2016 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,57 +19,6 @@
 
 
 
-static int file_func (
-	char	const * const	filename,
-	void		* const	user_data
-	)
-{
-	((char const **) user_data)[0] = filename;
-
-	return 0;			// Keep parsing
-}
-
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const * const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
-
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
-
-	fprintf ( stderr, "\n" );
-
-	return 0;			// Keep parsing
-}
-
-
-
-#define RECENT_FILE	"recent.file"
-
-
-
-Backend::Backend ()
-	:
-	recent_file	( RECENT_FILE, 20 ),
-	force_tsvcsv	(0),
-	cline_filename	(),
-	prefs_filename	()
-{
-}
-
-Backend::~Backend ()
-{
-	preferences.save ();
-}
-
 char const * Backend::get_cline_filename () const
 {
 	return cline_filename;
@@ -80,40 +29,49 @@ int Backend::get_force_tsvcsv () const
 	return force_tsvcsv;
 }
 
+static int print_version ()
+{
+	printf ( "%s\n\n", VERSION );
+
+	return 1;		// Stop parsing
+}
+
+static int print_help ()
+{
+	print_version ();
+
+	printf ("For further information consult the man page "
+		"%s(1) or the mtCellEdit Handbook.\n"
+		"\n"
+		, BIN_NAME );
+
+	return 1;		// Stop parsing
+}
+
 int Backend::command_line (
 	int			const	argc,
 	char	const * const * const	argv
 	)
 {
-	int		show_version = 0;
-	mtArg	const	arg_list[] = {
-{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-{ "csv",	MTKIT_ARG_SWITCH, &force_tsvcsv, CED_FILE_FORCE_CSV, NULL },
-{ "prefs",	MTKIT_ARG_STRING, &prefs_filename, 0, NULL },
-{ "tsv",	MTKIT_ARG_SWITCH, &force_tsvcsv, CED_FILE_FORCE_TSV, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args ( [this]( char const * const filename )
+		{
+			this->cline_filename = filename;
+			return 0; 	// Continue parsing
+		} );
 
+	int stop = 0;
 
-	mtkit_arg_parse ( argc, argv, arg_list, file_func, error_func,
-		&cline_filename );
+	args.add ( "-help",	stop, 1, print_help );
+	args.add ( "-version",	stop, 1, print_version );
+	args.add ( "csv",	force_tsvcsv, CED_FILE_FORCE_CSV );
+	args.add ( "prefs",	prefs_filename );
+	args.add ( "tsv",	force_tsvcsv, CED_FILE_FORCE_TSV );
 
-	switch ( show_version )
+	args.parse ( argc, argv );
+
+	if ( stop )
 	{
-	case 1:
-		printf ( "%s\n\n", VERSION );
-		return 1;
-
-	case 2:
-		printf (
-		"%s\n\n"
-		"For further information consult the man page "
-		"%s(1) or the mtCellEdit Handbook.\n"
-		"\n"
-		, VERSION, BIN_NAME );
-
-		return 1;
+		return 1;		// Quit program
 	}
 
 	prefs_init ();

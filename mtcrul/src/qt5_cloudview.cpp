@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,16 +20,16 @@
 
 
 CloudView::CloudView (
-	mtKit::Prefs		& prefs,
+	mtKit::UserPrefs	& prefs,
 	char	const * const	prefs_prefix,
-	CloudQtGL		& cloud_gl,
+	mtGin::GL::Points	& cloud_gl,
 	RulerQtGL		& ruler_gl,
-	ModelQtGL		& model_gl,
+	mtGin::GL::Triangles	& model_gl,
 	QWidget		* const	parent
 	)
 	:
 	QOpenGLWidget	( parent ),
-	m_prefs		( prefs ),
+	m_uprefs	( prefs ),
 	m_prefs_prefix	( prefs_prefix ),
 	m_frames	( 0 ),
 	m_fps		( 0.0 ),
@@ -58,12 +58,11 @@ CloudView::CloudView (
 	m_ruler_gl	( ruler_gl ),
 	m_model_gl	( model_gl )
 {
-	m_camera.set_rotX ( Crul::CAM_B_XROT_DEFAULT );
-	m_camera.set_rotZ ( Crul::CAM_B_ZROT_DEFAULT );
+	m_camera.set_angle ( Crul::CAM_B_XROT_DEFAULT, 0,
+		Crul::CAM_B_ZROT_DEFAULT );
 
-	m_camera.set_x ( Crul::CAM_B_X_DEFAULT );
-	m_camera.set_y ( Crul::CAM_B_Y_DEFAULT );
-	m_camera.set_z ( Crul::CAM_B_Z_DEFAULT );
+	m_camera.set_position ( Crul::CAM_B_X_DEFAULT,
+		Crul::CAM_B_Y_DEFAULT, Crul::CAM_B_Z_DEFAULT );
 
 	setMinimumSize ( 200, 200 );
 
@@ -112,11 +111,12 @@ void CloudView::set_mode ( int const mode )
 
 void CloudView::set_xrotation ( int const degrees )
 {
-	int const angle = (int)Crul::normalize_angle ( degrees );
+	int const angle = (int)mtkit_angle_normalize ( degrees );
 
-	if ( angle != m_camera.get_rotX() )
+	if ( angle != m_camera.get_rot_x() )
 	{
-		m_camera.set_rotX ( angle );
+		m_camera.set_angle ( angle, m_camera.get_rot_y(),
+			m_camera.get_rot_z() );
 
 		emit xrotation_changed ( angle );
 		emit camera_changed ();
@@ -125,11 +125,12 @@ void CloudView::set_xrotation ( int const degrees )
 
 void CloudView::set_zrotation ( int const degrees )
 {
-	int const angle = (int)Crul::normalize_angle ( degrees );
+	int const angle = (int)mtkit_angle_normalize ( degrees );
 
-	if ( angle != m_camera.get_rotZ() )
+	if ( angle != m_camera.get_rot_z() )
 	{
-		m_camera.set_rotZ ( angle );
+		m_camera.set_angle ( m_camera.get_rot_x(), m_camera.get_rot_y(),
+			angle );
 
 		emit zrotation_changed ( angle );
 		emit camera_changed ();
@@ -138,11 +139,12 @@ void CloudView::set_zrotation ( int const degrees )
 
 void CloudView::set_xrotation ( double const degrees )
 {
-	double const angle = Crul::normalize_angle ( degrees );
+	double const angle = mtkit_angle_normalize ( degrees );
 
-	if ( angle != m_camera.get_rotX() )
+	if ( angle != m_camera.get_rot_x() )
 	{
-		m_camera.set_rotX ( angle );
+		m_camera.set_angle ( angle, m_camera.get_rot_y(),
+			m_camera.get_rot_z() );
 
 		emit xrotation_changed ( angle );
 		emit camera_changed ();
@@ -151,11 +153,12 @@ void CloudView::set_xrotation ( double const degrees )
 
 void CloudView::set_zrotation ( double const degrees )
 {
-	double const angle = Crul::normalize_angle ( degrees );
+	double const angle = mtkit_angle_normalize ( degrees );
 
-	if ( angle != m_camera.get_rotZ() )
+	if ( angle != m_camera.get_rot_z() )
 	{
-		m_camera.set_rotZ ( angle );
+		m_camera.set_angle ( m_camera.get_rot_x(), m_camera.get_rot_y(),
+			angle );
 
 		emit zrotation_changed ( angle );
 		emit camera_changed ();
@@ -166,49 +169,21 @@ void CloudView::initializeGL ()
 {
 	initializeOpenGLFunctions ();
 
-	// Sadly Qt GL version calls aren't reliable for <3.0 so this is needed.
-	double dver = 1.3;
-	char const * const gl_str =
-		(char const *)glGetString(GL_SHADING_LANGUAGE_VERSION);
-	char const * gl_num;
-
-	for ( gl_num = gl_str; *gl_num != 0 && !isdigit ( *gl_num ); gl_num++ )
-	{
-	}
-
-	if ( gl_num && gl_num[0] != 0 )
-	{
-		mtkit_strtod ( gl_num, &dver, NULL, 0 );
-	}
-
-	char vbuf[128];
-	snprintf ( vbuf, sizeof(vbuf), "#version %.0f%s\n", dver * 100,
-		QOpenGLContext::currentContext()->isOpenGLES() ? " es" : "" );
-
-#ifdef DEBUG
-	std::cout << "OpenGL shading language version = " << vbuf
-		<< "	from " << gl_str
-		<< "\n";
-#endif
-
 	glClearColor ( 0.2f, 0.2f, 0.3f, 1.0f );
 	glEnable ( GL_VERTEX_PROGRAM_POINT_SIZE );
 	glEnable ( GL_LINE_WIDTH );
 	glDisable ( GL_CULL_FACE );
+
+	std::string const vbuf ( mtGin::GL::get_shader_language_version() );
 
 	m_cloud_gl.init ( vbuf );
 	m_ruler_gl.init ( vbuf );
 	m_model_gl.init ( vbuf );
 }
 
-void CloudView::get_camera_matrix ( QMatrix4x4 & camera ) const
+void CloudView::get_camera_matrix ( mtGin::GL::Matrix4x4 & camera ) const
 {
-	camera.setToIdentity ();
-	camera.rotate ( (float)(180.0 - m_camera.get_rotX()), 1, 0, 0 );
-	camera.rotate ( (float)m_camera.get_rotY(), 0, 1, 0 );
-	camera.rotate ( (float)m_camera.get_rotZ(), 0, 0, 1 );
-	camera.translate ( (float)-m_camera.get_x(), (float)-m_camera.get_y(),
-		(float)-m_camera.get_z() );
+	camera = m_camera.get_matrix();
 }
 
 void CloudView::paintGL ()
@@ -229,13 +204,11 @@ void CloudView::paintGL ()
 //	glEnable ( GL_BLEND );		// Transparency
 //	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-	QMatrix4x4 camera;
-	get_camera_matrix ( camera );
-
-	QVector3D const light (
-		m_light_camera ? (float)m_camera.get_x() : (float)m_light_x,
-		m_light_camera ? (float)m_camera.get_y() : (float)m_light_y,
-		m_light_camera ? (float)m_camera.get_z() : (float)m_light_z
+	mtGin::GL::Matrix4x4 const & camera = m_camera.get_matrix();
+	mtGin::Vertex const light (
+		m_light_camera ? m_camera.get_x() : m_light_x,
+		m_light_camera ? m_camera.get_y() : m_light_y,
+		m_light_camera ? m_camera.get_z() : m_light_z
 		);
 
 	try
@@ -289,7 +262,7 @@ void CloudView::paintGL ()
 		snprintf ( txt, sizeof(txt),
 			"(%.2f, %.2f, %.2f) [%.2f°, , %.2f°] %i fps",
 			m_camera.get_x(), m_camera.get_y(), m_camera.get_z(),
-			m_camera.get_rotX(), m_camera.get_rotZ(),
+			m_camera.get_rot_x(), m_camera.get_rot_z(),
 			(int)round (m_fps) );
 
 		QBrush const & brush = (m_mode == MODE_RULER) ?
@@ -337,19 +310,22 @@ void CloudView::restore_prefs ()
 {
 	std::string const prefix ( m_prefs_prefix );
 
-	m_point_range = m_prefs.getDouble ( PREFS_GL_POINT_RANGE );
+	m_point_range = m_uprefs.get_double ( PREFS_GL_POINT_RANGE );
 
-	m_light_camera = m_prefs.getInt ( PREFS_GL_LIGHT_CAMERA );
-	m_light_x = m_prefs.getDouble ( PREFS_GL_LIGHT_X );
-	m_light_y = m_prefs.getDouble ( PREFS_GL_LIGHT_Y );
-	m_light_z = m_prefs.getDouble ( PREFS_GL_LIGHT_Z );
+	m_light_camera = m_uprefs.get_int ( PREFS_GL_LIGHT_CAMERA );
+	m_light_x = m_uprefs.get_double ( PREFS_GL_LIGHT_X );
+	m_light_y = m_uprefs.get_double ( PREFS_GL_LIGHT_Y );
+	m_light_z = m_uprefs.get_double ( PREFS_GL_LIGHT_Z );
 
-	m_camera.set_x ( m_prefs.getDouble ( (prefix + PREFS_CAM_X).c_str() ) );
-	m_camera.set_y ( m_prefs.getDouble ( (prefix + PREFS_CAM_Y).c_str() ) );
-	m_camera.set_z ( m_prefs.getDouble ( (prefix + PREFS_CAM_Z).c_str() ) );
+	m_camera.set_position (
+		m_uprefs.get_double ( (prefix + PREFS_CAM_X).c_str()),
+		m_uprefs.get_double ( (prefix + PREFS_CAM_Y).c_str()),
+		m_uprefs.get_double ( (prefix + PREFS_CAM_Z).c_str()) );
 
-	m_camera.set_rotX(m_prefs.getDouble((prefix + PREFS_CAM_XROT).c_str()));
-	m_camera.set_rotZ(m_prefs.getDouble((prefix + PREFS_CAM_ZROT).c_str()));
+	m_camera.set_angle (
+		m_uprefs.get_double ( (prefix + PREFS_CAM_XROT). c_str() ),
+		0,
+		m_uprefs.get_double ( (prefix + PREFS_CAM_ZROT). c_str() ) );
 
 	init_gl_perspective ();
 }
@@ -358,42 +334,40 @@ void CloudView::store_prefs () const
 {
 	std::string const prefix ( m_prefs_prefix );
 
-	m_prefs.set ( (prefix + PREFS_CAM_X).c_str(), m_camera.get_x() );
-	m_prefs.set ( (prefix + PREFS_CAM_Y).c_str(), m_camera.get_y() );
-	m_prefs.set ( (prefix + PREFS_CAM_Z).c_str(), m_camera.get_z() );
+	m_uprefs.set ( (prefix + PREFS_CAM_X).c_str(), m_camera.get_x() );
+	m_uprefs.set ( (prefix + PREFS_CAM_Y).c_str(), m_camera.get_y() );
+	m_uprefs.set ( (prefix + PREFS_CAM_Z).c_str(), m_camera.get_z() );
 
-	m_prefs.set ( (prefix + PREFS_CAM_XROT).c_str(), m_camera.get_rotX() );
-	m_prefs.set ( (prefix + PREFS_CAM_ZROT).c_str(), m_camera.get_rotZ() );
+	m_uprefs.set ( (prefix + PREFS_CAM_XROT).c_str(), m_camera.get_rot_x());
+	m_uprefs.set ( (prefix + PREFS_CAM_ZROT).c_str(), m_camera.get_rot_z());
 }
 
 void CloudView::init_gl_perspective ()
 {
-	m_proj.setToIdentity ();
-	m_proj.perspective ( 45.0f, GLfloat(m_gl_width) / GLfloat(m_gl_height),
-		0.01f, GLfloat(m_point_range) );
+	m_proj.set_identity ();
+	m_proj.perspective ( 45.0f, float(m_gl_width) / float(m_gl_height),
+		0.01f, float(m_point_range) );
 }
 
 void CloudView::spin_180 ()
 {
-	m_camera.set_rotX( Crul::normalize_angle( 180.0 - m_camera.get_rotX()));
-	m_camera.set_rotZ( Crul::normalize_angle( 180.0 + m_camera.get_rotZ()));
+	m_camera.turn_around ();
 
-	emit xrotation_changed ( m_camera.get_rotX() );
-	emit zrotation_changed ( m_camera.get_rotZ() );
+	emit xrotation_changed ( m_camera.get_rot_x() );
+	emit zrotation_changed ( m_camera.get_rot_z() );
 	emit camera_changed ();
 }
 
 void CloudView::reset_camera ()
 {
-	m_camera.set_rotX ( Crul::CAM_B_XROT_DEFAULT );
-	m_camera.set_rotZ ( Crul::CAM_B_ZROT_DEFAULT );
+	m_camera.set_angle ( Crul::CAM_B_XROT_DEFAULT, 0,
+		Crul::CAM_B_ZROT_DEFAULT );
 
-	m_camera.set_x ( Crul::CAM_B_X_DEFAULT );
-	m_camera.set_y ( Crul::CAM_B_Y_DEFAULT );
-	m_camera.set_z ( Crul::CAM_B_Z_DEFAULT );
+	m_camera.set_position ( Crul::CAM_B_X_DEFAULT, Crul::CAM_B_Y_DEFAULT,
+		Crul::CAM_B_Z_DEFAULT );
 
-	emit xrotation_changed ( m_camera.get_rotX() );
-	emit zrotation_changed ( m_camera.get_rotZ() );
+	emit xrotation_changed ( m_camera.get_rot_x() );
+	emit zrotation_changed ( m_camera.get_rot_z() );
 	emit camera_changed ();
 }
 
@@ -401,8 +375,8 @@ void CloudView::clone_camera ( CloudView const * view )
 {
 	m_camera = view->m_camera;
 
-	emit xrotation_changed ( m_camera.get_rotX() );
-	emit zrotation_changed ( m_camera.get_rotZ() );
+	emit xrotation_changed ( m_camera.get_rot_x() );
+	emit zrotation_changed ( m_camera.get_rot_z() );
 	emit camera_changed ();
 }
 
@@ -412,9 +386,10 @@ void CloudView::set_xyz_snap_nudge ()
 	double const y = m_camera.get_y();
 	double const z = m_camera.get_z();
 
-	m_camera.set_x ( x - fmod ( x, m_view_nudge ) );
-	m_camera.set_y ( y - fmod ( y, m_view_nudge ) );
-	m_camera.set_z ( z - fmod ( z, m_view_nudge ) );
+	m_camera.set_position (
+		x - fmod ( x, m_view_nudge ),
+		y - fmod ( y, m_view_nudge ),
+		z - fmod ( z, m_view_nudge ) );
 
 	emit camera_changed ();
 }
@@ -428,8 +403,8 @@ void CloudView::set_camera ( Crul::Camera const * const camera )
 
 	m_camera = *camera;
 
-	emit xrotation_changed ( m_camera.get_rotX() );
-	emit zrotation_changed ( m_camera.get_rotZ() );
+	emit xrotation_changed ( m_camera.get_rot_x() );
+	emit zrotation_changed ( m_camera.get_rot_z() );
 	emit camera_changed ();
 }
 
@@ -440,12 +415,11 @@ void CloudView::store_camera ( Crul::Camera * const camera ) const
 		return;
 	}
 
-	camera->set_rotX ( m_camera.get_rotX () );
-	camera->set_rotZ ( m_camera.get_rotZ () );
+	camera->set_angle ( m_camera.get_rot_x (), m_camera.get_rot_y (),
+		m_camera.get_rot_z () );
 
-	camera->set_x ( m_camera.get_x() );
-	camera->set_y ( m_camera.get_y() );
-	camera->set_z ( m_camera.get_z() );
+	camera->set_position ( m_camera.get_x(), m_camera.get_y(),
+		m_camera.get_z() );
 }
 
 void CloudView::show_crosshair ( bool const visible )

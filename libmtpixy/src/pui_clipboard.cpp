@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -56,25 +56,20 @@ int mtPixyUI::Clipboard::load (
 {
 	std::string filename = create_filename ( n );
 
-	return set_image ( mtPixy::Image::load ( filename.c_str () ), 0, 0 );
+	return set_pixmap ( pixy_pixmap_load ( filename.c_str(), NULL ), 0, 0 );
 }
 
 int mtPixyUI::Clipboard::save (
 	int	const	n
-	)
+	) const
 {
-	if ( ! m_img.get () )
-	{
-		return 1;
-	}
-
 	std::string filename = create_filename ( n );
 
-	return m_img.get ()->save_png ( filename.c_str (), 5 );
+	return pixy_pixmap_save_png ( get_pixmap(), filename.c_str (), 5 );
 }
 
-int mtPixyUI::Clipboard::set_image (
-	mtPixy::Image	* const	im,
+int mtPixyUI::Clipboard::set_pixmap (
+	mtPixmap	* const	im,
 	int		const	x,
 	int		const	y,
 	bool		const	txt
@@ -85,7 +80,7 @@ int mtPixyUI::Clipboard::set_image (
 		return 1;
 	}
 
-	m_img.reset ( im );
+	m_pixmap.reset ( im );
 	m_text_paste = txt;
 
 	m_x = x;
@@ -103,13 +98,8 @@ void mtPixyUI::Clipboard::get_xy (
 	y = m_y;
 }
 
-mtPixy::Image * mtPixyUI::Clipboard::get_image ()
-{
-	return m_img.get ();
-}
-
 void mtPixyUI::Clipboard::render (
-	mtPixy::Color	const * const	pal,
+	mtPalette	const * const	pal,
 	mtPixy::RecSelOverlay	const	&ovl,
 	unsigned char		* const	rgb,
 	int			const	x,
@@ -117,9 +107,10 @@ void mtPixyUI::Clipboard::render (
 	int			const	w,
 	int			const	h,
 	int			const	zs
-	)
+	) const
 {
-	if ( ! m_img.get () )
+	mtPixmap const * const pixmap = get_pixmap ();
+	if ( ! pixmap )
 	{
 		return;
 	}
@@ -141,23 +132,24 @@ void mtPixyUI::Clipboard::render (
 	px -= x;
 	py -= y;
 
-	m_img.get ()->blit_rgb_alpha_blend ( pal, rgb, px, py, w, h, zs );
+	pixy_pixmap_blit_rgb_alpha_blend ( pixmap, pal, rgb, px, py, w, h, zs );
 }
 
 int mtPixyUI::Clipboard::paste (
-	File		&file,
+	File	const	&file,
 	int	const	x,
 	int	const	y
-	)
+	) const
 {
-	mtPixy::Image	* dest = file.get_image ();
+	mtPixmap	* dest = file.get_pixmap ();
+	mtPixmap const * const pixmap = get_pixmap ();
 
-	if ( ! dest || ! m_img.get () )
+	if ( ! dest || ! pixmap )
 	{
 		return 1;
 	}
 
-	if ( dest->paste_alpha_blend ( m_img.get (), x, y ) )
+	if ( pixy_pixmap_paste_alpha_blend ( dest, pixmap, x, y ) )
 	{
 		return 1;
 	}
@@ -166,24 +158,26 @@ int mtPixyUI::Clipboard::paste (
 }
 
 int mtPixyUI::Clipboard::paste (
-	File		&file,
+	File	const	&file,
 	int	const	x,
 	int	const	y,
 	int		&dirty_x,
 	int		&dirty_y,
 	int		&dirty_w,
 	int		&dirty_h
-	)
+	) const
 {
 	if ( paste ( file, x, y ) )
 	{
 		return 1;
 	}
 
+	mtPixmap const * const pixmap = get_pixmap ();
+
 	dirty_x = x;
 	dirty_y = y;
-	dirty_w = m_img.get ()->get_width ();
-	dirty_h = m_img.get ()->get_height ();
+	dirty_w = pixmap->width;
+	dirty_h = pixmap->height;
 
 	return 0;
 }
@@ -193,22 +187,24 @@ int mtPixyUI::Clipboard::lasso (
 	int	const	y
 	)
 {
-	if ( ! m_img.get () )
+	mtPixmap * const pixmap = get_pixmap ();
+
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
-	if ( m_img.get ()->lasso ( x, y ) )
+	if ( pixy_lasso ( pixmap, x, y ) )
 	{
 		return 1;
 	}
 
-	int		minx, miny;
-	mtPixy::Image	* nim = m_img.get ()->resize_trim_by_alpha (minx, miny);
+	int	minx, miny;
+	mtPixmap * nim = pixy_pixmap_resize_trim_by_alpha(pixmap, &minx, &miny);
 
 	if ( nim )
 	{
-		m_img.reset ( nim );
+		m_pixmap.reset ( nim );
 
 		m_x += minx;
 		m_y += miny;
@@ -219,9 +215,12 @@ int mtPixyUI::Clipboard::lasso (
 
 int mtPixyUI::Clipboard::flip_vertical ()
 {
-	if ( m_img.get () )
+	mtPixmap const * const pixmap = get_pixmap ();
+
+	if ( pixmap )
 	{
-		return set_image ( m_img.get ()->flip_vertically (), m_x, m_y );
+		return set_pixmap ( pixy_pixmap_flip_vertically ( pixmap ), m_x,
+			m_y );
 	}
 
 	return 1;
@@ -229,9 +228,12 @@ int mtPixyUI::Clipboard::flip_vertical ()
 
 int mtPixyUI::Clipboard::flip_horizontal ()
 {
-	if ( m_img.get () )
+	mtPixmap const * const pixmap = get_pixmap ();
+
+	if ( pixmap )
 	{
-		return set_image ( m_img.get ()->flip_horizontally(), m_x, m_y);
+		return set_pixmap ( pixy_pixmap_flip_horizontally ( pixmap ),
+			m_x, m_y );
 	}
 
 	return 1;
@@ -239,9 +241,12 @@ int mtPixyUI::Clipboard::flip_horizontal ()
 
 int mtPixyUI::Clipboard::rotate_clockwise ()
 {
-	if ( m_img.get () )
+	mtPixmap const * const pixmap = get_pixmap ();
+
+	if ( pixmap )
 	{
-		return set_image ( m_img.get ()->rotate_clockwise (), m_x, m_y);
+		return set_pixmap ( pixy_pixmap_rotate_clockwise ( pixmap ),
+			m_x, m_y );
 	}
 
 	return 1;
@@ -249,10 +254,12 @@ int mtPixyUI::Clipboard::rotate_clockwise ()
 
 int mtPixyUI::Clipboard::rotate_anticlockwise ()
 {
-	if ( m_img.get () )
+	mtPixmap const * const pixmap = get_pixmap ();
+
+	if ( pixmap )
 	{
-		return set_image ( m_img.get ()->rotate_anticlockwise (), m_x,
-			m_y );
+		return set_pixmap ( pixy_pixmap_rotate_anticlockwise ( pixmap ),
+			m_x, m_y );
 	}
 
 	return 1;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2018 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,49 +21,37 @@
 
 mtQEX::Image::Image ()
 	:
-	image		(),
-	zoom		( 1 )
+	m_area		( new ImageArea ( this ) ),
+	m_zoom		( 1 )
 {
 	setAlignment ( Qt::AlignHCenter | Qt::AlignVCenter );
 
-	area = new ImageArea ( this );
-	setWidget ( area );
+	setWidget ( m_area );
 
 	setBackgroundRole ( QPalette::Dark );
 }
 
 mtQEX::Image::~Image ()
 {
-	delete image;
-	image = NULL;
 }
 
-void mtQEX::Image::setImage (
-	mtPixy::Image	* const	im
-	)
+void mtQEX::Image::setPixmap ( mtPixmap * const pixmap )
 {
-	delete image;
-	image = im;
+	m_pixmap.reset ( pixmap );
 
-	if ( im )
-	{
-		area->setGeometry ( 0, 0,
-			image->get_width () * zoom,
-			image->get_height () * zoom );
-	}
-	else
-	{
-		area->setGeometry ( 0, 0, 0, 0 );
-	}
+	int const w = pixy_pixmap_get_width ( pixmap );
+	int const h = pixy_pixmap_get_height ( pixmap );
+
+	m_area->setGeometry ( 0, 0, w * m_zoom, h * m_zoom );
 
 	// Note: both of these are needed to cover all scenarios
-	area->update ();
-	area->updateGeometry ();
+	m_area->update ();
+	m_area->updateGeometry ();
 }
 
-mtPixy::Image * mtQEX::Image::getImage ()
+mtPixmap * mtQEX::Image::getPixmap ()
 {
-	return image;
+	return m_pixmap.get();
 }
 
 int mtQEX::Image::setZoom (
@@ -75,19 +63,16 @@ int mtQEX::Image::setZoom (
 		return 1;
 	}
 
-	if ( z != zoom )
+	if ( z != m_zoom )
 	{
-		zoom = z;
+		m_zoom = z;
 
-		if ( image )
-		{
-			area->setGeometry ( 0, 0,
-				image->get_width () * zoom,
-				image->get_height () * zoom );
+		int const w = pixy_pixmap_get_width ( getPixmap () );
+		int const h = pixy_pixmap_get_height ( getPixmap () );
 
-			area->update ();
-			area->updateGeometry ();
-		}
+		m_area->setGeometry ( 0, 0, w * m_zoom, h * m_zoom );
+		m_area->update ();
+		m_area->updateGeometry ();
 	}
 
 	return 0;
@@ -95,12 +80,12 @@ int mtQEX::Image::setZoom (
 
 int mtQEX::Image::getZoom ()
 {
-	return zoom;
+	return m_zoom;
 }
 
 void mtQEX::Image::update ()
 {
-	area->update ();
+	m_area->update ();
 }
 
 mtQEX::ImageArea::ImageArea (
@@ -117,52 +102,36 @@ void mtQEX::ImageArea::paintEvent (
 	QPaintEvent	* const	ev
 	)
 {
-	mtPixy::Image	* destImage, * srcImage;
-	int		px, py, pw, ph;
+	int const px = ev->rect ().x ();
+	int const py = ev->rect ().y ();
+	int const pw = ev->rect ().width ();
+	int const ph = ev->rect ().height ();
 
-
-	px = ev->rect ().x ();
-	py = ev->rect ().y ();
-	pw = ev->rect ().width ();
-	ph = ev->rect ().height ();
-
-	destImage = mtPixy::Image::create ( mtPixy::Image::TYPE_RGB, pw, ph );
-	unsigned char * const rgb = destImage->get_canvas ();
+	mtPixy::Pixmap const dest ( pixy_pixmap_new_rgb ( pw, ph ) );
+	unsigned char * const rgb = pixy_pixmap_get_canvas ( dest.get() );
 
 	if ( ! rgb )
 	{
-		delete destImage;
 		return;
 	}
 
-	if (	qi						&&
-		(srcImage = qi->getImage () )
-		)
+	mtPixmap const * const src = qi->getPixmap();
+
+	if ( src )
 	{
-		mtPixy::Palette	* const	pal = srcImage->get_palette ();
+		mtPalette const * const pal =pixy_pixmap_get_palette_const(src);
 
-		if ( pal )
-		{
-			int const zoom = qi->getZoom ();
-			mtPixy::Color const * const col = pal->get_color ();
-
-			srcImage->blit_rgb ( col, rgb, -px, -py, pw, ph, zoom );
-		}
+		pixy_pixmap_blit_rgb ( src, pal, rgb, -px, -py, pw, ph,
+			qi->getZoom () );
 	}
 
-	QImage * qim = new QImage ( (const uchar *)rgb, pw, ph, pw * 3,
-		QImage::Format_RGB888 );
+	std::unique_ptr<QImage> const qim ( new QImage ( (const uchar *)rgb, pw,
+		ph, pw * 3, QImage::Format_RGB888 ) );
 
-	if ( qim )
+	if ( qim.get() )
 	{
 		QPainter p ( this );
-		p.drawImage ( QPoint ( px, py ), qim[0] );
-
-		delete qim;		// Delete before rgb image destroy
-		qim = NULL;
+		p.drawImage ( QPoint ( px, py ), *qim.get() );
 	}
-
-	delete destImage;
-	destImage = NULL;
 }
 

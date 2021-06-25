@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "qt5_gl_ruler.h"
+#include "qt5_cloudview.h"
 
 
 
@@ -25,9 +25,7 @@ RulerQtGL::RulerQtGL ()
 	m_show_lines		( true ),
 	m_show_plane		( true ),
 	m_line_butt_size	( 1.0 ),
-	m_line_thickness	( 1.0 ),
-	m_triangles		( GL_TRIANGLES ),
-	m_lines			( GL_LINES )
+	m_line_thickness	( 1.0 )
 {
 }
 
@@ -54,8 +52,8 @@ void RulerQtGL::populate (
 	)
 {
 	// Setup our vertex buffer object.
-	std::vector<Crul::VertexGL> triangles;
-	std::vector<Crul::VertexGL> lines;
+	std::vector<mtGin::GL::VertexRGBnormal> triangles;
+	std::vector<mtGin::GL::VertexRGB> lines;
 
 	Crul::Ruler const * plane = NULL;
 
@@ -71,7 +69,7 @@ void RulerQtGL::populate (
 		if ( m_show_lines )
 		{
 			Crul::Line const & line = ruler.get_line ();
-			Crul::VertexGL vertex;
+			mtGin::GL::VertexRGB vertex;
 
 			vertex.x = line.x1;
 			vertex.y = line.y1;
@@ -106,15 +104,15 @@ void RulerQtGL::populate (
 		plane->create_plane_gl ( lines, plane_range );
 	}
 
-	m_triangles.populate ( triangles );
-	m_lines.populate ( lines );
+	m_triangles.populate ( triangles.data(), triangles.size() );
+	m_lines.populate ( lines.data(), lines.size() );
 }
 
 void RulerQtGL::render (
-	QMatrix4x4	const &	camera,
-	QMatrix4x4	const &	proj,
-	QVector3D	const &	light
-	)
+	mtGin::GL::Matrix4x4 const & camera,
+	mtGin::GL::Matrix4x4 const & proj,
+	mtGin::Vertex	const &	light
+	) const
 {
 	if ( ! is_visible () )
 	{
@@ -122,7 +120,7 @@ void RulerQtGL::render (
 	}
 
 	glLineWidth ( GLfloat ( m_line_thickness ) );
-	m_lines.render ( camera, proj, light );
+	m_lines.render ( camera, proj );
 
 	m_triangles.render ( camera, proj, light );
 }

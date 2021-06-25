@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,33 +19,17 @@
 
 
 
-Backend		backend;
-
-
-
-int operation_update (
-	int	const	res
-	)
-{
-	if ( 0 == res )
-	{
-		backend.file().reset_tool_mode ();
-	}
-
-	return res;
-}
-
 int main (
 	int		const	argc,
 	char	const * const	argv[]
 	)
 {
-	if ( 1 == backend.command_line ( argc, argv ) )
-	{
-		return 0;
-	}
+	Backend		backend;
 
-	backend.main_loop ();
+	if ( 0 == backend.command_line ( argc, argv ) )
+	{
+		backend.main_loop ();
+	}
 
 	return backend.exit.value ();
 }

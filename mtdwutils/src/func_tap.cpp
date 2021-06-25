@@ -19,22 +19,22 @@
 
 
 
-int dwut_decbot ()
+int Global::dw_decbot ()
 {
-	mtDW::Butt * const butt = global.db.get_butt ();
-	std::string filename ( global.s_o );
+	mtDW::Butt * const butt = db.get_butt ();
+	std::string filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 
 	mtKit::string_strip_extension ( filename, NULL );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
-	if ( mtDW::Tap::multi_decode ( butt, global.s_arg, filename.c_str () ) )
+	if ( mtDW::Tap::multi_decode ( butt, s_arg, filename.c_str () ) )
 	{
 		return ERROR_BOTTLE_DECODE;
 	}
@@ -42,25 +42,25 @@ int dwut_decbot ()
 	return 0;
 }
 
-int dwut_encbot ()
+int Global::dw_encbot ()
 {
-	if ( ! global.s_bottle )
+	if ( ! s_bottle )
 	{
 		return ERROR_BOTTLE_MISSING;
 	}
 
-	mtDW::Well * const well = global.db.get_well ();
-	mtDW::Butt * const butt = global.db.get_butt ();
-	mtDW::Soda * const soda = global.db.get_soda ();
-	mtDW::Tap const * const tap = global.db.get_tap ();
+	mtDW::Well * const well = db.get_well ();
+	mtDW::Butt * const butt = db.get_butt ();
+	mtDW::Soda * const soda = db.get_soda ();
+	mtDW::Tap const * const tap = db.get_tap ();
 
-	std::string filename ( global.s_o );
+	std::string filename ( s_o );
 
 	filename += "/";
-	filename += mtKit::basename ( global.s_arg );
+	filename += mtKit::basename ( s_arg );
 
-	char const * const pos = strrchr ( global.s_bottle, '.' );
-	char const * const sep = strrchr ( global.s_bottle, MTKIT_DIR_SEP );
+	char const * const pos = strrchr ( s_bottle, '.' );
+	char const * const sep = strrchr ( s_bottle, MTKIT_DIR_SEP );
 
 	if ( pos > sep )
 	{
@@ -71,14 +71,12 @@ int dwut_encbot ()
 		filename += ".bottle";
 	}
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
-		std::cout << global.s_arg << " -> " << filename << "\n";
+		std::cout << s_arg << " -> " << filename << "\n";
 	}
 
-	if ( tap->encode ( well, butt, soda, global.s_bottle, global.s_arg,
-		filename.c_str () )
-		)
+	if ( tap->encode ( well, butt, soda, s_bottle, s_arg, filename.c_str()))
 	{
 		return ERROR_BOTTLE_ENCODE;
 	}

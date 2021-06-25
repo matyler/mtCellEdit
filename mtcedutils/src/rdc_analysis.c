@@ -19,19 +19,14 @@
 
 
 
-static void mtkit_print_errno (
-	int	const	e
-	)
+static void mtkit_print_errno ( int const e )
 {
-	char	const *	se;
-
-
-	if ( e == 0 )
+	if ( 0 == e )
 	{
 		return;
 	}
 
-	se = strerror ( e );
+	char const * se = strerror ( e );
 	if ( ! se )
 	{
 		se = "?";
@@ -372,13 +367,7 @@ finish:
 	return res;
 }
 
-int print_analysis (
-	mtArg	const * const	ARG_UNUSED ( mtarg ),
-	int		const	ARG_UNUSED ( arg ),
-	int		const	ARG_UNUSED ( argc ),
-	char	const * const	ARG_UNUSED ( argv[] ),
-	void		* const	ARG_UNUSED ( user_data )
-	)
+int print_analysis ()
 {
 	if (	validate_arg_i ()	||
 		print_analysis_real ()

@@ -9,7 +9,7 @@
 
 
 
-=A.1 Mathematical Randomness=[SEC1]
+==A.1 Mathematical Randomness==[SEC1]
 
 Randomness can be many things, but for work relating to mtDataWell I define it as a combination of 3 things:
 
@@ -28,7 +28,7 @@ data.
 
 
 
-==A.1.1 Judging Random Quality==[SEC11]
+===A.1.1 Judging Random Quality===[SEC11]
 
 As with all computer programs, and data processing,
 **"garbage in, garbage out"**.
@@ -60,7 +60,7 @@ or recoded).
 
 
 
-=A.2 Soda OTP Logs=[SEC2]
+==A.2 Soda OTP Logs==[SEC2]
 
 Soda encode transaction logs are kept in the database here:
 ```

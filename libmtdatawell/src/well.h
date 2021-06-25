@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -99,6 +99,29 @@ private:
 
 
 
+struct WellPrefs
+{
+	int			seed_lsi	= 0;
+	int			seed_msi	= 0;
+	int			buf_file_tot	= 0;
+	int			buf_file_pos	= 0;
+	int			buf_prng_tot	= 0;
+	int			buf_prng_pos	= 0;
+	int			buf_zlib_pos	= 0;
+	int			file_id		= 0;
+	int			file_pos_lsi	= 0;
+	int			file_pos_msi	= 0;
+	int			todo_table	= 0;
+	int			bitshift_salt	= 0;
+	int			bitshift_pos	= 0;
+	int			bitshift[8]	= {0};
+
+	// Below must be destroyed first before the above items
+	mtKit::UserPrefs	uprefs;
+};
+
+
+
 class Well::Op
 {
 public:
@@ -125,7 +148,7 @@ public:
 	FileDB			m_file_db;
 
 private:
-	mtKit::Prefs * create_well_prefs ();
+	WellPrefs * create_well_prefs ();
 	void new_well_prefs ();
 	void store_well_state ();
 	void restore_well_state ();
@@ -136,7 +159,7 @@ private:
 
 	std::string	const	m_well_root;	// <m_path> / well /
 
-	std::unique_ptr<mtKit::Prefs> m_prefs_well;
+	std::unique_ptr<WellPrefs> m_prefs_well;
 
 	FileStream		m_file;
 

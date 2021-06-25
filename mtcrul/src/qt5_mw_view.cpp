@@ -36,7 +36,7 @@ void Mainwindow::press_view_show_antialiasing ()
 	m_cloud_view_a->set_antialiasing ( on );
 	m_cloud_view_b->set_antialiasing ( on );
 
-	m_prefs.set ( PREFS_VIEW_SHOW_ANTIALIASING, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_ANTIALIASING, on ? 1 : 0 );
 }
 
 void Mainwindow::press_view_show_crosshair ()
@@ -46,7 +46,7 @@ void Mainwindow::press_view_show_crosshair ()
 	m_cloud_view_a->show_crosshair ( on );
 	m_cloud_view_b->show_crosshair ( on );
 
-	m_prefs.set ( PREFS_VIEW_SHOW_CROSSHAIR, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_CROSSHAIR, on ? 1 : 0 );
 }
 
 void Mainwindow::press_view_show_statusbar ()
@@ -56,7 +56,7 @@ void Mainwindow::press_view_show_statusbar ()
 	m_cloud_view_a->show_statusbar ( on );
 	m_cloud_view_b->show_statusbar ( on );
 
-	m_prefs.set ( PREFS_VIEW_SHOW_STATUSBAR, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_STATUSBAR, on ? 1 : 0 );
 }
 
 void Mainwindow::press_view_show_cloud ()
@@ -66,7 +66,7 @@ void Mainwindow::press_view_show_cloud ()
 	m_cloud_view_a->show_cloud ( on );
 	m_cloud_view_b->show_cloud ( on );
 
-	m_prefs.set ( PREFS_VIEW_SHOW_CLOUD, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_CLOUD, on ? 1 : 0 );
 }
 
 void Mainwindow::press_view_show_model ()
@@ -76,7 +76,7 @@ void Mainwindow::press_view_show_model ()
 	m_cloud_view_a->show_model ( on );
 	m_cloud_view_b->show_model ( on );
 
-	m_prefs.set ( PREFS_VIEW_SHOW_MODEL, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_MODEL, on ? 1 : 0 );
 }
 
 void Mainwindow::press_view_select_a ()

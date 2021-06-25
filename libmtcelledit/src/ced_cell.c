@@ -769,7 +769,7 @@ int ced_sheet_scan_area (
 		coltot = CED_MAX_COLUMN;
 	}
 
-	if ( ! rowtot || (row + rowtot - 1) > CED_MAX_ROW )
+	if ( ! rowtot || (row + rowtot) > (CED_MAX_ROW + 1) )
 	{
 		state.max_row = CED_MAX_ROW;
 	}
@@ -778,7 +778,7 @@ int ced_sheet_scan_area (
 		state.max_row = row + rowtot - 1;
 	}
 
-	if ( ! coltot || (col + coltot - 1) > CED_MAX_COLUMN )
+	if ( ! coltot || (col + coltot) > (CED_MAX_COLUMN + 1) )
 	{
 		state.max_col = CED_MAX_COLUMN;
 	}

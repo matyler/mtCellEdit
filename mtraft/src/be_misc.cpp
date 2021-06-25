@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2017 Mark Tyler
+	Copyright (C) 2011-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,42 +19,23 @@
 
 
 
-static char	const	* scan_directory = NULL;
-
-
-
-static int arg_file_func (
-	char	const * const	filename,
-	void		* const	ARG_UNUSED ( user_data )
-	)
+static int print_version ()
 {
-	if ( ! scan_directory )
-	{
-		scan_directory = filename;
-	}
+	printf ( "%s\n\n", VERSION );
 
-	return 0;			// Keep parsing
+	return 1;		// Stop parsing
 }
 
-static int arg_error_func (
-	int			const	error,
-	int			const	arg,
-	int			const	argc,
-	char	const * const * const	argv,
-	void			* const	ARG_UNUSED ( user_data )
-	)
+static int print_help ()
 {
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
+	print_version ();
 
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
+	printf ("For further information consult the man page "
+		"%s(1) or the mtCellEdit Handbook.\n"
+		"\n"
+		, BIN_NAME );
 
-	fprintf ( stderr, "\n" );
-
-	return 0;			// Keep parsing
+	return 1;		// Stop parsing
 }
 
 int raft_cline (
@@ -63,32 +44,27 @@ int raft_cline (
 	char	const **	const	path
 	)
 {
-	int		show_version = 0;
-	mtArg	const	arg_list[] = {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-			};
+	char const * scan_directory = nullptr;
 
+	mtKit::Arg args ( [&scan_directory]( char const * const filename )
+		{
+			if ( ! scan_directory )
+			{
+				scan_directory = filename;
+			}
+			return 0; 	// Continue parsing
+		} );
 
-	mtkit_arg_parse ( argc, argv, arg_list, arg_file_func, arg_error_func,
-		NULL );
+	int stop = 0;
 
-	switch ( show_version )
+	args.add ( "-help",	stop, 1, print_help );
+	args.add ( "-version",	stop, 1, print_version );
+
+	args.parse ( argc, argv );
+
+	if ( stop )
 	{
-	case 1:
-		printf ( "%s\n\n", VERSION );
-
-		return 1;		// Request caller terminates
-
-	case 2:
-		printf ( "%s\n\n"
-		"For further information consult the man page "
-		"%s(1) or the mtCellEdit Handbook.\n"
-		"\n"
-		, VERSION, BIN_NAME );
-
-		return 1;		// Request caller terminates
+		return 1;		// Quit program
 	}
 
 	if ( path )

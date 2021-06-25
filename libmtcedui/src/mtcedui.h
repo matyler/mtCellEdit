@@ -685,6 +685,72 @@ int cui_graph_duplicate (
 
 
 
+class CuiCellPrefChange;
+
+struct CuiRenPage;
+struct CuiRender;
+
+
+
+class CuiCellPrefChange
+{
+public:
+	CuiCellPrefChange ();
+	~CuiCellPrefChange ();
+
+	int init ( CedSheet * const sheet );
+
+	void cleanup ();
+	void cleanup_sheet ();
+
+	int commit_prefs_set (
+		CedSheet	* sheet,
+		CuiBook		* cubook,
+		int		pref_id,
+		int		pref_num,
+		char	const	* pref_charp
+		);
+
+	static int commit_prefs_set_check (
+		int		res,
+		CedSheet	* sheet,
+		int		change_cursor,
+		int		pref_id
+		);
+
+	void cellpref_init ( mtKit::UserPrefs & prefs );
+
+/// ----------------------------------------------------------------------------
+
+	CedCellPrefs	const * cell_prefs	= nullptr;
+
+	// Items below used by cellpref_init()
+	CedCellPrefs	cell_vals;
+	std::string	cell_format_datetime;
+	std::string	cell_num_thousands;
+	std::string	cell_text_prefix;
+	std::string	cell_text_suffix;
+
+private:
+	CedSheet	* src			= nullptr;
+	CedSheet	* pref_paste_sheet	= nullptr;
+
+	int		pref_r1			= 0;
+	int		pref_c1			= 0;
+	int		pref_r2			= 0;
+	int		pref_c2			= 0;
+
+	int		old_cursor_r1		= 0;
+	int		old_cursor_c1		= 0;
+	int		old_cursor_r2		= 0;
+	int		old_cursor_c2		= 0;
+
+	// We have raw pointers so we block improper use via rule of five
+	MTKIT_RULE_OF_FIVE( CuiCellPrefChange )
+};
+
+
+
 struct CuiRenPage
 {
 	int		width;
@@ -764,7 +830,7 @@ int cui_ren_row_from_y (
 */
 
 int cui_export_output (
-	mtPrefs		* prefs_file,
+	mtKit::UserPrefs const & uprefs,
 	CedSheet	* sheet,
 	char	const	* filename,
 	char	const	* gui_filename,
@@ -816,7 +882,7 @@ int cui_ren_expose_column_header (
 	void		* callback_data
 	);
 
-mtPixy::Image * cui_graph_render_image (
+mtPixmap * cui_graph_render_pixmap (
 	CedBook		* book,
 	char	const	* graph_name,
 	int		* breakpoint,

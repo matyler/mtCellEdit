@@ -40,7 +40,7 @@ This program demonstrates how you can use a spreadsheet to make the following jo
 
 ==5.2 Porting and Hacking mtCellEdit==[SEC2]
 
-mtCellEdit was designed and built on a GNU/Linux system, with the GUI created with the help of Qt4/5.  It should possible to port it anywhere else (with a little effort) as it is just a C/C++ program. I don't have enough time and energy to do this porting myself but feel free to port the code if you want (according to the GNU GPL of course) and tell me or the world about your experiences.
+mtCellEdit was designed and built on a GNU/Linux system, with the GUI created with the help of Qt 5.  It should possible to port it anywhere else (with a little effort) as it is just a C/C++ program. I don't have enough time and energy to do this porting myself but feel free to port the code if you want (according to the GNU GPL of course) and tell me or the world about your experiences.
 
 
 

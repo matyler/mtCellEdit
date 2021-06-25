@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,60 +19,16 @@
 
 
 
-static int prepare_canvas ()
+static int prepare_alpha ( mtPixmap * const pixmap )
 {
-	// Rescale if too small
-
-	int	const	w = global.image->get_width ();
-	int	const	h = global.image->get_height ();
-	int		factor = 1;
-
-	while ( factor < 100 && MIN ( w * factor, h * factor ) < 1000 )
-	{
-		factor *= 2;
-	}
-
-	if ( factor > 1 )
-	{
-		mtPixy::Image * image = global.image->scale ( w * factor,
-			h * factor, mtPixy::Image::SCALE_BLOCKY );
-
-		if ( ! image )
-		{
-			return 1;
-		}
-
-		global.set_image ( image );
-	}
-
-	// Create RGB canvas, if not already RGB
-
-	if ( 3 != global.image->get_canvas_bpp () )
-	{
-		mtPixy::Image * image = global.image->convert_to_rgb ();
-
-		if ( ! image )
-		{
-			// Fail: caller tells user of failure
-			return ERROR_LIBMTPIXY;
-		}
-
-		global.set_image ( image );
-	}
-
-	return 0;
-}
-
-static int prepare_alpha ()
-{
-	if ( global.image->create_alpha () )
+	if ( pixy_pixmap_create_alpha ( pixmap ) )
 	{
 		return 1;
 	}
 
-	int		const	w = global.image->get_width ();
-	int		const	h = global.image->get_height ();
-	unsigned char * const	mem = global.image->get_alpha ();
+	int		const	w = pixy_pixmap_get_width ( pixmap );
+	int		const	h = pixy_pixmap_get_height ( pixmap );
+	unsigned char * const	mem = pixy_pixmap_get_alpha ( pixmap );
 	size_t		const	pixtot = (size_t)(w * h);
 
 	mem[0] = 254;
@@ -85,7 +41,7 @@ static int prepare_alpha ()
 	return 0;
 }
 
-int pixyut_twit ()
+int Global::pixy_twit ()
 {
 	if ( ut_load_file () )
 	{
@@ -93,13 +49,60 @@ int pixyut_twit ()
 		return ERROR_LOAD_FILE;
 	}
 
-	if ( prepare_canvas () || prepare_alpha () )
+	auto prepare_canvas = [this]() -> int
+	{
+		// Rescale if too small
+
+		mtPixmap * pixmap = m_pixmap.get();
+		int	const	w = pixy_pixmap_get_width ( pixmap );
+		int	const	h = pixy_pixmap_get_height ( pixmap );
+		int		factor = 1;
+
+		while ( factor < 100 && MIN ( w * factor, h * factor ) < 1000 )
+		{
+			factor *= 2;
+		}
+
+		if ( factor > 1 )
+		{
+			mtPixmap * im = pixy_pixmap_scale ( pixmap, w * factor,
+				h * factor, PIXY_SCALE_BLOCKY );
+
+			if ( ! im )
+			{
+				return 1;
+			}
+
+			set_pixmap ( im );
+
+			pixmap = m_pixmap.get();
+		}
+
+		// Create RGB canvas, if not already RGB
+
+		if ( 3 != pixy_pixmap_get_bytes_per_pixel ( pixmap ) )
+		{
+			mtPixmap * im = pixy_pixmap_convert_to_rgb ( pixmap );
+			if ( ! im )
+			{
+				return 1;
+			}
+
+			set_pixmap ( im );
+		}
+
+		return 0;
+	};
+
+	if (	prepare_canvas ()
+		|| prepare_alpha ( m_pixmap.get() )
+		)
 	{
 		// Fail: caller tells user of failure
 		return ERROR_LIBMTPIXY;
 	}
 
-	global.i_ftype_out = mtPixy::File::TYPE_PNG;
+	i_ftype_out = PIXY_FILE_TYPE_PNG;
 
 	return 0;
 }

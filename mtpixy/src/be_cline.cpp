@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,39 +19,23 @@
 
 
 
-static int file_func (
-	char	const	* const	filename,
-	void		* const	user_data
-	)
+static int print_version ()
 {
-	char	const * * const pp_prefs_filename = (char const **)user_data;
+	printf ( "%s\n\n", VERSION );
 
-
-	// User has given a filename
-	pp_prefs_filename[0] = filename;
-
-	return 1;			// Stop parsing - filename comes last
+	return 1;		// Stop parsing
 }
 
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const	* const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
+static int print_help ()
 {
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
+	print_version ();
 
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
+	printf ("For further information consult the man page "
+		"%s(1) or the mtPixy Handbook.\n"
+		"\n"
+		, BIN_NAME );
 
-	fprintf ( stderr, "\n" );
-
-	return 0;			// Keep parsing
+	return 1;		// Stop parsing
 }
 
 int Backend::command_line (
@@ -59,33 +43,24 @@ int Backend::command_line (
 	char	const * const *	const	argv
 	)
 {
-	int		show_version = 0;
-	mtArg	const	arg_list[] = {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ "s",		MTKIT_ARG_SWITCH, &m_screenshot, 1, NULL },
-		{ "prefs",	MTKIT_ARG_STRING, &m_prefs_filename, 0, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args ( [this]( char const * const filename )
+		{
+			m_cline_files.push_back ( filename );
 
+			return 0; 	// Continue parsing
+		} );
 
-	mtkit_arg_parse ( argc, argv, arg_list, file_func, error_func,
-		&m_cline_filename );
+	int stop = 0;
 
-	switch ( show_version )
+	args.add ( "-help",	stop, 1, print_help );
+	args.add ( "-version",	stop, 1, print_version );
+	args.add ( "prefs",	m_prefs_filename );
+	args.add ( "s",		m_screenshot, 1 );
+
+	args.parse ( argc, argv );
+
+	if ( stop )
 	{
-	case 1:
-		printf ( "%s\n\n", VERSION );
-
-		return 1;		// Quit program
-
-	case 2:
-		printf (
-		"%s\n\n"
-		"For further information consult the man page "
-		"%s(1) or the mtCellEdit Handbook.\n"
-		"\n", VERSION, BIN_NAME );
-
 		return 1;		// Quit program
 	}
 
@@ -96,10 +71,16 @@ int Backend::command_line (
 
 char const * Backend::get_cline_filename () const
 {
-	return m_cline_filename;
+	if ( m_cline_files.size() < 1 )
+	{
+		return nullptr;
+	}
+
+	return m_cline_files[0];
 }
 
 int Backend::get_cline_screenshot () const
 {
 	return m_screenshot;
 }
+

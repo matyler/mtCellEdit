@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -42,11 +42,11 @@ private:
 
 	mtKit::Random	&	m_random;
 
-	std::unique_ptr<mtPixy::Image> m_image;
+	mtPixy::Pixmap		m_pixmap;
 	std::unique_ptr<mtPixy::Brush> m_brush;
 
-	mtPixy::Palette		* m_palette;
-	mtPixy::Color		* m_color;
+	mtPalette		* m_palette;
+	mtColor			* m_color;
 };
 
 

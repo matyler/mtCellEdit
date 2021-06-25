@@ -36,8 +36,8 @@ esac
 
 
 case "$1" in
-*"-qt4" ) CONF="--use-qt4";;
 *"-qt5" ) CONF="--use-qt5";;
+*"-qt6" ) CONF="--use-qt6";;
 esac
 
 

@@ -1,3 +1,8 @@
+3.5	2021-6-25
+
+	* Effects->CRT menu option added
+	* Options->Show Command Line Files menu option added
+
 3.3	2019-5-25
 
 	* App icon slightly changed to be simpler and cleaner.

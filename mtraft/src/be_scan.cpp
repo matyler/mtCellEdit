@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2018 Mark Tyler
+	Copyright (C) 2004-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,13 +27,14 @@ typedef struct
 	double		other;
 } scanTot;
 
-typedef struct
+
+
+struct scanState
 {
 	CedSheet	* const	sheet;
-	raftScanFunc	const	callback;
-	void		* const	user_data;
+	mtKit::Busy		& busy;
 	int			row;
-} scanState;
+};
 
 
 
@@ -199,7 +200,7 @@ static void add_totals (
 }
 
 static int scan_recurse (
-	char	const	* const	path,
+	std::string	const	& path,
 	scanState	* const	state,
 	int		const	recurse,	// 1 = No Recurse <.>
 					// 2 = Top level dirs
@@ -207,16 +208,16 @@ static int scan_recurse (
 	scanTot		* sum		// Subdirectory total for (2->3)
 	)
 {
-	if ( state->callback ( state->user_data ) )
+	if ( state->busy.aborted () )
 	{
 		return 1;		// User termination
 	}
 
 	// Open pathname given
-	DIR * dp = opendir ( path );
+	DIR * dp = opendir ( path.c_str() );
 	if ( ! dp )
 	{
-		fprintf ( stderr, "Unable to opendir '%s'\n", path );
+		fprintf ( stderr, "Unable to opendir '%s'\n", path.c_str() );
 
 		return 0;
 	}
@@ -235,24 +236,16 @@ static int scan_recurse (
 			continue;
 		}
 
-		char * tmp = mtkit_string_join ( path, ep->d_name, NULL, NULL );
-		if ( ! tmp )
-		{
-			res = -1;
-			break;
-		}
+		std::string tmp ( path );
+		tmp += ep->d_name;
 
 		// Get full name of file/directory
 
 		struct stat buf;
-		if ( lstat ( tmp, &buf ) )	// Get file details
+		if ( lstat ( tmp.c_str(), &buf ) )	// Get file details
 		{
-			free ( tmp );
 			continue;
 		}
-
-		free ( tmp );
-		tmp = NULL;
 
 		if ( S_ISDIR ( buf.st_mode ) )
 		{
@@ -260,20 +253,12 @@ static int scan_recurse (
 			{
 				scanTot		ltot = { 0, 0, 0, 0 };
 
+				tmp = path;
+				tmp += ep->d_name;
+				tmp += '/';
 
-				tmp = mtkit_string_join ( path, ep->d_name, "/",
-					NULL);
-
-				if ( ! tmp )
-				{
-					return -1;
-				}
-
-				res = scan_recurse ( tmp, state, 3,
+				res = scan_recurse ( tmp.c_str(), state, 3,
 					recurse == 2 ? &ltot : sum );
-
-				free ( tmp );
-				tmp = NULL;
 
 				if ( recurse == 2 )
 				{
@@ -319,13 +304,12 @@ static int scan_recurse (
 }
 
 int raft_scan_sheet (
-	char	const	*	const	path,
+	std::string		const	& path,
 	CedSheet	**	const	sheet,
-	raftScanFunc		const	callback,
-	void		*	const	user_data
+	mtKit::Busy			& busy
 	)
 {
-	if ( ! path || ! sheet )
+	if ( ! sheet )
 	{
 		return -1;		// Fail
 	}
@@ -336,7 +320,7 @@ int raft_scan_sheet (
 		return -1;		// Fail
 	}
 
-	scanState	state = { sheet[0], callback, user_data, 1 };
+	scanState	state = { sheet[0], busy, 1 };
 	int		res = scan_recurse ( path, &state, 1, NULL );
 
 	if ( res == 0 )
@@ -365,59 +349,48 @@ int raft_scan_sheet (
 
 
 
-char * raft_path_check (
-	char	const	* path
-	)
+std::string raft_path_check ( char const * path )
 {
 	if ( ! path || path[0] == 0 )
 	{
-		return NULL;		// Argument error
+		return "";		// Argument error
 	}
 
 	if ( 0 == mtkit_file_directory_exists ( path ) )
 	{
-		return NULL;		// Doesn't exist
+		return "";		// Doesn't exist
 	}
 
-	size_t plen = strlen ( path );
+	size_t const plen = strlen ( path );
 	if ( plen >= MAX_PATH_LEN )
 	{
-		return NULL;		// Path too long
+		return "";		// Path too long
 	}
 
-	char * new_path = NULL;
+	std::string new_path ( path );
 
 	if ( path [ plen - 1 ] != '/' )
 	{
 		// Ensure path has '/' at end
-
-		new_path = mtkit_string_join ( path, "/", NULL, NULL );
-	}
-	else
-	{
-		new_path = strdup ( path );
+		new_path += '/';
 	}
 
 	return new_path;
 }
 
-char * raft_path_merge (
-	char	const	* const	path,
+std::string raft_path_merge (
+	std::string	const	& path,
 	CedSheet	* const	sheet,
 	int		const	row
 	)
 {
-	if ( ! path )
-	{
-		return NULL;
-	}
+	std::string new_path ( path );
 
-	char	* new_path = NULL;
-	CedCell	* cell = ced_sheet_get_cell ( sheet, row, RAFT_COL_NAME );
-
+	CedCell	* const cell = ced_sheet_get_cell ( sheet, row, RAFT_COL_NAME );
 	if ( cell && cell->text )
 	{
-		new_path = mtkit_string_join ( path, cell->text, "/", NULL );
+		new_path += cell->text;
+		new_path += '/';
 	}
 
 	return new_path;

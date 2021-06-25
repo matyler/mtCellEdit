@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 
 static void analyse_rgb_image (
+	int			const	verbose,
 	unsigned char	const * const	rgb,
 	int			const	w,
 	int			const	h
@@ -56,7 +57,7 @@ static void analyse_rgb_image (
 		printf( "%i. %8i / %8i = %4.2f%%\n", i, buckets, tot_mem, perc);
 
 
-		if ( global.i_verbose && 8 == i )
+		if ( verbose && 8 == i )
 		{
 			printf ( "--------------------------------\n" );
 			printf ( "R+G+B	Pixels	Cols	Tot\n" );
@@ -106,33 +107,33 @@ static void analyse_rgb_image (
 	puts ( "" );
 }
 
-int pixyut_riba ()
+int Global::pixy_riba ()
 {
 	if ( ut_load_file () )
 	{
 		// Unable to load file - non-fatal error for 'riba'
 
-		printf ( "????? %s\n", global.s_arg );
+		printf ( "????? %s\n", s_arg );
 
 		return 0;
 	}
 
-	int			const	bpp = global.image->get_canvas_bpp ();
-	int			const	w = global.image->get_width ();
-	int			const	h = global.image->get_height ();
-	unsigned char	const * const	rgb = global.image->get_canvas ();
+	mtPixmap const * const pixmap = m_pixmap.get();
+	int	const	bpp = pixy_pixmap_get_bytes_per_pixel ( pixmap );
+	int	const	w = pixy_pixmap_get_width ( pixmap );
+	int	const	h = pixy_pixmap_get_height ( pixmap );
+	unsigned char	const * const	rgb = pixy_pixmap_get_canvas ( pixmap );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
 		printf ( "w=%-5i h=%-5i cols=%-3i bpp=%i%-3s",
 			w, h,
-			global.image->get_palette ()->get_color_total (),
+			pixy_pixmap_get_palette_size ( pixmap ),
 			bpp,
-			global.image->get_alpha () ? "+A" : "" );
+			pixy_pixmap_get_alpha ( pixmap ) ? "+A" : "" );
 	}
 
-	printf ( "%-5s %s\n", mtPixy::File::type_text (
-		(mtPixy::File::Type) global.i_ftype_in ), global.s_arg );
+	printf ( "%-5s %s\n", pixy_file_type_text ( i_ftype_in ), s_arg );
 
 	if ( bpp != 3 || ! rgb )
 	{
@@ -141,7 +142,7 @@ int pixyut_riba ()
 		return 0;
 	}
 
-	analyse_rgb_image ( rgb, w, h );
+	analyse_rgb_image ( i_verbose, rgb, w, h );
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,15 +19,6 @@
 
 
 
-Backend::Backend ()
-	:
-	recent_db		( PREFS_RECENT_DB, PREFS_RECENT_DB_TOTAL ),
-	recent_dir		( PREFS_RECENT_DIR, PREFS_RECENT_DIR_TOTAL ),
-	m_db_path		( NULL ),
-	m_prefs_filename	( NULL )
-{
-}
-
 int Backend::init_well ()
 {
 	return open_database ( m_db_path );
@@ -40,42 +31,28 @@ int Backend::open_database ( char const * const path )
 		return 1;
 	}
 
-	recent_db.set_filename ( db.get_path ().c_str () );
+	mprefs.recent_db.set ( db.get_path() );
 
 	return 0;
 }
 
-static int file_func (
-	char	const	* const	filename,
-	void		* const	user_data
-	)
+static int print_version ()
 {
-	Backend * const backend = static_cast<Backend *>(user_data);
+	printf ( "%s\n\n", VERSION );
 
-	backend->cline_add_filename ( filename );
-
-	return 0;			// Continue parsing
+	return 1;		// Stop parsing
 }
 
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const	* const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
+static int print_help ()
 {
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
+	print_version ();
 
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
+	printf ("For further information consult the man page "
+		"%s(1) or the mtDataWell Handbook.\n"
+		"\n"
+		, BIN_NAME );
 
-	fprintf ( stderr, "\n" );
-
-	return 0;			// Keep parsing
+	return 1;		// Stop parsing
 }
 
 int Backend::command_line (
@@ -83,32 +60,23 @@ int Backend::command_line (
 	char	const * const *	const	argv
 	)
 {
-	int		show_version = 0;
-	mtArg	const	arg_list[] = {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ "db",		MTKIT_ARG_STRING, &m_db_path, 0, NULL },
-		{ "prefs",	MTKIT_ARG_STRING, &m_prefs_filename, 0, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args ( [this]( char const * const filename )
+		{
+			cline_add_filename ( filename );
+			return 0; 	// Continue parsing
+		} );
 
+	int stop = 0;
 
-	mtkit_arg_parse ( argc, argv, arg_list, file_func, error_func, this );
+	args.add ( "-help",	stop, 1, print_help );
+	args.add ( "-version",	stop, 1, print_version );
+	args.add ( "db",	m_db_path );
+	args.add ( "prefs",	m_prefs_filename );
 
-	switch ( show_version )
+	args.parse ( argc, argv );
+
+	if ( stop )
 	{
-	case 1:
-		printf ( "%s\n\n", VERSION );
-
-		return 1;		// Quit program
-
-	case 2:
-		printf (
-		"%s\n\n"
-		"For further information consult the man page "
-		"%s(1) or the mtDataWell Handbook.\n"
-		"\n", VERSION, BIN_NAME );
-
 		return 1;		// Quit program
 	}
 
@@ -126,27 +94,23 @@ void Backend::cline_add_filename (
 
 void Backend::prefs_init ()
 {
-	mtPrefTable const prefs_table[] = {
-	{ PREFS_WINDOW_X, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_WINDOW_Y, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_WINDOW_W, MTKIT_PREF_TYPE_INT, "500", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_WINDOW_H, MTKIT_PREF_TYPE_INT, "500", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_WINDOW_MAXIMIZED, MTKIT_PREF_TYPE_INT, "1", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_WINDOW_X, mprefs.window_x, 50 );
+	uprefs.add_int ( PREFS_WINDOW_Y, mprefs.window_y, 50 );
+	uprefs.add_int ( PREFS_WINDOW_W, mprefs.window_w, 500 );
+	uprefs.add_int ( PREFS_WINDOW_H, mprefs.window_h, 500 );
+	uprefs.add_int ( PREFS_WINDOW_MAXIMIZED, mprefs.window_maximized, 1 );
 
-	{ PREFS_LAST_DIRECTORY, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_string ( PREFS_LAST_DIRECTORY, mprefs.last_directory, "" );
 
-	{ PREFS_HELP_FILE, MTKIT_PREF_TYPE_FILE, DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html", NULL, NULL, 0, NULL, NULL },
-	{ PREFS_HELP_BROWSER, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_string ( PREFS_HELP_FILE, mprefs.help_file,
+		DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html" );
+	uprefs.add_string ( PREFS_HELP_BROWSER, mprefs.help_browser, "" );
 
-	{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-	};
+	uprefs.add_ui_defaults ( mprefs.ui_prefs );
 
-	prefs.addTable ( prefs_table );
-	prefs.initWindowPrefs ();
+	mprefs.recent_db.init ( uprefs, PREFS_RECENT_DB, PREFS_RECENT_DB_TOTAL);
+	mprefs.recent_dir.init (uprefs,PREFS_RECENT_DIR,PREFS_RECENT_DIR_TOTAL);
 
-	recent_dir.init_prefs ( &prefs );
-	recent_db.init_prefs ( &prefs );
-
-	prefs.load ( m_prefs_filename, BIN_NAME );
+	uprefs.load ( m_prefs_filename, BIN_NAME );
 }
 

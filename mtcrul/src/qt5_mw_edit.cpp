@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "qt5_mw_edit.h"
+#include "qt5_mw.h"
 
 
 
@@ -60,11 +60,6 @@ void Mainwindow::press_edit_mode_ruler ()
 	set_edit_mode ( CloudView::MODE_RULER );
 }
 
-void ThreadImportPTS::run ()
-{
-	m_error = m_fe.cloud.load_pts ( m_filename, & m_fe.crul_db );
-}
-
 void Mainwindow::press_edit_import_pts ()
 {
 	QString filename = QFileDialog::getOpenFileName ( this,
@@ -77,14 +72,16 @@ void Mainwindow::press_edit_import_pts ()
 	}
 
 	std::string const path ( filename.toUtf8 ().data () );
+	int error = 0;
 
-	mtQEX::BusyDialog dialog ( this, "Importing data from PTS file." );
-	ThreadImportPTS work ( path, m_fe );
+	mtQEX::BusyDialog dialog ( this, "Importing data from PTS file.",
+		[this, &error, &path]()
+		{
+			error = m_fe.cloud.load_pts ( path, & m_fe.crul_db );
+		});
+	dialog.wait_for_thread ();
 
-	work.start ();
-	dialog.wait_for_thread ( work );
-
-	switch ( work.error () )
+	switch ( error )
 	{
 	case 0:
 		break;
@@ -105,11 +102,6 @@ void Mainwindow::press_edit_import_pts ()
 	update_info ();
 }
 
-void ThreadImportModel::run ()
-{
-	m_error = m_fe.model.import_file ( m_filename, & m_fe.crul_db );
-}
-
 void Mainwindow::press_edit_import_model ()
 {
 	QString filename = QFileDialog::getOpenFileName ( this,
@@ -122,14 +114,17 @@ void Mainwindow::press_edit_import_model ()
 	}
 
 	std::string const path ( filename.toUtf8 ().data () );
+	int error = 0;
 
-	mtQEX::BusyDialog dialog ( this, "Importing data from model file." );
-	ThreadImportModel work ( path, m_fe );
+	mtQEX::BusyDialog dialog ( this, "Importing data from model file.",
+		[this, &error, &path]()
+		{
+			error = m_fe.model.import_file ( path, & m_fe.crul_db );
+		});
 
-	work.start ();
-	dialog.wait_for_thread ( work );
+	dialog.wait_for_thread ();
 
-	switch ( work.error () )
+	switch ( error )
 	{
 	case 0:
 		break;
@@ -155,27 +150,25 @@ void Mainwindow::press_edit_prefs ()
 	m_cloud_view_a->store_prefs ();
 	m_cloud_view_b->store_prefs ();
 
-	mtQEX::PrefsWindow ( m_prefs.getPrefsMem (), "Preferences" );
+	mtQEX::prefs_window ( this, m_uprefs, "Preferences" );
 
-	set_nudge ( m_prefs.getInt ( PREFS_VIEW_NUDGE_SIZE ) );
-	set_point_size ( (int)m_prefs.getDouble ( PREFS_GL_POINT_SIZE ) );
-	set_line_butt_size ( (int)m_prefs.getDouble ( PREFS_GL_LINE_BUTT_SIZE));
-	set_line_thickness ( (int)m_prefs.getDouble ( PREFS_GL_LINE_THICKNESS));
+	set_nudge ( m_mprefs.view_nudge_size );
+	set_point_size ( (int)m_mprefs.gl_point_size );
+	set_line_butt_size ( (int)m_mprefs.gl_line_butt_size );
+	set_line_thickness ( (int)m_mprefs.gl_line_thickness );
 
-	set_xrotation_a ( m_prefs.getDouble ( PREFS_VIEW_A PREFS_CAM_XROT ) );
-	set_zrotation_a ( m_prefs.getDouble ( PREFS_VIEW_A PREFS_CAM_ZROT ) );
-	set_xrotation_b ( m_prefs.getDouble ( PREFS_VIEW_B PREFS_CAM_XROT ) );
-	set_zrotation_b ( m_prefs.getDouble ( PREFS_VIEW_B PREFS_CAM_ZROT ) );
+	set_xrotation_a ( m_mprefs.view_a_cam_xrot );
+	set_zrotation_a ( m_mprefs.view_a_cam_zrot );
+	set_xrotation_b ( m_mprefs.view_b_cam_xrot );
+	set_zrotation_b ( m_mprefs.view_b_cam_zrot );
 
 	populate_gl_rulers ();
 
 	m_cloud_view_a->restore_prefs_update ();
 	m_cloud_view_b->restore_prefs_update ();
 
-	m_fe.cloud.set_resampling_rates (
-		m_prefs.getInt ( PREFS_CLOUD_RATE_LOW ),
-		m_prefs.getInt ( PREFS_CLOUD_RATE_MEDIUM )
-		);
+	m_fe.cloud.set_resampling_rates ( m_mprefs.cloud_rate_low,
+		m_mprefs.cloud_rate_medium );
 
 	update_view_show_items ();
 }

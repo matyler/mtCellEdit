@@ -77,6 +77,9 @@ void set_stderr_more ();
 class Database
 {
 public:
+	Database ();
+	~Database ();
+
 	int open ( char const * path );
 
 	inline mtDW::Well * get_well () const { return m_well.get (); }
@@ -93,6 +96,8 @@ private:
 	std::unique_ptr<mtDW::Butt>	m_butt;
 	std::unique_ptr<mtDW::Soda>	m_soda;
 	std::unique_ptr<mtDW::Tap>	m_tap;
+
+	MTKIT_RULE_OF_FIVE( Database )
 };
 
 
@@ -222,12 +227,10 @@ public:
 /// ----------------------------------------------------------------------------
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
-
 private:
+	std::unique_ptr<Op> const m_op;
 
-	Well ( const Well & );			// Disable copy constructor
-	Well & operator = (const Well &);	// Disable = operator
+	MTKIT_RULE_OF_FIVE( Well )
 };
 
 
@@ -278,21 +281,21 @@ public:
 	~OTPanalysis ();
 
 	static int init (		// Prepare graphics, memory, etc.
-		std::unique_ptr<mtPixy::Image> &im_8bit,
-		std::unique_ptr<mtPixy::Image> &im_16bit
+		mtPixy::Pixmap &im_8bit,
+		mtPixy::Pixmap &im_16bit
 		);
 		// Returns error code.  Interpret via get_error_text()
 
 	int analyse_bucket (
-		mtPixy::Image * image_8bit,
-		mtPixy::Image * image_16bit,
+		mtPixmap const * image_8bit,
+		mtPixmap const * image_16bit,
 		int bucket
 		) const;
 		// Returns error code.  Interpret via get_error_text()
 
 	int analyse_all_buckets (
-		mtPixy::Image * image_8bit,
-		mtPixy::Image * image_16bit
+		mtPixmap const * image_8bit,
+		mtPixmap const * image_16bit
 		) const;
 		// Returns error code.  Interpret via get_error_text()
 
@@ -304,11 +307,10 @@ public:
 /// ----------------------------------------------------------------------------
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
-
 private:
-	OTPanalysis ( const OTPanalysis & ); // Disable copy constructor
-	OTPanalysis & operator = (const OTPanalysis &); // Disable = operator
+	std::unique_ptr<Op> const m_op;
+
+	MTKIT_RULE_OF_FIVE( OTPanalysis )
 };
 
 
@@ -379,11 +381,11 @@ public:
 /// ----------------------------------------------------------------------------
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
 
 private:
-	Butt ( const Butt & );			// Disable copy constructor
-	Butt & operator = (const Butt &);	// Disable = operator
+	std::unique_ptr<Op> const m_op;
+
+	MTKIT_RULE_OF_FIVE( Butt )
 };
 
 
@@ -444,11 +446,11 @@ public:
 /// ----------------------------------------------------------------------------
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
+	std::unique_ptr<Op> const m_op;
 
 private:
-	Soda ( const Soda & );			// Disable copy constructor
-	Soda & operator = (const Soda &);	// Disable = operator
+
+	MTKIT_RULE_OF_FIVE( Soda )
 };
 
 
@@ -460,14 +462,11 @@ public:
 	~SodaTransaction ();
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
 
 private:
+	std::unique_ptr<Op> const m_op;
 
-	SodaTransaction ( const SodaTransaction & );
-		// Disable copy constructor
-	SodaTransaction & operator = (const SodaTransaction &);
-		// Disable = operator
+	MTKIT_RULE_OF_FIVE( SodaTransaction )
 };
 
 
@@ -507,11 +506,11 @@ public:
 /// ----------------------------------------------------------------------------
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
 
 private:
-	Tap ( const Tap & );			// Disable copy constructor
-	Tap & operator = (const Tap &);		// Disable = operator
+	std::unique_ptr<Op> const m_op;
+
+	MTKIT_RULE_OF_FIVE( Tap )
 };
 
 
@@ -568,11 +567,10 @@ public:
 /// ----------------------------------------------------------------------------
 
 	class Op;	// Opaque / Pimpl
-	Op * const op;
+	std::unique_ptr<Op> const m_op;
 
 private:
-	TapFile ( const TapFile & );		// Disable copy constructor
-	TapFile & operator = (const TapFile &);	// Disable = operator
+	MTKIT_RULE_OF_FIVE( TapFile )
 };
 
 

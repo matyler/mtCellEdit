@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,23 +20,17 @@
 
 
 int mtPixyUI::File::image_new_chores (
-	mtPixy::Image	* const	i
+	mtPixmap	* const	pixmap
 	)
 {
-	if ( ! i )
+	mtPixy::Pixmap tmp ( pixmap );
+
+	if ( m_undo_stack.add_next_step ( pixmap ) )
 	{
 		return 1;
 	}
 
-	if ( m_undo_stack.add_next_step ( i ) )
-	{
-		delete i;
-		return 1;
-	}
-
-	delete ( m_image );
-	m_image = i;
-
+	m_pixmap.reset ( tmp.release() );
 	m_modified = 1;
 
 	return 0;
@@ -49,7 +43,7 @@ int mtPixyUI::File::resize (
 	int	const	h
 	)
 {
-	return image_new_chores ( m_image->resize ( x, y, w, h ) );
+	return image_new_chores( pixy_pixmap_resize( get_pixmap(), x, y, w,h ));
 }
 
 int mtPixyUI::File::crop ()
@@ -77,22 +71,24 @@ int mtPixyUI::File::crop ()
 int mtPixyUI::File::scale (
 	int	const	w,
 	int	const	h,
-	mtPixy::Image::ScaleType const	scaletype
+	int	const	scaletype
 	)
 {
-	return image_new_chores ( m_image->scale ( w, h, scaletype ) );
+	return image_new_chores ( pixy_pixmap_scale ( get_pixmap(), w, h,
+		scaletype ) );
 }
 
 int mtPixyUI::File::convert_to_rgb ()
 {
-	return image_new_chores ( m_image->convert_to_rgb () );
+	return image_new_chores ( pixy_pixmap_convert_to_rgb( get_pixmap() ) );
 }
 
 int mtPixyUI::File::convert_to_indexed (
-	mtPixy::Image::DitherType const dt
+	int	const	dt
 	)
 {
-	return image_new_chores ( m_image->convert_to_indexed ( dt ) );
+	return image_new_chores ( pixy_pixmap_convert_to_indexed ( get_pixmap(),
+		dt ) );
 }
 
 int mtPixyUI::File::effect_transform_color (
@@ -104,76 +100,82 @@ int mtPixyUI::File::effect_transform_color (
 	int	const	po
 	)
 {
-	return image_new_chores ( m_image->effect_transform_color ( ga, br, co,
-		sa, hu, po ) );
+	return image_new_chores ( pixy_effect_transform_color ( get_pixmap(),
+		ga, br, co, sa, hu, po ) );
 }
 
 int mtPixyUI::File::effect_invert ()
 {
-	return image_new_chores ( m_image->effect_invert () );
+	return image_new_chores ( pixy_pixmap_effect_invert ( get_pixmap() ) );
+}
+
+int mtPixyUI::File::effect_crt ( int const scale )
+{
+	return image_new_chores( pixy_pixmap_effect_crt( get_pixmap(), scale ));
 }
 
 int mtPixyUI::File::effect_edge_detect ()
 {
-	return image_new_chores ( m_image->effect_edge_detect () );
+	return image_new_chores( pixy_pixmap_effect_edge_detect( get_pixmap()));
 }
 
 int mtPixyUI::File::effect_sharpen (
 	int	const	n
 	)
 {
-	return image_new_chores ( m_image->effect_sharpen ( n ) );
+	return image_new_chores( pixy_pixmap_effect_sharpen( get_pixmap(), n ));
 }
 
 int mtPixyUI::File::effect_soften (
 	int	const	n
 	)
 {
-	return image_new_chores ( m_image->effect_soften ( n ) );
+	return image_new_chores ( pixy_pixmap_effect_soften( get_pixmap(), n ));
 }
 
 int mtPixyUI::File::effect_emboss ()
 {
-	return image_new_chores ( m_image->effect_emboss () );
+	return image_new_chores ( pixy_pixmap_effect_emboss ( get_pixmap() ) );
 }
 
 int mtPixyUI::File::effect_normalize ()
 {
-	return image_new_chores ( m_image->effect_normalize () );
+	return image_new_chores ( pixy_pixmap_effect_normalize( get_pixmap() ));
 }
 
 int mtPixyUI::File::effect_bacteria (
 	int	const	n
 	)
 {
-	return image_new_chores ( m_image->effect_bacteria ( n ) );
+	return image_new_chores( pixy_pixmap_effect_bacteria( get_pixmap(), n));
 }
 
 int mtPixyUI::File::flip_horizontally ()
 {
-	return image_new_chores ( m_image->flip_horizontally () );
+	return image_new_chores( pixy_pixmap_flip_horizontally( get_pixmap() ));
 }
 
 int mtPixyUI::File::flip_vertically ()
 {
-	return image_new_chores ( m_image->flip_vertically () );
+	return image_new_chores ( pixy_pixmap_flip_vertically( get_pixmap() ) );
 }
 
 int mtPixyUI::File::rotate_clockwise ()
 {
-	return image_new_chores ( m_image->rotate_clockwise () );
+	return image_new_chores ( pixy_pixmap_rotate_clockwise( get_pixmap() ));
 }
 
 int mtPixyUI::File::rotate_anticlockwise ()
 {
-	return image_new_chores ( m_image->rotate_anticlockwise () );
+	return image_new_chores ( pixy_pixmap_rotate_anticlockwise (
+		get_pixmap() ) );
 }
 
 int mtPixyUI::File::destroy_alpha ()
 {
-	if ( 0 == m_image->destroy_alpha () )
+	if ( 0 == pixy_pixmap_destroy_alpha ( get_pixmap() ) )
 	{
-		m_undo_stack.add_next_step ( m_image );
+		m_undo_stack.add_next_step ( get_pixmap() );
 		m_modified = 1;
 
 		return 0;

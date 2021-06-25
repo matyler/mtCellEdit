@@ -147,13 +147,13 @@ double pCloud::xyz_sample ( double const xyz ) const
 	double const m = fmod ( xyz, m_lim );
 	double delta;
 
-	if ( abs(m) <= m_lim_half )
+	if ( fabs(m) <= m_lim_half )
 	{
 		delta = -m;
 	}
 	else
 	{
-		delta = m_lim - abs(m);
+		delta = m_lim - fabs(m);
 
 		if ( m < 0 )
 		{

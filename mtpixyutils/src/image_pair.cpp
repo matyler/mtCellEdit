@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019 Mark Tyler
+	Copyright (C) 2019-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,43 +19,42 @@
 
 
 
-int ImagePair::open_file ( char const * const filename )
+int ImagePair::open_file (
+	char	const * const	filename,
+	int			& i_ftype_in,
+	mtPixmap	** const img
+	)
 {
-	mtPixy::File::Type	ft;
-	mtPixy::Image		* image = mtPixy::Image::load ( filename, &ft );
+	int		ft;
+	mtPixmap	* pixmap = pixy_pixmap_load ( filename, &ft );
 
-	if ( ! image )
+	if ( ! pixmap )
 	{
 		fprintf ( stderr, "Unable to load '%s'\n", filename );
-		global.i_error = 1;	// Bail out
-
 		return 1;
 	}
 
-	global.i_ftype_in = (int)ft;
+	i_ftype_in = (int)ft;
 
-	m_image_a.reset ( m_image_b.release () );
-	m_image_b.reset ( image );
+	m_pixmap_a.reset ( m_pixmap_b.release () );
+	m_pixmap_b.reset ( pixmap );
 
-	if ( false == global.image_pair.both_loaded () )
+	if ( false == both_loaded () )
 	{
-		return 1;
+		return -1;
 	}
 
-	if (	false == global.image_pair.both_match () ||
-		global.image_pair.prepare_output ()
-		)
+	if ( false == both_match () || prepare_output ( img ) )
 	{
-		global.i_error = 1;	// Bail out, error already reported
 		return 1;
 	}
 
 	return 0;		// Success - loaded & prepared OK
 }
 
-bool ImagePair::both_loaded ()
+bool ImagePair::both_loaded () const
 {
-	if ( get_image_a () && get_image_b () )
+	if ( get_pixmap_a () && get_pixmap_b () )
 	{
 		return true;
 	}
@@ -63,17 +62,18 @@ bool ImagePair::both_loaded ()
 	return false;
 }
 
-bool ImagePair::both_match ()
+bool ImagePair::both_match () const
 {
-	mtPixy::Image * const a = get_image_a ();
-	mtPixy::Image * const b = get_image_b ();
+	mtPixmap const * const a = get_pixmap_a ();
+	mtPixmap const * const b = get_pixmap_b ();
 
 	if (	a && b
-		&& a->get_width ()	== b->get_width ()
-		&& a->get_height ()	== b->get_height ()
-		&& a->get_type ()	== b->get_type ()
-		&& a->get_canvas ()
-		&& b->get_canvas ()
+		&& pixy_pixmap_get_width (a) == pixy_pixmap_get_width (b)
+		&& pixy_pixmap_get_height (a) == pixy_pixmap_get_height (b)
+		&& pixy_pixmap_get_bytes_per_pixel (a) ==
+			pixy_pixmap_get_bytes_per_pixel (b)
+		&& pixy_pixmap_get_canvas (a)
+		&& pixy_pixmap_get_canvas (b)
 		)
 	{
 		return true;
@@ -84,28 +84,24 @@ bool ImagePair::both_match ()
 	return false;
 }
 
-int ImagePair::prepare_output ()
+int ImagePair::prepare_output ( mtPixmap ** const dup ) const
 {
-	mtPixy::Image * image = get_image_a ();
+	mtPixmap * pixmap = get_pixmap_a ();
 
-	if ( ! image )
+	if ( ! pixmap )
 	{
 		std::cerr << "No image to duplicate.\n";
-		global.i_error = 1;	// Bail out
-
 		return 1;
 	}
 
-	image = image->duplicate ();
-	if ( ! image )
+	pixmap = pixy_pixmap_duplicate ( pixmap );
+	if ( ! pixmap )
 	{
 		std::cerr << "Unable to duplicate image.\n";
-		global.i_error = 1;	// Bail out
-
 		return 1;
 	}
 
-	global.set_image ( image );
+	*dup = pixmap;
 
 	return 0;
 }

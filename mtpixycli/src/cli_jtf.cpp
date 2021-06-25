@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,56 +19,57 @@
 
 
 
-int jtf_help (
+int Backend::jtf_help (
 	char	const * const *	const	args
 	)
 {
-	return backend.get_help ( args );
+	return get_help ( args );
 }
 
-int jtf_info (
+int Backend::jtf_info (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
 #define PFHEAD "%-25s : "
 
-	char const * const fn = backend.file().get_filename ();
-	char const * const ft = mtPixy::File::type_text (
-					backend.file().get_filetype () );
+	char const * const fn = file().get_filename ();
+	char const * const ft = pixy_file_type_text ( file().get_filetype () );
 
-	printf ( PFHEAD "%i\n", "File slot #", backend.get_file_number () );
+	printf ( PFHEAD "%i\n", "File slot #", get_file_number () );
 	printf ( PFHEAD "'%s'\n", "File name", fn ? fn : "" );
 	printf ( PFHEAD "%s\n", "File type", ft ? ft : "" );
-	printf ( PFHEAD "%i\n", "Modified", backend.file().get_modified () );
+	printf ( PFHEAD "%i\n", "Modified", file().get_modified () );
 
 	char		buf[128];
-	mtPixy::Image * im = backend.file().get_image ();
+	mtPixmap	const * pixmap = file().get_pixmap ();
 
-	mtPixy::image_print_geometry ( im, buf, sizeof ( buf ) );
+	pixy_pixmap_print_geometry ( pixmap, buf, sizeof ( buf ) );
 	printf ( PFHEAD "%s\n", "Image geometry", buf );
 
-	if ( im )
+	if ( pixmap )
 	{
 		printf ( PFHEAD "%i + %i\n", "Undo + Redo",
-			backend.file().get_undo_steps (),
-			backend.file().get_redo_steps () );
+			file().get_undo_steps (),
+			file().get_redo_steps () );
 
 		printf ( PFHEAD "%.1f MB\n", "Undo Memory",
-			backend.file().get_undo_mb () );
+			file().get_undo_mb () );
 
-		int		urp, pnip, pt;
-		int		pf [ mtPixy::Palette::COLOR_TOTAL_MAX ];
+		int	urp, pnip, pt;
+		int	pf [ PIXY_PALETTE_COLOR_TOTAL_MAX ];
 
-		if ( im->get_information ( urp, pnip, pf, pt ) )
+		if ( pixy_pixmap_get_information( pixmap, &urp, &pnip, pf, &pt))
 		{
 			printf ( "Error analysing image\n" );
 		}
 		else
 		{
-			int const ca = backend.file().brush.get_color_a_index();
-			int const cb = backend.file().brush.get_color_b_index();
-			char * mask = backend.file().palette_mask.color;
-			mtPixy::Color * col = im->get_palette ()->get_color ();
+			int const ca = file().brush.get_color_a_index();
+			int const cb = file().brush.get_color_b_index();
+			char * mask = file().palette_mask.color;
+			mtColor const * const col =
+				&pixy_pixmap_get_palette_const ( pixmap )->
+				color[0];
 
 
 			printf ( PFHEAD "%i\n", "Unique RGB Pixels", urp );
@@ -103,81 +104,79 @@ int jtf_info (
 		}
 	}
 
-	im = backend.clipboard.get_image ();
-	mtPixy::image_print_geometry ( im, buf, sizeof(buf) );
+	buf[0] = 0;
+	pixmap = clipboard.get_pixmap ();
+	pixy_pixmap_print_geometry ( pixmap, buf, sizeof(buf) );
 	printf ( PFHEAD "%s\n", "Clipboard", buf );
 
 	return 0;
 }
 
-int jtf_load (
+int Backend::jtf_load (
 	char	const * const *	const	args
 	)
 {
-	return backend.file().load_image ( args[0], 1, 3 );
+	return file().load_image ( args[0], 1, 3, "" );
 }
 
-int jtf_new (
+int Backend::jtf_new (
 	char	const * const *	const	args
 	)
 {
 	int			w, h, im_type;
 	mtKit::CharInt	const	chint_tab[] = {
-				{ "rgb",	mtPixy::Image::TYPE_RGB },
-				{ "indexed",	mtPixy::Image::TYPE_INDEXED },
+				{ "rgb",	PIXY_PIXMAP_BPP_RGB },
+				{ "indexed",	PIXY_PIXMAP_BPP_INDEXED },
 				{ NULL, 0 }
 				};
 
 
-	if (	mtKit::cli_parse_int ( args[0], w, mtPixy::Image::WIDTH_MIN,
-			mtPixy::Image::WIDTH_MAX )
-		|| mtKit::cli_parse_int ( args[1], h, mtPixy::Image::HEIGHT_MIN,
-			mtPixy::Image::HEIGHT_MAX )
+	if (	mtKit::cli_parse_int ( args[0], w, PIXY_PIXMAP_WIDTH_MIN,
+			PIXY_PIXMAP_WIDTH_MAX )
+		|| mtKit::cli_parse_int ( args[1], h, PIXY_PIXMAP_HEIGHT_MIN,
+			PIXY_PIXMAP_HEIGHT_MAX )
 		|| mtKit::cli_parse_charint ( args[2], chint_tab, im_type )
 		)
 	{
 		return 1;
 	}
 
-	return backend.file().new_image((mtPixy::Image::Type)im_type, w, h, 1,
-		3 );
+	return file().new_image ( im_type, w, h, 1, 3, "" );
 }
 
-int jtf_quit (
+int Backend::jtf_quit (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	backend.exit.abort ();
+	exit.abort ();
 
 	return 0;
 }
 
-int jtf_redo (
+int Backend::jtf_redo (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().redo () );
+	return operation_update ( file().redo () );
 }
 
-static int prep_save (
-	int			&comp,
-	mtPixy::File::Type	&ft
+int Backend::prep_save (
+	int		&comp,
+	int		&ft
 	)
 {
 	comp = 6;
-	ft = backend.file().get_filetype ();
+	ft = file().get_filetype ();
 
 	switch ( ft )
 	{
-	case mtPixy::File::TYPE_JPEG:
+	case PIXY_FILE_TYPE_JPEG:
 		comp = 85;
 		break;
 
-	case mtPixy::File::TYPE_BMP:
-	case mtPixy::File::TYPE_BP24:
-	case mtPixy::File::TYPE_GIF:
-	case mtPixy::File::TYPE_PNG:
-	case mtPixy::File::TYPE_PIXY:
+	case PIXY_FILE_TYPE_BMP:
+	case PIXY_FILE_TYPE_GIF:
+	case PIXY_FILE_TYPE_PNG:
 		comp = 6;
 		break;
 
@@ -188,41 +187,39 @@ static int prep_save (
 	return 0;
 }
 
-int jtf_save (
+int Backend::jtf_save (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	int			comp;
-	mtPixy::File::Type	ft;
+	int	comp;
+	int	ft;
 
 	if ( prep_save ( comp, ft ) )
 	{
 		return 1;
 	}
 
-	char	const	* fn = backend.file().get_filename ();
+	char	const	* fn = file().get_filename ();
 
-	return backend.file().save_image ( fn, ft, comp );
+	return file().save_image ( fn, ft, comp );
 }
 
-int jtf_save_as (
+int Backend::jtf_save_as (
 	char	const * const *	const	args
 	)
 {
-	int			comp;
-	mtPixy::File::Type	ft;
+	int	comp;
+	int	ft;
 
 	prep_save ( comp, ft );
 
 	if ( args[1] )
 	{
 		mtKit::CharInt	const	chint_tab[] = {
-				{ "bmp",	mtPixy::File::TYPE_BMP },
-				{ "bp24",	mtPixy::File::TYPE_BP24 },
-				{ "gif",	mtPixy::File::TYPE_GIF },
-				{ "jpeg",	mtPixy::File::TYPE_JPEG },
-				{ "png",	mtPixy::File::TYPE_PNG },
-				{ "pixy",	mtPixy::File::TYPE_PIXY },
+				{ "bmp",	PIXY_FILE_TYPE_BMP },
+				{ "gif",	PIXY_FILE_TYPE_GIF },
+				{ "jpeg",	PIXY_FILE_TYPE_JPEG },
+				{ "png",	PIXY_FILE_TYPE_PNG },
 				{ NULL, 0 }
 				};
 		int		fti;
@@ -232,11 +229,11 @@ int jtf_save_as (
 			return 1;
 		}
 
-		ft = (mtPixy::File::Type)fti;
+		ft = fti;
 
 		if ( ! args[2] )
 		{
-			if ( ft == mtPixy::File::TYPE_JPEG )
+			if ( ft == PIXY_FILE_TYPE_JPEG )
 			{
 				comp = 85;
 			}
@@ -245,7 +242,7 @@ int jtf_save_as (
 		{
 			int	cmin = 0, cmax = 9;
 
-			if ( ft == mtPixy::File::TYPE_JPEG )
+			if ( ft == PIXY_FILE_TYPE_JPEG )
 			{
 				cmax = 100;
 			}
@@ -257,17 +254,17 @@ int jtf_save_as (
 		}
 	}
 
-	return backend.file().save_image ( args[0], ft, comp );
+	return file().save_image ( args[0], ft, comp );
 }
 
-int jtf_save_undo (
+int Backend::jtf_save_undo (
 	char	const * const *	const	args
 	)
 {
-	return backend.file().export_undo_images ( args[0] );
+	return file().export_undo_images ( args[0] );
 }
 
-int jtf_text (
+int Backend::jtf_text (
 	char	const * const *	const	args
 	)
 {
@@ -298,14 +295,14 @@ int jtf_text (
 		eff[res] = 1;
 	}
 
-	return backend.file().clipboard_render_text ( backend.clipboard,
+	return file().clipboard_render_text ( clipboard,
 		args[0], args[1], size, eff[0], eff[1], eff[2], eff[3] );
 }
 
-int jtf_undo (
+int Backend::jtf_undo (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().undo () );
+	return operation_update ( file().undo () );
 }
 

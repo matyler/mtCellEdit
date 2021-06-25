@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="Qt5 Mark Tyler's point Cloud RULer"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('libmtkit' 'libmtpixy' 'libmtqex5' 'mesa' 'qt5-base' 'sqlite')
+depends=('libmtkit' 'libmtpixy' 'libmtgin' 'libmtqex5' 'mesa' 'qt5-base' 'sqlite')
 install=mtcrul_desktop.install
 source=($pkgname-$pkgver.tar.gz)
 md5sums

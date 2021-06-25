@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -35,26 +35,16 @@ void CloudView::mouse_camera (
 
 	if ( (event->buttons () & Qt::RightButton) )
 	{
-		double const nudge = 1.0/8.0;
+		double const nudge = scale / 8.0 / 4.0;
 
-		set_xrotation ( m_camera.get_rotX() + scale * nudge * my / 4.0);
-		set_zrotation ( m_camera.get_rotZ() - scale * nudge * mx / 4.0);
+		set_xrotation ( m_camera.get_rot_x() + nudge * my );
+		set_zrotation ( m_camera.get_rot_z() - nudge * mx );
 	}
 	else
 	{
-		double const nudge = m_view_nudge;
-		QMatrix4x4 camera;
-		get_camera_matrix ( camera );
-		QMatrix3x3 const normal = camera.normalMatrix ();
-		float const * const d = normal.data ();
+		double const nudge = m_view_nudge * scale;
 
-		double const dx = -mx * (double)d[0] + my * (double)d[1];
-		double const dy = -mx * (double)d[3] + my * (double)d[4];
-		double const dz = -mx * (double)d[6] + my * (double)d[7];
-
-		m_camera.set_x ( m_camera.get_x() + scale * nudge * dx );
-		m_camera.set_y ( m_camera.get_y() + scale * nudge * dy );
-		m_camera.set_z ( m_camera.get_z() + scale * nudge * dz );
+		m_camera.move ( -mx * nudge, my * nudge, 0 );
 
 		emit camera_changed ();
 	}
@@ -87,87 +77,63 @@ void CloudView::keypress_camera ( QKeyEvent * const event )
 
 	if ( (event->modifiers() & Qt::ControlModifier) )
 	{
-		double const nudge = 1.0/8.0;
+		double const nudge = (double)scale / 8.0;
 
 		switch ( event->key () )
 		{
 		case Qt::Key_Up:
-			set_xrotation ( m_camera.get_rotX() + scale * nudge );
+			set_xrotation ( m_camera.get_rot_x() + nudge );
 			break;
 
 		case Qt::Key_Down:
-			set_xrotation ( m_camera.get_rotX() - scale * nudge );
+			set_xrotation ( m_camera.get_rot_x() - nudge );
 			break;
 
 		case Qt::Key_Left:
-			set_zrotation ( m_camera.get_rotZ() - scale * nudge );
+			set_zrotation ( m_camera.get_rot_z() - nudge );
 			break;
 
 		case Qt::Key_Right:
-			set_zrotation ( m_camera.get_rotZ() + scale * nudge );
+			set_zrotation ( m_camera.get_rot_z() + nudge );
 			break;
-
-		default:
-			return;
 		}
 
 		return;
 	}
 
-	QMatrix4x4 camera;
-	get_camera_matrix ( camera );
-
-	QMatrix3x3 const normal = camera.normalMatrix ();
-	float const * const d = normal.data ();
-
-	double dx = 0.0, dy = 0.0, dz = 0.0;
+	double const nudge = scale * m_view_nudge;
 
 	switch ( event->key () )
 	{
 	case Qt::Key_PageUp:
-		dx = -d[2];
-		dy = -d[5];
-		dz = -d[8];
+		m_camera.move ( 0, 0, nudge );
 		break;
 
 	case Qt::Key_PageDown:
-		dx = d[2];
-		dy = d[5];
-		dz = d[8];
+		m_camera.move ( 0, 0, -nudge );
 		break;
 
 	case Qt::Key_Up:
-		dx = d[1];
-		dy = d[4];
-		dz = d[7];
+		m_camera.move ( 0, nudge, 0 );
 		break;
 
 	case Qt::Key_Down:
-		dx = -d[1];
-		dy = -d[4];
-		dz = -d[7];
+		m_camera.move ( 0, -nudge, 0 );
 		break;
 
 	case Qt::Key_Left:
-		dx = -d[0];
-		dy = -d[3];
-		dz = -d[6];
+		m_camera.move ( -nudge, 0, 0 );
 		break;
 
 	case Qt::Key_Right:
-		dx = d[0];
-		dy = d[3];
-		dz = d[6];
+		m_camera.move ( nudge, 0, 0 );
 		break;
 
 	default:
 		// Nothing to do so let the base class handle this event instead
 		QWidget::keyPressEvent ( event );
+		return;
 	}
-
-	m_camera.set_x ( m_camera.get_x() + scale * m_view_nudge * dx );
-	m_camera.set_y ( m_camera.get_y() + scale * m_view_nudge * dy );
-	m_camera.set_z ( m_camera.get_z() + scale * m_view_nudge * dz );
 
 	emit camera_changed ();
 }

@@ -21,62 +21,101 @@
 
 void Backend::prefs_init ()
 {
-	mtPrefTable	const	prefs_table[] = {
-{ PREFS_WINDOW_X, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_Y, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_W, MTKIT_PREF_TYPE_INT, "800", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_H, MTKIT_PREF_TYPE_INT, "600", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_MAXIMIZED, MTKIT_PREF_TYPE_INT, "1", NULL, NULL, 0, NULL, NULL },
-{ PREFS_WINDOW_STATE, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_WINDOW_X, mprefs.window_x, 50 );
+	uprefs.add_int ( PREFS_WINDOW_Y, mprefs.window_y, 50 );
+	uprefs.add_int ( PREFS_WINDOW_W, mprefs.window_w, 800 );
+	uprefs.add_int ( PREFS_WINDOW_H, mprefs.window_h, 600 );
+	uprefs.add_int ( PREFS_WINDOW_MAXIMIZED, mprefs.window_maximized, 1 );
+	uprefs.add_double ( PREFS_WINDOW_FILE_LIST_SPLIT,
+		mprefs.window_file_list_split, 0.5, 0.0, 1.0 );
+	uprefs.add_string ( PREFS_WINDOW_STATE, mprefs.window_state, "" );
 
-{ PREFS_CURSOR_NUDGE_PIXELS, MTKIT_PREF_TYPE_INT, "16", NULL, NULL, 0, "1	4096", NULL },
-{ PREFS_CURSOR_BRUSH_OPACITY, MTKIT_PREF_TYPE_DOUBLE, "0.4", NULL, NULL, 0, "0.0	1.0", NULL },
+	uprefs.set_invisible ( PREFS_WINDOW_X );
+	uprefs.set_invisible ( PREFS_WINDOW_Y );
+	uprefs.set_invisible ( PREFS_WINDOW_W );
+	uprefs.set_invisible ( PREFS_WINDOW_H );
+	uprefs.set_invisible ( PREFS_WINDOW_MAXIMIZED );
+	uprefs.set_invisible ( PREFS_WINDOW_FILE_LIST_SPLIT );
+	uprefs.set_invisible ( PREFS_WINDOW_STATE );
 
-{ PREFS_CANVAS_EASEL_RGB, MTKIT_PREF_TYPE_RGB, "11842740", NULL, NULL, 0, NULL, NULL },
-{ PREFS_CANVAS_ZOOM_GRID_GREY, MTKIT_PREF_TYPE_INT, "50", NULL, NULL, 0, "0	255", NULL },
-{ PREFS_CANVAS_ZOOM_GRID_SHOW, MTKIT_PREF_TYPE_BOOL, "1", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_CURSOR_NUDGE_PIXELS, mprefs.cursor_nudge_pixels,
+		16, 1, 4096 );
+	uprefs.add_double ( PREFS_CURSOR_BRUSH_OPACITY,
+		mprefs.cursor_brush_opacity, 0.4, 0.0, 1.0 );
 
-{ PREFS_FILE_RECENT_MAXLEN, MTKIT_PREF_TYPE_INT, "80", NULL, NULL, 0, NULL, NULL },
-{ PREFS_FILE_NEW_WIDTH, MTKIT_PREF_TYPE_INT, "256", NULL, NULL, 0, NULL, NULL },
-{ PREFS_FILE_NEW_HEIGHT, MTKIT_PREF_TYPE_INT, "192", NULL, NULL, 0, NULL, NULL },
-{ PREFS_FILE_NEW_TYPE, MTKIT_PREF_TYPE_INT, "2", NULL, NULL, 0, NULL, NULL },
-{ PREFS_FILE_COMPRESSION_JPEG, MTKIT_PREF_TYPE_INT, "85", NULL, NULL, 0, "1	100", NULL },
-{ PREFS_FILE_COMPRESSION_PNG, MTKIT_PREF_TYPE_INT, "6", NULL, NULL, 0, "0	9", NULL },
+	uprefs.add_rgb ( PREFS_CANVAS_EASEL_RGB, mprefs.canvas_easel_rgb,
+		11842740 );
+	uprefs.add_int ( PREFS_CANVAS_ZOOM_GRID_GREY,
+		mprefs.canvas_zoom_grid_grey, 50, 0, 255 );
+	uprefs.add_bool ( PREFS_CANVAS_ZOOM_GRID_SHOW,
+		mprefs.canvas_zoom_grid_show, 1 );
+	uprefs.set_invisible ( PREFS_CANVAS_ZOOM_GRID_SHOW );
 
-{ PREFS_HELP_FILE, MTKIT_PREF_TYPE_FILE, DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html", NULL, NULL, 0, NULL, NULL },
-{ PREFS_HELP_BROWSER, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_FILE_RECENT_MAXLEN, mprefs.file_recent_maxlen,
+		80 );
+	uprefs.add_int ( PREFS_FILE_NEW_WIDTH, mprefs.file_new_width, 256 );
+	uprefs.add_int ( PREFS_FILE_NEW_HEIGHT, mprefs.file_new_height, 192 );
+	uprefs.add_int ( PREFS_FILE_NEW_TYPE, mprefs.file_new_type, 2 );
+	uprefs.add_int ( PREFS_FILE_COMPRESSION_JPEG,
+		mprefs.file_compression_jpeg, 85, 1, 100 );
+	uprefs.add_int ( PREFS_FILE_COMPRESSION_PNG,
+		mprefs.file_compression_png, 6, 0, 9 );
+	uprefs.add_filename ( PREFS_FILE_NEW_PALETTE_FILE,
+		mprefs.file_new_palette_file, "" );
+	uprefs.add_int ( PREFS_FILE_NEW_PALETTE_NUM,
+		mprefs.file_new_palette_num, 3, 2, 6 );
+	uprefs.add_option ( PREFS_FILE_NEW_PALETTE_TYPE,
+		mprefs.file_new_palette_type, 1, { "Uniform", "Balanced",
+		"File" } );
 
-{ PREFS_FILE_NEW_PALETTE_NUM, MTKIT_PREF_TYPE_INT, "3", NULL, NULL, 0, "2	6", NULL },
-{ PREFS_FILE_NEW_PALETTE_TYPE, MTKIT_PREF_TYPE_OPTION, "1", NULL, NULL, 0, "Uniform	Balanced", NULL },
+	uprefs.set_invisible ( PREFS_FILE_NEW_WIDTH );
+	uprefs.set_invisible ( PREFS_FILE_NEW_HEIGHT );
+	uprefs.set_invisible ( PREFS_FILE_NEW_TYPE );
+	uprefs.set_invisible ( PREFS_FILE_NEW_PALETTE_FILE );
+	uprefs.set_invisible ( PREFS_FILE_NEW_PALETTE_NUM );
+	uprefs.set_invisible ( PREFS_FILE_NEW_PALETTE_TYPE );
 
-{ PREFS_PALETTE_NUMBER_OPACITY, MTKIT_PREF_TYPE_DOUBLE, "0.4", NULL, NULL, 0, "0.0	1.0", NULL },
+	uprefs.add_string ( PREFS_HELP_FILE, mprefs.help_file,
+		DATA_INSTALL "/doc/" BIN_NAME "/en_GB/chap_00.html" );
+	uprefs.add_string ( PREFS_HELP_BROWSER, mprefs.help_browser, "" );
 
-{ PREFS_UI_SCALE, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, "0	10", NULL },
-{ PREFS_UI_SCALE_PALETTE, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, "0	10", NULL },
+	uprefs.add_double ( PREFS_PALETTE_NUMBER_OPACITY,
+		mprefs.palette_number_opacity, 0.4, 0.0, 1.0 );
 
-{ PREFS_TEXT_FONT_NAME, MTKIT_PREF_TYPE_STR, "Sans", NULL, NULL, 0, NULL, NULL },
-{ PREFS_TEXT_FONT_SIZE, MTKIT_PREF_TYPE_INT, "12", NULL, NULL, 0, NULL, NULL },
-{ PREFS_TEXT_FONT_BOLD, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-{ PREFS_TEXT_FONT_ITALIC, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-{ PREFS_TEXT_FONT_UNDERLINE, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-{ PREFS_TEXT_FONT_STRIKETHROUGH, MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-{ PREFS_TEXT_ENTRY, MTKIT_PREF_TYPE_STR, "Enter Text Here", NULL, NULL, 0, NULL, NULL },
+	uprefs.add_int ( PREFS_UI_SCALE, mprefs.ui_scale, 0, 0, 10 );
+	uprefs.add_int ( PREFS_UI_SCALE_PALETTE, mprefs.ui_scale_palette, 0, 0,
+		10 );
 
-{ PREFS_UNDO_MB_MAX, MTKIT_PREF_TYPE_INT, "1024", NULL, NULL, 0, "1	10000", NULL },
-{ PREFS_UNDO_STEPS_MAX, MTKIT_PREF_TYPE_INT, "100", NULL, NULL, 0, "1	1000", NULL },
+	uprefs.add_string ( PREFS_TEXT_FONT_NAME, mprefs.text_font_name,"Sans");
+	uprefs.add_int ( PREFS_TEXT_FONT_SIZE, mprefs.text_font_size, 12 );
+	uprefs.add_int ( PREFS_TEXT_FONT_BOLD, mprefs.text_font_bold, 0 );
+	uprefs.add_int ( PREFS_TEXT_FONT_ITALIC, mprefs.text_font_italic, 0 );
+	uprefs.add_int ( PREFS_TEXT_FONT_UNDERLINE, mprefs.text_font_underline,
+		0 );
+	uprefs.add_int ( PREFS_TEXT_FONT_STRIKETHROUGH,
+		mprefs.text_font_strikethrough, 0 );
+	uprefs.add_string ( PREFS_TEXT_ENTRY, mprefs.text_entry,
+		"Enter Text Here" );
 
-{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-		};
+	uprefs.set_invisible ( PREFS_TEXT_FONT_NAME );
+	uprefs.set_invisible ( PREFS_TEXT_FONT_SIZE );
+	uprefs.set_invisible ( PREFS_TEXT_FONT_BOLD );
+	uprefs.set_invisible ( PREFS_TEXT_FONT_ITALIC );
+	uprefs.set_invisible ( PREFS_TEXT_FONT_UNDERLINE );
+	uprefs.set_invisible ( PREFS_TEXT_FONT_STRIKETHROUGH );
+	uprefs.set_invisible ( PREFS_TEXT_ENTRY );
 
+	uprefs.add_int ( PREFS_UNDO_MB_MAX, mprefs.undo_mb_max, 1024, 1, 10000);
+	uprefs.add_int ( PREFS_UNDO_STEPS_MAX, mprefs.undo_steps_max, 100, 1,
+		1000 );
 
-	prefs.addTable ( prefs_table );
-	prefs.initWindowPrefs ();
+	uprefs.add_ui_defaults ( mprefs.ui_editor );
 
-	recent_image.init_prefs ( &prefs );
+	mprefs.recent_image.init ( uprefs, PREFS_FILE_RECENT_IMAGE, 20 );
 
-	prefs.load ( m_prefs_filename, BIN_NAME );
+	uprefs.load ( m_prefs_filename, BIN_NAME );
 
-	file.set_undo_mb_max ( prefs.getInt ( PREFS_UNDO_MB_MAX ) );
-	file.set_undo_steps_max ( prefs.getInt ( PREFS_UNDO_STEPS_MAX ) );
+	file.set_undo_mb_max ( mprefs.undo_mb_max );
+	file.set_undo_steps_max ( mprefs.undo_steps_max );
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -30,15 +30,20 @@ void mtPixyUI::PaletteMask::clear ()
 }
 
 bool mtPixyUI::PaletteMask::is_masked (
-	mtPixy::Image	* const	img,
-	int	const	x,
-	int	const	y
+	mtPixmap	* const	img,
+	int		const	x,
+	int		const	y
 	) const
 {
-	int		const	bpp = img->get_canvas_bpp ();
-	int		const	w = img->get_width ();
-	int		const	h = img->get_height ();
-	unsigned char	* const	s = img->get_canvas ();
+	if ( ! img )
+	{
+		return false;
+	}
+
+	int		const	bpp = pixy_pixmap_get_bytes_per_pixel ( img );
+	int		const	w = pixy_pixmap_get_width ( img );
+	int		const	h = pixy_pixmap_get_height ( img );
+	unsigned char	* const	s = pixy_pixmap_get_canvas ( img );
 
 
 	if ( x >= w || y >= h || ! s )
@@ -65,9 +70,9 @@ bool mtPixyUI::PaletteMask::is_masked (
 		unsigned char	const	r = s [ 3*(x + y*w) + 0 ];
 		unsigned char	const	g = s [ 3*(x + y*w) + 1 ];
 		unsigned char	const	b = s [ 3*(x + y*w) + 2 ];
-		mtPixy::Palette		* const	pal = img->get_palette ();
-		mtPixy::Color	const * const	col = pal->get_color ();
-		int			const	tot = pal->get_color_total ();
+		mtPalette	* const	pal = pixy_pixmap_get_palette ( img );
+		mtColor	const * const	col = &pal->color[0];
+		int		const	tot = pal->size;
 
 
 		for ( int i = 0; i < tot; i++ )
@@ -109,17 +114,29 @@ static int pal_tree_cmp (
 }
 
 void mtPixyUI::PaletteMask::protect (
-	mtPixy::Image	* const	src,
-	mtPixy::Image	* const	dest,
+	mtPixmap const * const	src,
+	mtPixmap	* const	dest,
 	int		const	x,
 	int		const	y,
 	int		const	w,
 	int		const	h
 	) const
 {
-	int	const	coltot = src->get_palette ()->get_color_total ();
-	int		i;
+	if ( ! src || ! dest || ! src->canvas || ! dest->canvas )
+	{
+		return;
+	}
 
+	int	const	bpp = pixy_pixmap_get_bytes_per_pixel ( src );
+	int	const	dest_bpp = pixy_pixmap_get_bytes_per_pixel ( dest );
+
+	if ( bpp != dest_bpp )
+	{
+		return;
+	}
+
+	int	const	coltot = pixy_pixmap_get_palette_size ( src );
+	int		i;
 
 	for ( i = 0; i < coltot; i++ )
 	{
@@ -135,23 +152,19 @@ void mtPixyUI::PaletteMask::protect (
 		return;
 	}
 
-
-	unsigned char	* const	s = src->get_canvas ();
-	unsigned char	* const	d = dest->get_canvas ();
-	unsigned char		* sc, * dc;
-	int		const	bpp = src->get_canvas_bpp ();
-	int		const	iw = src->get_width ();
+	unsigned char	const * const	s = pixy_pixmap_get_canvas ( src );
+	unsigned char	* const	d = pixy_pixmap_get_canvas ( dest );
+	int		const	iw = pixy_pixmap_get_width ( src );
 	int		const	ix2 = x + w;
 	int		const	iy2 = y + h;
 	int			ix, iy, rgb;
-
 
 	if ( bpp == 1 )
 	{
 		for ( iy = y; iy < iy2; iy++ )
 		{
-			sc = s + iy * iw;
-			dc = d + iy * iw;
+			unsigned char	const * const	sc = s + iy * iw;
+			unsigned char		* const	dc = d + iy * iw;
 
 			for ( ix = x; ix < ix2; ix++ )
 			{
@@ -166,8 +179,8 @@ void mtPixyUI::PaletteMask::protect (
 	{
 		mtTree		* pal_tree;	// Key=RGB Data=Palette Index
 		mtTreeNode	* tnode;
-		mtPixy::Color	* const	pal = src->get_palette ()->get_color ();
-
+		mtColor	const * const pal = &pixy_pixmap_get_palette_const (src)
+					->color[0];
 
 		pal_tree = mtkit_tree_new ( pal_tree_cmp, NULL );
 		if ( ! pal_tree )
@@ -179,7 +192,7 @@ void mtPixyUI::PaletteMask::protect (
 		{
 			if ( 0 != color[i] )
 			{
-				rgb = mtPixy::rgb_2_int ( pal[i].red,
+				rgb = pixy_rgb_2_int ( pal[i].red,
 					pal[i].green, pal[i].blue );
 
 				if ( 0 == mtkit_tree_node_add ( pal_tree,
@@ -195,12 +208,12 @@ void mtPixyUI::PaletteMask::protect (
 
 		for ( iy = y; iy < iy2; iy++ )
 		{
-			sc = s + (iy * iw + x) * 3;
-			dc = d + (iy * iw + x) * 3;
+			unsigned char	const	* sc = s + (iy * iw + x) * 3;
+			unsigned char		* dc = d + (iy * iw + x) * 3;
 
 			for ( ix = x; ix < ix2; ix++ )
 			{
-				rgb = mtPixy::rgb_2_int ( sc[0], sc[1], sc[2] );
+				rgb = pixy_rgb_2_int ( sc[0], sc[1], sc[2] );
 
 				tnode = mtkit_tree_node_find ( pal_tree,
 					(void *)(intptr_t)rgb );

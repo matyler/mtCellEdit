@@ -1,3 +1,7 @@
+3.5	2021-6-25
+
+	* mtPixmap, mtPalette, mtColor, added.
+
 3.3	2019-5-25
 
 	* libmtPixyUI merged into libmtPixy.

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2018 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,11 +23,6 @@
 
 
 Backend::Backend ()
-	:
-	m_file_p	(),
-	m_file		(),
-	m_clipboard	(),
-	m_prefs		()
 {
 	ced_init ();
 
@@ -44,11 +39,14 @@ Backend::Backend ()
 	}
 
 	m_clipboard = cui_clip_new ();
+	if ( ! m_clipboard )
+	{
+		goto error;
+	}
 
-	if (	! m_clipboard	||
-		prefs_init ()	||
-		set_file ( 0 )
-		)
+	prefs_init ();
+
+	if ( set_file ( 0 ) )
 	{
 		goto error;
 	}
@@ -72,29 +70,6 @@ Backend::~Backend ()
 		cui_file_free ( m_file[i] );
 		m_file[i] = NULL;
 	}
-
-	prefs_free ();
-}
-
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const * const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
-
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
-
-	fprintf ( stderr, "\n" );
-
-	return 0;		// Keep parsing
 }
 
 int Backend::command_line (
@@ -106,16 +81,14 @@ int Backend::command_line (
 	int	show_about	= 1;
 	int	tab_text	= 0;
 
-	mtArg	const	arg_list[]	= {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ "q",		MTKIT_ARG_SWITCH, &show_about, 0, NULL },
-		{ "t",		MTKIT_ARG_SWITCH, &tab_text, 1, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
+	mtKit::Arg args;
 
+	args.add ( "-help",	show_version, 2 );
+	args.add ( "-version",	show_version, 1 );
+	args.add ( "q",		show_about, 0 );
+	args.add ( "t",		tab_text, 1 );
 
-	mtkit_arg_parse ( argc, argv, arg_list, NULL, error_func, NULL );
+	args.parse ( argc, argv );
 
 	switch ( show_version )
 	{
@@ -147,124 +120,6 @@ int Backend::command_line (
 	}
 
 	return 0;			// Continue program
-}
-
-static int init_table ( mtKit::CliTab &clitab )
-{
-	if (	0
-		|| clitab.add_item ( "about", jtf_about )
-		|| clitab.add_item ( "clear", jtf_clear )
-		|| clitab.add_item ( "clear content", jtf_clear_content )
-		|| clitab.add_item ( "clear prefs", jtf_clear_prefs )
-		|| clitab.add_item ( "clip flip_h", jtf_clip_flip_h )
-		|| clitab.add_item ( "clip flip_v", jtf_clip_flip_v )
-		|| clitab.add_item ( "clip load", jtf_clip_load, 1, 1,
-			"<OS FILENAME>" )
-		|| clitab.add_item ( "clip save", jtf_clip_save, 1, 1,
-			"<OS FILENAME>" )
-		|| clitab.add_item ( "clip rotate_a", jtf_clip_rotate_a )
-		|| clitab.add_item ( "clip rotate_c", jtf_clip_rotate_c )
-		|| clitab.add_item ( "clip transpose", jtf_clip_transpose )
-		|| clitab.add_item ( "copy", jtf_copy )
-		|| clitab.add_item ( "copy output", jtf_copy_output )
-		|| clitab.add_item ( "copy values", jtf_copy_values )
-		|| clitab.add_item ( "cut", jtf_cut )
-		|| clitab.add_item ( "delete column", jtf_delete_column )
-		|| clitab.add_item ( "delete graph", jtf_delete_graph )
-		|| clitab.add_item ( "delete row", jtf_delete_row )
-		|| clitab.add_item ( "delete sheet", jtf_delete_sheet )
-		|| clitab.add_item ( "duplicate sheet", jtf_duplicate_sheet )
-		|| clitab.add_item ( "export graph", jtf_export_graph, 1, 1,
-			"<OS FILENAME>" )
-		|| clitab.add_item ( "export output graph",
-			jtf_export_output_graph, 2, 2,
-			"<OS FILENAME> <FILETYPE>" )
-		|| clitab.add_item ( "export output sheet",
-			jtf_export_output_sheet, 2, 2,
-			"<OS FILENAME> <FILETYPE>" )
-		|| clitab.add_item ( "export sheet", jtf_export_sheet, 2, 2,
-			"<OS FILENAME> <FILETYPE>" )
-		|| clitab.add_item ( "find", jtf_find, 1, 5,
-			"<TEXT> [wild] [case] [value] [all]" )
-		|| clitab.add_item ( "help", jtf_help, 0, 100, "[ARG]..." )
-		|| clitab.add_item ( "import book", jtf_import_book, 1, 2,
-			"<OS FILENAME> [csv | tsv]" )
-		|| clitab.add_item ( "import graph", jtf_import_graph, 2, 2,
-			"<GRAPH NAME> <OS FILENAME>" )
-		|| clitab.add_item ( "info", jtf_info )
-		|| clitab.add_item ( "insert column", jtf_insert_column, 0, 1,
-			"[clip]" )
-		|| clitab.add_item ( "insert row", jtf_insert_row, 0, 1,
-			"[clip]" )
-		|| clitab.add_item ( "list files", jtf_list_files )
-		|| clitab.add_item ( "list graphs", jtf_list_graphs )
-		|| clitab.add_item ( "list sheets", jtf_list_sheets )
-		|| clitab.add_item ( "load", jtf_load, 1, 2,
-			"<OS FILENAME> [csv | tsv]" )
-		|| clitab.add_item ( "new", jtf_new_book )
-		|| clitab.add_item ( "new book", jtf_new_book )
-		|| clitab.add_item ( "new sheet", jtf_new_sheet )
-		|| clitab.add_item ( "paste", jtf_paste )
-		|| clitab.add_item ( "paste content", jtf_paste_content )
-		|| clitab.add_item ( "paste prefs", jtf_paste_prefs )
-		|| clitab.add_item ( "print", jtf_print )
-		|| clitab.add_item ( "print cell num", jtf_print_cell_num )
-		|| clitab.add_item ( "print cell text", jtf_print_cell_text )
-		|| clitab.add_item ( "print cell type", jtf_print_cell_type )
-		|| clitab.add_item ( "print prefs book", jtf_print_prefs_book)
-		|| clitab.add_item ( "print prefs cell", jtf_print_prefs_cell)
-		|| clitab.add_item ( "print prefs sheet",
-			jtf_print_prefs_sheet )
-		|| clitab.add_item ( "print prefs state",
-			jtf_print_prefs_state )
-		|| clitab.add_item ( "q", jtf_quit )
-		|| clitab.add_item ( "quit", jtf_quit )
-		|| clitab.add_item ( "recalc", jtf_recalc_sheet )
-		|| clitab.add_item ( "recalc book", jtf_recalc_book )
-		|| clitab.add_item ( "recalc sheet", jtf_recalc_sheet )
-		|| clitab.add_item ( "redo", jtf_redo )
-		|| clitab.add_item ( "rename graph", jtf_rename_graph, 1, 1,
-			"<NEW NAME>" )
-		|| clitab.add_item ( "rename sheet", jtf_rename_sheet, 1, 1,
-			"<NEW NAME>" )
-		|| clitab.add_item ( "save", jtf_save )
-		|| clitab.add_item ( "save as", jtf_save_as, 1, 2,
-			"<OS FILENAME> [FILETYPE]" )
-		|| clitab.add_item ( "select", jtf_select, 1, 1,
-			"< all | CELLREF[:CELLREF] >" )
-		|| clitab.add_item ( "set 2dyear", jtf_set_2dyear, 0, 1,
-			"[YEAR START]" )
-		|| clitab.add_item ( "set book", jtf_set_book, 1, 1,
-			"<INTEGER - BOOK NUMBER 0-4>" )
-		|| clitab.add_item ( "set cell", jtf_set_cell, 1, 1,
-			"<CELL CONTENT>" )
-		|| clitab.add_item ( "set graph", jtf_set_graph, 1, 1,
-			"<GRAPH NAME>" )
-		|| clitab.add_item ( "set prefs book", jtf_set_prefs_book,
-			2, 2, "<KEY> <DATA>" )
-		|| clitab.add_item ( "set prefs cell", jtf_set_prefs_cell,
-			2, 2, "<KEY> <DATA>" )
-		|| clitab.add_item ( "set prefs cellborder",
-			jtf_set_prefs_cellborder, 1, 1, "<DATA>" )
-		|| clitab.add_item ( "set prefs sheet", jtf_set_prefs_sheet,
-			2, 2, "<KEY> <DATA>" )
-		|| clitab.add_item ( "set prefs state", jtf_set_prefs_state,
-			2, 2, "<KEY> <DATA>" )
-		|| clitab.add_item ( "set sheet", jtf_set_sheet, 1, 1,
-			"<SHEET NAME>" )
-		|| clitab.add_item ( "set width", jtf_set_width, 1, 1,
-			"< auto | INTEGER >" )
-		|| clitab.add_item ( "sort column", jtf_sort_column, 1, 1,
-			"<EXPRESSION>" )
-		|| clitab.add_item ( "sort row", jtf_sort_row, 1, 1,
-			"<EXPRESSION>" )
-		|| clitab.add_item ( "undo", jtf_undo )
-		)
-	{
-		return 1;
-	}
-
-	return 0;
 }
 
 static void parse_as_formula (
@@ -303,9 +158,129 @@ static void parse_as_formula (
 	}
 }
 
+
+
+#define JTFUNC( X ) [this](char const * const * f ) { return jtf_ ## X (f); }
+
+
+
 void Backend::main_loop ()
 {
-	if ( init_table ( m_clitab ) )
+	if (	0
+		|| m_clitab.add_item ( "about", JTFUNC(about) )
+		|| m_clitab.add_item ( "clear", JTFUNC(clear) )
+		|| m_clitab.add_item ( "clear content", JTFUNC(clear_content) )
+		|| m_clitab.add_item ( "clear prefs", JTFUNC(clear_prefs) )
+		|| m_clitab.add_item ( "clip flip_h", JTFUNC(clip_flip_h) )
+		|| m_clitab.add_item ( "clip flip_v", JTFUNC(clip_flip_v) )
+		|| m_clitab.add_item ( "clip load", JTFUNC(clip_load), 1, 1,
+			"<OS FILENAME>" )
+		|| m_clitab.add_item ( "clip save", JTFUNC(clip_save), 1, 1,
+			"<OS FILENAME>" )
+		|| m_clitab.add_item ( "clip rotate_a", JTFUNC(clip_rotate_a) )
+		|| m_clitab.add_item ( "clip rotate_c", JTFUNC(clip_rotate_c) )
+		|| m_clitab.add_item ( "clip transpose", JTFUNC(clip_transpose))
+		|| m_clitab.add_item ( "copy", JTFUNC(copy) )
+		|| m_clitab.add_item ( "copy output", JTFUNC(copy_output) )
+		|| m_clitab.add_item ( "copy values", JTFUNC(copy_values) )
+		|| m_clitab.add_item ( "cut", JTFUNC(cut) )
+		|| m_clitab.add_item ( "delete column", JTFUNC(delete_column) )
+		|| m_clitab.add_item ( "delete graph", JTFUNC(delete_graph) )
+		|| m_clitab.add_item ( "delete row", JTFUNC(delete_row) )
+		|| m_clitab.add_item ( "delete sheet", JTFUNC(delete_sheet) )
+		|| m_clitab.add_item ( "duplicate sheet",
+			JTFUNC(duplicate_sheet) )
+		|| m_clitab.add_item ( "export graph", JTFUNC(export_graph),
+			1, 1, "<OS FILENAME>" )
+		|| m_clitab.add_item ( "export output graph",
+			JTFUNC(export_output_graph), 2, 2,
+			"<OS FILENAME> <FILETYPE>" )
+		|| m_clitab.add_item ( "export output sheet",
+			JTFUNC(export_output_sheet), 2, 2,
+			"<OS FILENAME> <FILETYPE>" )
+		|| m_clitab.add_item ( "export sheet", JTFUNC(export_sheet),
+			2, 2, "<OS FILENAME> <FILETYPE>" )
+		|| m_clitab.add_item ( "find", JTFUNC(find), 1, 5,
+			"<TEXT> [wild] [case] [value] [all]" )
+		|| m_clitab.add_item ( "help", JTFUNC(help), 0, 100, "[ARG]...")
+		|| m_clitab.add_item ( "import book", JTFUNC(import_book), 1, 2,
+			"<OS FILENAME> [csv | tsv]" )
+		|| m_clitab.add_item ( "import graph", JTFUNC(import_graph),
+			2, 2, "<GRAPH NAME> <OS FILENAME>" )
+		|| m_clitab.add_item ( "info", JTFUNC(info) )
+		|| m_clitab.add_item ( "insert column", JTFUNC(insert_column),
+			0, 1, "[clip]" )
+		|| m_clitab.add_item ( "insert row", JTFUNC(insert_row), 0, 1,
+			"[clip]" )
+		|| m_clitab.add_item ( "list files", JTFUNC(list_files) )
+		|| m_clitab.add_item ( "list graphs", JTFUNC(list_graphs) )
+		|| m_clitab.add_item ( "list sheets", JTFUNC(list_sheets) )
+		|| m_clitab.add_item ( "load", JTFUNC(load), 1, 2,
+			"<OS FILENAME> [csv | tsv]" )
+		|| m_clitab.add_item ( "new", JTFUNC(new_book) )
+		|| m_clitab.add_item ( "new book", JTFUNC(new_book) )
+		|| m_clitab.add_item ( "new sheet", JTFUNC(new_sheet) )
+		|| m_clitab.add_item ( "paste", JTFUNC(paste) )
+		|| m_clitab.add_item ( "paste content", JTFUNC(paste_content) )
+		|| m_clitab.add_item ( "paste prefs", JTFUNC(paste_prefs) )
+		|| m_clitab.add_item ( "print", JTFUNC(print) )
+		|| m_clitab.add_item ( "print cell num",
+			JTFUNC(print_cell_num) )
+		|| m_clitab.add_item ( "print cell text",
+			JTFUNC(print_cell_text) )
+		|| m_clitab.add_item ( "print cell type",
+			JTFUNC(print_cell_type) )
+		|| m_clitab.add_item ( "print prefs book",
+			JTFUNC(print_prefs_book) )
+		|| m_clitab.add_item ( "print prefs cell",
+			JTFUNC(print_prefs_cell) )
+		|| m_clitab.add_item ( "print prefs sheet",
+			JTFUNC(print_prefs_sheet) )
+		|| m_clitab.add_item ( "print prefs state",
+			JTFUNC(print_prefs_state) )
+		|| m_clitab.add_item ( "q", JTFUNC(quit) )
+		|| m_clitab.add_item ( "quit", JTFUNC(quit) )
+		|| m_clitab.add_item ( "recalc", JTFUNC(recalc_sheet) )
+		|| m_clitab.add_item ( "recalc book", JTFUNC(recalc_book) )
+		|| m_clitab.add_item ( "recalc sheet", JTFUNC(recalc_sheet) )
+		|| m_clitab.add_item ( "redo", JTFUNC(redo) )
+		|| m_clitab.add_item ( "rename graph", JTFUNC(rename_graph),
+			1, 1, "<NEW NAME>" )
+		|| m_clitab.add_item ( "rename sheet", JTFUNC(rename_sheet),
+			1, 1, "<NEW NAME>" )
+		|| m_clitab.add_item ( "save", JTFUNC(save) )
+		|| m_clitab.add_item ( "save as", JTFUNC(save_as), 1, 2,
+			"<OS FILENAME> [FILETYPE]" )
+		|| m_clitab.add_item ( "select", JTFUNC(select), 1, 1,
+			"< all | CELLREF[:CELLREF] >" )
+		|| m_clitab.add_item ( "set 2dyear", JTFUNC(set_2dyear), 0, 1,
+			"[YEAR START]" )
+		|| m_clitab.add_item ( "set book", JTFUNC(set_book), 1, 1,
+			"<INTEGER - BOOK NUMBER 0-4>" )
+		|| m_clitab.add_item ( "set cell", JTFUNC(set_cell), 1, 1,
+			"<CELL CONTENT>" )
+		|| m_clitab.add_item ( "set graph", JTFUNC(set_graph), 1, 1,
+			"<GRAPH NAME>" )
+		|| m_clitab.add_item ( "set prefs book", JTFUNC(set_prefs_book),
+			2, 2, "<KEY> <DATA>" )
+		|| m_clitab.add_item ( "set prefs cell", JTFUNC(set_prefs_cell),
+			2, 2, "<KEY> <DATA>" )
+		|| m_clitab.add_item ( "set prefs cellborder",
+			JTFUNC(set_prefs_cellborder), 1, 1, "<DATA>" )
+		|| m_clitab.add_item ( "set prefs sheet",
+			JTFUNC(set_prefs_sheet), 2, 2, "<KEY> <DATA>" )
+		|| m_clitab.add_item ( "set prefs state",
+			JTFUNC(set_prefs_state), 2, 2, "<KEY> <DATA>" )
+		|| m_clitab.add_item ( "set sheet", JTFUNC(set_sheet), 1, 1,
+			"<SHEET NAME>" )
+		|| m_clitab.add_item ( "set width", JTFUNC(set_width), 1, 1,
+			"< auto | INTEGER >" )
+		|| m_clitab.add_item ( "sort column", JTFUNC(sort_column), 1, 1,
+			"<EXPRESSION>" )
+		|| m_clitab.add_item ( "sort row", JTFUNC(sort_row), 1, 1,
+			"<EXPRESSION>" )
+		|| m_clitab.add_item ( "undo", JTFUNC(undo) )
+		)
 	{
 		exit.abort ();
 		exit.set_value ( 1 );
@@ -358,9 +333,7 @@ int Backend::get_help (
 	return m_clitab.print_help ( argv );
 }
 
-int Backend::undo_report_updates (
-	int	const	error
-	)
+int Backend::undo_report_updates ( int const error )
 {
 	if ( error < 0 )
 	{
@@ -435,14 +408,10 @@ void Backend::update_changes_chores ()
 	}
 }
 
-CedSheet * Backend::sheet (
-	bool	const	print_error
-	)
+CedSheet * Backend::sheet ( bool const print_error )
 {
-	CedSheet	* s;
+	CedSheet	* const s = cui_file_get_sheet ( m_file_p );
 
-
-	s = cui_file_get_sheet ( m_file_p );
 	if ( ! s && print_error )
 	{
 		fprintf ( stderr, "No sheet available.\n\n" );
@@ -451,14 +420,10 @@ CedSheet * Backend::sheet (
 	return s;
 }
 
-CedBookFile * Backend::graph (
-	bool	const	print_error
-	)
+CedBookFile * Backend::graph ( bool const print_error )
 {
-	CedBookFile	* g;
+	CedBookFile	* const g = cui_file_get_graph ( m_file_p );
 
-
-	g = cui_file_get_graph ( m_file_p );
 	if ( ! g && print_error )
 	{
 		fprintf ( stderr, "No graph available.\n\n" );
@@ -467,9 +432,7 @@ CedBookFile * Backend::graph (
 	return g;
 }
 
-int Backend::set_file (
-	int	const	n
-	)
+int Backend::set_file ( int const n )
 {
 	if ( n < 0 || n >= FILE_TOTAL )
 	{

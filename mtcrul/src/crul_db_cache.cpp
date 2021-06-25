@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 void Crul::DB::clear_cache ()
 {
-	m_db.empty_table ( DB_TABLE_CACHE_PTS );
-
 	clear_cache_index ( CACHE_TYPE_LOW );
 	clear_cache_index ( CACHE_TYPE_MEDIUM );
 	clear_cache_index ( CACHE_TYPE_HIGH );
@@ -41,14 +39,15 @@ char const * Crul::DB::get_cache_name ( int const type )
 }
 
 int Crul::DB::load_cache (
-	int			const	type,
-	std::vector<PointGL>	* const	cloud
+	int		const	type,
+	std::vector<mtGin::GL::VertexRGB> * const cloud
 	)
 {
-	char const * name = get_cache_name ( type );
+	char const * const name = get_cache_name ( type );
 
 	if ( ! name )
 	{
+		std::cerr << "DB::load_cache - no such type =" << type << "\n";
 		return 1;
 	}
 
@@ -83,55 +82,38 @@ int Crul::DB::load_cache (
 			return 0;
 		}
 
-		sql =	"SELECT "	DB_FIELD_MEM
-			" FROM "	DB_TABLE_CACHE_PTS
-			" WHERE "	DB_FIELD_ID	" = ?1"
-			" ORDER BY "	DB_FIELD_ITEM;
+		mtKit::ByteFileRead file;
+		std::string filename ( m_dir );
 
-		mtKit::SqliteGetRecord cache ( m_db, sql );
-		cache.stmt.bind_int64 ( 1, type );
+		filename += "cache_";
+		filename += name;
+		filename += ".bin";
 
-		int const vec_len = (int)sizeof((*cloud)[0]);
+		if ( file.open ( filename.c_str (), 0 ) )
+		{
+			std::cerr << "DB::load_cache - unable to open file "
+				<< filename << "\n";
+			return 1;
+		}
+
+		size_t const len = sizeof((*cloud)[0]);
 
 		cloud->resize ( (size_t)cache_tot );
 
-		int vec_todo = cache_tot;
 		int vec_done = 0;
-		PointGL * vec_dest = cloud->data ();
+		mtGin::GL::VertexRGB * dest = cloud->data ();
 
-		for ( int i = 0; cache.next () == 0; i++ )
+		for ( ; vec_done < cache_tot; vec_done++ )
 		{
-			void const * mem;
-			int memlen;
+			size_t const loaded = file.read ( dest, len );
 
-			if ( cache.get_blob ( &mem, memlen ) || memlen < 1 )
+			if ( loaded != len )
 			{
-				std::cerr << "Unable to get blob:"
-					<< " type = " << name
-					<< " item = " << i
-					<< "\n";
+				std::cerr << "Cache file ended prematurely\n";
 				break;
 			}
 
-			int const vec_items = memlen / vec_len;
-
-			if ( vec_items > vec_todo )
-			{
-				std::cerr << "Too much data in DB cache\n";
-				break;
-			}
-
-			if ( vec_items < 1 )
-			{
-				std::cerr << "Too little data in DB cache\n";
-				break;
-			}
-
-			memcpy ( vec_dest, mem, (size_t)vec_items * vec_len );
-
-			vec_todo -= vec_items;
-			vec_done += vec_items;
-			vec_dest += vec_items;
+			dest++;
 		}
 
 		if ( vec_done != cache_tot )
@@ -152,14 +134,15 @@ int Crul::DB::load_cache (
 }
 
 int Crul::DB::save_cache (
-	int				const	type,
-	std::vector<PointGL>	const * const	cloud
+	int					const	type,
+	std::vector<mtGin::GL::VertexRGB> const * const	cloud
 	)
 {
-	char const * name = get_cache_name ( type );
+	char const * const name = get_cache_name ( type );
 
 	if ( ! name )
 	{
+		std::cerr << "DB::save_cache - no such type =" << type << "\n";
 		return 1;
 	}
 
@@ -184,29 +167,32 @@ int Crul::DB::save_cache (
 		rec_idx.set_integer ( (sqlite3_int64)cloud->size () );
 		rec_idx.insert_record ();
 
-		mtKit::SqliteAddRecord rec_data ( m_db, DB_TABLE_CACHE_PTS );
+		mtKit::ByteFileWrite file;
+		std::string filename ( m_dir );
 
-		rec_data.add_field ( DB_FIELD_ID );
-		rec_data.add_field ( DB_FIELD_ITEM );
-		rec_data.add_field ( DB_FIELD_MEM );
-		rec_data.end_field ();
+		filename += "cache_";
+		filename += name;
+		filename += ".bin";
 
-		size_t todo = cloud->size ();
-		size_t offset = 0;
-		PointGL const * const mem = cloud->data ();
-
-		for ( int i = 0; todo > 0; i++ )
+		if ( file.open ( filename.c_str () ) )
 		{
-			size_t const items = MIN ( todo, DB_ITEM_SIZE );
-			size_t const len = items * sizeof(mem[0]);
+			std::cerr << "DB::save_cache - unable to open file "
+				<< filename << "\n";
+			return 1;
+		}
 
-			rec_data.set_integer ( type );
-			rec_data.set_integer ( i );
-			rec_data.set_blob ( (char const *)&mem[offset], len );
-			rec_data.insert_record ();
+		size_t const todo = cloud->size ();
+		mtGin::GL::VertexRGB const * const mem = cloud->data ();
+		size_t const len = sizeof( mem[0] );
 
-			todo -= items;
-			offset += items;
+		for ( size_t i = 0; i < todo; i++ )
+		{
+			if ( file.write ( &mem[i], len ) )
+			{
+				std::cerr << "DB::save_cache - error writing "
+					"to file " << filename << "\n";
+				return 1;
+			}
 		}
 	}
 	catch (...)

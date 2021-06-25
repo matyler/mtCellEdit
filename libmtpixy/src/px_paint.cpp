@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,15 +19,15 @@
 
 
 
-int mtPixy::Image::paint_canvas_rectangle (
-	Brush		&bru,
+int mtPixy::Brush::paint_canvas_rectangle (
+	mtPixmap * const pixmap,
 	int	const	x,
 	int	const	y,
 	int	const	w,
 	int	const	h
 	)
 {
-	if ( ! m_canvas )
+	if ( ! pixmap || ! pixmap->canvas )
 	{
 		return 0;
 	}
@@ -39,29 +39,24 @@ int mtPixy::Image::paint_canvas_rectangle (
 
 	dx1 = MAX ( dx1, 0 );
 	dy1 = MAX ( dy1, 0 );
-	dx2 = MIN ( dx2, m_width );
-	dy2 = MIN ( dy2, m_height );
+	dx2 = MIN ( dx2, pixmap->width );
+	dy2 = MIN ( dy2, pixmap->height );
 
-	if ( dx1 >= m_width || dy1 >= m_height )
+	if ( dx1 >= pixmap->width || dy1 >= pixmap->height )
 	{
 		// Nothing to paint
 		return 0;
 	}
 
 	int			i, j;
-	int		const	ps = mtPixy::Brush::PATTERN_SIZE;
+	int		const	ps = PATTERN_SIZE;
 	unsigned char	const	* sm;
 	unsigned char		* dm;
 
-	if ( m_type == TYPE_INDEXED )
+	if ( PIXY_PIXMAP_BPP_INDEXED == pixmap->bpp )
 	{
-		Image * pi = bru.get_pattern_idx ();
-		if ( ! pi )
-		{
-			return 1;
-		}
-
-		unsigned char * pat = pi->get_canvas ();
+		mtPixmap const * const pi = get_pattern_idx ();
+		unsigned char const * const pat = pixy_pixmap_get_canvas (pi);
 		if ( ! pat )
 		{
 			return 1;
@@ -69,7 +64,7 @@ int mtPixy::Image::paint_canvas_rectangle (
 
 		for ( j = dy1; j < dy2; j++ )
 		{
-			dm = m_canvas + dx1 + m_width * j;
+			dm = pixmap->canvas + dx1 + pixmap->width * j;
 			sm = pat + (j % ps) * ps;
 
 			for ( i = dx1; i < dx2; i++ )
@@ -78,17 +73,12 @@ int mtPixy::Image::paint_canvas_rectangle (
 			}
 		}
 	}
-	else if ( m_type == TYPE_RGB )
+	else if ( PIXY_PIXMAP_BPP_RGB == pixmap->bpp )
 	{
 		unsigned char	const	* smx;
 
-		Image * pi = bru.get_pattern_rgb ();
-		if ( ! pi )
-		{
-			return 1;
-		}
-
-		unsigned char * pat = pi->get_canvas ();
+		mtPixmap const * const pi = get_pattern_rgb ();
+		unsigned char const * const pat = pixy_pixmap_get_canvas (pi);
 		if ( ! pat )
 		{
 			return 1;
@@ -96,7 +86,7 @@ int mtPixy::Image::paint_canvas_rectangle (
 
 		for ( j = dy1; j < dy2; j++ )
 		{
-			dm = m_canvas + (dx1 + m_width * j) * 3;
+			dm = pixmap->canvas + (dx1 + pixmap->width * j) * 3;
 			sm = pat + (j % ps) * ps * 3;
 
 			for ( i = dx1; i < dx2; i++ )
@@ -112,8 +102,8 @@ int mtPixy::Image::paint_canvas_rectangle (
 	return 0;
 }
 
-int mtPixy::Image::paint_rectangle (
-	Brush		&bru,
+int mtPixy::Brush::paint_rectangle (
+	mtPixmap * const pixmap,
 	int	const	x,
 	int	const	y,
 	int	const	w,
@@ -125,37 +115,34 @@ int mtPixy::Image::paint_rectangle (
 		return 1;
 	}
 
-	if ( ! m_canvas )
+	if ( ! pixmap || ! pixmap->canvas )
 	{
 		return 0;
 	}
 
-	Image * const imask = create ( TYPE_ALPHA, w, h );
-	if ( ! imask )
+	mtPixy::Pixmap const imask ( pixy_pixmap_new_alpha ( w, h ) );
+	if ( ! imask.get() )
 	{
 		return 1;
 	}
 
-	unsigned char * const dst = imask->m_alpha;
+	unsigned char * const dst = imask.get()->alpha;
 	if ( ! dst )
 	{
-		delete imask;
 		return 1;
 	}
 
 	memset ( dst, 255, (size_t)(w * h) );
 
-	imask->paint_flow ( bru );
+	pixy_paint_flow ( imask.get(), this->get_flow() );
 
-	paste_alpha_pattern ( imask, bru, x, y );
-
-	delete imask;
+	mtPixy::paste_alpha_pattern ( pixmap, imask.get(), *this, x, y );
 
 	return 0;
 }
 
-int mtPixy::Image::paint_polygon (
-	Brush			&bru,
+int mtPixy::Brush::paint_polygon (
+	mtPixmap	* const pixmap,
 	PolySelOverlay	const	&ovl,
 	int			&x,
 	int			&y,
@@ -163,28 +150,26 @@ int mtPixy::Image::paint_polygon (
 	int			&h
 	)
 {
-	if ( ! m_canvas )
+	if ( ! pixmap || ! pixmap->canvas )
 	{
 		return 0;
 	}
 
-	Image * imask = ovl.create_mask ( x, y, w, h );
-	if ( ! imask )
+	mtPixy::Pixmap imask ( ovl.create_mask ( x, y, w, h ) );
+	if ( ! imask.get() )
 	{
 		return 1;
 	}
 
-	imask->paint_flow ( bru );
+	pixy_paint_flow ( imask.get(), this->get_flow() );
 
-	paste_alpha_pattern ( imask, bru, x, y );
-
-	delete imask;
+	mtPixy::paste_alpha_pattern ( pixmap, imask.get(), *this, x, y);
 
 	return 0;
 }
 
-int mtPixy::Image::paint_brush (
-	Brush		&bru,
+int mtPixy::Brush::paint_brush (
+	mtPixmap * const pixmap,
 	int	const	x1,
 	int	const	y1,
 	int	const	x2,
@@ -196,42 +181,46 @@ int mtPixy::Image::paint_brush (
 	bool	const	skip
 	)
 {
+	if ( ! pixmap || ! pixmap->canvas )
+	{
+		return 0;
+	}
+
 	// Enforce sanity
 	int		rx1 = MAX ( x1, 0 );
 	int		ry1 = MAX ( y1, 0 );
 	int		rx2 = MAX ( x2, 0 );
 	int		ry2 = MAX ( y2, 0 );
 
-	rx1 = MIN ( rx1, m_width - 1 );
-	ry1 = MIN ( ry1, m_height - 1 );
-	rx2 = MIN ( rx2, m_width - 1 );
-	ry2 = MIN ( ry2, m_height - 1 );
+	rx1 = MIN ( rx1, pixmap->width - 1 );
+	ry1 = MIN ( ry1, pixmap->height - 1 );
+	rx2 = MIN ( rx2, pixmap->width - 1 );
+	ry2 = MIN ( ry2, pixmap->height - 1 );
 
 	int	const	bs = mtPixy::Brush::SHAPE_SIZE;
 	int	const	w = abs ( rx2 - rx1 ) + bs;
 	int	const	h = abs ( ry2 - ry1 ) + bs;
 
-	Image * const imask = create ( TYPE_ALPHA, w, h );
-	if ( ! imask )
+	mtPixy::Pixmap imask ( pixy_pixmap_new_alpha ( w, h ) );
+	if ( ! imask.get() )
 	{
 		return 1;
 	}
 
-	Image * const bshape = bru.get_shape_mask ();
+	mtPixmap * const bshape = this->get_shape_mask ();
 	if ( ! bshape )
 	{
-		delete imask;
 		return 1;
 	}
 
-	int	const	spac = bru.get_spacing ();
+	int	const	spac = this->get_spacing ();
 	int	const	xa = x1 - MIN ( x1, x2 );
 	int	const	ya = y1 - MIN ( y1, y2 );
 	int	const	xb = x2 - MIN ( x1, x2 );
 	int	const	yb = y2 - MIN ( y1, y2 );
 	int		xd = (x1 == x2) ? 0 : (x1 < x2) ? 1 : -1;
 	int	const	yd = (y1 == y2) ? 0 : (y1 < y2) ? 1 : -1;
-	int		spacmod = bru.get_space_mod ();
+	int		spacmod = this->get_space_mod ();
 	int		x, y;
 	double		p;
 
@@ -240,7 +229,7 @@ int mtPixy::Image::paint_brush (
 		x = x2 - MIN ( x1, x2 );
 		y = y2 - MIN ( y1, y2 );
 
-		imask->paste_alpha_or ( bshape, x, y );
+		pixy_pixmap_paste_alpha_or ( imask.get(), bshape, x, y );
 	}
 	else if ( w >= h )
 	{
@@ -264,13 +253,14 @@ int mtPixy::Image::paint_brush (
 
 			if ( spacmod == 0 )
 			{
-				imask->paste_alpha_or ( bshape, x, y );
+				pixy_pixmap_paste_alpha_or ( imask.get(),
+					bshape, x, y );
 			}
 
 			spacmod = (spacmod + 1) % spac;
 		}
 
-		bru.set_space_mod ( spacmod );
+		this->set_space_mod ( spacmod );
 	}
 	else	// h > w
 	{
@@ -281,23 +271,22 @@ int mtPixy::Image::paint_brush (
 
 			if ( spacmod == 0 )
 			{
-				imask->paste_alpha_or ( bshape, x, y );
+				pixy_pixmap_paste_alpha_or ( imask.get(),
+					bshape, x, y );
 			}
 
 			spacmod = (spacmod + 1) % spac;
 		}
 
-		bru.set_space_mod ( spacmod );
+		this->set_space_mod ( spacmod );
 	}
 
-	imask->paint_flow ( bru );
+	pixy_paint_flow ( imask.get(), this->get_flow() );
 
 	x = MIN ( rx1, rx2 ) - bs / 2;
 	y = MIN ( ry1, ry2 ) - bs / 2;
 
-	paste_alpha_pattern ( imask, bru, x, y );
-
-	delete imask;
+	mtPixy::paste_alpha_pattern ( pixmap, imask.get(), *this, x, y );
 
 	dx = x;
 	dy = y;
@@ -316,45 +305,16 @@ int mtPixy::Image::paint_brush (
 		dy = 0;
 	}
 
-	if ( (dx + dw) > m_width )
+	if ( (dx + dw) > pixmap->width )
 	{
-		dw = m_width - dx;
+		dw = pixmap->width - dx;
 	}
 
-	if ( (dy + dh) > m_height )
+	if ( (dy + dh) > pixmap->height )
 	{
-		dh = m_height - dy;
+		dh = pixmap->height - dy;
 	}
 
 	return 0;
-}
-
-void mtPixy::Image::paint_flow (
-	Brush	const	&bru
-	) const
-{
-	int	const	fl = bru.get_flow ();
-
-
-	if ( fl >= Brush::FLOW_MIN && fl < Brush::FLOW_MAX )
-	{
-		int	const	tot = m_width * m_height;
-		int		r;
-		unsigned char	* dest = m_alpha;
-		unsigned char	* destlim = dest + tot;
-
-
-		for ( ; dest < destlim; dest++ )
-		{
-			if ( dest[0] > 0 )
-			{
-				r = rand () % (Brush::FLOW_MAX + 1);
-				if ( r > fl )
-				{
-					dest[0] = 0;
-				}
-			}
-		}
-	}
 }
 

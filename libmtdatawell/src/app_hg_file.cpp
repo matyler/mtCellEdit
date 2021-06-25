@@ -129,11 +129,12 @@ int FileOps::get_output_mem_utf8 ( std::string &result )
 
 	if ( 1 != mtkit_utf8_string_legal ( (unsigned char const *)buf,
 			(size_t)buflen )
-		|| mtKit::string_from_data ( result, buf, (size_t)buflen )
 		)
 	{
 		return 1;
 	}
+
+	result = std::string ( (char const *)buf, (size_t)buflen );
 
 	return 0;
 }
@@ -237,13 +238,7 @@ int FileOps::cleanse_file ()
 			return 1;
 		}
 
-		std::string st;
-
-		if ( mtKit::string_from_data ( st, src, (size_t)glyph_len ) )
-		{
-			std::cerr << "cleanse_file: unexpected UTF-8 error.\n";
-			return 1;
-		}
+		std::string const st ( (char const *)src, (size_t)glyph_len );
 
 		char root = 0;
 
@@ -306,13 +301,8 @@ static void count_utf8 (
 				throw 123;
 			}
 
-			std::string st;
-
-			if ( mtKit::string_from_data ( st, src,
-				(size_t)glyph_len ) )
-			{
-				throw 123;
-			}
+			std::string const st ( (char const *)src,
+				(size_t)glyph_len );
 
 			int bits = 0;
 			int nodes = 0;

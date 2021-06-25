@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -23,45 +23,6 @@
 
 
 
-mtPixy::Image * mtPixy::Image::convert_to_rgb ()
-{
-	if ( m_type != TYPE_INDEXED )
-	{
-		return NULL;
-	}
-
-	Image * im = create ( TYPE_RGB, m_width, m_height );
-	if ( ! im )
-	{
-		return NULL;
-	}
-
-	im->m_palette.copy ( &m_palette );
-
-	if ( im->copy_alpha ( this ) )
-	{
-		delete im;
-		return NULL;
-	}
-
-	unsigned char	*	dest = im->m_canvas;
-	unsigned char	* const	dlim = dest + m_width * m_height * 3;
-	unsigned char	*	src = m_canvas;
-	Color	const	*	col = m_palette.get_color ();
-
-	while ( dest < dlim )
-	{
-		unsigned char const pix = *src++;
-
-		*dest++ = col [ pix ].red;
-		*dest++ = col [ pix ].green;
-		*dest++ = col [ pix ].blue;
-	}
-
-	return im;
-}
-
-
 /*
 Dumb (but fast) Floyd-Steinberg dithering in RGB space, loosely based on
 Dennis Lee's dithering implementation from dl3quant.c, in turn based on
@@ -69,7 +30,7 @@ dithering code from the IJG's jpeg library - WJ
 */
 
 static void dumb_dither (
-	mtPixy::Color	const * const	pal,
+	mtColor		const * const	pal,
 	int			const	ncols,
 	unsigned char	const * const	mem_src,
 	unsigned char		* const	mem_dest,
@@ -239,8 +200,138 @@ prone to patterning. This trick I learned from Dennis Lee's code - WJ
 	free ( rows );
 }
 
-static void basic_dither (
-	mtPixy::Color	const * const	pal,
+
+struct DithCol
+{
+	DithCol ( int ia, int ib, int r, int g, int b )
+		:
+		index_a	( ia ),
+		index_b	( ib ),
+		red	( r ),
+		green	( g ),
+		blue	( b )
+	{}
+
+	int	const	index_a;
+	int	const	index_b;
+
+	int	const	red;
+	int	const	green;
+	int	const	blue;
+};
+
+
+
+class DithTable
+{
+public:
+	DithTable ( mtColor const * pal, int cols )
+		:
+		m_pal	( pal ),
+		m_cols	( cols )
+	{}
+
+	void init ();
+
+	void match ( int r, int g, int b, int & idx_a, int & idx_b ) const;
+
+private:
+	mtColor		const * const	m_pal;
+	int			const	m_cols;
+	std::vector< DithCol >		m_table;
+};
+
+
+
+void DithTable::init ()
+{
+	// 255/3 = 85
+	int const limit = m_cols > 32 ? 86 : 255;
+
+	for ( int i = 0; i < m_cols; i++ )
+	{
+		for ( int j = i; j < m_cols; j++ )
+		{
+			mtColor	const & ca = m_pal[ i ];
+			mtColor	const & cb = m_pal[ j ];
+
+			if (	abs( ca.red - cb.red )		> limit
+				|| abs( ca.green - cb.green )	> limit
+				|| abs( ca.blue - cb.blue )	> limit
+				)
+			{
+				continue;
+			}
+
+			int const r = ((int)ca.red + (int)cb.red) / 2;
+			int const g = ((int)ca.green + (int)cb.green) / 2;
+			int const b = ((int)ca.blue + (int)cb.blue) / 2;
+
+			m_table.emplace_back ( i, j, r, g, b );
+		}
+	}
+}
+
+void DithTable::match (
+	int	const	r,
+	int	const	g,
+	int	const	b,
+	int		& idx_a,
+	int		& idx_b
+	) const
+{
+	size_t best_i = 0;
+	int best_d = 1<<30;
+
+	for ( size_t i = 0; i < m_table.size(); i++ )
+	{
+		DithCol		const & col = m_table[ i ];
+		mtColor		const & ca = m_pal[ col.index_a ];
+		mtColor		const & cb = m_pal[ col.index_b ];
+
+		int const d =
+			3*abs( r - col.red )	+
+			3*abs( g - col.green )	+
+			3*abs( b - col.blue )	+
+/*
+NOTE: we also add the delta between each of the indices to avoid the grey
+problem whereby two greys far away from the image colour average to exactly
+the required value crowding out a near miss, e.g.
+
+image pixel	= (100,100,100)
+palette a	= (50,50,50)
+palette b	= (90,90,90)
+palette c	= (150,150,150)
+
+b&b is the better choice than a&c, but without checking the total deltas of
+the indices we would otherwise choose the extremes instead as they average 100
+for a perfect match.
+MT 2020-8-9
+*/
+			abs( r - ca.red )	+
+			abs( g - ca.green )	+
+			abs( b - ca.blue )	+
+
+			abs( r - cb.red )	+
+			abs( g - cb.green )	+
+			abs( b - cb.blue )
+			;
+
+		if ( d < best_d )
+		{
+			best_i = i;
+			best_d = d;
+		}
+	}
+
+	idx_a = m_table[ best_i ].index_a;
+	idx_b = m_table[ best_i ].index_b;
+}
+
+
+
+static void average_dither (
+	mtColor		const * const	pal,
 	int			const	ncols,
 	unsigned char	const * const	mem_src,
 	unsigned char		* const	mem_dest,
@@ -248,81 +339,119 @@ static void basic_dither (
 	int			const	h
 	)
 {
-	unsigned char		* dest, pcol[3];
-	unsigned char	const	* old_mem_image;
-	int			k, closest[3][2];
+	DithTable table ( pal, ncols );
 
+	try
+	{
+		table.init ();
+	}
+	catch (...)
+	{
+		return;
+	}
 
-	dest = mem_dest;
-	old_mem_image = mem_src;
+	unsigned char		* dest = mem_dest;
+	unsigned char	const	* src = mem_src;
 
 	for ( int j = 0; j < h; j++ )		// Convert RGB to indexed
 	{
 		for ( int i = 0; i < w; i++ )
 		{
-			pcol[0] = old_mem_image[ 3 * ( i + w * j ) ];
-			pcol[1] = old_mem_image[ 1 + 3 * ( i + w * j ) ];
-			pcol[2] = old_mem_image[ 2 + 3 * ( i + w * j ) ];
+			int const r = *src++;
+			int const g = *src++;
+			int const b = *src++;
+			int const dither = ( i + j ) & 1;
 
-			closest[0][0] = 0; // 1st Closest palette item to pixel
-			closest[1][0] = 100000000;
-			closest[0][1] = 0; // 2nd Closest palette item to pixel
-			closest[1][1] = 100000000;
+			int kt[2];
+			table.match ( r, g, b, kt[0], kt[1] );
 
+			*dest++ = (unsigned char)kt[ dither ];
+		}
+	}
+}
+
+static void basic_dither (
+	mtColor		const * const	pal,
+	int			const	ncols,
+	unsigned char	const * const	mem_src,
+	unsigned char		* const	mem_dest,
+	int			const	w,
+	int			const	h
+	)
+{
+	unsigned char		* dest = mem_dest;
+	unsigned char	const	* src = mem_src;
+
+	for ( int j = 0; j < h; j++ )		// Convert RGB to indexed
+	{
+		for ( int i = 0; i < w; i++ )
+		{
+			int const r = *src++;
+			int const g = *src++;
+			int const b = *src++;
+
+			int best_i = 0; // 1st Closest palette item to pixel
+			int best_d = 100000000;
+			int last_i = 0; // 2nd Closest palette item to pixel
+			int last_d = 100000000;
+
+			int k;
 			for ( k = 0; k < ncols; k++ )
 			{
-				closest[2][0] =
-					abs ( pcol[0] - pal[k].red ) +
-					abs ( pcol[1] - pal[k].green ) +
-					abs ( pcol[2] - pal[k].blue );
+				int test_d =
+					abs (r - (int)pal[k].red ) +
+					abs (g - (int)pal[k].green )+
+					abs (b - (int)pal[k].blue );
 
-				if ( closest[2][0] < closest[1][0] )
+				if ( test_d < best_d )
 				{
-					closest[0][1] = closest[0][0];
-					closest[1][1] = closest[1][0];
-					closest[0][0] = k;
-					closest[1][0] = closest[2][0];
+					last_i = best_i;
+					last_d = best_d;
+					best_i = k;
+					best_d = test_d;
 
-					if ( closest[2][0] == 0 )
+					if ( test_d == 0 )
 					{
 						break;
 					}
 				}
 				else
 				{
-					if ( closest[2][0] < closest[1][1] )
+					if ( test_d < last_d )
 					{
-						closest[0][1] = k;
-						closest[1][1] = closest[2][0];
+						last_i = k;
+						last_d = test_d;
 					}
 				}
 			}
 
-			if ( closest[1][1] == 100000000 )
+			if ( last_d == 100000000 )
 			{
-				closest[1][0] = 0;
+				best_d = 0;
 			}
 
-			if ( closest[1][0] == 0 )
+			if ( best_d == 0 )
 			{
-				k = closest[0][0];
+				k = best_i;
 			}
 			else
 			{
-				if ( closest[1][1] * 0.67 <
-					( closest[1][1] - closest[1][0] ) )
+				if ( best_d * 0.9 < (last_d - best_d) )
 				{
-					k = closest[0][0];
+					k = best_i;
 				}
 				else
 				{
-				  	if ( closest[0][0] > closest[0][1] )
+					int const kt[2] = { best_i, last_i };
+					int const dither = ( i + j ) & 1;
+
+					if ( best_i > last_i )
 					{
-						k = closest[0][ ( i + j ) % 2 ];
+						k = kt[ dither ];
 					}
 					else
 					{
-						k = closest[0][ (i+j+1) % 2 ];
+						k = kt[ 1 - dither ];
 					}
 				}
 			}
@@ -332,269 +461,60 @@ static void basic_dither (
 	}
 }
 
-mtPixy::Image * mtPixy::Image::convert_to_indexed (
-	DitherType	const	dt
+mtPixmap * pixy_pixmap_convert_to_indexed (
+	mtPixmap const	* const	pixmap,
+	int		const	dt
 	)
 {
-	if ( m_type != TYPE_RGB )
+	if ( pixmap->bpp != PIXY_PIXMAP_BPP_RGB )
 	{
 		return NULL;
 	}
 
-	Image * im = create ( TYPE_INDEXED, m_width, m_height );
+	mtPixmap * im = pixy_pixmap_new_indexed( pixmap->width, pixmap->height);
 	if ( ! im )
 	{
 		return NULL;
 	}
 
-	im->m_palette.copy ( &m_palette );
+	pixy_palette_copy ( &im->palette, &pixmap->palette );
 
-	if ( im->copy_alpha ( this ) )
+	if ( pixy_pixmap_copy_alpha ( im, pixmap ) )
 	{
-		delete im;
+		pixy_pixmap_destroy ( &im );
 		return NULL;
 	}
 
 	switch ( dt )
 	{
-	case DITHER_NONE:
-		dumb_dither( m_palette.get_color(), m_palette.get_color_total(),
-			m_canvas, im->m_canvas, m_width, m_height, 0 );
+	case PIXY_DITHER_NONE:
+		dumb_dither ( &pixmap->palette.color[0], pixmap->palette.size,
+			pixmap->canvas, im->canvas, pixmap->width,
+			pixmap->height, 0 );
 		break;
 
-	case DITHER_BASIC:
-		basic_dither ( m_palette.get_color (),
-			m_palette.get_color_total(), m_canvas, im->m_canvas,
-			m_width, m_height );
+	case PIXY_DITHER_BASIC:
+		basic_dither ( &pixmap->palette.color[0], pixmap->palette.size,
+			pixmap->canvas, im->canvas, pixmap->width,
+			pixmap->height );
 		break;
 
-	case DITHER_FLOYD:
-		dumb_dither( m_palette.get_color(), m_palette.get_color_total(),
-			m_canvas, im->m_canvas, m_width, m_height, 1 );
+	case PIXY_DITHER_AVERAGE:
+		average_dither ( &pixmap->palette.color[0],
+			pixmap->palette.size, pixmap->canvas,
+			im->canvas, pixmap->width, pixmap->height );
+		break;
+
+	case PIXY_DITHER_FLOYD:
+		dumb_dither ( &pixmap->palette.color[0],
+			pixmap->palette.size, pixmap->canvas, im->canvas,
+			pixmap->width, pixmap->height, 1 );
 		break;
 
 	default:
-		delete im;
+		pixy_pixmap_destroy ( &im );
 		return NULL;
 	}
-
-	return im;
-}
-
-static void flip_h_mem (
-	unsigned char		* const	dest,
-	unsigned char	const * const	src,
-	int			const	w,
-	int			const	h,
-	int			const	bpp
-	)
-{
-	if ( ! dest || ! src )
-	{
-		return;
-	}
-
-	for ( int y = 0; y < h; y++ )
-	{
-		unsigned char * d = dest + bpp * y * w;
-		unsigned char const * s = src + bpp * y * w + bpp * (w - 1);
-
-		if ( bpp == 3 )
-		{
-			for ( int x = 0; x < w; x++ )
-			{
-				*d++ = s[0];
-				*d++ = s[1];
-				*d++ = s[2];
-				s -= 3;
-			}
-		}
-		else if ( bpp == 1 )
-		{
-			for ( int x = 0; x < w; x++ )
-			{
-				*d++ = *s--;
-			}
-		}
-	}
-}
-
-mtPixy::Image * mtPixy::Image::flip_horizontally ()
-{
-	Image		* i = duplicate ();
-
-
-	if ( i )
-	{
-		flip_h_mem ( i->m_canvas, m_canvas, m_width, m_height,
-			m_canvas_bpp );
-		flip_h_mem ( i->m_alpha, m_alpha, m_width, m_height, 1 );
-	}
-
-	return i;
-}
-
-static void flip_v_mem (
-	unsigned char		* const	dest,
-	unsigned char	const * const	src,
-	int			const	w,
-	int			const	h,
-	int			const	bpp
-	)
-{
-	if ( ! dest || ! src )
-	{
-		return;
-	}
-
-	size_t		const	tot = (size_t)(bpp * w);
-
-	for ( int y = 0; y < h; y++ )
-	{
-		unsigned char * const d = dest + bpp * y * w;
-		unsigned char const * const s = src + bpp * (h - y - 1) * w;
-
-		memcpy ( d, s, tot );
-	}
-}
-
-mtPixy::Image * mtPixy::Image::flip_vertically ()
-{
-	Image		* i = duplicate ();
-
-
-	if ( i )
-	{
-		flip_v_mem ( i->m_canvas, m_canvas, m_width, m_height,
-			m_canvas_bpp );
-		flip_v_mem ( i->m_alpha, m_alpha, m_width, m_height, 1 );
-	}
-
-	return i;
-}
-
-static void rotate_c_mem (
-	unsigned char		* const	dest,
-	unsigned char	const * const	src,
-	int			const	w,
-	int			const	h,
-	int			const	bpp
-	)
-{
-	if ( ! dest || ! src )
-	{
-		return;
-	}
-
-	unsigned char	const	* s = src;
-
-	for ( int y = 0; y < h; y++ )
-	{
-		unsigned char * d = dest + bpp * (h - y - 1);
-
-		if ( bpp == 3 )
-		{
-			for ( int x = 0; x < w; x++ )
-			{
-				d[0] = *s++;
-				d[1] = *s++;
-				d[2] = *s++;
-				d += h * 3;
-			}
-		}
-		else if ( bpp == 1 )
-		{
-			for ( int x = 0; x < w; x++ )
-			{
-				d[0] = *s++;
-				d += h;
-			}
-		}
-	}
-}
-
-mtPixy::Image * mtPixy::Image::rotate_clockwise ()
-{
-	Image * im = create ( m_type, m_height, m_width );
-	if ( ! im )
-	{
-		return NULL;
-	}
-
-	if ( m_alpha && im->create_alpha () )
-	{
-		delete im;
-		return NULL;
-	}
-
-	im->m_palette.copy ( &m_palette );
-
-	rotate_c_mem ( im->m_canvas, m_canvas, m_width, m_height, m_canvas_bpp);
-	rotate_c_mem ( im->m_alpha, m_alpha, m_width, m_height, 1 );
-
-	return im;
-}
-
-static void rotate_a_mem (
-	unsigned char		* const	dest,
-	unsigned char	const * const	src,
-	int			const	w,
-	int			const	h,
-	int			const	bpp
-	)
-{
-	if ( ! dest || ! src )
-	{
-		return;
-	}
-
-
-	unsigned char	const	* s = src;
-
-
-	for ( int y = 0; y < h; y++ )
-	{
-		unsigned char * d = dest + bpp * (y + (w - 1) * h);
-
-		if ( bpp == 3 )
-		{
-			for ( int x = 0; x < w; x++ )
-			{
-				d[0] = *s++;
-				d[1] = *s++;
-				d[2] = *s++;
-				d -= h * 3;
-			}
-		}
-		else if ( bpp == 1 )
-		{
-			for ( int x = 0; x < w; x++ )
-			{
-				d[0] = *s++;
-				d -= h;
-			}
-		}
-	}
-}
-
-mtPixy::Image * mtPixy::Image::rotate_anticlockwise ()
-{
-	Image * im = create ( m_type, m_height, m_width );
-	if ( ! im )
-	{
-		return NULL;
-	}
-
-	if ( m_alpha && im->create_alpha () )
-	{
-		delete im;
-		return NULL;
-	}
-
-	im->m_palette.copy ( &m_palette );
-
-	rotate_a_mem ( im->m_canvas, m_canvas, m_width, m_height, m_canvas_bpp);
-	rotate_a_mem ( im->m_alpha, m_alpha, m_width, m_height, 1 );
 
 	return im;
 }

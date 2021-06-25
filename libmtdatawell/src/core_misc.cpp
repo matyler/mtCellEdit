@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -121,6 +121,14 @@ void mtDW::FilenameSwap::swap ()
 	f2 = f0;
 }
 
+mtDW::Database::Database ()
+{
+}
+
+mtDW::Database::~Database ()
+{
+}
+
 int mtDW::Database::open ( char const * const path )
 {
 	try
@@ -189,6 +197,45 @@ int mtDW::remove_dir ( std::string const &path )
 	}
 
 	return 0;
+}
+
+mtDW::ByteBuf::ByteBuf ()
+{
+}
+
+mtDW::ByteBuf::ByteBuf ( size_t const size )
+{
+	if ( allocate ( size ) )
+	{
+		throw 123;
+	}
+}
+
+mtDW::ByteBuf::~ByteBuf ()
+{
+	set ( NULL, 0 );
+}
+
+int mtDW::ByteBuf::allocate ( size_t const size )
+{
+	if ( size < 1 )
+	{
+		set ( NULL, 0 );
+		return 0;
+	}
+
+	set ( (uint8_t *)calloc ( size, sizeof(uint8_t) ), size );
+
+	return m_buf == NULL ? 1 : 0;
+}
+
+void mtDW::ByteBuf::set ( uint8_t * const buf, size_t const size )
+{
+	free ( m_buf );
+	m_buf = buf;
+	m_size = size;
+	m_tot = 0;
+	m_pos = 0;
 }
 
 void mtDW::ByteBuf::load_whole ( std::string const &filename )

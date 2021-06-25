@@ -135,47 +135,6 @@ std::string mtKit::basename ( std::string const &path )
 	return path.substr ( found + 1 );
 }
 
-int mtKit::string_from_data (
-	std::string		& str,
-	void	const * const	data,
-	size_t		const	size
-	)
-{
-	str.clear ();
-
-	if ( ! data )
-	{
-		return 1;
-	}
-
-	int res = 1;
-
-	char * buf = (char *)malloc ( size + 1 );
-	if ( buf )
-	{
-		if ( size > 0 )
-		{
-			memcpy ( buf, data, size );
-		}
-
-		buf[ size ] = 0;
-
-		try
-		{
-			str = buf;
-			res = 0;	// Success
-		}
-		catch ( ... )
-		{
-		}
-
-		free ( buf );
-		buf = NULL;
-	}
-
-	return res;
-}
-
 int mtKit::string_strip_extension (
 	std::string		&filename,
 	char	const * const	extension

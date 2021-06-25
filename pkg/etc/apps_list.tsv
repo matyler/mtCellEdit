@@ -15,9 +15,12 @@ mtraft-qt5	mtraft	1
 mtpixy-qt5	mtpixy	1
 mtpixyutils	mtpixyutils	1
 mtpixycli	mtpixycli	1
+libmtgin	libmtgin	1
+mtginutils	mtginutils	1
 mtcrul-qt5	mtcrul	1
-libmtqex4	libmtqex
-mtcelledit-qt4	mtcelledit
-mtdatawell-qt4	mtdatawell
-mtraft-qt4	mtraft
-mtpixy-qt4	mtpixy
+libmtqex6	libmtqex
+mtcelledit-qt6	mtcelledit
+mtdatawell-qt6	mtdatawell
+mtraft-qt6	mtraft
+mtpixy-qt6	mtpixy
+mtcrul-qt6	mtcrul

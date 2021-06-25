@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019 Mark Tyler
+	Copyright (C) 2019-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -140,18 +140,7 @@ mtDW::Utf8Font::Utf8Font ()
 						<< "\n";
 				}
 
-				std::string glyph;
-				if ( mtKit::string_from_data ( glyph, src[j],
-					(size_t)glyph_len )
-					)
-				{
-					std::cerr << "mtDW::Utf8Font::Utf8Font"
-						<< " Failed to create string."
-						<< " font #=" << j
-						<< " glyph ="
-						<< src[TYPE_ASCII][g]
-						<< "\n";
-				}
+				std::string glyph ( src[j], (size_t)glyph_len );
 
 				nodes += glyph;
 				src[j] += glyph_len;

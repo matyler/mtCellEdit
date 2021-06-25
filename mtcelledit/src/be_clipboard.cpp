@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2015 Mark Tyler
+	Copyright (C) 2008-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,21 +25,17 @@ int be_clip_clear_selection (
 	int		const	mode
 	)
 {
-	int		r,
-			c,
-			rtot,
-			ctot;
-
-
 	if ( ! sheet )
 	{
 		return 1;
 	}
 
-	r = MIN ( sheet->prefs.cursor_r1, sheet->prefs.cursor_r2 );
-	c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
-	rtot = 1 + abs ( sheet->prefs.cursor_r1 - sheet->prefs.cursor_r2 );
-	ctot = 1 + abs ( sheet->prefs.cursor_c1 - sheet->prefs.cursor_c2 );
+	int const r = MIN ( sheet->prefs.cursor_r1, sheet->prefs.cursor_r2 );
+	int const c = MIN ( sheet->prefs.cursor_c1, sheet->prefs.cursor_c2 );
+	int const rtot = 1 + abs ( sheet->prefs.cursor_r1 -
+		sheet->prefs.cursor_r2 );
+	int const ctot = 1 + abs ( sheet->prefs.cursor_c1 -
+		sheet->prefs.cursor_c2 );
 
 	if ( r < 1 || c < 1 )
 	{
@@ -146,13 +142,19 @@ static int copy_output_scan (
 	void		* const	ARG_UNUSED ( user_data )
 	)
 {
-	char		* txt;
+	char		buf[ 2000 ];
+	ced_cell_create_output ( cell, NULL, buf, sizeof(buf) );
 
-
-	txt = ced_cell_create_output ( cell, NULL );
 	free ( cell->text );
+	if ( buf[0] )
+	{
+		cell->text = strdup ( buf );
+	}
+	else
+	{
+		cell->text = nullptr;
+	}
 
-	cell->text = txt;
 	cell->type = CED_CELL_TYPE_TEXT_EXPLICIT;
 	cell->value = 0;
 

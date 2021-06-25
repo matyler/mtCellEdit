@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017-2018 Mark Tyler
+	Copyright (C) 2017-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,21 +19,19 @@
 
 
 
-static int prepare_output (
-	mtPixy::Image	* const	im
-	)
+static int prepare_output ( mtPixmap * const pixmap )
 {
-	if ( ! im )
+	if ( ! pixmap )
 	{
 		printf ( "Unable to create output image.\n" );
 		return 1;
 	}
 
-	mtPixy::Palette * const pal = im->get_palette ();
+	mtPalette * const pal = pixy_pixmap_get_palette ( pixmap );
 
-	pal->set_grey ();
+	pixy_palette_set_grey ( pal );
 
-	mtPixy::Color * const col = pal->get_color ();
+	mtColor * const col = &pal->color[0];
 
 	col[1].red = 64;
 	col[1].green = 0;
@@ -46,7 +44,7 @@ static int prepare_output (
 	col[3].blue = 64;
 
 	// Set up blue chequers on the top line
-	unsigned char	* const mem = im->get_canvas ();
+	unsigned char	* const mem = pixy_pixmap_get_canvas ( pixmap );
 	unsigned char		c = 0;
 
 	for ( int i = 0; i < 768; i+=256 )
@@ -69,7 +67,7 @@ static int prepare_output (
 	return 0;
 }
 
-static void analyse_rgb_image (
+static mtPixmap * analyse_rgb_image (
 	unsigned char	const * const	rgb,
 	int			const	w,
 	int			const	h
@@ -78,7 +76,7 @@ static void analyse_rgb_image (
 	int		* mem_r = (int *)calloc ( 256*256, sizeof(int) );
 	int		* mem_g = (int *)calloc ( 256*256, sizeof(int) );
 	int		* mem_b = (int *)calloc ( 256*256, sizeof(int) );
-	mtPixy::Image	* im = NULL;
+	mtPixmap	* pixmap = nullptr;
 
 	if ( ! mem_r || ! mem_g || ! mem_b )
 	{
@@ -86,9 +84,9 @@ static void analyse_rgb_image (
 		goto finish;
 	}
 
-	im = mtPixy::Image::create ( mtPixy::Image::TYPE_INDEXED, 768, 256 );
+	pixmap = pixy_pixmap_new_indexed ( 768, 256 );
 
-	if ( prepare_output ( im ) )
+	if ( prepare_output ( pixmap ) )
 	{
 		goto finish;
 	}
@@ -107,7 +105,7 @@ static void analyse_rgb_image (
 		// Map RGB totals to the image
 
 		int		const	memtot = 256*256;
-		unsigned char * const	dest = im->get_canvas ();
+		unsigned char * const	dest = pixy_pixmap_get_canvas( pixmap );
 		int		const	* memarr[3] = { mem_r, mem_g, mem_b };
 
 		for ( int k = 0; k < 3; k++ )
@@ -135,8 +133,6 @@ static void analyse_rgb_image (
 		}
 	}
 
-	global.set_image ( im );
-
 finish:
 	free ( mem_r );
 	mem_r = NULL;
@@ -146,35 +142,37 @@ finish:
 
 	free ( mem_b );
 	mem_b = NULL;
+
+	return pixmap;
 }
 
-int pixyut_rida ()
+int Global::pixy_rida ()
 {
 	if ( ut_load_file () )
 	{
 		// Unable to load file - non-fatal error for 'rida'
 
-		printf ( "????? %s\n", global.s_arg );
+		printf ( "????? %s\n", s_arg );
 
 		return 0;
 	}
 
-	int			const	bpp = global.image->get_canvas_bpp ();
-	int			const	w = global.image->get_width ();
-	int			const	h = global.image->get_height ();
-	unsigned char	const * const	rgb = global.image->get_canvas ();
+	mtPixmap const * const pixmap = m_pixmap.get();
+	int	const	bpp = pixy_pixmap_get_bytes_per_pixel ( pixmap );
+	int	const	w = pixy_pixmap_get_width ( pixmap );
+	int	const	h = pixy_pixmap_get_height ( pixmap );
+	unsigned char	const * const	rgb = pixy_pixmap_get_canvas ( pixmap );
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
 		printf ( "w=%-5i h=%-5i cols=%-3i bpp=%i%-3s",
 			w, h,
-			global.image->get_palette ()->get_color_total (),
+			pixy_pixmap_get_palette_size ( pixmap ),
 			bpp,
-			global.image->get_alpha () ? "+A" : "" );
+			pixy_pixmap_get_alpha ( pixmap ) ? "+A" : "" );
 	}
 
-	printf ( "%-5s %s\n", mtPixy::File::type_text (
-		(mtPixy::File::Type) global.i_ftype_in ), global.s_arg );
+	printf ( "%-5s %s\n", pixy_file_type_text ( i_ftype_in ), s_arg );
 
 	if ( bpp != 3 || ! rgb )
 	{
@@ -183,7 +181,11 @@ int pixyut_rida ()
 		return 0;
 	}
 
-	analyse_rgb_image ( rgb, w, h );
+	mtPixmap * const im = analyse_rgb_image ( rgb, w, h );
+	if ( im )
+	{
+		set_pixmap ( im );
+	}
 
 	return 0;
 }

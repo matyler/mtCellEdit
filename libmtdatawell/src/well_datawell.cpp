@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,55 +25,54 @@ char const * const mtDW::Well::PASSWORD_OTHER_DEFAULT = "!?£#$@&%*";
 
 mtDW::Well::Well ( char const * const path )
 	:
-	op		( new Well::Op ( path ) )
+	m_op		( new Well::Op ( path ) )
 {
 }
 
 mtDW::Well::~Well ()
 {
-	delete op;
 }
 
 void mtDW::Well::get_shifts ( int shifts[8] ) const
 {
-	op->m_bitshift.get_shifts ( shifts );
+	m_op->m_bitshift.get_shifts ( shifts );
 }
 
 void mtDW::Well::set_shifts () const
 {
-	op->m_bitshift.set_shifts ( op->m_random );
+	m_op->m_bitshift.set_shifts ( m_op->m_random );
 }
 
 uint64_t mtDW::Well::get_seed () const
 {
-	return op->m_random.get_seed ();
+	return m_op->m_random.get_seed ();
 }
 
 void mtDW::Well::set_seed ( uint64_t seed ) const
 {
-	op->m_random.set_seed ( seed );
+	m_op->m_random.set_seed ( seed );
 }
 
 void mtDW::Well::set_seed_by_time () const
 {
-	op->m_random.set_seed_by_time ();
+	m_op->m_random.set_seed_by_time ();
 }
 
 int mtDW::Well::get_files_done () const
 {
-	return op->count_files_done ();
+	return m_op->count_files_done ();
 }
 
 int mtDW::Well::get_files_todo () const
 {
-	return op->count_files_todo ();
+	return m_op->count_files_todo ();
 }
 
 void mtDW::Well::add_path ( char const * const path ) const
 {
 	try
 	{
-		FileScan ( op->m_file_db, path );
+		FileScan ( m_op->m_file_db, path );
 	}
 	catch ( ... )
 	{
@@ -82,7 +81,7 @@ void mtDW::Well::add_path ( char const * const path ) const
 
 void mtDW::Well::empty () const
 {
-	op->m_file_db.remove_all_files ();
+	m_op->m_file_db.remove_all_files ();
 }
 
 int mtDW::Well::save_file (
@@ -90,27 +89,27 @@ int mtDW::Well::save_file (
 	char	const * const	filename
 	) const
 {
-	return op->save_file ( bytes, filename );
+	return m_op->save_file ( bytes, filename );
 }
 
 int mtDW::Well::get_int () const
 {
-	return op->get_int ();
+	return m_op->get_int ();
 }
 
 int mtDW::Well::get_int ( int modulo ) const
 {
-	return op->get_int ( modulo );
+	return m_op->get_int ( modulo );
 }
 
 void mtDW::Well::get_data ( uint8_t * buf, size_t buflen ) const
 {
-	op->get_data ( buf, buflen );
+	m_op->get_data ( buf, buflen );
 }
 
 void mtDW::Well::save_state () const
 {
-	return op->save_state ();
+	return m_op->save_state ();
 }
 
 void mtDW::Well::shuffle ( std::vector<int> &items ) const

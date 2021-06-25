@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019 Mark Tyler
+	Copyright (C) 2019-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -37,16 +37,9 @@ mtDW::GlyphNode::GlyphNode ( std::string const &nodes )
 			break;
 		}
 
-		std::string st;
-
-		mtKit::string_from_data ( st, src + i, (size_t)len );
-
-		if ( st.size () > 0 )
+		if ( add ( std::string ( (char const *)(src + i), (size_t)len)))
 		{
-			if ( add ( st ) )
-			{
-				break;
-			}
+			break;
 		}
 
 		i += (size_t)len;

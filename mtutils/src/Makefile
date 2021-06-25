@@ -1,6 +1,7 @@
 include		../_conf.txt
 
 OBJS_GENTEX	:= $(patsubst %.c,%.o,$(wildcard mtgentex*.c))
+OBJS_GENTEX	:= $(patsubst %.cpp,%.o,$(wildcard mtgentex*.cpp) $(OBJS_GENTEX))
 OBJS_PTS2PLY	:= $(patsubst %.cpp,%.o,$(wildcard mtpts2ply*.cpp))
 BINS		=			\
 		mtbinana		\
@@ -31,7 +32,7 @@ mtchls.o:	mtchls.h
 
 
 mtgentex:	$(OBJS_GENTEX)
-		$(CC) $^ -o $@ $(LDFLAGS)
+		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS_GENTEX):	mtgentex.h
 

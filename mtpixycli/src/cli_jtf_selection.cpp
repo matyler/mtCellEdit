@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,21 +19,21 @@
 
 
 
-int jtf_clip_flip_h (
+int Backend::jtf_clip_flip_h (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.clipboard.flip_horizontal ();
+	return clipboard.flip_horizontal ();
 }
 
-int jtf_clip_flip_v (
+int Backend::jtf_clip_flip_v (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.clipboard.flip_vertical ();
+	return clipboard.flip_vertical ();
 }
 
-int jtf_clip_load (
+int Backend::jtf_clip_load (
 	char	const * const *	const	args
 	)
 {
@@ -44,24 +44,24 @@ int jtf_clip_load (
 		return 1;
 	}
 
-	return backend.clipboard.load ( num );
+	return clipboard.load ( num );
 }
 
-int jtf_clip_rotate_a (
+int Backend::jtf_clip_rotate_a (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().clipboard_rotate_anticlockwise(backend.clipboard);
+	return file().clipboard_rotate_anticlockwise ( clipboard );
 }
 
-int jtf_clip_rotate_c (
+int Backend::jtf_clip_rotate_c (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().clipboard_rotate_clockwise ( backend.clipboard );
+	return file().clipboard_rotate_clockwise ( clipboard );
 }
 
-int jtf_clip_save (
+int Backend::jtf_clip_save (
 	char	const * const *	const	args
 	)
 {
@@ -72,24 +72,24 @@ int jtf_clip_save (
 		return 1;
 	}
 
-	return backend.clipboard.save ( num );
+	return clipboard.save ( num );
 }
 
-int jtf_copy (
+int Backend::jtf_copy (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().selection_copy ( backend.clipboard );
+	return file().selection_copy ( clipboard );
 }
 
-int jtf_crop (
+int Backend::jtf_crop (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return operation_update ( backend.file().crop () );
+	return operation_update ( file().crop () );
 }
 
-int jtf_cut (
+int Backend::jtf_cut (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
@@ -101,7 +101,7 @@ int jtf_cut (
 	return jtf_fill ( NULL );
 }
 
-int jtf_lasso (
+int Backend::jtf_lasso (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
@@ -110,24 +110,24 @@ int jtf_lasso (
 		return 1;
 	}
 
-	return backend.file().selection_lasso ( backend.clipboard );
+	return file().selection_lasso ( clipboard );
 }
 
-int jtf_select_all (
+int Backend::jtf_select_all (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().select_all ();
+	return file().select_all ();
 }
 
-int jtf_select_polygon (
+int Backend::jtf_select_polygon (
 	char	const * const *	const	args
 	)
 {
 	int		x, y, res = 0;
 
 
-	backend.file().polygon_overlay.clear ();
+	file().polygon_overlay.clear ();
 
 	for ( int i = 0; args[i] && args[i + 1]; i += 2 )
 	{
@@ -139,9 +139,9 @@ int jtf_select_polygon (
 			break;
 		}
 
-		backend.file().polygon_overlay.set_start ( x, y );
+		file().polygon_overlay.set_start ( x, y );
 
-		if ( backend.file().polygon_overlay.add () )
+		if ( file().polygon_overlay.add () )
 		{
 			res = 1;
 			break;
@@ -150,14 +150,14 @@ int jtf_select_polygon (
 
 	if ( res == 0 )
 	{
-		backend.file().set_tool_mode (
+		file().set_tool_mode (
 			mtPixyUI::File::TOOL_MODE_SELECTED_POLYGON );
 	}
 
 	return res;
 }
 
-int jtf_select_rectangle (
+int Backend::jtf_select_rectangle (
 	char	const * const *	const	args
 	)
 {
@@ -172,15 +172,12 @@ int jtf_select_rectangle (
 		return 1;
 	}
 
-	if ( backend.file().rectangle_overlay.set ( x, y, w, h,
-		backend.file().get_image () )
-		)
+	if ( file().rectangle_overlay.set ( x, y, w, h, file().get_pixmap () ) )
 	{
 		return 1;
 	}
 
-	backend.file().set_tool_mode (
-		mtPixyUI::File::TOOL_MODE_SELECTED_RECTANGLE );
+	file().set_tool_mode ( mtPixyUI::File::TOOL_MODE_SELECTED_RECTANGLE );
 
 	return 0;
 }

@@ -15,29 +15,65 @@
 	along with this program in the file COPYING.
 */
 
-#include <stdlib.h>
-#include <string.h>
-
 #include <mtkit.h>
 #include <mtdatawell.h>
 
 
 
-class Global;
+typedef std::function<int()>	FunCB;
 
 
 
 class Global
 {
 public:
-	Global () :
-		i_font		( 5 ),
-		i_verbose	( 0 ),
-		s_arg		( NULL ),
-		s_bottle	( NULL ),
-		s_o		( "." ),
-		s_db_path	( NULL )
-	{}
+	Global ();
+	~Global ();
+
+	int command_line ( int argc, char const * const argv[] );
+
+private:
+	enum
+	{
+		ERROR_UNKNOWN		= -1,
+
+		ERROR_NONE		= 0,
+
+		ERROR_BOTTLE_MISSING	= 1,
+		ERROR_SODA_ENCODE,
+		ERROR_SODA_DECODE,
+		ERROR_BOTTLE_ENCODE,
+		ERROR_BOTTLE_DECODE,
+		ERROR_DB_OPEN,
+		ERROR_FONT_ENCODE,
+		ERROR_FONT_DECODE,
+		ERROR_HG_ENCODE,
+		ERROR_HG_DECODE,
+
+		ERROR_MAX
+	};
+
+
+	std::string get_error_text ( int code ) const;
+	FunCB get_function ( std::string const & txt ) const;
+
+	void set_function ( char const * name );
+
+	int dw_decbot ();
+	int dw_decfont ();
+	int dw_dechg ();
+	int dw_decsoda ();
+	int dw_encbot ();
+	int dw_encfont ();
+	int dw_enchg ();
+	int dw_encsoda ();
+
+	void print_help ();
+	void print_version ();
+	int parse_com ();
+	int file_func ( char const * filename );
+
+	MTKIT_RULE_OF_FIVE( Global )
 
 /// ----------------------------------------------------------------------------
 
@@ -46,50 +82,18 @@ public:
 	mtDW::Utf8Font	font_index;
 	mtKit::Exit	exit;
 
-	int		i_font;
-	int		i_verbose;
+	int		i_font = 5;
+	int		i_verbose = 0;
 
-	char	const	* s_arg;	// Current command line argument
-	char	const	* s_bottle;
-	char	const	* s_o;
-	char	const	* s_db_path;
+	char	const	* s_arg = nullptr;	// Current command line argument
+	char	const	* s_bottle = nullptr;
+	char	const	* s_o = nullptr;
+	char	const	* s_db_path = nullptr;
+
+	FunCB		m_function = nullptr;
+	std::string	m_function_name;
+
+	std::map< std::string, FunCB > jump_table;
+	std::map< int, std::string > err_table;
 };
-
-
-
-// Note: must match ff_errtab in main.c
-enum
-{
-	ERROR_BOTTLE_MISSING	= 1,
-	ERROR_SODA_ENCODE	= 2,
-	ERROR_SODA_DECODE	= 3,
-	ERROR_BOTTLE_ENCODE	= 4,
-	ERROR_BOTTLE_DECODE	= 5,
-	ERROR_DB_OPEN		= 6,
-	ERROR_FONT_ENCODE	= 7,
-	ERROR_FONT_DECODE	= 8,
-	ERROR_HG_ENCODE		= 9,
-	ERROR_HG_DECODE		= 10
-};
-
-
-
-extern Global		global;
-
-
-
-/*	Command functions
-
-	Return 0 = success.
-	Return > 0 = Generic error to be reported by caller (main.c ff_errtab).
-*/
-
-int dwut_decbot ();
-int dwut_decfont ();
-int dwut_dechg ();
-int dwut_decsoda ();
-int dwut_encbot ();
-int dwut_encfont ();
-int dwut_enchg ();
-int dwut_encsoda ();
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
 
 
 
-int jtf_fill (
+int Backend::jtf_fill (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().selection_fill ();
+	return file().selection_fill ();
 }
 
-int jtf_floodfill (
+int Backend::jtf_floodfill (
 	char	const * const *	const	args
 	)
 {
@@ -39,17 +39,17 @@ int jtf_floodfill (
 		return 1;
 	}
 
-	return backend.file().flood_fill ( cx, cy );
+	return file().flood_fill ( cx, cy );
 }
 
-int jtf_outline (
+int Backend::jtf_outline (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().selection_outline ();
+	return file().selection_outline ();
 }
 
-int jtf_paint (
+int Backend::jtf_paint (
 	char	const * const *	const	args
 	)
 {
@@ -66,15 +66,15 @@ int jtf_paint (
 			break;
 		}
 
-		backend.file().paint_brush_to ( x, y );
+		file().paint_brush_to ( x, y );
 	}
 
-	backend.file().paint_brush_finish ();
+	file().paint_brush_finish ();
 
 	return res;
 }
 
-int jtf_paste (
+int Backend::jtf_paste (
 	char	const * const *	const	args
 	)
 {
@@ -87,8 +87,8 @@ int jtf_paste (
 		return 1;
 	}
 
-	if (	backend.clipboard.paste ( backend.file(), x, y )	||
-		backend.file().commit_undo_step ()
+	if (	clipboard.paste ( file(), x, y )	||
+		file().commit_undo_step ()
 		)
 	{
 		return 1;
@@ -97,7 +97,7 @@ int jtf_paste (
 	return operation_update ( 0 );
 }
 
-int jtf_set_brush_flow (
+int Backend::jtf_set_brush_flow (
 	char	const * const *	const	args
 	)
 {
@@ -108,12 +108,12 @@ int jtf_set_brush_flow (
 		return 1;
 	}
 
-	backend.file().brush.set_flow ( flow );
+	file().brush.set_flow ( flow );
 
 	return 0;
 }
 
-int jtf_set_brush_pattern (
+int Backend::jtf_set_brush_pattern (
 	char	const * const *	const	args
 	)
 {
@@ -124,10 +124,10 @@ int jtf_set_brush_pattern (
 		return 1;
 	}
 
-	return backend.file().brush.set_pattern ( num );
+	return file().brush.set_pattern ( num );
 }
 
-int jtf_set_brush_shape (
+int Backend::jtf_set_brush_shape (
 	char	const * const *	const	args
 	)
 {
@@ -138,10 +138,10 @@ int jtf_set_brush_shape (
 		return 1;
 	}
 
-	return backend.file().brush.set_shape ( num );
+	return file().brush.set_shape ( num );
 }
 
-int jtf_set_brush_spacing (
+int Backend::jtf_set_brush_spacing (
 	char	const * const *	const	args
 	)
 {
@@ -152,18 +152,18 @@ int jtf_set_brush_spacing (
 		return 1;
 	}
 
-	backend.file().brush.set_spacing ( spacing );
+	file().brush.set_spacing ( spacing );
 
 	return 0;
 }
 
-static int set_col (
+int Backend::set_col (
 	char	const * const *	const	args,
 	int			const	b
 	)
 {
-	mtPixy::Image	* im = backend.file().get_image ();
-	if ( ! im )
+	mtPixmap const * const pixmap = file().get_pixmap ();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
@@ -175,42 +175,43 @@ static int set_col (
 		return 1;
 	}
 
-	mtPixy::Color	* col = im->get_palette ()->get_color ();
+	mtColor	const * const col = &pixy_pixmap_get_palette_const ( pixmap )->
+		color[0];
 
 	if ( b )
 	{
-		backend.file().brush.set_color_b ( (unsigned char)idx, col );
+		file().brush.set_color_b ( (unsigned char)idx, col );
 	}
 	else
 	{
-		backend.file().brush.set_color_a ( (unsigned char)idx, col );
+		file().brush.set_color_a ( (unsigned char)idx, col );
 	}
 
-	return backend.file().update_brush_colors ();
+	return file().update_brush_colors ();
 }
 
-int jtf_set_color_a (
+int Backend::jtf_set_color_a (
 	char	const * const *	const	args
 	)
 {
 	return set_col ( args, 0 );
 }
 
-int jtf_set_color_b (
+int Backend::jtf_set_color_b (
 	char	const * const *	const	args
 	)
 {
 	return set_col ( args, 1 );
 }
 
-int jtf_set_color_swap (
+int Backend::jtf_set_color_swap (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_swap_ab ();
+	return file().palette_swap_ab ();
 }
 
-int jtf_set_file (
+int Backend::jtf_set_file (
 	char	const * const *	const	args
 	)
 {
@@ -221,6 +222,6 @@ int jtf_set_file (
 		return 1;
 	}
 
-	return backend.set_file ( idx );
+	return set_file ( idx );
 }
 

@@ -10,8 +10,11 @@ mtdwutils	./configure
 mtdwcli	./configure.slackware12.0
 mtpixyutils	./configure
 mtpixycli	./configure.slackware12.0
-libmtqex4	./configure --use-qt4 --libdir=/usr/lib64
-mtcelledit-qt4	./configure --use-qt4
-mtdatawell-qt4	./configure --use-qt4
-mtraft-qt4	./configure --use-qt4
-mtpixy-qt4	./configure --use-qt4
+libmtqex5	./configure --use-qt5 --libdir=/usr/lib64
+mtcelledit-qt5	./configure --use-qt5
+mtdatawell-qt5	./configure --use-qt5
+mtraft-qt5	./configure --use-qt5
+mtpixy-qt5	./configure --use-qt5
+libmtgin	./configure --libdir=/usr/lib64
+mtginutils	./configure
+mtcrul-qt5	./configure --use-qt5

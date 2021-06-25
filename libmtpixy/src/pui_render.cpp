@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ static void render_chequers (
 	}
 }
 
-mtPixy::Image * mtPixyUI::File::render_canvas (
+mtPixmap * mtPixyUI::File::render_canvas (
 	int	const	x,
 	int	const	y,
 	int	const	w,
@@ -68,29 +68,31 @@ mtPixy::Image * mtPixyUI::File::render_canvas (
 	int	const	zs
 	)
 {
-	if ( ! m_image )
+	mtPixmap const * const pixmap = get_pixmap ();
+	if ( ! pixmap )
 	{
 		return NULL;
 	}
 
-	mtPixy::Image * const im = mtPixy::Image::create (
-		mtPixy::Image::TYPE_RGB, w, h );
+	mtPixmap * const im = pixy_pixmap_new_rgb ( w, h );
 	if ( ! im )
 	{
 		return NULL;
 	}
 
-	if ( m_image->get_alpha () )
-	{
-		render_chequers ( im->get_canvas (), x, y, w, h );
+	unsigned char * const canvas = pixy_pixmap_get_canvas ( im );
 
-		m_image->blit_rgb_alpha_blend ( m_image->get_palette ()->
-			get_color (), im->get_canvas (), -x, -y, w, h, zs );
+	if ( pixmap->alpha )
+	{
+		render_chequers ( canvas, x, y, w, h );
+
+		pixy_pixmap_blit_rgb_alpha_blend ( pixmap, &pixmap->palette,
+			canvas, -x, -y, w, h, zs );
 	}
 	else
 	{
-		m_image->blit_rgb ( m_image->get_palette ()->get_color (),
-			im->get_canvas (), -x, -y, w, h, zs );
+		pixy_pixmap_blit_rgb ( pixmap, &pixmap->palette, canvas,
+			-x, -y, w, h, zs );
 	}
 
 	return im;

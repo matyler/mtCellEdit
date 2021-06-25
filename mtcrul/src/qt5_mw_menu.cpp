@@ -33,7 +33,7 @@ void Mainwindow::create_menu ()
 	file_menu->addSeparator ();
 
 
-	for ( int i = 0; i < PREFS_CRUL_RECENT_DB_TOTAL; i++ )
+	for ( size_t i = 0; i < PREFS_CRUL_RECENT_DB_TOTAL; i++ )
 	{
 		act_db_recent[i] = new QAction ( "", this );
 

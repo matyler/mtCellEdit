@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "qt5_mw_camera.h"
+#include "qt5_mw.h"
 
 
 
@@ -89,7 +89,7 @@ void Mainwindow::press_view_show_rulers ()
 	populate_gl_rulers ();
 	update_gl_view ();
 
-	m_prefs.set ( PREFS_VIEW_SHOW_RULERS, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_RULERS, on ? 1 : 0 );
 }
 
 void Mainwindow::press_view_show_ruler_plane ()
@@ -100,7 +100,7 @@ void Mainwindow::press_view_show_ruler_plane ()
 	populate_gl_rulers ();
 	update_gl_view ();
 
-	m_prefs.set ( PREFS_VIEW_SHOW_RULER_PLANE, on ? 1 : 0 );
+	m_uprefs.set ( PREFS_VIEW_SHOW_RULER_PLANE, on ? 1 : 0 );
 }
 
 void Mainwindow::press_ruler_swap_ab ()
@@ -160,18 +160,18 @@ void Mainwindow::press_ruler_new ()
 
 	if ( dialog.get_text ( label ) )
 	{
-		QMatrix4x4 camat;
+		mtGin::GL::Matrix4x4 camat;
 		m_cloud_view_a->get_camera_matrix ( camat );
 
-		QMatrix3x3 const normal = camat.normalMatrix ();
-		float const * const d = normal.data ();
+		mtGin::GL::Matrix3x3 const normal = camat.normal ();
+		mtGin::GL::Array3x3_float const & d = normal.data ();
 
 		double const len = 10.0;	// Distance away from camera
 		double const lz = 5;		// Up/Down half length
 
-		double const dx = len * (double)-d[2];
-		double const dy = len * (double)-d[5];
-		double const dz = len * (double)-d[8];
+		double const dx = len * (double)-d[0][2];
+		double const dy = len * (double)-d[1][2];
+		double const dz = len * (double)-d[2][2];
 
 		Crul::Camera const & camera = m_cloud_view_a->get_camera();
 		Crul::Ruler ruler;
@@ -495,9 +495,9 @@ void Mainwindow::enable_ruler_buttons ( Crul::Ruler const * const rul )
 	m_button_rul_rgb_set->setEnabled ( on );
 	m_button_rul_plane->setEnabled ( on );
 	m_button_rul_delete->setEnabled ( on );
-	m_button_rul_copy->setEnabled ( on );
+//	m_button_rul_copy->setEnabled ( on );
 	m_button_rul_edit->setEnabled ( on );
-	m_button_rul_hide_all->setEnabled ( on );
+//	m_button_rul_hide_all->setEnabled ( on );
 }
 
 void Mainwindow::populate_gl_rulers ()
@@ -550,15 +550,18 @@ void Mainwindow::keypress_ruler (
 		case Crul::Ruler::PLANE_YZ:	dxf = 0.0;	break;
 		}
 
-		QMatrix4x4 camat;
+		mtGin::GL::Matrix4x4 camat;
 		view->get_camera_matrix ( camat );
 
-		QMatrix3x3 const normal = camat.normalMatrix ();
-		float const * const d = normal.data ();
+		mtGin::GL::Matrix3x3 const normal = camat.normal ();
+		mtGin::GL::Array3x3_float const & d = normal.data ();
 
-		double const dx = dxf * (my * (double)d[1] - mx * (double)d[0]);
-		double const dy = dyf * (my * (double)d[4] - mx * (double)d[3]);
-		double const dz = dzf * (my * (double)d[7] - mx * (double)d[6]);
+		double const dx = dxf * (my * (double)d[0][1] -
+			mx * (double)d[0][0]);
+		double const dy = dyf * (my * (double)d[1][1] -
+			mx * (double)d[1][0]);
+		double const dz = dzf * (my * (double)d[2][1] -
+			mx * (double)d[2][0]);
 
 		if ( dx !=0 || dy != 0 || dz != 0 )
 		{
@@ -628,15 +631,15 @@ void Mainwindow::mouse_ruler (
 		break;
 	}
 
-	QMatrix4x4 camat;
+	mtGin::GL::Matrix4x4 camat;
 	view->get_camera_matrix ( camat );
 
-	QMatrix3x3 const normal = camat.normalMatrix ();
-	float const * const d = normal.data ();
+	mtGin::GL::Matrix3x3 const normal = camat.normal ();
+	mtGin::GL::Array3x3_float const & d = normal.data ();
 
-	double const dx = dxf * (my * (double)d[1] - mx * (double)d[0]);
-	double const dy = dyf * (my * (double)d[4] - mx * (double)d[3]);
-	double const dz = dzf * (my * (double)d[7] - mx * (double)d[6]);
+	double const dx = dxf * (my * (double)d[0][1] - mx * (double)d[0][0]);
+	double const dy = dyf * (my * (double)d[1][1] - mx * (double)d[1][0]);
+	double const dz = dzf * (my * (double)d[2][1] - mx * (double)d[2][0]);
 
 	if ( dx !=0 || dy != 0 || dz != 0 )
 	{

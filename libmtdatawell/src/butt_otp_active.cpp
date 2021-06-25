@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -59,44 +59,39 @@ int mtDW::OTPactive::get_data (
 
 void mtDW::OTPactive::store_otp_state ()
 {
-	mtKit::Prefs * const prefs = m_prefs_butt.get ();
+	OTPprefs * const prefs = m_prefs_butt.get ();
 
 	if ( prefs )
 	{
-		prefs->set ( OTP_PREFS_WRITE_NEXT, m_write_next );
-		prefs->set ( OTP_PREFS_BUCKET, m_bucket );
-		prefs->set ( OTP_PREFS_POSITION, m_position );
-		prefs->set ( OTP_PREFS_STATUS, m_status );
+		prefs->write_next	= m_write_next;
+		prefs->bucket		= m_bucket;
+		prefs->position		= m_position;
+		prefs->status		= m_status;
 	}
 }
 
 void mtDW::OTPactive::restore_otp_state ()
 {
-	mtKit::Prefs * const prefs = m_prefs_butt.get ();
+	OTPprefs * const prefs = m_prefs_butt.get ();
 
 	if ( prefs )
 	{
-		m_write_next =	prefs->getInt ( OTP_PREFS_WRITE_NEXT );
-		m_bucket =	prefs->getInt ( OTP_PREFS_BUCKET );
-		m_position =	prefs->getInt ( OTP_PREFS_POSITION );
-		m_status =	prefs->getInt ( OTP_PREFS_STATUS );
+		m_write_next	= prefs->write_next;
+		m_bucket	= prefs->bucket;
+		m_position	= prefs->position;
+		m_status	= prefs->status;
 	}
 }
 
-mtKit::Prefs * mtDW::OTPactive::create_otp_prefs ()
+mtDW::OTPprefs * mtDW::OTPactive::create_otp_prefs ()
 {
-	mtKit::Prefs * prefs = new mtKit::Prefs;
+	auto * prefs = new OTPprefs;
 
-	static mtPrefTable const local[] = {
-	{ OTP_PREFS_COMMENT,	MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
-	{ OTP_PREFS_WRITE_NEXT,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ OTP_PREFS_BUCKET,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ OTP_PREFS_POSITION,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ OTP_PREFS_STATUS,	MTKIT_PREF_TYPE_INT, "0", NULL, NULL, 0, NULL, NULL },
-	{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-	};
-
-	prefs->addTable ( local );
+	prefs->uprefs.add_string ( OTP_PREFS_COMMENT, prefs->comment, "" );
+	prefs->uprefs.add_int ( OTP_PREFS_WRITE_NEXT, prefs->write_next, 0 );
+	prefs->uprefs.add_int ( OTP_PREFS_BUCKET, prefs->bucket, 0 );
+	prefs->uprefs.add_int ( OTP_PREFS_POSITION, prefs->position, 0 );
+	prefs->uprefs.add_int ( OTP_PREFS_STATUS, prefs->status, 0 );
 
 	return prefs;
 }
@@ -118,7 +113,7 @@ int mtDW::OTPactive::add_otp ( std::string const & name )
 
 	time_t		now;
 	struct tm	* now_tm;
-	char		buf[32];
+	char		buf[128];
 
 	now = time ( NULL );
 	now_tm = localtime ( &now );
@@ -235,11 +230,11 @@ int mtDW::OTPactive::delete_otp ( std::string const & name ) const
 
 	std::string const full_path = m_op.m_butt_root + name + MTKIT_DIR_SEP;
 
-	std::unique_ptr<mtKit::Prefs> prefs ( create_otp_prefs () );
+	std::unique_ptr<OTPprefs> prefs ( create_otp_prefs () );
 	std::string const prefs_filename = full_path + OTP_PREFS_FILENAME;
-	prefs.get ()->load ( prefs_filename.c_str (), NULL );
+	prefs->uprefs.load ( prefs_filename.c_str (), NULL );
 
-	if ( STATUS_READ_ONLY & prefs.get ()->getInt ( OTP_PREFS_STATUS ) )
+	if ( STATUS_READ_ONLY & prefs->status )
 	{
 		return report_error ( ERROR_DISK_OTP_READ_ONLY );
 	}
@@ -251,12 +246,12 @@ int mtDW::OTPactive::set_comment ( std::string const & comment )
 {
 	RETURN_ON_ERROR ( check_read_only () )
 
-	mtKit::Prefs * const prefs = m_prefs_butt.get ();
+	OTPprefs * const prefs = m_prefs_butt.get ();
 
 	if ( prefs )
 	{
-		prefs->set ( OTP_PREFS_COMMENT, comment.c_str () );
-		prefs->save ();
+		prefs->comment = comment;
+		prefs->uprefs.save ();
 	}
 
 	return 0;
@@ -264,11 +259,11 @@ int mtDW::OTPactive::set_comment ( std::string const & comment )
 
 char const * mtDW::OTPactive::get_comment () const
 {
-	mtKit::Prefs * const prefs = m_prefs_butt.get ();
+	OTPprefs const * const prefs = m_prefs_butt.get ();
 
 	if ( prefs )
 	{
-		return prefs->getString ( OTP_PREFS_COMMENT );
+		return prefs->comment.c_str();
 	}
 
 	return "";
@@ -317,7 +312,7 @@ int mtDW::OTPactive::init_otp_path (
 	// Get accounting info
 	new_otp_prefs ();
 	std::string const fn = m_path + OTP_PREFS_FILENAME;
-	m_prefs_butt.get ()->load ( fn.c_str (), NULL );
+	m_prefs_butt->uprefs.load ( fn.c_str (), NULL );
 	restore_otp_state ();
 
 	// Tell Butt to save its state as we have a new active OTP
@@ -387,12 +382,12 @@ int mtDW::OTPactive::check_read_only () const
 
 void mtDW::OTPactive::save_state ()
 {
-	mtKit::Prefs * const prefs = m_prefs_butt.get ();
+	OTPprefs * const prefs = m_prefs_butt.get ();
 
 	if ( prefs )
 	{
 		store_otp_state ();
-		prefs->save ();
+		prefs->uprefs.save ();
 	}
 }
 
@@ -444,15 +439,15 @@ void mtDW::OTPactive::get_otp_list ( std::vector<OTPinfo> &list ) const
 			filename += MTKIT_DIR_SEP;
 			filename += OTP_PREFS_FILENAME;
 
-			std::unique_ptr<mtKit::Prefs> prefs
+			std::unique_ptr<OTPprefs> prefs
 				( create_otp_prefs () );
 
-			prefs.get ()->load ( filename.c_str (), NULL );
+			prefs->uprefs.load ( filename.c_str (), NULL );
 
 			list.push_back ( OTPinfo ( ep->d_name,
-				prefs.get ()->getString ( OTP_PREFS_COMMENT ),
-				prefs.get ()->getInt ( OTP_PREFS_STATUS ),
-				prefs.get ()->getInt ( OTP_PREFS_WRITE_NEXT )
+				prefs->comment.c_str(),
+				prefs->status,
+				prefs->write_next
 				) );
 		}
 	}

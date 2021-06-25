@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,15 +19,13 @@
 
 
 
-Backend backend;
-
-
-
 int main (
 	int			const	argc,
 	char	const * const * const	argv
 	)
 {
+	Backend backend;
+
 #ifdef DEBUG
 	// Check the error tables are correct
 	mtDW::get_error_text ( 0 );
@@ -49,150 +47,125 @@ int main (
 
 
 
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const * const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	std::cerr << "error_func: Argument ERROR! -"
-		<< " num=" << error
-		<< " arg=" << arg
-		<< "/" << (argc - 1);
+#define JTFUNC( X ) [this](char const * const * f ) { return jtf_ ## X (f); }
 
-	if ( arg < argc )
-	{
-		std::cerr << " '" << argv[arg] << "'";
-	}
 
-	std::cerr << "\n";
-
-	return 0;		// Keep parsing
-}
-
-static int init_table ( mtKit::CliTab &clitab )
-{
-	if (	0
-		|| clitab.add_item ( "about", jtf_about )
-
-		|| clitab.add_item ( "app cardshuff", jtf_app_cardshuff )
-		|| clitab.add_item ( "app cointoss", jtf_app_cointoss, 1, 1,
-			"<INTEGER>" )
-		|| clitab.add_item ( "app declist", jtf_app_declist, 3, 3,
-			"<INTEGER> <DECIMAL> <DECIMAL>" )
-		|| clitab.add_item ( "app diceroll", jtf_app_diceroll, 2, 2,
-			"<INTEGER> <INTEGER>" )
-
-		|| clitab.add_item ( "app homoglyph analyse",
-			jtf_app_homoglyph_analyse, 1, 1,
-			"<INPUT FILENAME UTF-8>" )
-		|| clitab.add_item ( "app homoglyph clean",
-			jtf_app_homoglyph_clean, 2, 2,
-			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8>" )
-		|| clitab.add_item ( "app homoglyph encode",
-			jtf_app_homoglyph_encode, 3, 3,
-			"<INPUT FILENAME UTF-8> <INPUT FILENAME BIN> "
-			"<OUTPUT FILENAME UTF-8>" )
-		|| clitab.add_item ( "app homoglyph decode",
-			jtf_app_homoglyph_decode, 2, 2,
-			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME BIN>" )
-
-		|| clitab.add_item ( "app intlist", jtf_app_intlist, 3, 3,
-			"<INTEGER> <INTEGER> <INTEGER>" )
-		|| clitab.add_item ( "app numshuff", jtf_app_numshuff, 1, 1,
-			"<INTEGER>" )
-		|| clitab.add_item ( "app password", jtf_app_password, 2, 7,
-			"<INTEGER> <INTEGER> [lower] [upper] [num] [other] "
-			"[STRING]" )
-		|| clitab.add_item ( "app pins", jtf_app_pins, 2, 2,
-			"<INTEGER> <INTEGER>" )
-
-		|| clitab.add_item ( "app utf8font clean",
-			jtf_app_utf8font_clean, 2, 2,
-			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8>" )
-		|| clitab.add_item ( "app utf8font encode",
-			jtf_app_utf8font_encode, 3, 3,
-			"<INPUT FILENAME UTF-8> <INTEGER> "
-			"<OUTPUT FILENAME UTF-8>" )
-		|| clitab.add_item ( "app utf8font list", jtf_app_utf8font_list,
-			0, 0, NULL )
-
-		|| clitab.add_item ( "butt add buckets", jtf_butt_add_buckets,
-			1, 1,"<INTEGER>")
-		|| clitab.add_item ( "butt add otp", jtf_butt_add_otp, 1, 1,
-			"<STRING>" )
-		|| clitab.add_item ( "butt add random otp",
-			jtf_butt_add_random_otp )
-		|| clitab.add_item ( "butt delete otp", jtf_butt_delete_otp,
-			1, 1, "<STRING>" )
-		|| clitab.add_item ( "butt empty", jtf_butt_empty )
-		|| clitab.add_item ( "butt import otp", jtf_butt_import_otp,
-			1, 1, "<PATH>" )
-		|| clitab.add_item ( "butt info", jtf_butt_info )
-		|| clitab.add_item ( "butt list", jtf_butt_list )
-		|| clitab.add_item ( "butt set comment", jtf_butt_set_comment,
-			1, 1, "<STRING>" )
-		|| clitab.add_item ( "butt set otp", jtf_butt_set_otp, 1, 1,
-			"<STRING>" )
-		|| clitab.add_item ( "butt set read_only",
-			jtf_butt_set_read_only )
-		|| clitab.add_item ( "butt set read_write",
-			jtf_butt_set_read_write )
-
-		|| clitab.add_item ( "db", jtf_db, 1, 1, "<PATH>" )
-
-		|| clitab.add_item ( "help", jtf_help, 0, 100, "[ARG]..." )
-		|| clitab.add_item ( "info", jtf_info )
-		|| clitab.add_item ( "q", jtf_quit )
-		|| clitab.add_item ( "quit", jtf_quit )
-
-		|| clitab.add_item ( "soda decode", jtf_soda_decode, 2, 2,
-			"<INPUT FILENAME> <OUTPUT FILENAME>")
-		|| clitab.add_item ( "soda encode", jtf_soda_encode, 2, 2,
-			"<INPUT FILENAME> <OUTPUT FILENAME>" )
-		|| clitab.add_item ( "soda file info", jtf_soda_file_info, 1, 1,
-			"<FILENAME>" )
-		|| clitab.add_item ( "soda info", jtf_soda_info )
-		|| clitab.add_item ( "soda multi decode", jtf_soda_multi_decode,
-			2, 2, "<INPUT FILENAME> <OUTPUT FILENAME>" )
-		|| clitab.add_item ( "soda multi encode", jtf_soda_multi_encode,
-			4, 18,
-			"<INPUT FILENAME> <OUTPUT FILENAME> <BUTT NAME>..." )
-		|| clitab.add_item ( "soda set mode", jtf_soda_set_mode, 1, 1,
-			"<INTEGER>" )
-
-		|| clitab.add_item ( "tap decode", jtf_tap_decode, 2, 2,
-			"<INPUT FILENAME> <OUTPUT FILENAME>" )
-		|| clitab.add_item ( "tap encode", jtf_tap_encode, 3, 3,
-			"<INPUT BOTTLE> <INPUT FILE> <OUTPUT BOTTLE>" )
-		|| clitab.add_item ( "tap file info", jtf_tap_file_info, 1, 1,
-			"<FILENAME>" )
-		|| clitab.add_item ( "tap multi decode", jtf_tap_multi_decode,
-			2, 2, "<INPUT FILENAME> <OUTPUT FILENAME>" )
-
-		|| clitab.add_item ( "well add path", jtf_well_add_path, 1, 1,
-			"<PATH>" )
-		|| clitab.add_item ( "well empty", jtf_well_empty )
-		|| clitab.add_item ( "well info", jtf_well_info )
-		|| clitab.add_item ( "well reset shifts", jtf_well_reset_shifts)
-		|| clitab.add_item ( "well save file", jtf_well_save_file, 2, 2,
-			"<BYTES> <FILENAME>" )
-		|| clitab.add_item ( "well seed", jtf_well_seed )
-		|| clitab.add_item ( "well seed int", jtf_well_seed_int, 1, 1,
-			"<INTEGER>" )
-		)
-	{
-		return 1;
-	}
-
-	return 0;
-}
 
 void Backend::main_loop ()
 {
-	if ( init_table ( m_clitab ) )
+	if (	0
+		|| m_clitab.add_item ( "about", JTFUNC( about ) )
+
+		|| m_clitab.add_item ( "app cardshuff", JTFUNC( app_cardshuff ))
+		|| m_clitab.add_item ( "app cointoss", JTFUNC( app_cointoss ),
+			1, 1, "<INTEGER>" )
+		|| m_clitab.add_item ( "app declist", JTFUNC( app_declist ),
+			3, 3, "<INTEGER> <DECIMAL> <DECIMAL>" )
+		|| m_clitab.add_item ( "app diceroll", JTFUNC( app_diceroll ),
+			2, 2, "<INTEGER> <INTEGER>" )
+
+		|| m_clitab.add_item ( "app homoglyph analyse",
+			JTFUNC( app_homoglyph_analyse ), 1, 1,
+			"<INPUT FILENAME UTF-8>" )
+		|| m_clitab.add_item ( "app homoglyph clean",
+			JTFUNC(app_homoglyph_clean), 2, 2,
+			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8>" )
+		|| m_clitab.add_item ( "app homoglyph encode",
+			JTFUNC( app_homoglyph_encode ), 3, 3,
+			"<INPUT FILENAME UTF-8> <INPUT FILENAME BIN> "
+			"<OUTPUT FILENAME UTF-8>" )
+		|| m_clitab.add_item ( "app homoglyph decode",
+			JTFUNC( app_homoglyph_decode ), 2, 2,
+			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME BIN>" )
+
+		|| m_clitab.add_item ( "app intlist", JTFUNC( app_intlist ),
+			3, 3, "<INTEGER> <INTEGER> <INTEGER>" )
+		|| m_clitab.add_item ( "app numshuff", JTFUNC( app_numshuff ),
+			1, 1, "<INTEGER>" )
+		|| m_clitab.add_item ( "app password", JTFUNC( app_password ),
+			2, 7,
+			"<INTEGER> <INTEGER> [lower] [upper] [num] [other] "
+			"[STRING]" )
+		|| m_clitab.add_item ( "app pins", JTFUNC( app_pins ), 2, 2,
+			"<INTEGER> <INTEGER>" )
+
+		|| m_clitab.add_item ( "app utf8font clean",
+			JTFUNC( app_utf8font_clean ), 2, 2,
+			"<INPUT FILENAME UTF-8> <OUTPUT FILENAME UTF-8>" )
+		|| m_clitab.add_item ( "app utf8font encode",
+			JTFUNC( app_utf8font_encode ), 3, 3,
+			"<INPUT FILENAME UTF-8> <INTEGER> "
+			"<OUTPUT FILENAME UTF-8>" )
+		|| m_clitab.add_item ( "app utf8font list",
+			JTFUNC( app_utf8font_list ), 0, 0, NULL )
+
+		|| m_clitab.add_item ( "butt add buckets",
+			JTFUNC( butt_add_buckets ), 1, 1,"<INTEGER>")
+		|| m_clitab.add_item ( "butt add otp", JTFUNC( butt_add_otp ),
+			1, 1, "<STRING>" )
+		|| m_clitab.add_item ( "butt add random otp",
+			JTFUNC( butt_add_random_otp ) )
+		|| m_clitab.add_item ( "butt delete otp",
+			JTFUNC( butt_delete_otp ), 1, 1, "<STRING>" )
+		|| m_clitab.add_item ( "butt empty", JTFUNC( butt_empty ) )
+		|| m_clitab.add_item ( "butt import otp",
+			JTFUNC( butt_import_otp ), 1, 1, "<PATH>" )
+		|| m_clitab.add_item ( "butt info", JTFUNC( butt_info ) )
+		|| m_clitab.add_item ( "butt list", JTFUNC( butt_list ) )
+		|| m_clitab.add_item ( "butt set comment",
+			JTFUNC( butt_set_comment ), 1, 1, "<STRING>" )
+		|| m_clitab.add_item ( "butt set otp", JTFUNC( butt_set_otp ),
+			1, 1, "<STRING>" )
+		|| m_clitab.add_item ( "butt set read_only",
+			JTFUNC( butt_set_read_only ) )
+		|| m_clitab.add_item ( "butt set read_write",
+			JTFUNC( butt_set_read_write ) )
+
+		|| m_clitab.add_item ( "db", JTFUNC( db ), 1, 1, "<PATH>" )
+
+		|| m_clitab.add_item ( "help", JTFUNC(help), 0, 100, "[ARG]...")
+		|| m_clitab.add_item ( "info", JTFUNC( info ) )
+		|| m_clitab.add_item ( "q", JTFUNC( quit ) )
+		|| m_clitab.add_item ( "quit", JTFUNC( quit ) )
+
+		|| m_clitab.add_item ( "soda decode", JTFUNC( soda_decode ),
+			2, 2, "<INPUT FILENAME> <OUTPUT FILENAME>")
+		|| m_clitab.add_item ( "soda encode", JTFUNC( soda_encode ),
+			2, 2, "<INPUT FILENAME> <OUTPUT FILENAME>" )
+		|| m_clitab.add_item ( "soda file info",
+			JTFUNC( soda_file_info ), 1, 1, "<FILENAME>" )
+		|| m_clitab.add_item ( "soda info", JTFUNC( soda_info ) )
+		|| m_clitab.add_item ( "soda multi decode",
+			JTFUNC( soda_multi_decode ),
+			2, 2, "<INPUT FILENAME> <OUTPUT FILENAME>" )
+		|| m_clitab.add_item ( "soda multi encode",
+			JTFUNC( soda_multi_encode ), 4, 18,
+			"<INPUT FILENAME> <OUTPUT FILENAME> <BUTT NAME>..." )
+		|| m_clitab.add_item ( "soda set mode", JTFUNC( soda_set_mode ),
+			1, 1, "<INTEGER>" )
+
+		|| m_clitab.add_item ( "tap decode", JTFUNC( tap_decode ), 2, 2,
+			"<INPUT FILENAME> <OUTPUT FILENAME>" )
+		|| m_clitab.add_item ( "tap encode", JTFUNC( tap_encode ), 3, 3,
+			"<INPUT BOTTLE> <INPUT FILE> <OUTPUT BOTTLE>" )
+		|| m_clitab.add_item ( "tap file info",
+			JTFUNC( tap_file_info ), 1, 1, "<FILENAME>" )
+		|| m_clitab.add_item ( "tap multi decode",
+			JTFUNC( tap_multi_decode ),
+			2, 2, "<INPUT FILENAME> <OUTPUT FILENAME>" )
+
+		|| m_clitab.add_item ( "well add path", JTFUNC( well_add_path ),
+			1, 1, "<PATH>" )
+		|| m_clitab.add_item ( "well empty", JTFUNC( well_empty ) )
+		|| m_clitab.add_item ( "well info", JTFUNC( well_info ) )
+		|| m_clitab.add_item ( "well reset shifts",
+			JTFUNC( well_reset_shifts ) )
+		|| m_clitab.add_item ( "well save file",
+			JTFUNC( well_save_file ), 2, 2, "<BYTES> <FILENAME>" )
+		|| m_clitab.add_item ( "well seed", JTFUNC( well_seed ) )
+		|| m_clitab.add_item ( "well seed int", JTFUNC( well_seed_int ),
+			1, 1, "<INTEGER>" )
+		)
 	{
 		exit.abort ();
 		exit.set_value ( 1 );
@@ -256,17 +229,15 @@ int Backend::command_line (
 	int	show_about	= 1;
 	int	tab_text	= 0;
 
-	mtArg	const	arg_list[] = {
-	{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-	{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-	{ "db",		MTKIT_ARG_STRING, &m_db_path, 0, NULL },
-	{ "q",		MTKIT_ARG_SWITCH, &show_about, 0, NULL },
-	{ "t",		MTKIT_ARG_SWITCH, &tab_text, 1, NULL },
-	{ NULL, 0, NULL, 0, NULL }
-	};
+	mtKit::Arg args;
 
+	args.add ( "-help",	show_version, 2 );
+	args.add ( "-version",	show_version, 1 );
+	args.add ( "db",	m_db_path );
+	args.add ( "q",		show_about, 0 );
+	args.add ( "t",		tab_text, 1 );
 
-	mtkit_arg_parse( argc, argv, arg_list, NULL, error_func, NULL);
+	args.parse ( argc, argv );
 
 	if ( show_version )
 	{

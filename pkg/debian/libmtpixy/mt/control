@@ -2,7 +2,7 @@ Source: libmtpixy
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libcairo2-dev, libpango1.0-dev, libpng-dev, libgif-dev, libjpeg-dev
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libcairo2-dev, libpango1.0-dev, librsvg2-dev, libpng-dev, libgif-dev, libjpeg-dev
 Standards-Version: 3.9.3
 Homepage: http://ced.marktyler.org/
 

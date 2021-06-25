@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2019 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,28 +19,43 @@
 
 
 
-int pixyut_cmp ()
+int Global::pixy_cmp ()
 {
-	if ( global.image_pair.open_file ( global.s_arg ) )
+	mtPixmap * pixmap;
+
+	switch ( m_image_pair.open_file ( s_arg, i_ftype_in, &pixmap ) )
 	{
+	case 0:
+		// Both images are loaded, so do some work.
+		break;
+
+	case -1:
+		// Only one image loaded.
+		return 0;
+
+	case 1:
+		i_error = 1;	// Error, so bail out
 		return 0;
 	}
 
-	mtPixy::Image * const image_a = global.image_pair.get_image_a ();
-	mtPixy::Image * const image_b = global.image_pair.get_image_b ();
+	set_pixmap ( pixmap );
 
-	unsigned char const * const mem_a = image_a->get_canvas ();
-	unsigned char const * const mem_b = image_b->get_canvas ();
+	mtPixmap const * const pixmap_a = m_image_pair.get_pixmap_a ();
+	mtPixmap const * const pixmap_b = m_image_pair.get_pixmap_b ();
 
-	int64_t const pixels = image_a->get_canvas_bpp () *
-		(image_a->get_width () * image_a->get_height ());
+	unsigned char const * const mem_a = pixy_pixmap_get_canvas ( pixmap_a );
+	unsigned char const * const mem_b = pixy_pixmap_get_canvas ( pixmap_b );
+
+	int64_t const pixels = pixy_pixmap_get_bytes_per_pixel ( pixmap_a ) *
+		pixy_pixmap_get_width ( pixmap_a ) *
+		pixy_pixmap_get_height( pixmap_a );
 
 	for ( int64_t p = 0; p < pixels; p++ )
 	{
 		if ( mem_a[p] != mem_b[p] )
 		{
 			std::cerr << "Images not identical\n";
-			global.i_error = 1;	// Bail out
+			i_error = 1;	// Bail out
 
 			return 0;
 		}
@@ -49,22 +64,37 @@ int pixyut_cmp ()
 	return 0;
 }
 
-int pixyut_delta ()
+int Global::pixy_delta ()
 {
-	if ( global.image_pair.open_file ( global.s_arg ) )
+	mtPixmap * pixmap;
+
+	switch ( m_image_pair.open_file ( s_arg, i_ftype_in, &pixmap ) )
 	{
+	case 0:
+		// Both images are loaded, so do some work.
+		break;
+
+	case -1:
+		// Only one image loaded.
+		return 0;
+
+	case 1:
+		i_error = 1;	// Error, so bail out
 		return 0;
 	}
 
-	mtPixy::Image * const image_a = global.image_pair.get_image_a ();
-	mtPixy::Image * const image_b = global.image_pair.get_image_b ();
+	set_pixmap ( pixmap );
 
-	unsigned char const * const mem_a = image_a->get_canvas ();
-	unsigned char const * const mem_b = image_b->get_canvas ();
-	unsigned char * const dest = global.image->get_canvas ();
+	mtPixmap const * const pixmap_a = m_image_pair.get_pixmap_a ();
+	mtPixmap const * const pixmap_b = m_image_pair.get_pixmap_b ();
 
-	int64_t const pixels = image_a->get_canvas_bpp () *
-		(image_a->get_width () * image_a->get_height ());
+	unsigned char const * const mem_a = pixy_pixmap_get_canvas ( pixmap_a );
+	unsigned char const * const mem_b = pixy_pixmap_get_canvas ( pixmap_b );
+	unsigned char * const dest = pixy_pixmap_get_canvas ( m_pixmap.get() );
+
+	int64_t const pixels = pixy_pixmap_get_bytes_per_pixel ( pixmap_a ) *
+		pixy_pixmap_get_width ( pixmap_a ) *
+		pixy_pixmap_get_height( pixmap_a );
 
 	for ( int64_t p = 0; p < pixels; p++ )
 	{
@@ -74,117 +104,117 @@ int pixyut_delta ()
 	return 0;
 }
 
-int pixyut_ls ()
+int Global::pixy_ls ()
 {
 	if ( ut_load_file () )
 	{
 		// Unable to load file - non-fatal error for 'ls'
 
-		printf ( "????? %s\n", global.s_arg );
+		printf ( "????? %s\n", s_arg );
 
 		return 0;
 	}
 
-	if ( global.i_verbose )
+	if ( i_verbose )
 	{
+		mtPixmap const * const pixmap = m_pixmap.get();
+
 		printf ( "w=%-5i h=%-5i cols=%-3i bpp=%i%-3s",
-			global.image->get_width (),
-			global.image->get_height (),
-			global.image->get_palette ()->get_color_total (),
-			global.image->get_canvas_bpp (),
-			global.image->get_alpha () ? "+A" : "" );
+			pixy_pixmap_get_width ( pixmap ),
+			pixy_pixmap_get_height ( pixmap ),
+			pixy_pixmap_get_palette_size ( pixmap ),
+			pixy_pixmap_get_bytes_per_pixel( pixmap ),
+			pixy_pixmap_get_alpha ( pixmap ) ? "+A" : "" );
 	}
 
-	printf ( "%-5s %s\n", mtPixy::File::type_text (
-		(mtPixy::File::Type) global.i_ftype_in ), global.s_arg );
+	printf ( "%-5s %s\n", pixy_file_type_text ( i_ftype_in ), s_arg );
 
 	return 0;
 }
 
-int pixyut_new ()
+int Global::pixy_new ()
 {
-	if (	global.i_palette < 0 ||
-		global.i_palette > mtPixy::Palette::UNIFORM_MAX
+	if (	i_palette < 0 ||
+		i_palette > PIXY_PALETTE_UNIFORM_MAX
 		)
 	{
 		return ERROR_BAD_PALETTE; // Fail: caller tells user of failure
 	}
 
-	mtPixy::Image * image = mtPixy::Image::create (
-		(mtPixy::Image::Type)global.i_image_type,
-		global.i_width, global.i_height );
+	mtPixmap * pixmap = pixy_pixmap_new ( i_image_type, i_width, i_height );
 
-	if ( ! image )
+	if ( ! pixmap )
 	{
 		return ERROR_LIBMTPIXY; // Fail: caller tells user of failure
 	}
 
-	global.set_image ( image );
+	set_pixmap ( pixmap );
 
-	mtPixy::Palette	* const pal = image->get_palette ();
+	mtPalette * const pal = pixy_pixmap_get_palette ( pixmap );
 
-	switch ( global.i_palette )
+	switch ( i_palette )
 	{
 	case 0:
 		break;
 
 	case 1:
-		pal->set_grey ();
+		pixy_palette_set_grey ( pal );
 		break;
 
 	default:
-		pal->set_uniform ( global.i_palette );
+		pixy_palette_set_uniform ( pal, i_palette );
 		break;
 	}
 
 	return 0;
 }
 
-int pixyut_resize ()
+int Global::pixy_resize ()
 {
 	if ( ut_load_file () )
 	{
 		return ERROR_LOAD_FILE;	// Fail: caller tells user of failure
 	}
 
-	mtPixy::Image * image = global.image->resize ( global.i_x, global.i_y,
-		global.i_width, global.i_height );
+	mtPixmap * pixmap = pixy_pixmap_resize ( m_pixmap.get(), i_x, i_y,
+		i_width, i_height );
 
-	if ( ! image )
+	if ( ! pixmap )
 	{
 		return ERROR_LIBMTPIXY; // Fail: caller tells user of failure
 	}
 
-	global.set_image ( image );
+	set_pixmap ( pixmap );
 
 	return 0;
 }
 
-int pixyut_scale ()
+int Global::pixy_scale ()
 {
 	if ( ut_load_file () )
 	{
 		return ERROR_LOAD_FILE;	// Fail: caller tells user of failure
 	}
 
-	mtPixy::Image::ScaleType st = mtPixy::Image::SCALE_BLOCKY;
+	int st = PIXY_SCALE_BLOCKY;
 
-	if (	global.image->get_type () == mtPixy::Image::TYPE_RGB &&
-		global.i_scale == 0
+	if (	pixy_pixmap_get_bytes_per_pixel ( m_pixmap.get() ) ==
+			PIXY_PIXMAP_BPP_RGB
+		&& i_scale == 0
 		)
 	{
-		st = mtPixy::Image::SCALE_SMOOTH;
+		st = PIXY_SCALE_SMOOTH;
 	}
 
-	mtPixy::Image * image = global.image->scale ( global.i_width,
-		global.i_height, st );
+	mtPixmap * const pixmap = pixy_pixmap_scale ( m_pixmap.get(), i_width,
+		i_height, st );
 
-	if ( ! image )
+	if ( ! pixmap )
 	{
 		return ERROR_LIBMTPIXY; // Fail: caller tells user of failure
 	}
 
-	global.set_image ( image );
+	set_pixmap ( pixmap );
 
 	return 0;
 }

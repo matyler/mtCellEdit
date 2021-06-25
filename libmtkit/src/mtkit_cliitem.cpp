@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,52 +19,15 @@
 
 
 
-static int tab_cmp (
-	void	const * const	k1,
-	void	const * const	k2
-	)
+int mtKit::CliItem::add_item ( CliItem * const item )
 {
-	return strcmp ( (char const *)k1, (char const *)k2 );
-}
+	// Needed in case of exception
+	std::unique_ptr< CliItem > tmp ( item );
 
-static void tab_del (
-	mtTreeNode	* const	node
-	)
-{
-	// Key not destroyed here: is a reference to data in (CliTabItem *)
-	delete ( (mtKit::CliItem *)node->data );
-}
+	auto const ret = m_items.insert ( std::make_pair ( item->m_key,
+		std::move ( tmp ) ) );
 
-mtKit::CliItem::CliItem ()
-	:
-	m_key		(),
-	m_func		(),
-	m_arg_min	( 0 ),
-	m_arg_max	( 0 ),
-	m_arg_help	(),
-	m_arg_scale	( 1 )
-{
-	m_tree = mtkit_tree_new ( tab_cmp, tab_del );
-}
-
-mtKit::CliItem::~CliItem ()
-{
-	mtkit_tree_destroy ( m_tree );
-	m_tree = NULL;
-
-	free ( m_key );
-	m_key = NULL;
-
-	free ( m_arg_help );
-	m_arg_help = NULL;
-}
-
-int mtKit::CliItem::add_item (
-	CliItem		* item
-	)
-{
-	if ( 0 == mtkit_tree_node_add ( m_tree, (void *)item->m_key,
-		(void *)item ) )
+	if ( ret.second == false )
 	{
 		return 1;
 	}
@@ -73,7 +36,6 @@ int mtKit::CliItem::add_item (
 }
 
 int mtKit::CliItem::set_data (
-	char	const * const	key,
 	CliFunc		const	func,
 	int		const	arg_min,
 	int		const	arg_max,
@@ -82,11 +44,6 @@ int mtKit::CliItem::set_data (
 	)
 {
 	if ( arg_min < 0 || arg_max < arg_min || arg_scale < 1 )
-	{
-		return 1;
-	}
-
-	if ( key && mtkit_strfreedup ( &m_key, key ) )
 	{
 		return 1;
 	}
@@ -100,25 +57,24 @@ int mtKit::CliItem::set_data (
 	m_arg_max = arg_max;
 	m_arg_scale = arg_scale;
 
-	if ( arg_help && mtkit_strfreedup ( &m_arg_help, arg_help ) )
+	if ( arg_help )
 	{
-		return 1;
+		m_arg_help = arg_help;
 	}
 
 	return 0;
 }
 
-mtKit::CliItem * mtKit::CliItem::find_item (
-	char	const * const	key
-	) const
+mtKit::CliItem * mtKit::CliItem::find ( std::string const & key ) const
 {
-	mtTreeNode * node = mtkit_tree_node_find ( m_tree, (void const *)key );
-	if ( node )
+	auto const it = m_items.find ( key );
+
+	if ( it == m_items.end() )
 	{
-		return (CliItem *)node->data;
+		return nullptr;
 	}
 
-	return NULL;
+	return it->second.get();
 }
 
 mtKit::CliItem const * mtKit::CliItem::match_args (
@@ -137,7 +93,7 @@ mtKit::CliItem const * mtKit::CliItem::match_args (
 
 	for ( i = 0; argv[i]; i++ )
 	{
-		match = match->find_item ( argv[i] );
+		match = match->find ( argv[i] );
 		if ( ! match )
 		{
 			// Unmatched command
@@ -146,7 +102,7 @@ mtKit::CliItem const * mtKit::CliItem::match_args (
 			goto finish;
 		}
 
-		if ( ! match->m_tree->root )
+		if ( match->m_items.size() == 0 )
 		{
 			// No more commands in this line so rest must be args
 			// (not commands)
@@ -219,11 +175,11 @@ int mtKit::CliItem::callback (
 
 int mtKit::CliItem::print_help_item () const
 {
-	char	const	* info = " ... ";
+	std::string info = " ... ";
 
 	if ( m_func )
 	{
-		if ( m_arg_help )
+		if ( m_arg_help.size() > 0 )
 		{
 			info = m_arg_help;
 		}
@@ -231,7 +187,7 @@ int mtKit::CliItem::print_help_item () const
 		{
 			// Do sub-functions also exist?
 
-			if ( m_tree->root )
+			if ( m_items.size() > 0 )
 			{
 				info = "[...]";
 			}
@@ -242,30 +198,20 @@ int mtKit::CliItem::print_help_item () const
 		}
 	}
 
-	printf ( "%-14s %s\n", m_key, info );
+	printf ( "%-14s %s\n", m_key.c_str(), info.c_str() );
 
 	return 0;
-}
-
-static int cb_help (
-	mtTreeNode	* const	node,
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	mtKit::CliItem	const	* citem = (mtKit::CliItem const *)node->data;
-
-	if ( citem )
-	{
-		return citem->print_help_item ();
-	}
-
-	return 0;			// Continue
 }
 
 int mtKit::CliItem::print_help () const
 {
 	printf ( "\n" );
-	mtkit_tree_scan ( m_tree, cb_help, NULL, 0 );
+
+	for ( auto && item : m_items )
+	{
+		item.second.get()->print_help_item ();
+	}
+
 	printf ( "\n" );
 
 	return 0;

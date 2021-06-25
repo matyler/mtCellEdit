@@ -1,0 +1,3 @@
+0.0	2021-1-14
+
+	* mtGinUtils started - Utilities and demos for libmtgin.

@@ -8,7 +8,7 @@
 
 = DESCRIPTION =
 Create an output file from a source file ready for twitter.  Twitter sometimes
-mangles a pixel art image unless its RGB, and has an alpha pixel.  This program
+mangles a pixel art image unless it's RGB, and has an alpha pixel.  This program
 ensures the output file has these qualities, and is at least 1000 pixels in
 size.
 

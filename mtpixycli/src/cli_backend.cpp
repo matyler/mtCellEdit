@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2018 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,33 +28,12 @@ Backend::Backend ()
 {
 	for ( int i = 0; i < FILE_TOTAL; i++ )
 	{
-		m_file[i].new_image ( mtPixy::Image::TYPE_RGB, 100, 100, 1, 3 );
+		m_file[i].new_image ( PIXY_PIXMAP_BPP_RGB, 100, 100, 1, 3, "" );
 	}
 }
 
 Backend::~Backend ()
 {
-}
-
-static int error_func (
-	int		const	error,
-	int		const	arg,
-	int		const	argc,
-	char	const	* const	argv[],
-	void		* const	ARG_UNUSED ( user_data )
-	)
-{
-	fprintf ( stderr, "error_func: Argument ERROR! - num=%i arg=%i/%i",
-		error, arg, argc );
-
-	if ( arg < argc )
-	{
-		fprintf ( stderr, " '%s'", argv[arg] );
-	}
-
-	fprintf ( stderr, "\n" );
-
-	return 0;			// Keep parsing
 }
 
 int Backend::command_line (
@@ -68,19 +47,22 @@ int Backend::command_line (
 	int		rnd_seed	= 0;
 	char	const	* fn_patterns	= NULL;
 	char	const	* fn_shapes	= NULL;
-	mtArg	const	arg_list[] = {
-		{ "-help",	MTKIT_ARG_SWITCH, &show_version, 2, NULL },
-		{ "-version",	MTKIT_ARG_SWITCH, &show_version, 1, NULL },
-		{ "patterns",	MTKIT_ARG_STRING, &fn_patterns, 0, NULL },
-		{ "q",		MTKIT_ARG_SWITCH, &show_about, 0, NULL },
-		{ "seed",	MTKIT_ARG_INT, &rnd_seed, 0, NULL },
-		{ "shapes",	MTKIT_ARG_STRING, &fn_shapes, 0, NULL },
-		{ "t",		MTKIT_ARG_SWITCH, &tab_text, 1, NULL },
-		{ NULL, 0, NULL, 0, NULL }
-		};
 
+	mtKit::Arg args;
 
-	mtkit_arg_parse ( argc, argv, arg_list, NULL, error_func, NULL );
+	args.add ( "-help",	show_version, 2 );
+	args.add ( "-version",	show_version, 1 );
+	args.add ( "patterns",	fn_patterns );
+	args.add ( "q",		show_about, 0 );
+	args.add ( "seed",	rnd_seed );
+	args.add ( "shapes",	fn_shapes );
+	args.add ( "t",		tab_text, 1 );
+
+	if ( args.parse ( argc, argv ) )
+	{
+		exit.set_value ( 1 );
+		return 1;
+	}
 
 	switch ( show_version )
 	{
@@ -113,7 +95,7 @@ int Backend::command_line (
 
 	if ( fn_patterns )
 	{
-		if ( backend.file().brush.load_patterns ( fn_patterns ) )
+		if ( file().brush.load_patterns ( fn_patterns ) )
 		{
 			fprintf ( stderr, "ERROR: Pattern file '%s' invalid.\n",
 				fn_patterns );
@@ -126,7 +108,7 @@ int Backend::command_line (
 
 	if ( fn_shapes )
 	{
-		if ( backend.file().brush.load_shapes ( fn_shapes ) )
+		if ( file().brush.load_shapes ( fn_shapes ) )
 		{
 			fprintf ( stderr, "ERROR: Shape file '%s' invalid.\n",
 				fn_shapes );
@@ -149,137 +131,146 @@ int Backend::command_line (
 	return 0;			// Continue program
 }
 
-static int init_table ( mtKit::CliTab &clitab )
-{
-	if (	0
-		|| clitab.add_item ( "canvas flip_h", jtf_canvas_flip_h )
-		|| clitab.add_item ( "canvas flip_v", jtf_canvas_flip_v )
-		|| clitab.add_item ( "canvas indexed", jtf_canvas_indexed,
-			1, 1, "<DITHER none | basic | floyd>" )
-		|| clitab.add_item ( "canvas rgb", jtf_canvas_rgb )
-		|| clitab.add_item ( "canvas rotate_a", jtf_canvas_rotate_a )
-		|| clitab.add_item ( "canvas rotate_c", jtf_canvas_rotate_c )
-		|| clitab.add_item ( "clip flip_h", jtf_clip_flip_h )
-		|| clitab.add_item ( "clip flip_v", jtf_clip_flip_v )
-		|| clitab.add_item ( "clip load", jtf_clip_load, 1, 1,
-			"<1..12>" )
-		|| clitab.add_item ( "clip rotate_a", jtf_clip_rotate_a )
-		|| clitab.add_item ( "clip rotate_c", jtf_clip_rotate_c )
-		|| clitab.add_item ( "clip save", jtf_clip_save, 1, 1,
-			"<1..12>" )
-		|| clitab.add_item ( "copy", jtf_copy )
-		|| clitab.add_item ( "crop", jtf_crop )
-		|| clitab.add_item ( "cut", jtf_cut )
-		|| clitab.add_item ( "delete alpha", jtf_delete_alpha )
-		|| clitab.add_item ( "effect bacteria", jtf_effect_bacteria,
-			1, 1, "<STRENGTH 1..100>" )
-		|| clitab.add_item ( "effect edge_detect",
-			jtf_effect_edge_detect )
-		|| clitab.add_item ( "effect emboss", jtf_effect_emboss )
-		|| clitab.add_item ( "effect invert", jtf_effect_invert )
-		|| clitab.add_item ( "effect sharpen", jtf_effect_sharpen,
-			1, 1, "<STRENGTH 1..100>" )
-		|| clitab.add_item ( "effect soften", jtf_effect_soften, 1, 1,
-			"<STRENGTH 1..100>" )
-		|| clitab.add_item ( "effect trans_color",
-			jtf_effect_trans_color, 6, 6,
-			"<GAMMA -100..100> <BRIGHTNESS -100..100> "
-			"<CONTRAST -100..100> <SATURATION -100..100> "
-			"<HUE -1529..1529> <POSTERIZE 1..8>" )
-		|| clitab.add_item ( "fill", jtf_fill )
-		|| clitab.add_item ( "floodfill", jtf_floodfill, 2, 2,
-			"<X 0..> <Y 0..>" )
-		|| clitab.add_item ( "help", jtf_help, 0, 100, "[ARG]..." )
-		|| clitab.add_item ( "info", jtf_info )
-		|| clitab.add_item ( "lasso", jtf_lasso )
-		|| clitab.add_item ( "load", jtf_load, 1, 1, "<OS FILENAME>" )
-		|| clitab.add_item ( "new", jtf_new, 3, 3,
-			"<WIDTH 1..32767> <HEIGHT 1..32767> <rgb | indexed>" )
-		|| clitab.add_item ( "outline", jtf_outline )
-		|| clitab.add_item ( "paint", jtf_paint, 1, 100,
-			"< <X 0..> <Y 0..> >...", 2 )
-		|| clitab.add_item ( "palette color", jtf_palette_color, 4, 4,
-			"<INDEX 0..255> <RED 0..255> <GREEN 0..255> "
-			"<BLUE 0..255>" )
-		|| clitab.add_item ( "palette del_unused",
-			jtf_palette_del_unused )
-		|| clitab.add_item ( "palette from_canvas",
-			jtf_palette_from_canvas )
-		|| clitab.add_item ( "palette gradient", jtf_palette_gradient)
-		|| clitab.add_item ( "palette load", jtf_palette_load, 1, 1,
-			"<OS FILENAME>" )
-		|| clitab.add_item ( "palette mask all", jtf_palette_mask_all)
-		|| clitab.add_item ( "palette mask index",
-			jtf_palette_mask_index, 1, 1, "<0..255>" )
-		|| clitab.add_item ( "palette merge_dups",
-			jtf_palette_merge_dups )
-		|| clitab.add_item ( "palette move", jtf_palette_move, 2, 2,
-			"<FROM INDEX 0..255> <TO INDEX 0..255>" )
-		|| clitab.add_item ( "palette quantize", jtf_palette_quantize)
-		|| clitab.add_item ( "palette save", jtf_palette_save, 1, 1,
-			"<OS FILENAME>" )
-		|| clitab.add_item ( "palette set", jtf_palette_set, 2, 2,
-			"<uniform | balanced> <2..6>" )
-		|| clitab.add_item ( "palette size", jtf_palette_size, 1, 1,
-			"<2..255>" )
-		|| clitab.add_item ( "palette sort", jtf_palette_sort, 3, 4,
-			"<START 0..255> <FINISH 0..255> <hue | saturation | "
-			"value | min | brightness | red | green | blue | "
-			"frequency > [reverse]" )
-		|| clitab.add_item ( "palette unmask all",
-			jtf_palette_unmask_all )
-		|| clitab.add_item ( "palette unmask index",
-			jtf_palette_unmask_index, 1, 1, "<0..255>" )
-		|| clitab.add_item ( "paste", jtf_paste, 2, 2,
-			"<X -32766..> <Y -32766..>" )
-		|| clitab.add_item ( "q", jtf_quit )
-		|| clitab.add_item ( "quit", jtf_quit )
-		|| clitab.add_item ( "redo", jtf_redo )
-		|| clitab.add_item ( "resize", jtf_resize, 4, 4,
-			"<X -32766..32767> <Y -32766..32767> <WIDTH 1..32767> "
-			"<HEIGHT 1..32767>" )
-		|| clitab.add_item ( "save", jtf_save )
-		|| clitab.add_item ( "save as", jtf_save_as, 1, 3,
-			"<OS FILENAME> [ <bmp | bp24 | gif | jpeg | pixy | "
-			"png > [COMPRESSION 0..9 | 0..100] ]" )
-		|| clitab.add_item ( "save undo", jtf_save_undo, 1, 1,
-			"<OS FILENAME>" )
-		|| clitab.add_item ( "scale", jtf_scale, 2, 3,
-			"<WIDTH 1..32767> <HEIGHT 1..32767> [smooth]" )
-		|| clitab.add_item ( "select all", jtf_select_all )
-		|| clitab.add_item ( "select polygon", jtf_select_polygon,
-			1, 100, "< <X 0..> <Y 0..> >...", 2 )
-		|| clitab.add_item ( "select rectangle", jtf_select_rectangle,
-			4, 4, "<X 0..> <Y 0..> <WIDTH 1..> <HEIGHT 1..>" )
-		|| clitab.add_item ( "set brush flow", jtf_set_brush_flow,
-			1, 1, "<1..1000>" )
-		|| clitab.add_item ( "set brush pattern",
-			jtf_set_brush_pattern, 1, 1, "<0..>" )
-		|| clitab.add_item ( "set brush shape", jtf_set_brush_shape,
-			1, 1, "<0..>" )
-		|| clitab.add_item ( "set brush spacing",
-			jtf_set_brush_spacing, 1, 1, "<0..100>" )
-		|| clitab.add_item ( "set color a", jtf_set_color_a, 1, 1,
-			"<0..255>" )
-		|| clitab.add_item ( "set color b", jtf_set_color_b, 1, 1,
-			"<0..255>" )
-		|| clitab.add_item ( "set color swap", jtf_set_color_swap )
-		|| clitab.add_item ( "set file", jtf_set_file, 1, 1, "<0..4>")
-		|| clitab.add_item ( "text", jtf_text, 3, 7, "<STRING> "
-			"<FONT NAME> <FONT SIZE 1..100> [bold] [italic] "
-			"[underline] [strikethrough]" )
-		|| clitab.add_item ( "undo", jtf_undo )
-		)
-	{
-		return 1;
-	}
 
-	return 0;
-}
+
+#define JTFUNC( X ) [this](char const * const * f ) { return jtf_ ## X (f); }
+
+
 
 void Backend::main_loop ()
 {
-	if ( init_table ( m_clitab ) )
+	if (	0
+		|| m_clitab.add_item ( "canvas flip_h", JTFUNC(canvas_flip_h) )
+		|| m_clitab.add_item ( "canvas flip_v", JTFUNC(canvas_flip_v) )
+		|| m_clitab.add_item ( "canvas indexed", JTFUNC(canvas_indexed),
+			1, 1, "<DITHER none | basic | average | floyd>" )
+		|| m_clitab.add_item ( "canvas rgb", JTFUNC(canvas_rgb) )
+		|| m_clitab.add_item ( "canvas rotate_a",
+			JTFUNC(canvas_rotate_a) )
+		|| m_clitab.add_item ( "canvas rotate_c",
+			JTFUNC(canvas_rotate_c) )
+		|| m_clitab.add_item ( "clip flip_h", JTFUNC(clip_flip_h) )
+		|| m_clitab.add_item ( "clip flip_v", JTFUNC(clip_flip_v) )
+		|| m_clitab.add_item ( "clip load", JTFUNC(clip_load), 1, 1,
+			"<1..12>" )
+		|| m_clitab.add_item ( "clip rotate_a", JTFUNC(clip_rotate_a) )
+		|| m_clitab.add_item ( "clip rotate_c", JTFUNC(clip_rotate_c) )
+		|| m_clitab.add_item ( "clip save", JTFUNC(clip_save), 1, 1,
+			"<1..12>" )
+		|| m_clitab.add_item ( "copy", JTFUNC(copy) )
+		|| m_clitab.add_item ( "crop", JTFUNC(crop) )
+		|| m_clitab.add_item ( "cut", JTFUNC(cut) )
+		|| m_clitab.add_item ( "delete alpha", JTFUNC(delete_alpha) )
+
+		|| m_clitab.add_item ( "effect bacteria",
+			JTFUNC(effect_bacteria), 1, 1, "<STRENGTH 1..100>" )
+		|| m_clitab.add_item ( "effect crt",
+			JTFUNC(effect_crt), 1, 1, "<SCALE 2..32>" )
+		|| m_clitab.add_item ( "effect edge_detect",
+			JTFUNC(effect_edge_detect) )
+		|| m_clitab.add_item ( "effect emboss", JTFUNC(effect_emboss) )
+		|| m_clitab.add_item ( "effect invert", JTFUNC(effect_invert) )
+		|| m_clitab.add_item ( "effect sharpen", JTFUNC(effect_sharpen),
+			1, 1, "<STRENGTH 1..100>" )
+		|| m_clitab.add_item ( "effect soften", JTFUNC(effect_soften),
+			1, 1, "<STRENGTH 1..100>" )
+		|| m_clitab.add_item ( "effect trans_color",
+			JTFUNC(effect_trans_color), 6, 6,
+			"<GAMMA -100..100> <BRIGHTNESS -100..100> "
+			"<CONTRAST -100..100> <SATURATION -100..100> "
+			"<HUE -1529..1529> <POSTERIZE 1..8>" )
+
+		|| m_clitab.add_item ( "fill", JTFUNC(fill) )
+		|| m_clitab.add_item ( "floodfill", JTFUNC(floodfill), 2, 2,
+			"<X 0..> <Y 0..>" )
+		|| m_clitab.add_item ( "help", JTFUNC(help), 0, 100, "[ARG]...")
+		|| m_clitab.add_item ( "info", JTFUNC(info) )
+		|| m_clitab.add_item ( "lasso", JTFUNC(lasso) )
+		|| m_clitab.add_item ( "load", JTFUNC(load), 1, 1,
+			"<OS FILENAME>" )
+		|| m_clitab.add_item ( "new", JTFUNC(new), 3, 3,
+			"<WIDTH 1..32767> <HEIGHT 1..32767> <rgb | indexed>" )
+		|| m_clitab.add_item ( "outline", JTFUNC(outline) )
+		|| m_clitab.add_item ( "paint", JTFUNC(paint), 1, 100,
+			"< <X 0..> <Y 0..> >...", 2 )
+		|| m_clitab.add_item ( "palette color", JTFUNC(palette_color),
+			4, 4, "<INDEX 0..255> <RED 0..255> <GREEN 0..255> "
+			"<BLUE 0..255>" )
+		|| m_clitab.add_item ( "palette del_unused",
+			JTFUNC(palette_del_unused) )
+		|| m_clitab.add_item ( "palette from_canvas",
+			JTFUNC(palette_from_canvas) )
+		|| m_clitab.add_item ( "palette gradient",
+			JTFUNC(palette_gradient) )
+		|| m_clitab.add_item ( "palette load", JTFUNC(palette_load),
+			1, 1, "<OS FILENAME>" )
+		|| m_clitab.add_item ( "palette mask all",
+			JTFUNC(palette_mask_all) )
+		|| m_clitab.add_item ( "palette mask index",
+			JTFUNC(palette_mask_index), 1, 1, "<0..255>" )
+		|| m_clitab.add_item ( "palette merge_dups",
+			JTFUNC(palette_merge_dups) )
+		|| m_clitab.add_item ( "palette move", JTFUNC(palette_move),
+			2, 2, "<FROM INDEX 0..255> <TO INDEX 0..255>" )
+		|| m_clitab.add_item ( "palette quantize",
+			JTFUNC(palette_quantize) )
+		|| m_clitab.add_item ( "palette save", JTFUNC(palette_save),
+			1, 1, "<OS FILENAME>" )
+		|| m_clitab.add_item ( "palette set", JTFUNC(palette_set), 2, 2,
+			"<uniform | balanced> <2..6>" )
+		|| m_clitab.add_item ( "palette size", JTFUNC(palette_size), 1, 1,
+			"<2..255>" )
+		|| m_clitab.add_item ( "palette sort", JTFUNC(palette_sort),
+			3, 4,
+			"<START 0..255> <FINISH 0..255> <hue | saturation | "
+			"value | min | brightness | red | green | blue | "
+			"frequency > [reverse]" )
+		|| m_clitab.add_item ( "palette unmask all",
+			JTFUNC(palette_unmask_all) )
+		|| m_clitab.add_item ( "palette unmask index",
+			JTFUNC(palette_unmask_index), 1, 1, "<0..255>" )
+		|| m_clitab.add_item ( "paste", JTFUNC(paste), 2, 2,
+			"<X -32766..> <Y -32766..>" )
+		|| m_clitab.add_item ( "q", JTFUNC(quit) )
+		|| m_clitab.add_item ( "quit", JTFUNC(quit) )
+		|| m_clitab.add_item ( "redo", JTFUNC(redo) )
+		|| m_clitab.add_item ( "resize", JTFUNC(resize), 4, 4,
+			"<X -32766..32767> <Y -32766..32767> <WIDTH 1..32767> "
+			"<HEIGHT 1..32767>" )
+		|| m_clitab.add_item ( "save", JTFUNC(save) )
+		|| m_clitab.add_item ( "save as", JTFUNC(save_as), 1, 3,
+			"<OS FILENAME> [ <bmp | bp24 | gif | jpeg | pixy | "
+			"png > [COMPRESSION 0..9 | 0..100] ]" )
+		|| m_clitab.add_item ( "save undo", JTFUNC(save_undo), 1, 1,
+			"<OS FILENAME>" )
+		|| m_clitab.add_item ( "scale", JTFUNC(scale), 2, 3,
+			"<WIDTH 1..32767> <HEIGHT 1..32767> [smooth]" )
+		|| m_clitab.add_item ( "select all", JTFUNC(select_all) )
+		|| m_clitab.add_item ( "select polygon", JTFUNC(select_polygon),
+			1, 100, "< <X 0..> <Y 0..> >...", 2 )
+		|| m_clitab.add_item ( "select rectangle",
+			JTFUNC(select_rectangle), 4, 4,
+			"<X 0..> <Y 0..> <WIDTH 1..> <HEIGHT 1..>" )
+		|| m_clitab.add_item ( "set brush flow", JTFUNC(set_brush_flow),
+			1, 1, "<1..1000>" )
+		|| m_clitab.add_item ( "set brush pattern",
+			JTFUNC(set_brush_pattern), 1, 1, "<0..>" )
+		|| m_clitab.add_item ( "set brush shape",
+			JTFUNC(set_brush_shape), 1, 1, "<0..>" )
+		|| m_clitab.add_item ( "set brush spacing",
+			JTFUNC(set_brush_spacing), 1, 1, "<0..100>" )
+		|| m_clitab.add_item ( "set color a", JTFUNC(set_color_a), 1, 1,
+			"<0..255>" )
+		|| m_clitab.add_item ( "set color b", JTFUNC(set_color_b), 1, 1,
+			"<0..255>" )
+		|| m_clitab.add_item ( "set color swap", JTFUNC(set_color_swap))
+		|| m_clitab.add_item ( "set file", JTFUNC(set_file), 1, 1,
+			"<0..4>")
+		|| m_clitab.add_item ( "text", JTFUNC(text), 3, 7, "<STRING> "
+			"<FONT NAME> <FONT SIZE 1..100> [bold] [italic] "
+			"[underline] [strikethrough]" )
+		|| m_clitab.add_item ( "undo", JTFUNC(undo) )
+		)
 	{
 		exit.abort ();
 		exit.set_value ( 1 );
@@ -356,5 +347,15 @@ int Backend::get_help (
 	) const
 {
 	return m_clitab.print_help ( argv );
+}
+
+int Backend::operation_update ( int const res )
+{
+	if ( 0 == res )
+	{
+		file().reset_tool_mode ();
+	}
+
+	return res;
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019 Mark Tyler
+	Copyright (C) 2019-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,32 +28,47 @@
 
 
 
-int pixyut_fade ()
+int Global::pixy_fade ()
 {
-	if ( global.image_pair.open_file ( global.s_arg ) )
+	mtPixmap * img;
+
+	switch ( m_image_pair.open_file ( s_arg, i_ftype_in, &img ) )
 	{
+	case 0:
+		// Both images are loaded and match, so do some work.
+		break;
+
+	case -1:
+		// Only one image loaded.
+		return 0;
+
+	case 1:
+		i_error = 1;	// Error, so bail out
 		return 0;
 	}
 
-	int const fps = MAX( FPS_MIN, MIN( FPS_MAX, global.i_fps ) );
-	int const secs = MAX( SECONDS_MIN, MIN( SECONDS_MAX, global.i_seconds));
-	int const f0 = MAX( F0_MIN, MIN( F0_MAX, global.i_frame0));
+	set_pixmap ( img );
+
+	int const fps = MAX( FPS_MIN, MIN( FPS_MAX, i_fps ) );
+	int const secs = MAX( SECONDS_MIN, MIN( SECONDS_MAX, i_seconds));
+	int const f0 = MAX( F0_MIN, MIN( F0_MAX, i_frame0));
 
 	int const frames = f0 + fps * secs;
 
-	mtPixy::Image * const image_a = global.image_pair.get_image_a ();
-	mtPixy::Image * const image_b = global.image_pair.get_image_b ();
+	mtPixmap const * const pixmap_a = m_image_pair.get_pixmap_a ();
+	mtPixmap const * const pixmap_b = m_image_pair.get_pixmap_b ();
 
-	unsigned char const * const mem_a = image_a->get_canvas ();
-	unsigned char const * const mem_b = image_b->get_canvas ();
-	unsigned char * const dest = global.image->get_canvas ();
+	unsigned char const * const mem_a = pixy_pixmap_get_canvas ( pixmap_a );
+	unsigned char const * const mem_b = pixy_pixmap_get_canvas ( pixmap_b );
+	unsigned char * const dest = pixy_pixmap_get_canvas ( m_pixmap.get() );
 
-	int64_t const pixels = image_a->get_canvas_bpp () *
-		(image_a->get_width () * image_a->get_height ());
+	int64_t const pixels = pixy_pixmap_get_bytes_per_pixel ( pixmap_a ) *
+		pixy_pixmap_get_width ( pixmap_a ) *
+		pixy_pixmap_get_height( pixmap_a );
 
-	std::string fn ( global.s_dir );
+	std::string fn ( s_dir );
 	fn += MTKIT_DIR_SEP;
-	fn += std::string(global.s_prefix);
+	fn += std::string ( s_prefix );
 
 	for ( int f = f0; f < frames; f++ )
 	{
@@ -73,17 +88,17 @@ int pixyut_fade ()
 
 		std::string const filename ( fn + num_txt );
 
-		if ( global.i_verbose )
+		if ( i_verbose )
 		{
 			puts ( filename.c_str () );
 		}
 
-		if ( global.image->save_png ( filename.c_str (), 2 ) )
+		if ( pixy_pixmap_save_png( m_pixmap.get(), filename.c_str(), 2))
 		{
 			fprintf ( stderr, "Error: Unable to save file '%s'\n",
 				filename.c_str () );
 
-			global.i_error = 1;
+			i_error = 1;
 
 			return 0;
 		}

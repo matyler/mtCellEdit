@@ -22,7 +22,8 @@ CHECK_EMPTY()
 {
 	# Check for empty directories: git doesn't track these
 	cd $CWD
-	EMPTY=$(find . -type d -empty)
+	EMPTY=$(find . -not -path ./.git -prune -type d -empty)
+
 	if [ "$EMPTY" != "" ]
 	then
 		echo
@@ -32,14 +33,25 @@ CHECK_EMPTY()
 
 		exit
 	fi
+
+	SMALL=$(find . -type f -size -3c)
+	if [ "$SMALL" != "" ]
+	then
+		echo
+		echo "WARNING! Small files less than 3 bytes:"
+		echo
+		echo $SMALL
+
+		read JUNK
+	fi
 }
 
 CHECK_HIDDEN()
 {
 	# Check for hidden files & directories
 	cd $CWD
-	HIDDEN_FILES=$(find . -type f -iname ".*")
-	HIDDEN_DIRS=$(find . -type d -iname ".*")
+	HIDDEN_FILES=$(find . -not -path ./.git -prune -type f -iname ".*")
+	HIDDEN_DIRS=$(find . -not -path ./.git -prune -type d -iname ".*")
 	if [ "$HIDDEN_FILES$HIDDEN_DIRS" != "." ]
 	then
 		echo
@@ -51,9 +63,6 @@ CHECK_HIDDEN()
 		exit
 	fi
 }
-
-CHECK_EMPTY
-CHECK_HIDDEN
 
 cd $CWD
 PACKAGE=$(basename $CWD)
@@ -103,7 +112,7 @@ cd $CWD/..
 chmod -R -77 $PACKAGE
 chmod -R a+r $PACKAGE
 
-tar cJf ~/$PACKAGE.tar.xz --owner=root --group=root $PACKAGE
+tar cJf ~/$PACKAGE.tar.xz --owner=root --group=root --exclude $PACKAGE/.git $PACKAGE
 
 echo
 

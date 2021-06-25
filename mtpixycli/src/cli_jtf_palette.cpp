@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2017 Mark Tyler
+	Copyright (C) 2016-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,13 +18,12 @@
 #include "private.h"
 
 
-int jtf_palette_color (
+int Backend::jtf_palette_color (
 	char	const * const *	const	args
 	)
 {
-	mtPixy::Image	* im = backend.file().get_image ();
-
-	if ( ! im )
+	mtPixmap const * const pixmap = file().get_pixmap ();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
@@ -35,55 +34,55 @@ int jtf_palette_color (
 		mtKit::cli_parse_int( args[1], r, 0, 255 )	||
 		mtKit::cli_parse_int( args[2], g, 0, 255 )	||
 		mtKit::cli_parse_int( args[3], b, 0, 255 )	||
-		backend.file().palette_load_color ( (unsigned char)i,
+		file().palette_load_color ( (unsigned char)i,
 		(unsigned char)r, (unsigned char)g, (unsigned char)b )
 		)
 	{
 		return 1;
 	}
 
-	backend.file().brush.set_color_a ( (unsigned char)i,
-		im->get_palette ()->get_color () );
+	file().brush.set_color_a ( (unsigned char)i,
+		&pixy_pixmap_get_palette_const ( pixmap )->color[0] );
 
 	return 0;
 }
 
-int jtf_palette_del_unused (
+int Backend::jtf_palette_del_unused (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_remove_unused ( NULL );
+	return file().palette_remove_unused ( NULL );
 }
 
-int jtf_palette_from_canvas (
+int Backend::jtf_palette_from_canvas (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_create_from_canvas ();
+	return file().palette_create_from_canvas ();
 }
 
-int jtf_palette_gradient (
+int Backend::jtf_palette_gradient (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_create_gradient ();
+	return file().palette_create_gradient ();
 }
 
-int jtf_palette_load (
+int Backend::jtf_palette_load (
 	char	const * const *	const	args
 	)
 {
-	return backend.file().palette_load ( args[0] );
+	return file().palette_load ( args[0] );
 }
 
-int jtf_palette_mask_all (
+int Backend::jtf_palette_mask_all (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_mask_all ();
+	return file().palette_mask_all ();
 }
 
-int jtf_palette_mask_index (
+int Backend::jtf_palette_mask_index (
 	char	const * const *	const	args
 	)
 {
@@ -94,24 +93,24 @@ int jtf_palette_mask_index (
 		return 1;
 	}
 
-	backend.file().palette_mask.color[ idx ] = 1;
+	file().palette_mask.color[ idx ] = 1;
 
 	return 0;
 }
 
-int jtf_palette_merge_dups (
+int Backend::jtf_palette_merge_dups (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_merge_duplicates ( NULL );
+	return file().palette_merge_duplicates ( NULL );
 }
 
-int jtf_palette_move (
+int Backend::jtf_palette_move (
 	char	const * const *	const	args
 	)
 {
-	mtPixy::Image	* im = backend.file().get_image ();
-	if ( ! im )
+	mtPixmap * const pixmap = file().get_pixmap ();
+	if ( ! pixmap )
 	{
 		return 1;
 	}
@@ -125,10 +124,11 @@ int jtf_palette_move (
 		return 1;
 	}
 
-	im->palette_move_color ( (unsigned char)a, (unsigned char)b );
+	pixy_pixmap_palette_move_color ( pixmap, (unsigned char)a,
+		(unsigned char)b );
 
-	if (	backend.file().update_brush_colors ()	||
-		backend.file().palette_changed ()
+	if (	file().update_brush_colors ()	||
+		file().palette_changed ()
 		)
 	{
 		return 1;
@@ -137,21 +137,21 @@ int jtf_palette_move (
 	return 0;
 }
 
-int jtf_palette_quantize (
+int Backend::jtf_palette_quantize (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_quantize_pnn ();
+	return file().palette_quantize_pnn ();
 }
 
-int jtf_palette_save (
+int Backend::jtf_palette_save (
 	char	const * const *	const	args
 	)
 {
-	return backend.file().palette_save ( args[0] );
+	return file().palette_save ( args[0] );
 }
 
-int jtf_palette_set (
+int Backend::jtf_palette_set (
 	char	const * const *	const	args
 	)
 {
@@ -164,16 +164,16 @@ int jtf_palette_set (
 
 	if (	mtKit::cli_parse_charint ( args[0], chint_tab, type )	||
 		mtKit::cli_parse_int ( args[1], num, 2, 6 )		||
-		backend.file().palette_load_default ( type, num )
+		file().palette_load_default ( type, num, "" )
 		)
 	{
 		return 1;
 	}
 
-	return backend.file().update_brush_colors ();
+	return file().update_brush_colors ();
 }
 
-int jtf_palette_size (
+int Backend::jtf_palette_size (
 	char	const * const *	const	args
 	)
 {
@@ -184,23 +184,23 @@ int jtf_palette_size (
 		return 1;
 	}
 
-	return backend.file().palette_set_size ( size );
+	return file().palette_set_size ( size );
 }
 
-int jtf_palette_sort (
+int Backend::jtf_palette_sort (
 	char	const * const *	const	args
 	)
 {
 	mtKit::CharInt	const	chint_tab[] = {
-				{ "hue",	mtPixy::Image::SORT_HUE },
-				{ "saturation",	mtPixy::Image::SORT_SATURATION},
-				{ "value",	mtPixy::Image::SORT_VALUE },
-				{ "min",	mtPixy::Image::SORT_MIN },
-				{ "brightness",	mtPixy::Image::SORT_BRIGHTNESS},
-				{ "red",	mtPixy::Image::SORT_RED },
-				{ "green",	mtPixy::Image::SORT_GREEN },
-				{ "blue",	mtPixy::Image::SORT_BLUE },
-				{ "frequency",	mtPixy::Image::SORT_FREQUENCY },
+				{ "hue",	PIXY_PALETTE_SORT_HUE },
+				{ "saturation",	PIXY_PALETTE_SORT_SATURATION },
+				{ "value",	PIXY_PALETTE_SORT_VALUE },
+				{ "min",	PIXY_PALETTE_SORT_MIN },
+				{ "brightness",	PIXY_PALETTE_SORT_BRIGHTNESS },
+				{ "red",	PIXY_PALETTE_SORT_RED },
+				{ "green",	PIXY_PALETTE_SORT_GREEN },
+				{ "blue",	PIXY_PALETTE_SORT_BLUE },
+				{ "frequency",	PIXY_PALETTE_SORT_FREQUENCY },
 				{ NULL, 0 }
 				};
 	mtKit::CharInt	const	chint_rev[] = {
@@ -214,26 +214,25 @@ int jtf_palette_sort (
 		|| mtKit::cli_parse_charint ( args[2], chint_tab, type )
 		|| ( args[3] && mtKit::cli_parse_charint ( args[3], chint_rev,
 			reverse ) )
-		|| backend.file().palette_sort ( (unsigned char)start,
-			(unsigned char)finish,
-			(mtPixy::Image::PaletteSortType)type,
+		|| file().palette_sort ( (unsigned char)start,
+			(unsigned char)finish, type,
 			reverse == 1 ? true : false )
 		)
 	{
 		return 1;
 	}
 
-	return backend.file().update_brush_colors ();
+	return file().update_brush_colors ();
 }
 
-int jtf_palette_unmask_all (
+int Backend::jtf_palette_unmask_all (
 	char	const * const *	const	ARG_UNUSED ( args )
 	)
 {
-	return backend.file().palette_unmask_all ();
+	return file().palette_unmask_all ();
 }
 
-int jtf_palette_unmask_index (
+int Backend::jtf_palette_unmask_index (
 	char	const * const *	const	args
 	)
 {
@@ -244,7 +243,7 @@ int jtf_palette_unmask_index (
 		return 1;
 	}
 
-	backend.file().palette_mask.color[ idx ] = 0;
+	file().palette_mask.color[ idx ] = 0;
 
 	return 0;
 }

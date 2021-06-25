@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,11 +18,492 @@
 #ifndef MTPIXY_H_
 #define MTPIXY_H_
 
-#include <stdlib.h>
+#include <mtkit.h>
 
 
 
 #ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+typedef struct mtColor		mtColor;
+typedef struct mtPalette	mtPalette;
+typedef struct mtPixmap		mtPixmap;
+
+
+
+enum
+{
+	PIXY_FILE_TYPE_NONE	= -1,
+	PIXY_FILE_TYPE_MIN	= 0,	// -------------------------------------
+	PIXY_FILE_TYPE_BMP	= 0,	// Indexed / RGB
+	PIXY_FILE_TYPE_PNG	= 1,	// Indexed / RGB
+	PIXY_FILE_TYPE_JPEG	= 2,	// RGB
+	PIXY_FILE_TYPE_GIF	= 3,	// Indexed
+	PIXY_FILE_TYPE_GPL	= 4,	// Palette only
+	PIXY_FILE_TYPE_SVG	= 5,	// Load only
+// Future additions will go here
+	PIXY_FILE_TYPE_MAX	= 5,	// -------------------------------------
+
+	PIXY_PIXMAP_BPP_ALPHA_ONLY	= 0,
+	PIXY_PIXMAP_BPP_INDEXED		= 1,
+	PIXY_PIXMAP_BPP_RGB		= 3,
+
+	PIXY_PIXMAP_WIDTH_MIN		= 1,
+	PIXY_PIXMAP_WIDTH_MAX		= 32767,
+	PIXY_PIXMAP_HEIGHT_MIN		= 1,
+	PIXY_PIXMAP_HEIGHT_MAX		= 32767,
+
+	PIXY_PALETTE_COLOR_TOTAL_MIN	= 2,
+	PIXY_PALETTE_COLOR_TOTAL_MAX	= 256,
+
+	PIXY_PALETTE_UNIFORM_MIN	= 2,
+	PIXY_PALETTE_UNIFORM_MAX	= 6,
+
+	PIXY_PALETTE_SORT_HUE		= 0,
+	PIXY_PALETTE_SORT_SATURATION	= 1,
+	PIXY_PALETTE_SORT_VALUE		= 2,
+	PIXY_PALETTE_SORT_MIN		= 3,
+	PIXY_PALETTE_SORT_BRIGHTNESS	= 4,
+	PIXY_PALETTE_SORT_RED		= 5,
+	PIXY_PALETTE_SORT_GREEN		= 6,
+	PIXY_PALETTE_SORT_BLUE		= 7,
+	PIXY_PALETTE_SORT_FREQUENCY	= 8,
+
+	PIXY_EFFECT_CRT_SCALE_MIN	= 2,
+	PIXY_EFFECT_CRT_SCALE_MAX	= 32,
+
+	PIXY_SCALE_BLOCKY		= 0,	// Nearest neighbour
+	PIXY_SCALE_SMOOTH		= 1,	// Area mapping (RGB only)
+
+	PIXY_DITHER_NONE		= 0,
+	PIXY_DITHER_BASIC		= 1,
+	PIXY_DITHER_AVERAGE		= 2,
+	PIXY_DITHER_FLOYD		= 3,
+
+	PIXY_BRUSH_FLOW_MIN		= 1,
+	PIXY_BRUSH_FLOW_MAX		= 1000
+};
+
+
+
+struct mtColor
+{
+	unsigned char	red;
+	unsigned char	green;
+	unsigned char	blue;
+};
+
+
+
+struct mtPalette
+{
+	int		size;
+	mtColor		color[ PIXY_PALETTE_COLOR_TOTAL_MAX ];
+};
+
+
+
+// Functions return: 0 = success, NULL = fail; unless otherwise stated.
+
+
+
+///	mtColor		--------------------------------------------------------
+
+#define pixy_int_2_red( A )		( (A >> 16) & 0xFF )
+#define pixy_int_2_green( A )		( (A >> 8) & 0xFF )
+#define pixy_int_2_blue( A )		(A & 0xFF)
+#define pixy_rgb_2_int( R, G, B )	((R << 16) + (G << 8) + B)
+#define pixy_rgb_2_brightness(R,G,B)	((299 * R + 587 * G + 114 * B) / 1000)
+
+
+
+void pixy_transform_color (
+	unsigned char *	buf,
+	int		buftot,
+	int		gam,
+	int		bri,
+	int		con,
+	int		sat,
+	int		hue,
+	int		pos
+	);
+
+void pixy_color_set_rgb_int (
+	mtColor		* color,	// Must be valid
+	int		rgb
+	);
+
+int pixy_color_get_rgb (
+	mtColor	const	* color		// Must be valid
+	);
+
+///	mtPalette	--------------------------------------------------------
+
+void pixy_palette_init (		// Default 8 color palette
+	mtPalette	* palette	// Must be valid
+	);
+
+int pixy_palette_load (
+	mtPalette	* palette,	// Must be valid
+	char	const	* filename
+	);
+
+int pixy_palette_save (
+	mtPalette const	* palette,	// Must be valid
+	char	const	* filename
+	);
+
+int pixy_palette_copy (
+	mtPalette	* dest,		// Must be valid
+	mtPalette const	* src		// Must be valid
+	);
+
+int pixy_palette_set_size (
+	mtPalette	* palette,	// Must be valid
+	int		newtotal
+	);
+
+int pixy_palette_set_correct (		// Corrects any errors in palette,
+					// e.g. wrong size
+	mtPalette	* palette	// Must be valid
+	);
+
+int pixy_palette_set_uniform (
+	mtPalette	* palette,	// Must be valid
+	int		factor		// UNIFORM_MIN / MAX
+	);
+
+int pixy_palette_set_uniform_balanced (
+	mtPalette	* palette,	// Must be valid
+	int		factor		// UNIFORM_MIN / MAX
+	);
+
+int pixy_palette_set_grey (
+	mtPalette	* palette	// Must be valid
+	);
+
+void pixy_palette_effect_invert (
+	mtPalette	* palette	// Must be valid
+	);
+
+int pixy_palette_create_gradient (
+	mtPalette	* palette,	// Must be valid
+	unsigned char	a,
+	unsigned char	b
+	);
+
+int pixy_palette_append_color (
+	mtPalette	* palette,	// Must be valid
+	unsigned char	r,
+	unsigned char	g,
+	unsigned char	b
+	);
+	// -1 => Not added, else new colour index
+
+int pixy_palette_get_color_index (
+	mtPalette const * palette,	// Must be valid
+	unsigned char	r,
+	unsigned char	g,
+	unsigned char	b
+	);
+	// -1 => Not in palette
+
+void pixy_palette_transform_color (
+	mtPalette	* palette,	// Must be valid
+	int		ga,		// Gamma	-100..100
+	int		br,		// Brightness	-255..255
+	int		co,		// Contrast	-100..100
+	int		sa,		// Saturation	-100..100
+	int		hu,		// Hue		-1530..1530
+	int		po		// Posterize	1..8
+	);
+
+///	mtPixmap	--------------------------------------------------------
+
+mtPixmap * pixy_pixmap_new (
+	int	type,		// 0=Alpha only 1=Indexed 3=RGB
+	int	width,
+	int	height
+	);
+
+mtPixmap * pixy_pixmap_new_rgb (
+	int	width,
+	int	height
+	);
+
+mtPixmap * pixy_pixmap_new_indexed (
+	int	width,
+	int	height
+	);
+
+mtPixmap * pixy_pixmap_new_alpha (
+	int	width,
+	int	height
+	);
+
+mtPixmap * pixy_pixmap_duplicate (
+	mtPixmap const	* pixmap
+	);
+
+void pixy_pixmap_destroy (
+	mtPixmap	** pixmap
+	);
+
+/*
+Not every program using mtPixy wants a Cairo dependency.
+If a program needs this function it must #include <cairo.h> before <mtpixy.h>
+*/
+#ifdef CAIRO_VERSION_MAJOR
+
+mtPixmap * pixy_pixmap_from_cairo ( cairo_surface_t * surface );
+
+#endif
+
+
+int pixy_pixmap_create_rgb_canvas (
+	mtPixmap	* pixmap
+	);
+
+int pixy_pixmap_create_indexed_canvas (
+	mtPixmap	* pixmap
+	);
+
+int pixy_pixmap_create_alpha (
+	mtPixmap	* pixmap
+	);
+
+mtPixmap * pixy_pixmap_load (
+	char	const	* filename,
+	int		* file_type	// MTPIXMAP_FILETYPE_*
+	);
+
+int pixy_pixmap_save (
+	mtPixmap const	* pixmap,
+	char	const	* filename,
+	int		file_type,	// MTPIXMAP_FILETYPE_*
+	int		compression
+	);
+
+int pixy_pixmap_get_width (
+	mtPixmap const	* pixmap
+	);
+
+int pixy_pixmap_get_height (
+	mtPixmap const	* pixmap
+	);
+
+int pixy_pixmap_get_bytes_per_pixel (
+	mtPixmap const	* pixmap
+	);
+	// 0=Empty 1=Indexed 3=RGB
+
+mtPalette * pixy_pixmap_get_palette (
+	mtPixmap	* pixmap
+	);
+
+mtPalette const * pixy_pixmap_get_palette_const (
+	mtPixmap const * pixmap
+	);
+
+int pixy_pixmap_get_palette_size (
+	mtPixmap const * pixmap
+	);
+
+unsigned char * pixy_pixmap_get_canvas (
+	mtPixmap const	* pixmap
+	);
+
+unsigned char * pixy_pixmap_get_alpha (
+	mtPixmap const	* pixmap
+	);
+
+int pixy_pixmap_destroy_alpha ( mtPixmap * pixmap );
+	// 0=Destroyed 1=Nothing to destroy
+
+/*
+void pixy_pixmap_set_data (		// Change w/h/canvas/alpha
+	mtPixmap	* pixmap,
+	int		w,
+	int		h,
+	unsigned char	* canvas,
+	unsigned char	* alpha
+	);
+*/
+
+void pixy_pixmap_print_geometry (
+	mtPixmap const	* pixmap,
+	char		* buf,
+	size_t		buflen
+	);
+
+int pixy_pixmap_get_information (
+	mtPixmap const	* pixmap,
+	int		* urp,		// Unique RGB pixels
+	int		* pnip,		// Pixels not in palette
+	int		* pf,		// Palette frequencies
+					// Palette::COLOR_TOTAL_MAX item array
+	int		* pt		// Palette total
+	);
+
+
+/// BLITTING -------------------------------------------------------------------
+
+void pixy_pixmap_blit_idx_alpha_blend (
+	mtPixmap const	* pixmap,
+	unsigned char	* dest,
+	int		x,		// Start x on dest
+	int		y,		// Start y on dest
+	int		w,		// dest width
+	int		h		// dest height
+	);
+
+void pixy_pixmap_blit_idx (
+	mtPixmap const	* pixmap,
+	unsigned char	* dest,
+	int		x,		// Start x on dest
+	int		y,		// Start y on dest
+	int		w,		// dest width
+	int		h		// dest height
+	);
+
+void pixy_pixmap_blit_rgb_alpha_blend (
+	mtPixmap const	* pixmap,
+	mtPalette const	* palette,	// See note below
+	unsigned char	* dest,
+	int		x,		// Start x on dest
+	int		y,		// Start y on dest
+	int		w,		// dest width
+	int		h,		// dest height
+	int		zs		// Zoom scale
+	);
+
+void pixy_pixmap_blit_rgb (
+	mtPixmap const	* pixmap,
+	mtPalette const	* palette,	// See note below
+	unsigned char	* dest,
+	int		x,		// Start x on dest
+	int		y,		// Start y on dest
+	int		w,		// dest width
+	int		h,		// dest height
+	int		zs		// Zoom scale
+	);
+
+/*
+NOTE: We need a palette reference as the source pixmap may not have the correct
+palette.  For example if the user copied an indexed image and wants to paste
+this, we must use the current canvas palette and not the old clipboard palette.
+*/
+
+/// PALETTE --------------------------------------------------------------------
+
+int pixy_pixmap_palette_sort (
+	mtPixmap 	* pixmap,
+	unsigned char	i_start,
+	unsigned char	i_end,
+	int		s_type,
+	int		reverse
+	);
+
+void pixy_pixmap_palette_move_color (
+	mtPixmap 	* pixmap,
+	unsigned char	idx,
+	unsigned char	new_idx
+	);
+
+void pixy_pixmap_palette_set_default (
+	mtPixmap 	* pixmap,
+	int		pal_type,
+	int		pal_num,
+	char const	* pal_filename
+	);
+
+
+/// IMAGE TRANSFORMS
+
+mtPixmap * pixy_pixmap_resize (		 // Cropping
+	mtPixmap const	* pixmap,
+	int		x,
+	int		y,
+	int		w,
+	int		h
+	);
+
+mtPixmap * pixy_pixmap_scale (
+	mtPixmap const	* pixmap,
+	int		w,
+	int		h,
+	int		scaletype
+	);
+
+mtPixmap * pixy_pixmap_convert_to_rgb (
+	mtPixmap const	* pixmap
+	);
+
+mtPixmap * pixy_pixmap_convert_to_indexed (
+	mtPixmap const	* pixmap,
+	int		dt		// PIXY_DITHER_**
+	);
+
+
+///	File I/O	--------------------------------------------------------
+
+int pixy_file_detect_type (
+	char const * filename
+	);
+	// PIXY_FILE_*
+
+char const * pixy_file_type_text (
+	int type			// PIXY_FILE_*
+	);
+	// File type in text, or "" if not valid
+
+mtPixmap * pixy_pixmap_load_bmp (
+	char	const * filename
+	);
+
+mtPixmap * pixy_pixmap_load_png (
+	char	const * filename
+	);
+
+mtPixmap * pixy_pixmap_load_jpeg (
+	char	const * filename
+	);
+
+mtPixmap * pixy_pixmap_load_gif (
+	char	const * filename
+	);
+
+int pixy_pixmap_save_bmp (
+	mtPixmap const	* pixmap,
+	char	const	* filename
+	);
+
+int pixy_pixmap_save_png (
+	mtPixmap const	* pixmap,
+	char	const	* filename,
+	int		compression
+	);
+
+int pixy_pixmap_save_jpeg (
+	mtPixmap const	* pixmap,
+	char	const	* filename,
+	int		compression
+	);
+
+int pixy_pixmap_save_gif (
+	mtPixmap const	* pixmap,
+	char	const	* filename
+	);
+
+
+
+/// C++ API --------------------------------------------------------------------
+
+#ifdef __cplusplus
+}
 
 #include <memory>
 
@@ -31,79 +512,49 @@ namespace mtPixy
 {
 
 class Brush;
-class Color;
 class Font;
 class FontData;
-class Image;
 class LineOverlay;
 class Overlay;
+class Pixmap;
 class PolySelOverlay;
-class Palette;
 class RecSelOverlay;
-
-namespace File {}
-
-
-
-inline int int_2_red	( int A ) { return (A >> 16) & 0xFF; }
-inline int int_2_green	( int A ) { return (A >> 8) & 0xFF; }
-inline int int_2_blue	( int A ) { return (A & 0xFF); }
-inline int rgb_2_int	( int R, int G, int B )
-				{ return ((R << 16) + (G << 8) + B); }
-
-inline int rgb_2_brightness ( int const r, int const g, int const b )
-	{ return (299 * r + 587 * g + 114 * b) / 1000; }
+class SVG;
 
 
 
-// Functions return: 0 = success, NULL = fail; unless otherwise stated.
+/// PAINTING -------------------------------------------------------------------
 
 
 
-namespace File
-{
-	enum Type
-	{
-		TYPE_NONE	= -1,
-
-		TYPE_MIN	= 0,
-		TYPE_BMP	= 0,	// Indexed / RGB
-		TYPE_PNG	= 1,	// Indexed / RGB
-		TYPE_JPEG	= 2,	// RGB
-		TYPE_GIF	= 3,	// Indexed
-		TYPE_GPL	= 4,	// Palette only
-		TYPE_PIXY	= 5,	// Indexed / RGB
-		TYPE_BP24	= 6,	// RGB Colorspace
-
-// Future additions will go here
-
-		TYPE_MAX	= 6
-	};
-
-
-	Type detect_type ( char const * filename );
-	char const * type_text ( Type t );
-		// File type in text, or "" if not valid
-}
-
-
-
-class Color
+class Pixmap
 {
 public:
-	Color ( unsigned char r, unsigned char g, unsigned char b );
-	explicit Color ( int rgb );
-	Color ();
-	~Color ();
+	explicit Pixmap ( mtPixmap * ptr = nullptr ) : m_ptr ( ptr ) {}
+	~Pixmap () { reset ( nullptr ); }
 
-	void set ( int i );
-	int get () const;
+	inline mtPixmap * get () const { return m_ptr; }
 
-/// ----------------------------------------------------------------------------
+	inline void reset ( mtPixmap * ptr )
+	{
+		if ( ptr != m_ptr )
+		{
+			pixy_pixmap_destroy ( &m_ptr );
+			m_ptr = ptr;
+		}
+	}
 
-	unsigned char	red;
-	unsigned char	green;
-	unsigned char	blue;
+	inline mtPixmap * release ()
+	{
+		mtPixmap * res = m_ptr;
+		m_ptr = nullptr;
+		return res;
+	}
+
+private:
+	mtPixmap	* m_ptr;
+
+	MTKIT_RULE_OF_FIVE( Pixmap )
 };
 
 
@@ -122,8 +573,8 @@ public:
 		SPACING_MIN	= 0,
 		SPACING_MAX	= 100,
 
-		FLOW_MIN	= 1,
-		FLOW_MAX	= 1000
+		FLOW_MIN	= PIXY_BRUSH_FLOW_MIN,
+		FLOW_MAX	= PIXY_BRUSH_FLOW_MAX
 	};
 
 	Brush ();
@@ -135,10 +586,10 @@ public:
 	void set_color_ab (
 		unsigned char idx_a,
 		unsigned char idx_b,
-		mtPixy::Color const * col
+		mtColor const * col
 		);
-	void set_color_a ( unsigned char idx, mtPixy::Color const * col );
-	void set_color_b ( unsigned char idx, mtPixy::Color const * col );
+	void set_color_a ( unsigned char idx, mtColor const * col );
+	void set_color_b ( unsigned char idx, mtColor const * col );
 	int set_shape ( int num );
 	int set_pattern ( int num );
 	int set_shape ( int x, int y );		// X,Y on palette
@@ -152,19 +603,19 @@ public:
 
 	void rebuild_pattern_mask ();
 
-	mtPixy::Image * build_color_swatch ( int zoom );
-	mtPixy::Image * build_shape_swatch ( int zoom );
-	mtPixy::Image * build_pattern_swatch ( int zoom );
-	mtPixy::Image * build_preview_swatch ( int zoom );
+	mtPixmap * build_color_swatch ( int zoom );
+	mtPixmap * build_shape_swatch ( int zoom );
+	mtPixmap * build_pattern_swatch ( int zoom );
+	mtPixmap * build_preview_swatch ( int zoom );
 
-	mtPixy::Image * get_shape_mask ();
-	mtPixy::Image * get_pattern_idx ();
-	mtPixy::Image * get_pattern_rgb ();
+	mtPixmap * get_shape_mask ();
+	mtPixmap * get_pattern_idx ();
+	mtPixmap * get_pattern_rgb ();
 
-	mtPixy::Image * get_shapes_palette ();
-	mtPixy::Image * get_patterns_palette ();
+	mtPixmap * get_shapes_palette ();
+	mtPixmap * get_patterns_palette ();
 
-	mtPixy::Color get_color_a () const;
+	mtColor get_color_a () const;
 	unsigned char get_color_a_index () const;
 	unsigned char get_color_b_index () const;
 
@@ -184,302 +635,35 @@ public:
 		int zs
 		);
 
-protected:
-	void rebuild_shape_mask ();
-
-/// ----------------------------------------------------------------------------
-
-	mtPixy::Image	* m_shapes;		// Indexed 24x24 cells in grid
-	mtPixy::Image	* m_patterns;		// Indexed 8x8 cells in grid
-
-	mtPixy::Image	* m_shape_mask;		// 24x24 alpha mask (no canvas)
-	mtPixy::Image	* m_pattern_idx;	// 8x8x256 canvas
-	mtPixy::Image	* m_pattern_rgb;	// 8x8xRGB canvas
-
-	mtPixy::Image	* m_shapes_palette;	// For UI - pick from all
-	mtPixy::Image	* m_patterns_palette;	// For UI - pick from all
-
-	int		m_shapes_palette_zoom;
-	int		m_pattern_palette_zoom;
-
-	mtPixy::Color	m_color_a;
-	mtPixy::Color	m_color_b;
-
-	unsigned char	m_index_a;
-	unsigned char	m_index_b;
-
-	int		m_shape_num;
-	int		m_pattern_num;
-
-	int		m_spacing;	// Pixel gap between brush impressions
-	int		m_space_mod;	// Current spacing modulo
-
-	int		m_flow;		// 0=No pixels FLOW_MAX=All pixels
-};
-
-
-
-class Palette
-{
-public:
-	enum	// Limits
-	{
-		COLOR_TOTAL_MIN	= 2,
-		COLOR_TOTAL_MAX	= 256,
-
-		UNIFORM_MIN	= 2,
-		UNIFORM_MAX	= 6
-	};
-
-
-	explicit Palette ( int paltype = 2 ); // 1=greyscale, 2..6=uniform
-	~Palette ();
-
-
-	int copy ( Palette const * src );	// this = src (with set_correct)
-	int load ( char const * filename );
-	int save ( char	const * filename ) const;
-
-	int set_color_total ( int newtotal );
-	int set_correct ();		// Corrects any errors in palette,
-					// e.g. wrong size
-	int set_uniform (
-		int factor		// UNIFORM_MIN / MAX
-		);
-	int set_uniform_balanced (
-		int factor		// UNIFORM_MIN / MAX
-		);
-	int set_grey ();		// Create greyscale gradient palette
-
-	void effect_invert ();
-
-	int create_gradient ( unsigned char a, unsigned char b );
-	int append_color (
-		unsigned char r,
-		unsigned char g,
-		unsigned char b
-		);
-		// -1 => Not added, else new colour index
-
-	int get_color_total () const;
-	Color * get_color ();
-	Color const * get_color () const;
-	int get_color_index (
-		unsigned char r,
-		unsigned char g,
-		unsigned char b
-		) const;
-		// -1 => Not in palette
-
-	void transform_color (
-		int ga,		// Gamma	-100..100
-		int br,		// Brightness	-255..255
-		int co,		// Contrast	-100..100
-		int sa,		// Saturation	-100..100
-		int hu,		// Hue		-1530..1530
-		int po		// Posterize	1..8
-		);
-
-protected:
-	int		m_color_total;	// COLOR_TOTAL_MIN / MAX
-
-	Color		m_color [ COLOR_TOTAL_MAX ];
-};
-
-
-
-class Image
-{
-public:
-	enum	// Limits
-	{
-		WIDTH_MIN	= 1,
-		WIDTH_MAX	= 32767,
-
-		HEIGHT_MIN	= 1,
-		HEIGHT_MAX	= 32767,
-
-		FLAG_PALETTE_LOADED	= 1
-	};
-
-	enum Type
-	{
-		TYPE_ALPHA	= 0,	// Alpha only, no canvas
-		TYPE_INDEXED	= 1,
-		TYPE_RGB	= 2
-	};
-
-	enum ScaleType
-	{
-		SCALE_BLOCKY,		// Nearest neighbour
-		SCALE_SMOOTH		// Area mapping (RGB only)
-	};
-
-	enum DitherType
-	{
-		DITHER_NONE,
-		DITHER_BASIC,
-		DITHER_FLOYD
-	};
-
-	enum PaletteSortType
-	{
-		SORT_HUE,
-		SORT_SATURATION,
-		SORT_VALUE,
-		SORT_MIN,
-		SORT_BRIGHTNESS,
-		SORT_RED,
-		SORT_GREEN,
-		SORT_BLUE,
-		SORT_FREQUENCY
-	};
-
-	Image (
-		Type imtype,
-		int w,
-		int h,
-		int * err = NULL	// Optional result flag 0=Success 1=Fail
-		);
-	~Image ();
-
-	static Image * create ( Type imtype, int w, int h );
-
-	static Image * from_data (
-		Type imtype,
-		int w,
-		int h,
-		unsigned char * canv,
-		unsigned char * alp
-		);
-
-	int create_alpha ();		// Create new empty alpha, destroy old
-
-	Type get_type () const;
-	int get_canvas_bpp () const;
-	int get_width () const;
-	int get_height () const;
-	unsigned char * get_canvas ();
-	unsigned char const * get_canvas () const;
-	unsigned char * get_alpha ();
-	unsigned char const * get_alpha () const;
-	Palette * get_palette ();
-	Palette const * get_palette () const;
-	int get_information (
-		int &urp,		// Unique RGB pixels
-		int &pnip,		// Pixels not in palette
-		int * pf,		// Palette frequencies
-					// Palette::COLOR_TOTAL_MAX item array
-		int &pt			// Palette total
-		);
-
-	// copy_*: Geometry/Type must match,i must exist, else returns an error.
-	int copy_canvas ( Image const * im );
-	int copy_alpha ( Image const * im );
-
-	int create_indexed_canvas ();
-	int create_rgb_canvas ();
-
-	// Move alpha to this image (same geometry), destroy im on success
-	int move_alpha_destroy ( Image * im );
-
-	void set_data (			// Change w/h/canvas/alpha
-		int w,
-		int h,
-		unsigned char * canv,
-		unsigned char * alp
-		);
-
-	int paste (			// Basic pixel paste (canvas & alpha)
-		Image * src,
-		int x,			// Paste src onto dest starting here
-		int y
-		);
-	int paste_alpha_blend (		// Paste using src alpha channel to
-		Image * src,		// blend canvas pixels. Alpha unchanged.
-		int x,			// Paste src onto dest starting here
-		int y
-		);
-	int paste_alpha_pattern (	// Paste using src alpha channel to
-		Image * src,		// blend canvas pixels with brush
-		Brush &bru,		// pattern. Alpha unchanged.
-		int x,			// Paste src onto dest starting here
-		int y
-		);
-	int paste_alpha_or (		// Paste using src alpha channel to
-		Image * src,		// or (|) alpha pixels.
-		int x,			// Paste src onto dest starting here
-		int y
-		);
-
-	void blit_idx_alpha_blend (
-		unsigned char * dest,
-		int x,			// Start x on dest
-		int y,			// Start y on dest
-		int w,			// dest width
-		int h			// dest height
-		);
-	void blit_idx (
-		unsigned char * dest,
-		int x,			// Start x on dest
-		int y,			// Start y on dest
-		int w,			// dest width
-		int h			// dest height
-		);
-	void blit_rgb_alpha_blend (
-		Color const * pal,
-		unsigned char * dest,
-		int x,			// Start x on dest
-		int y,			// Start y on dest
-		int w,			// dest width
-		int h,			// dest height
-		int zs = 1		// Zoom scale
-		);
-	void blit_rgb (
-		Color const * pal,
-		unsigned char * dest,
-		int x,			// Start x on dest
-		int y,			// Start y on dest
-		int w,			// dest width
-		int h,			// dest height
-		int zs = 1		// Zoom scale
-		);
-
-/// PALETTE
-
-	int palette_sort (
-		unsigned char i_start,
-		unsigned char i_end,
-		PaletteSortType s_type,
-		bool reverse
-		);
-
-	int palette_merge_duplicates ( int * tot ); // Must be INDEXED image
-	int palette_remove_unused ( int * tot ); // Must be INDEXED image
-	int palette_create_from_canvas ();	// Must be RGB image
-	void palette_move_color ( unsigned char idx, unsigned char new_idx );
-	void palette_set_default ( int pal_type, int pal_num );
-
-	int quantize_pnn (		// Must be RGB image
-		int coltot,		// Total colours to quantize to
-		Palette * pal = NULL	// Destination palette,NULL= Use image
-		);
-
 /// PAINTING
 
-	int paint_canvas_rectangle ( Brush &bru, int x, int y, int w, int h );
-	int paint_rectangle ( Brush &bru, int x, int y, int w, int h );
+	int paint_canvas_rectangle (
+		mtPixmap	* pixmap,
+		int		x,
+		int		y,
+		int		w,
+		int		h
+		);
+
+	int paint_rectangle (
+		mtPixmap	* pixmap,
+		int		x,
+		int		y,
+		int		w,
+		int		h
+		);
+
 	int paint_polygon (
-		Brush &bru,
+		mtPixmap * pixmap,
 		PolySelOverlay const &ovl,
 		int &x,
 		int &y,
 		int &w,
 		int &h
 		);
-	int paint_flood_fill ( Brush &bru, int x, int y );
+
 	int paint_brush (
-		Brush &bru,
+		mtPixmap * pixmap,
 		int x1,
 		int y1,
 		int x2,
@@ -491,108 +675,39 @@ public:
 		bool skip = false	// true = skip first paint
 		);
 
-/// IMAGE TRANSFORMS
-
-	Image * duplicate ();
-	Image * resize ( int x, int y, int w, int h );	// Useful for cropping
-	Image * resize_trim_by_alpha ( int &minx, int &miny );
-	Image * scale ( int w, int h, ScaleType scaletype );
-	Image * convert_to_rgb ();
-	Image * convert_to_indexed ( DitherType dt );
-	Image * effect_transform_color (
-		int ga,		// Gamma	-100..100
-		int br,		// Brightness	-255..255
-		int co,		// Contrast	-100..100
-		int sa,		// Saturation	-100..100
-		int hu,		// Hue		-1530..1530
-		int po		// Posterize	1..8
-		);
-	Image * effect_invert ();
-	Image * effect_edge_detect ();
-	Image * effect_sharpen ( int n );
-	Image * effect_soften ( int n );
-	Image * effect_emboss ();
-	Image * effect_normalize ();
-	Image * effect_bacteria ( int n );
-	Image * flip_horizontally ();
-	Image * flip_vertically ();
-	Image * rotate_clockwise ();
-	Image * rotate_anticlockwise ();
-
-	int destroy_alpha ();
-		// 0=Destroyed 1=Nothing to destroy
-
-	int lasso ( int x, int y );
-
-/// FILE I/O
-
-	static Image * load ( char const * filename,
-		File::Type * newtyp = NULL	// Optional: put file type here
-		);
-	static Image * load_bmp ( char const * filename );
-	static Image * load_bp24 ( char const * filename );
-	static Image * load_gif ( char const * filename );
-	static Image * load_jpeg ( char const * filename );
-	static Image * load_pixy ( char const * filename );
-	static Image * load_png ( char const * filename );
-
-	int save (
-		char const * filename,
-		File::Type filetype,
-		int compression		// PNG/JPEG compression level
-		) const;
-
-	int save_bmp ( char const * filename ) const;
-	int save_bp24 ( char const * filename,
-		int compression		// 0..9 (0 = uncompressed)
-		) const;
-	int save_gif ( char const * filename ) const;
-	int save_jpeg ( char const * filename,
-		int compression		// 0..100 (100 = best quality)
-		) const;
-	int save_pixy ( char const * filename,
-		int compression		// 0..9 (0 = uncompressed)
-		) const;
-	int save_png ( char const * filename,
-		int compression		// 0..9 (0 = uncompressed)
-		) const;
-
-	void set_file_flag ( int n );	// n = Image::FLAG_*
-	int get_file_flag () const;
-
-protected:
-	enum EffectType
-	{
-		EFFECT_EDGE_DETECT,
-		EFFECT_SHARPEN,
-		EFFECT_SOFTEN,
-		EFFECT_EMBOSS
-	};
-
-	Image * effect_rgb_action ( EffectType et, int it = 1 );
-
-	int create_canvas ();		// Create new empty canvas, destroy old
-
-	void destroy_canvas ();		// Resets type to mtPixy::Image::ALPHA
-
-	void flood_fill_internal (	// Args checked by caller
-		Image * im, int x, int y ) const;
-
-	void paint_flow ( Brush const &bru ) const;
-	mtPixy::Image * flood_fill_prepare_alpha ( int x, int y );
+private:
+	void rebuild_shape_mask ();
 
 /// ----------------------------------------------------------------------------
 
-	Type		m_type;
-	int		m_canvas_bpp;	// Bytes per pixel: 0, 1, 3
-	int		m_file_flag;	// 1=Palette from file
-	Palette		m_palette;
+	mtPixy::Pixmap	m_shapes;		// Indexed 24x24 cells in grid
+	mtPixy::Pixmap	m_patterns;		// Indexed 8x8 cells in grid
 
-	unsigned char	* m_canvas;
-	unsigned char	* m_alpha;
+	mtPixy::Pixmap	const m_shape_mask;	// 24x24 alpha mask (no canvas)
+	mtPixy::Pixmap	const m_pattern_idx;	// 8x8x256 canvas
+	mtPixy::Pixmap	const m_pattern_rgb;	// 8x8xRGB canvas
 
-	int		m_width;
-	int		m_height;
+	mtPixy::Pixmap	m_shapes_palette;	// For UI - pick from all
+	mtPixy::Pixmap	m_patterns_palette;	// For UI - pick from all
+
+	int		m_shapes_palette_zoom	= 1;
+	int		m_pattern_palette_zoom	= 1;
+
+	mtColor		m_color_a		= {0,0,0};
+	mtColor		m_color_b		= {0,0,0};
+
+	unsigned char	m_index_a		= 0;
+	unsigned char	m_index_b		= 0;
+
+	int		m_shape_num		= 0;
+	int		m_pattern_num		= 0;
+
+	int		m_spacing = 1;	// Pixel gap between brush impressions
+	int		m_space_mod = 0;	// Current spacing modulo
+
+	int		m_flow = FLOW_MAX; // 0=No pixels FLOW_MAX=All pixels
+
+	MTKIT_RULE_OF_FIVE( Brush )
 };
 
 
@@ -616,7 +731,7 @@ public:
 		);
 	~Font ();
 
-	Image * render_image (	// Create image from text
+	mtPixmap * render_pixmap (	// Create pixmap from text
 		char const * utf8,
 		int max_width		// 0=No max width
 		);
@@ -635,15 +750,12 @@ public:
 	int get_width () const;
 	int get_height () const;
 
-protected:
+private:
 	void set_style ();
-
-	Font ( const Font & );			// Disable copy constructor
-	Font & operator = (const Font &);	// Disable = operator
 
 /// ----------------------------------------------------------------------------
 
-	FontData	* m_font_data;
+	std::unique_ptr<FontData> m_font_data;
 
 	int		m_height;		// Glyph height in pixels
 	int		m_width;		// Glyph width in pixels
@@ -654,6 +766,8 @@ protected:
 	StyleUnderline	m_style_underline;
 	int		m_style_strikethrough;
 	int		m_style_row_pad;
+
+	MTKIT_RULE_OF_FIVE( Font )
 };
 
 
@@ -696,7 +810,7 @@ public:
 class RecSelOverlay : public Overlay
 {
 public:
-	int set ( int x, int y, int w, int h, mtPixy::Image const * im );
+	int set ( int x, int y, int w, int h, mtPixmap const * im );
 
 	void render (
 		unsigned char * rgb,
@@ -713,10 +827,25 @@ public:
 	void move_selection_end ( int x, int y, int max_x, int max_y,
 		int &dx, int &dy, int &dw, int &dh );
 
-	int set_paste ( Image * im, Image * pa, int px, int py );
-	int set_paste ( Image * im, Image * pa );
-	int move_paste ( int x, int y, Image const * im, Image const * pa,
-		int &dx, int &dy, int &dw, int &dh );
+	int set_paste (
+		mtPixmap const * image,
+		mtPixmap const * paste,
+		int px,
+		int py
+		);
+
+	int set_paste ( mtPixmap const * image, mtPixmap const * paste );
+
+	int move_paste (
+		int x,
+		int y,
+		mtPixmap const * image,
+		mtPixmap const * paste,
+		int &dx,
+		int &dy,
+		int &dw,
+		int &dh
+		);
 		// 0 = Not moved
 
 	void get_xywh ( int &x, int &y, int &w, int &h ) const;
@@ -737,11 +866,17 @@ public:
 
 	PolySelOverlay ();
 
-	Image * create_mask ( int &x, int &y, int &w, int &h ) const;
+	mtPixmap * create_mask ( int &x, int &y, int &w, int &h ) const;
 
 	void clear ();
 	int add ();		// Push x1, y1 onto list, increment
-	Image * copy ( Image * src, int &x, int &y, int &w, int &h ) const;
+	mtPixmap * copy (
+		mtPixmap const * src,
+		int &x,
+		int &y,
+		int &w,
+		int &h
+		) const;
 
 	void get_xywh ( int &x, int &y, int &w, int &h ) const;
 
@@ -754,10 +889,36 @@ public:
 
 
 
-void image_print_geometry ( Image * im, char * buf, size_t buflen );
+class SVG
+{
+public:
+	SVG ();
+	~SVG ();
 
-Image * text_render_preview (
-	Image::Type type,
+	int load ( char const * filename );
+	unsigned char * render ( int width, int height );
+		// Returns view of ARGB 32 bit memory slab (w x h).
+	void render_free ();
+
+	static int load_pixmap (
+		mtPixy::Pixmap	& pixmap,
+		char	const *	filename,
+		int		width,
+		int		height
+		);
+	int create_pixmap ( Pixmap & pixmap );
+
+private:
+	class Op;
+	std::unique_ptr<Op> m_op;
+
+	MTKIT_RULE_OF_FIVE( SVG )
+};
+
+
+
+mtPixmap * text_render_preview_pixmap (
+	int bpp,
 	char const * utf8,
 	char const * font_name,
 	int size,
@@ -766,43 +927,6 @@ Image * text_render_preview (
 	Font::StyleUnderline underline,
 	int strikethrough
 	);
-
-Image * text_render_paste (
-	Image::Type type,
-	Brush &bru,
-	char const * utf8,
-	char const * font_name,
-	int size,
-	int bold,
-	int italics,
-	Font::StyleUnderline underline,
-	int strikethrough
-	);
-
-void transform_color (
-	unsigned char * buf,
-	int buftot,	// Total pixels
-	int gam,	// Gamma	-100..100
-	int bri,	// Brightness	-255..255
-	int con,	// Contrast	-100..100
-	int sat,	// Saturation	-100..100
-	int hue,	// Hue		-1530..1530
-	int pos		// Posterize	1..8
-	);
-
-
-
-/*
-Not every program using mtPixy wants a Cairo dependency.
-If a program needs this function it must #include <cairo.h> before <mtpixy.h>
-*/
-#ifdef CAIRO_VERSION_MAJOR
-
-Image * image_from_cairo ( cairo_surface_t * surface );
-
-#endif
-
-
 
 }		// namespace mtPixy
 
@@ -830,17 +954,17 @@ public:
 		MAX_BYTES	= 10485760000
 	};
 
-	UndoStack ();
-	~UndoStack ();
+	UndoStack () {}
+	~UndoStack () { clear(); }
 
-	int undo ( mtPixy::Image ** ppim );
-	int redo ( mtPixy::Image ** ppim );
+	int undo ( mtPixy::Pixmap & ppim );
+	int redo ( mtPixy::Pixmap & ppim );
 
 	void clear ();
 
-	int add_next_step ( mtPixy::Image * pim );
+	int add_next_step ( mtPixmap const * pim );
 
-	mtPixy::Image * get_current_image ();
+	mtPixmap * get_pixmap ();
 
 	int64_t get_undo_bytes () const;
 	int64_t get_redo_bytes () const;
@@ -849,54 +973,20 @@ public:
 	int get_undo_steps () const;
 	int get_redo_steps () const;
 
-	UndoStep * get_step_current ();
+	UndoStep * get_step_current () const;
 
 	void set_max_bytes ( int64_t n );
 	void set_max_steps ( int n );
 
 private:
-	void add_step ( UndoStep * step );
+	UndoStep	* m_step_first		= nullptr;
+	UndoStep	* m_step_current	= nullptr;
 
-/// ----------------------------------------------------------------------------
+	int64_t		m_max_bytes		= 1000000000;
+	int		m_max_steps		= 100;
 
-	UndoStep	* m_step_first;
-	UndoStep	* m_step_current;
-
-	int64_t		m_max_bytes;
-	int		m_max_steps;
-
-	int		m_total_undo_steps;
-	int		m_total_redo_steps;
-};
-
-
-
-class UndoStep
-{
-public:
-	explicit UndoStep ( mtPixy::Image * pim );
-	~UndoStep ();
-
-	void insert_after ( UndoStep * us );
-	int step_restore ( mtPixy::Image ** ppim );
-
-	mtPixy::Image * get_image ();
-	UndoStep * get_step_previous ();
-	UndoStep * get_step_next ();
-	int64_t get_canvas_bytes () const;
-	void delete_steps_next ();
-
-private:
-	void set_canvas_bytes ();
-
-/// ----------------------------------------------------------------------------
-
-	UndoStep	* m_step_previous;
-	UndoStep	* m_step_next;
-
-	mtPixy::Image	* m_image;
-
-	int64_t		m_canvas_bytes;	// Bytes used by m_image canvas
+	int		m_total_undo_steps	= 0;
+	int		m_total_redo_steps	= 0;
 };
 
 
@@ -907,14 +997,14 @@ public:
 	PaletteMask ();
 
 	void clear ();
-	bool is_masked (		// Args assumed to be valid
-		mtPixy::Image * img,
+	bool is_masked (
+		mtPixmap * img,
 		int x,
 		int y
 		) const;
-	void protect (			// Args assumed to be valid
-		mtPixy::Image * src,	// Old image
-		mtPixy::Image * dest,	// Current updated image
+	void protect (
+		mtPixmap const * src,	// Old image
+		mtPixmap * dest,	// Current updated image
 		int x,			// Geomtry to check & change
 		int y,
 		int w,
@@ -923,8 +1013,11 @@ public:
 
 /// ----------------------------------------------------------------------------
 
-	char		color[ mtPixy::Palette::COLOR_TOTAL_MAX ];
+	char		color[ PIXY_PALETTE_COLOR_TOTAL_MAX ];
 			// 1=Protected
+
+private:
+	MTKIT_RULE_OF_FIVE( PaletteMask )
 };
 
 
@@ -936,14 +1029,18 @@ public:
 	~Clipboard ();
 
 	int load ( int n );
-	int save ( int n );
-	int set_image ( mtPixy::Image * im, int x, int y, bool txt = false );
+	int save ( int n ) const;
+	int set_pixmap ( mtPixmap * im, int x, int y, bool txt = false );
 
-	mtPixy::Image * get_image ();
+	inline mtPixmap * get_pixmap () const
+	{
+		return m_pixmap.get();
+	}
+
 	void get_xy ( int &x, int &y ) const;
 
 	void render (
-		mtPixy::Color const * pal,
+		mtPalette const * pal,
 		mtPixy::RecSelOverlay const &ovl,
 		unsigned char * rgb,
 		int x,
@@ -951,22 +1048,22 @@ public:
 		int w,
 		int h,
 		int zs
-		);
+		) const;
 
 	int paste (			// Pastes clipboard to image
-		File &file,
+		File const &file,
 		int x,
 		int y
-		);
+		) const;
 	int paste (			// Pastes clipboard to image
-		File &file,
+		File const &file,
 		int x,
 		int y,
 		int &dirty_x,
 		int &dirty_y,
 		int &dirty_w,
 		int &dirty_h
-		);
+		) const;
 
 	int flip_vertical ();
 	int flip_horizontal ();
@@ -983,7 +1080,7 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	std::unique_ptr<mtPixy::Image> m_img;
+	mtPixy::Pixmap	m_pixmap;
 
 	int		m_x, m_y;	// Position of original copy
 	std::string	m_path;
@@ -995,6 +1092,9 @@ private:
 class File
 {
 public:
+	File () {}
+	~File () {}
+
 	enum ToolMode
 	{
 		TOOL_MODE_PAINT,
@@ -1012,38 +1112,37 @@ public:
 		TOOL_MODE_FLOODFILL
 	};
 
-	File ();
-	~File ();
-
 ///	GENERAL
 
 	int new_image (
-		mtPixy::Image::Type imtype,
+		int bpp,
 		int w,
 		int h,
-		int pal_type,		// 0..1
-		int pal_num		// 2..6
+		int pal_type,		// 0..2
+		int pal_num,		// 2..6
+		std::string const & pal_filename
 		);
-	int load_image ( char const * fn, int pal_type, int pal_num );
-	int save_image ( char const * fn, mtPixy::File::Type ft, int comp );
-	void set_image ( mtPixy::Image * im );
+	int load_image ( char const * fn, int pal_type, int pal_num,
+		std::string const & pal_filename );
+	int save_image ( char const * fn, int ft, int comp );
 
-	int export_undo_images ( char const * fn );
-	int export_colormap ( char const * fn, int comp ) const;
+	void set_pixmap ( mtPixmap * im ); // This File takes ownership of 'im'
+
+	int export_undo_images ( char const * fn ) const;
 
 	// Create a new filename to set a new file extension
 	static char * get_correct_filename (
-		char		const *	filename,
-		mtPixy::File::Type	filetype
+		char	const *	filename,
+		int	filetype		// PIXY_FILE_*
 		);
 		// NULL = use "filename" in its current state
 		// !NULL = allocated string with correct extension
 
 	int resize ( int x, int y, int w, int h );
 	int crop ();
-	int scale ( int w, int h, mtPixy::Image::ScaleType scaletype );
+	int scale ( int w, int h, int scaletype );	// PIXY_SCALE_*
 	int convert_to_rgb ();
-	int convert_to_indexed ( mtPixy::Image::DitherType dt );
+	int convert_to_indexed ( int dt );	// PIXY_DITHER_*
 	int effect_transform_color (
 		int ga,		// Gamma	-100..100
 		int br,		// Brightness	-255..255
@@ -1053,6 +1152,7 @@ public:
 		int po		// Posterize	1..8
 		);
 	int effect_invert ();
+	int effect_crt ( int scale );
 	int effect_edge_detect ();
 	int effect_sharpen ( int n );
 	int effect_soften ( int n );
@@ -1065,7 +1165,7 @@ public:
 	int rotate_anticlockwise ();
 	int destroy_alpha ();
 
-	mtPixy::Image * render_canvas (
+	mtPixmap * render_canvas (
 		int x,
 		int y,
 		int w,
@@ -1082,11 +1182,11 @@ public:
 		unsigned char gry
 		);
 
-	mtPixy::Image * get_image ();
-	mtPixy::Palette * get_palette () const;
-	char const * get_filename () const;
-	int get_modified () const;
-	mtPixy::File::Type get_filetype () const;
+	mtPalette * get_palette () const;
+
+	inline char const * get_filename () const { return m_filename.c_str(); }
+	inline int get_modified () const	{ return m_modified; }
+	inline int get_filetype () const	{ return m_filetype; }
 
 	int get_pixel_info (
 		int canvas_x,
@@ -1095,17 +1195,18 @@ public:
 		unsigned char &pixel_green,
 		unsigned char &pixel_blue,
 		int &pixel_index
-		);
+		) const;
 
 ///	PALETTE
 
-	int palette_set ( mtPixy::Palette const * pal );
+	int palette_set ( mtPalette const * pal );
 	int palette_set_size ( int num );
 	int palette_load ( char const * fn );
-	int palette_save ( char const * fn );
+	int palette_save ( char const * fn ) const;
 	int palette_load_default (
-		int pal_type,		// 0=Uniform 1=Balanced
-		int pal_num
+		int pal_type,		// 0=Uniform 1=Balanced 2=file
+		int pal_num,
+		std::string const & pal_filename
 		);
 	int palette_load_color (
 		unsigned char idx,
@@ -1122,7 +1223,7 @@ public:
 	int palette_sort (
 		unsigned char i_start,
 		unsigned char i_end,
-		mtPixy::Image::PaletteSortType s_type,
+		int s_type,		// PIXY_PALETTE_SORT_*
 		bool reverse
 		);
 	int palette_merge_duplicates ( int * tot );
@@ -1182,7 +1283,7 @@ public:
 	int flood_fill ( int x, int y );
 
 	int select_all ();
-	int selection_copy ( Clipboard &clipboard );
+	int selection_copy ( Clipboard &clipboard ) const;
 	int selection_lasso ( Clipboard &clipboard ) const;
 	int selection_fill ();
 	int selection_outline ();
@@ -1200,6 +1301,10 @@ public:
 		int eff_strikethrough
 		);
 
+	inline mtPixmap * get_pixmap () const
+	{
+		return m_pixmap.get();
+	}
 
 /// ----------------------------------------------------------------------------
 
@@ -1210,8 +1315,8 @@ public:
 	mtPixy::PolySelOverlay	polygon_overlay;
 
 private:
-	void project_new_chores ( mtPixy::Image * ni );
-	int image_new_chores ( mtPixy::Image * i );
+	void project_new_chores ( mtPixmap * ni );
+	int image_new_chores ( mtPixmap * i );
 	int palette_new_chores ( int num );
 
 	int rectangle_fill ();
@@ -1221,16 +1326,20 @@ private:
 
 /// ----------------------------------------------------------------------------
 
-	char		* m_filename;
-	mtPixy::Image	* m_image;
+	std::string	m_filename;
+
+	mtPixy::Pixmap	m_pixmap;
 
 	UndoStack	m_undo_stack;
 
-	int		m_brush_x, m_brush_y;
-	int		m_modified;
-	mtPixy::File::Type m_filetype;
+	int		m_brush_x	= 0;
+	int		m_brush_y	= 0;
+	int		m_modified	= 0;
+	int		m_filetype	= PIXY_FILE_TYPE_NONE;
 
-	ToolMode	m_tool_mode;
+	ToolMode	m_tool_mode	= TOOL_MODE_PAINT;
+
+	MTKIT_RULE_OF_FIVE( File )
 };
 
 

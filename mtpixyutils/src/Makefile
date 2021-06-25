@@ -1,6 +1,7 @@
 include		../_conf.txt
 
 APPS		:=		\
+		pixycmp		\
 		pixydelta	\
 		pixyfade	\
 		pixyls		\
@@ -8,6 +9,7 @@ APPS		:=		\
 		pixypica	\
 		pixyresize	\
 		pixyriba	\
+		pixyrida	\
 		pixyrisa	\
 		pixyscale	\
 		pixytwit	\

@@ -1,0 +1,71 @@
+= NAME =
+@BIN_NAME@ - mandelbrot set explorer
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ]... [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ visually explores the Mandelbrot set.
+Left mouse click to move the centre of the zoom box, right click to zoom in.
+Use the **Arrow Keys** to move, with **Shift** to move more quickly, or the
+**Ctrl** key to shift the view in that direction.
+The **F1** key prints the current position to stdout.
+The **s** key dumps the current image to the user's home directory.
+The **Home** key returns to the start position.
+The **Delete** or **Escape** keys terminate the current processing job.
+The **Escape** key terminates the program, when not processing.
+The **End** key Redraws the current view.
+Zoom in and out using the keys **Page Up**, **Page Down**, **Enter**, **+**, **-**.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+**-cx** DECIMAL
+	The X coordinate for the centre of the plot (-2.0 to 2.0). Default = 0.0.
+
+**-cy** DECIMAL
+	The Y coordinate for the centre of the plot (-2.0 to 2.0). Default = 0.0.
+
+**-depth** INTEGER
+	Maximum depth of iterations (256 to 16384). Default = 1024.
+
+**-dir** STRING
+	Output directory for saving animation frames.
+
+**-fps** INTEGER
+	Frames per second of the animation (10 to 120). Default = 60.
+
+**-oh** INTEGER
+	Output pixmap height (128 to 15360). Default = 500.
+
+**-ow** INTEGER
+	Output pixmap width (128 to 15360). Default = 500.
+
+**-prefs** STRING
+	Use this file for GUI program preferences (e.g. window position).
+
+**-range** DECIMAL
+	Range of the plot width (maximum 20.0). Default = 4.0.
+
+**-threads** INTEGER
+	Use this number of threads for the calculations (1 to 16). Default = 0
+	which detects the number of available of threads on the CPU.
+
+**-tsv** STRING
+	Create an animation using this TSV file.
+
+**-v**
+	Verbose.
+
+
+= EXAMPLE =
+**@BIN_NAME@** -cx 0.5 -cy 0.2 -threads 5
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Default file used for storing user preferences.

@@ -20,11 +20,14 @@
 
 
 mtKit::CliTab::CliTab ()
+	:
+	m_root ( new CliItem ( "", nullptr, 0, 0, "", 1 ) )
 {
 }
 
 mtKit::CliTab::~CliTab ()
 {
+//	delete m_root;
 }
 
 int mtKit::CliTab::add_item (
@@ -41,14 +44,29 @@ int mtKit::CliTab::add_item (
 		return 1;
 	}
 
-	CliItem		* tmp_item = &m_root;
+	CliItem		* tmp_item = m_root.get();
 	bool		tmp_new = false;
+
+	auto const get_token = [command]( std::string & str, int n )
+		{
+			char * tc = mtkit_strtok ( command, " ", n );
+			if ( ! tc )
+			{
+				return 1;
+			}
+
+			str = tc;
+			free ( tc );
+
+			return 0;
+		};
 
 	// Find place in tree via command, then add item
 	for ( int tokn = 0; ; tokn ++ )
 	{
-		char * tc = mtkit_strtok ( command, " ", tokn );
-		if ( ! tc )
+		std::string tk;
+
+		if ( get_token ( tk, tokn ) )
 		{
 			// No more items in command list so finish here
 
@@ -61,8 +79,8 @@ int mtKit::CliTab::add_item (
 				return 1;
 			}
 
-			if ( tmp_item->set_data ( NULL, func, arg_min,
-				arg_max, arg_help, arg_scale ) )
+			if ( tmp_item->set_data ( func, arg_min, arg_max,
+				arg_help, arg_scale ) )
 			{
 				fprintf ( stderr, "CliTab::add_item: Unable to"
 					" set_data %s\n",
@@ -74,33 +92,20 @@ int mtKit::CliTab::add_item (
 			break;
 		}
 
-		CliItem * it = tmp_item->find_item ( tc );
+		CliItem * const it = tmp_item->find ( tk );
 		if ( it )
 		{
 			// Node found so drill down
-			free ( tc );
-			tc = NULL;
 			tmp_item = it;
 			continue;
 		}
 
 		// Node missing so create it
-		CliItem * new_item = new CliItem;
-		if ( new_item->set_data ( tc, NULL, 0, 0, NULL, 1 ) )
-		{
-			free ( tc );
-			tc = NULL;
-			delete new_item;
-
-			return 1;
-		}
-
-		free ( tc );
-		tc = NULL;
+		auto const new_item = new CliItem (tk, NULL, 0, 0, "", 1);
 
 		if ( tmp_item->add_item ( new_item ) )
 		{
-			delete new_item;
+			std::cerr << "CliItem '" << tk << "' already defined\n";
 
 			return 1;
 		}
@@ -140,7 +145,7 @@ int mtKit::CliTab::parse (
 	if ( args[0] )
 	{
 		int		err = 0, ncarg = 0;
-		CliItem	const * match = m_root.match_args( args, &err, &ncarg );
+		CliItem	const * match = m_root->match_args( args, &err, &ncarg);
 
 		if ( ! match )
 		{
@@ -200,16 +205,16 @@ int mtKit::CliTab::print_help (
 	char	const * const * const	argv
 	) const
 {
-	CliItem	const * match = &m_root;
-
 	if ( ! argv )
 	{
 		return 1;
 	}
 
+	CliItem	const * match = m_root.get();
+
 	for ( int i = 0; argv[i]; i++ )
 	{
-		match = match->find_item ( argv[i] );
+		match = match->find ( argv[i] );
 
 		if ( ! match )
 		{

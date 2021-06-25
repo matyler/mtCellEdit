@@ -11,12 +11,10 @@
 
 In order to compile and run mtDataWell you must have several packages already present on your system:
 
-- A GNU toolchain (gcc, make, gawk, etc).
+- A GNU toolchain (gcc, gmake, gawk, etc).
 - Qt version 5.
 - txt2tags.
 - Inkscape (to build the GUI app icons)
-- Cairo (version 1.6 or later).
-- Pango (version 1.22 or later).
 
 
 These must also include library headers, which some operating systems provide in separate packages.
@@ -25,7 +23,7 @@ mtDataWell then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
 | libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
-| libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo | The core pixel engine, including all file handling and general operations. |
+| libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo, librsvg | The core pixel engine, including all file handling and general operations. |
 | libmtDataWell | libmtKit, libmtPixy, libsndfile | Crypto and random data library. |
 | libmtQEX      | libmtKit, libmtPixy, Qt5 | Various Qt function utilities including preferences editor. |
 
@@ -33,7 +31,8 @@ mtDataWell then requires various libraries that I have created:
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
-| mtDWCLI       | libmtKit, libmtDataWell | Command line crypto and random data app. |
+| mtDWCLI       | libmtKit, libmtDataWell, readline | Command line crypto and random data app. |
+| mtDWUtils     | libmtKit, libmtDataWell | Command line crypto and random data utilities. |
 
 
 
@@ -86,7 +85,7 @@ make install DESTDIR=/my/chosen/directory/
 ```
 
 
-==3.3.1 Program man Pages==[SEC31]
+===3.3.1 Program man Pages===[SEC31]
 
 All of the programs in the mtDataWell suite have usage information contained in the associated man page.  This can be read in the usual way using the man program, such as this example:
 
@@ -160,7 +159,7 @@ To remove these items you would use:
 ```
 
 
-==3.5.1 Local Installation==[SEC51]
+===3.5.1 Local Installation===[SEC51]
 Sometimes it is desirable not to install the program files on the system, and instead install somewhere else using the --prefix= configure script argument such as:
 
 - ~/test_a/usr
@@ -179,70 +178,6 @@ DIR="$HOME/test/usr"; ./build_local.sh \
 ```
 
 For a longer example see the file: ./pkg/README.txt
-
-
-
-==3.6 Qt Port==[SEC6]
-
-I have designed mtDataWell to work with the Qt toolkit, either version 4.8 or 5.
-
-Qt version 5 is now the default target for mtDataWell, and is the current version of the Qt platform.  It works well on modern and powerful hardware, but it uses rather more resources than Qt4 so will not be the best choice for everyone.
-
-Qt version 4.8 is still used by older systems and has the benefit over Qt 5 as being rather more resource frugal.  As always you must consult the configure script help system to ensure you are using the correct settings for things like the system directory you will be installing to.
-
-After installing all of the core library components listed earlier you do the following:
-
-
-====mtQEX====
-
-```
-./configure --use-qt4
-make
-sudo make install
-```
-
-
-====mtDataWell====
-
-```
-./configure --use-qt4
-make
-sudo make install
-```
-
-
-====Menu Icons====
-
-Qt 4 sometimes struggles to find the correct icon theme for desktop environments outside GNOME, XFCE, and KDE.  This can be fixed by using these command lines:
-
-```
-gconftool-2 --type string --set /desktop/gnome/interface/icon_theme elementary
-DESKTOP_SESSION=gnome /usr/bin/mtdatawell-qt4
-```
-
-Change "elementary" to the name of your chosen theme.  If you use the standard "gnome" theme then this command isn't needed.
-
-If you wish to call this version of mtDataWell from inside a local .desktop file (located in ~/.local/share/applications) you would use this line:
-
-```
-Exec=env DESKTOP_SESSION=gnome /usr/bin/mtdatawell-qt4 %f
-```
-
-
-====Preferences File====
-
-If you install the Qt4 version on your system with a different binary name as above, it will use a slightly different preferences file to the Qt5 version:
-
-```
-~/.config/mtdatawell-qt4/prefs.txt
-```
-
-If you want to share the preferences between the two different programs you would call the program like this:
-
-```
-mtdatawell-qt4 -prefs ~/.config/mtdatawell-qt5/prefs.txt
-```
-
 
 
 

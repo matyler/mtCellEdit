@@ -41,20 +41,14 @@ mtDW::Butt::Op::Op (
 
 	// Global Prefs files --------------------------------------------------
 
-	static mtPrefTable const prefs_table[] = {
-	{ PREFS_BUTT_NAME, MTKIT_PREF_TYPE_STR, "", NULL, NULL, 0, NULL, NULL },
-	{ NULL, 0, NULL, NULL, NULL, 0, NULL, NULL }
-	};
-
-	m_prefs.addTable ( prefs_table );
+	m_prefs.uprefs.add_string ( PREFS_BUTT_NAME, m_prefs.butt_name, "" );
 
 	std::string const filename = m_butt_root + "butt.prefs";
 
-	m_prefs.load ( filename.c_str (), NULL );
+	m_prefs.uprefs.load ( filename.c_str (), NULL );
 
-	std::string name = m_prefs.getString ( PREFS_BUTT_NAME );
-
-	if ( name.size () < 1 || m_active_otp.set_otp ( name ) )
+	if (	m_prefs.butt_name.size () < 1
+		|| m_active_otp.set_otp ( m_prefs.butt_name ) )
 	{
 		// First time use or failure to load previously used butt,
 		// so create a new randomly named butt.
@@ -65,9 +59,9 @@ mtDW::Butt::Op::Op (
 		// Try 5 times to be sure (unlikely to have a collision)
 		for ( int i = 0; i < 5; i++ )
 		{
-			create_otp_name ( random, name );
+			create_otp_name ( random, m_prefs.butt_name );
 
-			if ( 0 == m_active_otp.add_otp ( name ) )
+			if ( 0 == m_active_otp.add_otp ( m_prefs.butt_name ) )
 			{
 				break;
 			}
@@ -101,7 +95,7 @@ void mtDW::Butt::Op::create_otp_name (
 
 void mtDW::Butt::Op::save_state ()
 {
-	m_prefs.set ( PREFS_BUTT_NAME, m_active_otp.get_name ().c_str () );
-	m_prefs.save ();
+	m_prefs.butt_name = m_active_otp.get_name ();
+	m_prefs.uprefs.save ();
 }
 

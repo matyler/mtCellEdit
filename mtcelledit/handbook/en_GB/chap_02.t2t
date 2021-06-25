@@ -21,7 +21,7 @@ mtCellEdit is designed to work on GNU/Linux operating systems, and has been test
 
 ==2.1 Life Before mtCellEdit==[SEC1]
 
-I first became interested in spreadsheet programs in the mid 1980's.  Ever since those early days software makers have enriched their spreadsheet programs with ever more complex features. (e.g. wordprocessing, databases, forms, software development and publishing). For some tasks this is quite useful as it can be more productive. However there is the drawback that spreadsheet programs became larger, demanding ever more memory, disk space and CPU power.  With more and more features, the user interface became ever more complex with even the most basic tasks becoming more cumbersome.  I've also noticed in recent years that I am having to retrain myself just to do the same jobs that I have been doing for over 20 years, as certain software companies have felt the need to totally rework their user interface model to manage this complexity.
+I first became interested in spreadsheet programs in the mid 1980's.  Ever since those early days software makers have enriched their spreadsheet programs with ever more complex features. (e.g. wordprocessing, databases, forms, software development and publishing). For some tasks this is quite useful as it can be more productive. However, the drawback is that spreadsheet programs have become larger, demanding ever more memory, disk space, and CPU power.  With more and more features, the user interface becomes ever more complex with even the most basic tasks becoming rather cumbersome.  I've also noticed in recent years that I am having to retrain myself just to do the same jobs that I have been doing for over 20 years, as certain software companies have felt the need to totally rework their user interface model to manage this complexity.
 
 When the job I want to complete is fairly simple, the use of a heavyweight tool doesn't feel quite right.  As a comparison, when I want to edit a text file I use a text editor, I don't use a wordprocessor because the text editor is exactly tailored to the job in hand so it's GUI doesn't become a hindrance.
 
@@ -49,7 +49,7 @@ I have always wanted mtCellEdit to be small, light, and reliable as I think thes
 
 - **Small** means a codebase with each part being small enough to manage easily.
 
- - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, e.g. porting to a new widget toolkit.
+ - No feature creep, bloatware, or old cruft.  This makes the end product much more focused on the user's needs.  It also makes the code easier to manage in the long run, such as porting to a new widget toolkit library.
 
 - **Light** means resource frugal.
 
@@ -82,12 +82,13 @@ An important decision I have taken is to release it as free software using the G
 | 2014-8-10  | 2.4         | Code correctness review.  API tightening with const.  Many warnings now switched on when debugging.  Major cruft removal.  mtPixel becomes mtIMG.  All lib directories now have lib prefix. |
 | 2015-5-24  | 2.5         | System integration (man pages added for each app, default font set at mtCellEdit compile time) |
 | 2015-9-6   | 2.6         | 2015 Election data added to mtEleana. |
-| 2016-5-14  | 2.7         | Qt5 is now the default GUI toolkit.  GTK+2 version of mtEleana removed. libmtIMG dispersed into libmtKit & libmtCedUI. mtEleana reworked. Pango now renders GUI and output file text (enables font substitution, kerning, etc).  |
-| 2017-2-24  | 3.0         | C code converted to C++.  mtPixy, mtPixyCLI, mtPixyUtils, libmtPixy, libmtPixyUI added. All GTK+2 code removed. |
+| 2016-5-14  | 2.7         | Qt 5 is now the default GUI toolkit.  GTK+2 version of mtEleana removed. libmtIMG dispersed into libmtKit & libmtCedUI. mtEleana reworked. Pango now renders GUI and output file text (enables font substitution, kerning, etc).  |
+| 2017-2-24  | 3.0         | Some C code converted to C++.  mtPixy, mtPixyCLI, mtPixyUtils, libmtPixy, libmtPixyUI added. All GTK+2 code removed. |
 | 2018-2-25  | 3.1         | General improvements. mtEleana removed. |
 | 2018-8-25  | 3.2         | libmtdatawell, mtDWCLI added. |
 | 2019-5-25  | 3.3         | libmtPixyUI merged into libmtPixy. mtDataWell added. |
-| 2020-6-25  | 3.4         | mtCrul and mtDWUtils added. |
+| 2020-6-25  | 3.4         | mtDWUtils, mtCrul added. |
+| 2021-6-25  | 3.5         | All Qt 4 code removed. Cherry-picked C++11 features introduced. libmtGin, mtGinUtils added. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

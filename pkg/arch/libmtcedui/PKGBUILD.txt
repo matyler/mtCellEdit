@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="MT Spreadsheet UI Engine"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('libmtkit' 'libmtpixy' 'libmtcelledit' 'cairo' 'pango' 'freetype2')
+depends=('libmtkit' 'libmtpixy' 'libmtcelledit' 'cairo' 'pango')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

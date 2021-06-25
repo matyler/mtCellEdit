@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2019 Mark Tyler
+	Copyright (C) 2013-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ mtQEX::SaveFileDialog::SaveFileDialog (
 		}
 
 		row = new QHBoxLayout;
-		row->setMargin ( 0 );
+		row->setContentsMargins ( 0, 0, 0, 0 );
 		w->setLayout ( row );
 
 		QLabel * label = new QLabel ( "File Format:" );

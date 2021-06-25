@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2017 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ static int get_force_arg (
 	return res;
 }
 
-int jtf_load (
+int Backend::jtf_load (
 	char	const * const * const	args
 	)
 {
@@ -52,7 +52,7 @@ int jtf_load (
 		return 2;
 	}
 
-	if ( cui_file_load ( backend.file(), args[0], ft ) )
+	if ( cui_file_load ( file(), args[0], ft ) )
 	{
 		fprintf ( stderr, "Unable to load '%s'\n\n", args[0] );
 
@@ -62,19 +62,18 @@ int jtf_load (
 	return 0;
 }
 
-int jtf_save (
+int Backend::jtf_save (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	if ( backend.file()->name == NULL )
+	if ( file()->name == NULL )
 	{
 		fprintf ( stderr, "Filename not set.\n\n" );
 
 		return 2;
 	}
 
-	if ( cui_file_save ( backend.file(), backend.file()->name,
-		backend.file()->type ) )
+	if ( cui_file_save ( file(), file()->name, file()->type ) )
 	{
 		fprintf ( stderr, "Unable to save.\n\n" );
 
@@ -110,19 +109,19 @@ static int get_file_type (
 	return 0;
 }
 
-int jtf_save_as (
+int Backend::jtf_save_as (
 	char	const * const * const	args
 	)
 {
 	if ( args[1] )
 	{
-		if ( get_file_type ( args[1], &backend.file()->type ) )
+		if ( get_file_type ( args[1], &file()->type ) )
 		{
 			return 2;
 		}
 	}
 
-	if ( cui_file_save ( backend.file(), args[0], backend.file()->type ) )
+	if ( cui_file_save ( file(), args[0], file()->type ) )
 	{
 		fprintf ( stderr, "Unable to save.\n\n" );
 
@@ -132,7 +131,7 @@ int jtf_save_as (
 	return 0;
 }
 
-int jtf_import_book (
+int Backend::jtf_import_book (
 	char	const * const * const	args
 	)
 {
@@ -157,14 +156,14 @@ int jtf_import_book (
 	}
 
 	int sheet_tot, sheet_fail, file_tot, file_fail;
-	int const res = cui_book_merge ( backend.file()->cubook,
+	int const res = cui_book_merge ( file()->cubook,
 		uifile->cubook->book, &sheet_tot, &sheet_fail, &file_tot,
 		&file_fail );
 
 	cui_file_free ( uifile );
 	uifile = NULL;
 
-	backend.undo_report_updates ( res );
+	undo_report_updates ( res );
 
 	printf ( "%i sheets imported.\n"
 		"%i sheets not imported due to identical names.\n"
@@ -180,18 +179,18 @@ int jtf_import_book (
 	}
 
 	// Update sheet/graph names if they were empty before
-	backend.sheet ();
-	backend.graph ();
-	backend.update_changes_chores ();
+	sheet ();
+	graph ();
+	update_changes_chores ();
 
 	return 0;			// Success
 }
 
-int jtf_import_graph (
+int Backend::jtf_import_graph (
 	char	const * const * const	args
 	)
 {
-	if ( cui_graph_get ( backend.file()->cubook->book, args[0] ) )
+	if ( cui_graph_get ( file()->cubook->book, args[0] ) )
 	{
 		fprintf ( stderr, "Graph name already exists.\n\n" );
 
@@ -208,8 +207,7 @@ int jtf_import_graph (
 		return 2;
 	}
 
-	if ( ! cui_graph_new ( backend.file()->cubook->book, buf, buf_size,
-		args[0] )
+	if ( ! cui_graph_new ( file()->cubook->book, buf, buf_size, args[0] )
 		)
 	{
 		free ( buf );
@@ -220,24 +218,23 @@ int jtf_import_graph (
 	}
 
 	buf = NULL;
-	mtkit_strfreedup ( &backend.file()->cubook->book->prefs.active_graph,
-		args[0] );
+	mtkit_strfreedup ( &file()->cubook->book->prefs.active_graph, args[0] );
 
 	return 0;
 }
 
-int jtf_export_graph (
+int Backend::jtf_export_graph (
 	char	const * const * const	args
 	)
 {
-	CedBookFile * const graph = backend.graph ();
+	CedBookFile * const gr = graph();
 
-	if ( ! graph )
+	if ( ! gr )
 	{
 		return 2;
 	}
 
-	if ( mtkit_file_save ( args[0], graph->mem, graph->size, 0 ) )
+	if ( mtkit_file_save ( args[0], gr->mem, gr->size, 0 ) )
 	{
 		fprintf ( stderr, "Error exporting graph.\n\n" );
 
@@ -247,12 +244,11 @@ int jtf_export_graph (
 	return 0;
 }
 
-int jtf_export_output_graph (
+int Backend::jtf_export_output_graph (
 	char	const * const * const	args
 	)
 {
-	CedBookFile * const graph = backend.graph ();
-	if ( ! graph )
+	if ( ! graph() )
 	{
 		return 2;
 	}
@@ -274,8 +270,8 @@ int jtf_export_output_graph (
 		return 2;
 	}
 
-	if ( cui_graph_render_file ( backend.file()->cubook->book,
-		backend.file()->cubook->book->prefs.active_graph,
+	if ( cui_graph_render_file ( file()->cubook->book,
+		file()->cubook->book->prefs.active_graph,
 		args[0], filetype, NULL, 1 )
 		)
 	{
@@ -287,12 +283,12 @@ int jtf_export_output_graph (
 	return 0;
 }
 
-int jtf_export_output_sheet (
+int Backend::jtf_export_output_sheet (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
-	if ( ! sheet )
+	CedSheet * const sh = sheet ();
+	if ( ! sh )
 	{
 		return 2;
 	}
@@ -318,16 +314,11 @@ int jtf_export_output_sheet (
 		return 2;
 	}
 
-	int		font_size = 12;
-	char	const	* font_name = "Sans";
-	int		row_pad = 1;
-
-	mtkit_prefs_get_str ( backend.prefs(), MAIN_FONT_NAME, &font_name );
-	mtkit_prefs_get_int ( backend.prefs(), MAIN_FONT_SIZE, &font_size );
-	mtkit_prefs_get_int ( backend.prefs(), MAIN_ROW_PAD, &row_pad );
-
-	if ( cui_export_output ( backend.prefs(), sheet, args[0],
-		backend.file()->name, filetype, row_pad, font_name, font_size ))
+	if ( cui_export_output ( prefs(), sh, args[0], file()->name, filetype,
+		prefs().get_int ( MAIN_ROW_PAD ),
+		prefs().get_string ( MAIN_FONT_NAME ).c_str(),
+		prefs().get_int ( MAIN_FONT_SIZE )
+		) )
 	{
 		fprintf ( stderr, "Error exporting sheet output.\n\n" );
 
@@ -337,12 +328,12 @@ int jtf_export_output_sheet (
 	return 0;
 }
 
-int jtf_export_sheet (
+int Backend::jtf_export_sheet (
 	char	const * const * const	args
 	)
 {
-	CedSheet * const sheet = backend.sheet ();
-	if ( ! sheet )
+	CedSheet * const sh = sheet ();
+	if ( ! sh )
 	{
 		return 2;
 	}
@@ -373,7 +364,7 @@ int jtf_export_sheet (
 		return 2;
 	}
 
-	if ( ced_sheet_save ( sheet, args[0], filetype ) )
+	if ( ced_sheet_save ( sh, args[0], filetype ) )
 	{
 		fprintf ( stderr, "Error exporting sheet.\n\n" );
 

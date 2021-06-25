@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2018 Mark Tyler
+	Copyright (C) 2004-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -50,21 +50,12 @@ enum	// Column numbers for each field in results sheet
 
 
 
-typedef int (* raftScanFunc) (
-	void		* user_data
-	);
-	// 0 = Keep scanning
-	// 1 = Stop
-
-
-
 // Functions return: 0 = success, NULL = fail; unless otherwise stated.
 
 int raft_scan_sheet (
-	char	const	* path,		// Path to scan all files & subdirs
+	std::string const & path,	// Path to scan all files & subdirs
 	CedSheet	** sheet,	// Put results here
-	raftScanFunc	callback,	// Option callback for each subdir
-	void		* user_data	// Passed to raftScanFunc
+	mtKit::Busy	& busy
 	);
 	// -1 = Error
 	//  0 = Success - sheet created
@@ -78,17 +69,15 @@ int raft_cline (			// Parse command line
 	// 0 = Success
 	// 1 = Terminate program
 
-char * raft_path_check (		// Check path, put into new string
+std::string raft_path_check (		// Check path, put into new string
 	char	const	* path
 	);
-	// Caller must free any result after use.
 
-char * raft_path_merge (		// Merge the current path and selected row
-	char	const	* path,		// Must have a / at the end
+std::string raft_path_merge (		// Merge the current path and selected row
+	std::string const & path,	// Must have a / at the end
 	CedSheet	* sheet,
 	int		row
 	);
-	// Caller must free any result after use.
 
 char * raft_get_clipboard (		// Create UTF8 text for clipboard
 	CedSheet	* sheet		// from this sheet

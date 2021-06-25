@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2018 Mark Tyler
+	Copyright (C) 2012-2020 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 
 
-int jtf_about (
+int Backend::jtf_about (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
@@ -31,37 +31,37 @@ int jtf_about (
 	return 0;
 }
 
-int jtf_help (
+int Backend::jtf_help (
 	char	const * const * const	args
 	)
 {
-	return backend.get_help ( args );
+	return get_help ( args );
 }
 
-int jtf_quit (
+int Backend::jtf_quit (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	backend.exit.abort ();
+	exit.abort ();
 
 	return 0;
 }
 
-int jtf_info (
+int Backend::jtf_info (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	char	const	* txt_sheet = "";
 	char		txt_rc[128] = {0};
 
-	CedSheet * const sheet = backend.sheet ( false );
+	CedSheet * const sh = sheet ( false );
 
-	if ( sheet )
+	if ( sh )
 	{
 		int	r1, r2, c1, c2;
 
 
-		ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+		ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
 		if ( r1 == r2 && c1 == c2 )
 		{
@@ -74,25 +74,24 @@ int jtf_info (
 				r1, c1, r2, c2 );
 		}
 
-		txt_sheet = backend.file()->cubook->book->prefs.active_sheet;
+		txt_sheet = file()->cubook->book->prefs.active_sheet;
 	}
 
 	char		const	* txt_graph = "";
 	char		const	* txt_filename = "";
 	char		const	* txt_filetype = "";
-	CedBookFile	* const	graph = backend.graph ( false );
 
-	if ( graph )
+	if ( graph ( false ) )
 	{
-		txt_graph = backend.file()->cubook->book->prefs.active_graph;
+		txt_graph = file()->cubook->book->prefs.active_graph;
 	}
 
-	if ( backend.file()->name )
+	if ( file()->name )
 	{
-		txt_filename = backend.file()->name;
+		txt_filename = file()->name;
 	}
 
-	txt_filetype = ced_file_type_text ( backend.file()->type );
+	txt_filetype = ced_file_type_text ( file()->type );
 
 	printf ( "Book #=%i "
 		"Sheet Name='%s' "
@@ -101,7 +100,7 @@ int jtf_info (
 		"Filename='%s' "
 		"File Type=%s"
 		"\n\n",
-		backend.get_file_number(), txt_sheet, txt_graph, txt_rc,
+		get_file_number(), txt_sheet, txt_graph, txt_rc,
 		txt_filename, txt_filetype );
 
 	return 0;
@@ -124,12 +123,11 @@ static int cb_list_files (
 	return 0;		// Continue
 }
 
-int jtf_list_files (
+int Backend::jtf_list_files (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	mtkit_tree_scan ( backend.file()->cubook->book->files, cb_list_files,
-		NULL, 0 );
+	mtkit_tree_scan ( file()->cubook->book->files, cb_list_files, NULL, 0 );
 
 	puts ( "" );
 
@@ -148,11 +146,11 @@ static int cb_list_graphs (
 	return 0;		// Continue
 }
 
-int jtf_list_graphs (
+int Backend::jtf_list_graphs (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	cui_graph_scan ( backend.file()->cubook->book, cb_list_graphs, NULL );
+	cui_graph_scan ( file()->cubook->book, cb_list_graphs, NULL );
 	puts ( "" );
 
 	return 0;
@@ -169,11 +167,11 @@ static int cb_list_sheets (
 	return 0;	// Continue
 }
 
-int jtf_list_sheets (
+int Backend::jtf_list_sheets (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
-	ced_book_scan ( backend.file()->cubook->book, cb_list_sheets, NULL );
+	ced_book_scan ( file()->cubook->book, cb_list_sheets, NULL );
 	puts ( "" );
 
 	return 0;
@@ -261,19 +259,15 @@ static int cb_scan_output (
 	void		* const	user_data
 	)
 {
-	char		* txt;
+	char	buf[2000];
 
-
-	txt = ced_cell_create_output ( cell, NULL );
-	if ( ! txt )
+	if ( ced_cell_create_output ( cell, NULL, buf, sizeof(buf) ) )
 	{
 		return 0;
 	}
 
 	cb_space_output ( row, col, user_data );
-	printf ( "%s", txt );
-
-	free ( txt );
+	printf ( "%s", buf );
 
 	return 0;		// Continue
 }
@@ -372,25 +366,23 @@ static int cb_scan_prefs (
 	return 0;		// Continue
 }
 
-static int cb_scan (
-	CedFuncScanArea	const	callback
-	)
+int Backend::cb_scan ( CedFuncScanArea const callback )
 {
-	CedSheet * const sheet = backend.sheet ();
-	if ( ! sheet )
+	CedSheet * const sh = sheet ();
+	if ( ! sh )
 	{
 		return 2;
 	}
 
 	int	rc[3], r1, r2, c1, c2;
 
-	ced_sheet_cursor_max_min ( sheet, &r1, &c1, &r2, &c2 );
+	ced_sheet_cursor_max_min ( sh, &r1, &c1, &r2, &c2 );
 
 	rc[0] = r1;
 	rc[1] = c1;
 	rc[2] = c1;
 
-	int const res = ced_sheet_scan_area ( sheet, r1, c1, r2 - r1 + 1,
+	int const res = ced_sheet_scan_area ( sh, r1, c1, r2 - r1 + 1,
 		c2 - c1 + 1, callback, rc );
 
 	if ( res )
@@ -405,35 +397,35 @@ static int cb_scan (
 	return 0;
 }
 
-int jtf_print (
+int Backend::jtf_print (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return cb_scan ( cb_scan_output );
 }
 
-int jtf_print_cell_num (
+int Backend::jtf_print_cell_num (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return cb_scan ( cb_scan_num );
 }
 
-int jtf_print_cell_text (
+int Backend::jtf_print_cell_text (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return cb_scan ( cb_scan_text );
 }
 
-int jtf_print_cell_type (
+int Backend::jtf_print_cell_type (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {
 	return cb_scan ( cb_scan_type );
 }
 
-int jtf_print_prefs_cell (
+int Backend::jtf_print_prefs_cell (
 	char	const * const * const	ARG_UNUSED ( args )
 	)
 {

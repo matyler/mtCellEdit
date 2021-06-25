@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -34,15 +34,9 @@
 #include <unistd.h>
 
 // OS
-#include <GL/gl.h>		// GLfloat
-#include <sqlite3.h>		// Unlock mtKit Sqlite API
-#include <mtkit.h>
+#include <mtkit_sqlite.h>
 #include <mtpixy.h>
-
-// Internal
-//#include "mtkit_.h"
-//#include "be.h"
-
+#include <mtgin_gl.h>
 
 
 
@@ -57,9 +51,7 @@ class Model;
 class Ruler;
 
 struct Line;
-struct PointGL;		// RGB opaque
 struct PtsExtent;
-struct VertexGL;	// RGBA
 
 
 
@@ -106,31 +98,30 @@ enum
 
 
 
-double normalize_angle ( double angle );
 int get_float_rgb_int ( GLfloat val );		// 0.0->0 .. 1.0->255
 
 void create_gl_grid (
-	std::vector<Crul::VertexGL> & lines,
+	std::vector<mtGin::GL::VertexRGB> & lines,
 	int count,
-	VertexGL const & v1,
-	VertexGL const & v2,
-	VertexGL const & v3,
-	VertexGL const & v4
+	mtGin::GL::VertexRGB const & v1,
+	mtGin::GL::VertexRGB const & v2,
+	mtGin::GL::VertexRGB const & v3,
+	mtGin::GL::VertexRGB const & v4
 	);
 
 void create_gl_face (
-	std::vector<Crul::VertexGL> & vertices,
-	VertexGL & v1,
-	VertexGL & v2,
-	VertexGL & v3,
-	VertexGL & v4
+	std::vector<mtGin::GL::VertexRGBnormal> & vertices,
+	mtGin::GL::VertexRGBnormal & v1,
+	mtGin::GL::VertexRGBnormal & v2,
+	mtGin::GL::VertexRGBnormal & v3,
+	mtGin::GL::VertexRGBnormal & v4
 	);
 
 void create_gl_triangle (
-	std::vector<Crul::VertexGL> & vertices,
-	VertexGL & v1,
-	VertexGL & v2,
-	VertexGL & v3
+	std::vector<mtGin::GL::VertexRGBnormal> & vertices,
+	mtGin::GL::VertexRGBnormal & v1,
+	mtGin::GL::VertexRGBnormal & v2,
+	mtGin::GL::VertexRGBnormal & v3
 	);
 
 
@@ -141,12 +132,13 @@ public:
 	DB ();
 	~DB ();
 
-	int open ( std::string const & filename );
-	inline std::string const & get_filename () const { return m_filename; }
+	int open ( std::string const & dir );
+	inline std::string const & get_dir () const { return m_dir; }
 
 	void clear_cache ();
-	int load_cache ( int type, std::vector<PointGL> * cloud );
-	int save_cache ( int type, std::vector<PointGL> const * cloud );
+	int load_cache ( int type, std::vector<mtGin::GL::VertexRGB> * cloud );
+	int save_cache ( int type, std::vector<mtGin::GL::VertexRGB> const
+		* cloud );
 
 	static char const * get_cache_name ( int type );
 
@@ -171,15 +163,15 @@ public:
 	int save_cameras ( std::map<int, Crul::Camera> const * map );
 
 	void clear_model ();
-	int load_model ( std::vector<VertexGL> & model );
-	int save_model ( std::vector<VertexGL> const & model );
+	int load_model ( std::vector<mtGin::GL::VertexRGBnormal> & model );
+	int save_model ( std::vector<mtGin::GL::VertexRGBnormal> const & model);
 
 private:
 	void clear_cache_index ( int id );
 
 /// ----------------------------------------------------------------------------
 
-	std::string	m_filename;
+	std::string	m_dir;
 
 	mtKit::Sqlite	m_db;
 };
@@ -202,7 +194,7 @@ struct Line
 	double get_angle_z () const;
 
 	void create_gl (
-		std::vector<Crul::VertexGL> & vertices,
+		std::vector<mtGin::GL::VertexRGBnormal> & vertices,
 		double line_size
 		) const;
 
@@ -211,38 +203,6 @@ struct Line
 	GLfloat	x1, y1, z1;
 	GLfloat	x2, y2, z2;
 	GLfloat	r, g, b;	// 0.0 -> 1.0
-};
-
-
-
-struct PointGL
-{
-	static size_t const FLOAT_TOT = 6;
-
-	GLfloat	x, y, z;
-	GLfloat	r, g, b;	// 0.0 -> 1.0
-};
-
-
-
-struct VertexGL
-{
-	static size_t const FLOAT_TOT = 9;
-
-	inline void set_rgb ( GLfloat rr, GLfloat gg, GLfloat bb )
-	{ r=rr; g=gg; b=bb; }
-
-	inline void set_rgb ( VertexGL const & v )
-	{ r=v.r; g=v.g; b=v.b; }
-
-	inline void set_normal ( VertexGL const & v )
-	{ nx=v.nx; ny=v.ny; nz=v.nz; }
-
-	void normal ( VertexGL & p2, VertexGL & p3 );
-
-	GLfloat	x, y, z;
-	GLfloat	r, g, b;	// 0.0 -> 1.0
-	GLfloat	nx, ny, nz;	// Normal
 };
 
 
@@ -270,14 +230,16 @@ public:
 	void clear ();			// Clear points & extents
 
 	inline size_t size ()		const	{ return m_points.size (); }
-	inline PointGL const * data ()	const	{ return m_points.data (); }
-	inline std::vector<PointGL> * get_points () { return & m_points; }
+	inline mtGin::GL::VertexRGB const * data () const
+		{ return m_points.data (); }
+	inline std::vector<mtGin::GL::VertexRGB> * get_points ()
+		{ return & m_points; }
 
 	PtsExtent const * extents_ready () const;	// NULL = unset
 	PtsExtent const * extents_calculate ();
 
 private:
-	std::vector<PointGL>	m_points;
+	std::vector<mtGin::GL::VertexRGB>	m_points;
 	PtsExtent		m_extent;
 };
 
@@ -303,8 +265,9 @@ public:
 	// Load pts into high; populate low/medium; store cache on DB.
 	int load_pts ( std::string const & filename, DB * db );
 
-	inline PointGL const * data ()	const	{ return m_cpts->data (); }
-	inline size_t size ()		const	{ return m_cpts->size (); }
+	inline mtGin::GL::VertexRGB const * data () const
+		{ return m_cpts->data (); }
+	inline size_t size () const { return m_cpts->size (); }
 
 /// ----------------------------------------------------------------------------
 
@@ -313,7 +276,7 @@ public:
 
 private:
 	int resample_cloud (
-		std::vector<Crul::PointGL> * dest,
+		std::vector<mtGin::GL::VertexRGB> * dest,
 		int rate
 		);
 
@@ -341,47 +304,32 @@ public:
 
 	int load_db_pts ( DB * db );
 
-	inline std::vector<VertexGL> const & get_pts () { return m_pts; }
+	inline std::vector<mtGin::GL::VertexRGBnormal> const & get_pts () const
+		{ return m_pts; }
 
 private:
-	std::vector<VertexGL> m_pts;
+	std::vector<mtGin::GL::VertexRGBnormal> m_pts;
 };
 
 
 
-class Camera
+class Camera : public mtGin::GL::Camera
 {
 public:
-	Camera ();
-
 	inline int get_id () const			{ return m_id; }
 	inline std::string const & get_label () const	{ return m_label; }
-	inline double get_x () const			{ return m_x; }
-	inline double get_y () const			{ return m_y; }
-	inline double get_z () const			{ return m_z; }
-	inline double get_rotX () const			{ return m_rotX; }
-	inline double get_rotY () const			{ return m_rotY; }
-	inline double get_rotZ () const			{ return m_rotZ; }
 	inline bool get_read_only () const		{ return m_read_only; }
 
 	inline void set_id ( int const i )		{ m_id = i; }
 	inline void set_label ( std::string const & l )	{ m_label = l; }
-	inline void set_x ( double const x )		{ m_x = x; }
-	inline void set_y ( double const y )		{ m_y = y; }
-	inline void set_z ( double const z )		{ m_z = z; }
-	inline void set_rotX ( double const r )		{ m_rotX = r; }
-	inline void set_rotY ( double const r )		{ m_rotY = r; }
-	inline void set_rotZ ( double const r )		{ m_rotZ = r; }
 	inline void set_read_only ( bool const r )	{ m_read_only = r; }
 
 /// ----------------------------------------------------------------------------
 
 private:
-	int		m_id;
+	int		m_id		= 0;
 	std::string	m_label;
-	double		m_x, m_y, m_z;
-	double		m_rotX, m_rotY, m_rotZ;
-	bool		m_read_only;
+	bool		m_read_only	= false;
 };
 
 
@@ -414,12 +362,12 @@ public:
 	void swap_ab ();
 
 	void create_ends_gl (
-		std::vector<Crul::VertexGL> & vertices,
+		std::vector<mtGin::GL::VertexRGBnormal> & vertices,
 		double end_size
 		) const;
 
 	void create_plane_gl (
-		std::vector<Crul::VertexGL> & lines,
+		std::vector<mtGin::GL::VertexRGB> & lines,
 		double plane_range
 		) const;
 

@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Qt5 Mark Tyler's point Cloud RULer
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy libmtqex5 libqt5-qtbase-devel inkscape sqlite3-devel Mesa-libGL-devel
-Requires:		libmtkit libmtpixy libmtqex5 libQt5Core5 libsqlite3-0
+BuildRequires:		libmtkit libmtpixy libmtgin libmtqex5 libqt5-qtbase-devel inkscape sqlite3-devel Mesa-libGL-devel
+Requires:		libmtkit libmtpixy libmtgin libmtqex5 libQt5Core5 libsqlite3-0
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

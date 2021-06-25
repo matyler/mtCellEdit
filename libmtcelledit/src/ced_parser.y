@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -461,15 +461,15 @@ static int yylex (
 	// Process function names
 	if ( isalpha ( input[ state->sp ] ) )
 	{
-		size_t			len = 0;
+		size_t			len = 1;
 		char		const	* start = input + state->sp;
 		char			* ns,
 					* s;
 		CedToken	const	* token;
 		CedToken	const	** tok_ptr = (CedToken const **)lvalp;
 
-
-		while ( isalpha ( input[ state->sp ] ) )
+		state->sp ++;
+		while ( isalnum ( input[ state->sp ] ) )
 		{
 			len ++;
 			state->sp ++;
