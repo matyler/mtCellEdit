@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2022 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -83,9 +83,8 @@ mtPixmap * pixy_pixmap_load_gif ( char const * const filename )
 
 
 	// GIF interlace pattern: Y0, DY, ...
-	unsigned char	interlace[10] = { 0, 1, 0, 8, 4, 8, 2, 4, 1, 2 };
+	unsigned char	const interlace[10] = { 0, 1, 0, 8, 4, 8, 2, 4, 1, 2 };
 	unsigned char	* src;
-	GifFileType	* giffy;
 	GifRecordType	gif_rec;
 	GifByteType	* byte_ext;
 	ColorMapObject	* cmap = NULL;
@@ -93,8 +92,7 @@ mtPixmap * pixy_pixmap_load_gif ( char const * const filename )
 	int		frame = 0;
 	mtPixmap	* image = NULL;
 
-
-	giffy = DGIFOPENFILENAME ( filename );
+	GifFileType	* const giffy = DGIFOPENFILENAME ( filename );
 
 	if ( ! giffy )
 	{

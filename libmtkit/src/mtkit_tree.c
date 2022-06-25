@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -280,7 +280,7 @@ static mtTreeNode * tree_node_insert (
 			node->balance --;
 		}
 	}
-	else if ( compare > 0 )
+	else /*if ( compare > 0 ) NOTE: always true as per 2 tests before */
 	{
 		if ( node->right )
 		{
@@ -497,7 +497,7 @@ static mtTreeNode * tree_node_remove (
 				old_balance );
 		}
 	}
-	else if ( cmp > 0 )
+	else /*if ( cmp > 0 ) NOTE: always true as per 2 tests before */
 	{
 		if ( node->right )
 		{

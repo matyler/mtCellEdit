@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2021 Mark Tyler
+	Copyright (C) 2008-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1038,6 +1038,7 @@ class ByteFileRead;
 class ByteFileWrite;
 class CliItem;
 class CliTab;
+class Clock;
 class Exit;
 class FileLock;
 class LineFileRead;
@@ -1549,6 +1550,7 @@ public:
 
 	inline bool is_open () const { return NULL != m_fp; }
 
+	inline FILE * get_fp () const { return m_fp; }
 	inline uint64_t get_pos () const { return m_pos; }
 
 private:
@@ -1683,6 +1685,32 @@ private:
 	int	m_min, m_max, m_val;
 	bool	m_aborted;
 	bool	m_range_changed;
+};
+
+
+
+class Clock
+{
+public:
+	Clock ()
+	{
+		restart ();
+	}
+
+	void restart ()
+	{
+		m_start = now ();
+	}
+
+	static double now ();		// Current monotonic time
+
+	double seconds () const		// Seconds since last restart
+	{
+		return now () - m_start;
+	}
+
+private:
+	double		m_start;
 };
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2019 Mark Tyler
+	Copyright (C) 2012-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,34 +15,31 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "cui.h"
 
 
 
 static char const * get_temp_clip_filename ( void )
 {
-	static char	temp_clip_filename [ 2048 ];
+	static std::string filename;
 
-
-	if ( ! temp_clip_filename[0] )
+	if ( filename.size() < 1 )
 	{
 		// First time usage
 
-		snprintf ( temp_clip_filename, sizeof ( temp_clip_filename ),
-			"%s/.cache", mtkit_file_home () );
+		filename += mtkit_file_home ();
+		filename += "/.cache";
 
-		mtkit_mkdir ( temp_clip_filename );
+		mtkit_mkdir ( filename.c_str() );
 
-		mtkit_strnncat ( temp_clip_filename, "/" APP_NAME,
-			sizeof ( temp_clip_filename ) );
+		filename += "/" APP_NAME;
 
-		mtkit_mkdir ( temp_clip_filename );
+		mtkit_mkdir ( filename.c_str() );
 
-		mtkit_strnncat ( temp_clip_filename, "/clipboard.ledger.zip",
-			sizeof ( temp_clip_filename ) );
+		filename += "/clipboard.ledger.zip";
 	}
 
-	return temp_clip_filename;
+	return filename.c_str ();
 }
 
 

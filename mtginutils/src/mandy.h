@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 Mark Tyler
+	Copyright (C) 2021-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -307,6 +307,7 @@ private:
 
 	MandelPalette		m_palette;
 	mtPixy::Pixmap		m_pixmap;
+	mtKit::Clock		m_clock;
 
 	double			m_cx		= AXIS_CXY_DEFAULT;
 	double			m_cy		= AXIS_CXY_DEFAULT;
@@ -314,8 +315,6 @@ private:
 	double			m_range_h	= AXIS_RANGE_DEFAULT;
 	size_t			m_depth_max	= DEPTH_MAX_DEFAULT;
 	int			m_verbose	= 0;
-
-	double			m_time_start	= 0.0;
 
 /// Temp variables for the threads ---------------------------------------------
 

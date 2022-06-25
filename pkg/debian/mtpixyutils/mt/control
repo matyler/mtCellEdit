@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtpixy
 Standards-Version: 3.9.3
-Homepage: http://ced.marktyler.org/
+Homepage: https://www.marktyler.org/
 
 Package: mtpixyutils
 Architecture: any

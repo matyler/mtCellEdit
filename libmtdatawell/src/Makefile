@@ -29,7 +29,7 @@ install:
 uninstall:
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_NAME)
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_SONAME)
-		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
+		cd $(DESTDIR)$(HEAD_INSTALL); rm -f $(HEADER)
 
 clean:
 		rm -f *.o *.so.$(LIB_SONUM)

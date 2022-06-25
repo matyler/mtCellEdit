@@ -14,8 +14,11 @@ $(LIB_SONAME):	$(OBJS)
 
 $(OBJS):	*.h
 
-# .c.o Implicit rule
-# .cpp.o Implicit rule
+%.o:		%.cpp
+		$(CXX) -I$(CURDIR) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+%.o:		%.c
+		$(CC) -I$(CURDIR) $(CPPFLAGS) $(CFLAGS) -c $<
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)

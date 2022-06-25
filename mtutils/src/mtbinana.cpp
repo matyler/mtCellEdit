@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -85,7 +85,16 @@ static void analyse_data_single (
 	)
 {
 	int	bits_used[8] = {0};
-	int	bit_mask[8] = { 1<<0, 1<<1, 1<<2, 1<<3, 1<<4, 1<<5, 1<<6, 1<<7}; 
+	int constexpr bit_mask[8] = {
+			1 << 0,
+			1 << 1,
+			1 << 2,
+			1 << 3,
+			1 << 4,
+			1 << 5,
+			1 << 6,
+			1 << 7
+		};
 	int	bytes_used[256] = {0};
 
 	for ( int i = 0; i < size; i++ )

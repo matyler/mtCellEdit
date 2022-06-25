@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2020 Mark Tyler
+	Copyright (C) 2012-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -138,7 +138,7 @@ int Backend::jtf_find (
 
 		if (	mtKit::cli_parse_charint ( args[i], chitab, res ) ||
 			res < 0 ||
-			res > 4
+			res > 3
 			)
 		{
 			fprintf ( stderr, "Unable to match argument '%s'\n\n",

@@ -1,10 +1,6 @@
 /*
 	Copyright (C) 2008-2021 Mark Tyler
 
-	Code ideas and portions from mtPaint:
-	Copyright (C) 2004-2006 Mark Tyler
-	Copyright (C) 2006-2016 Dmitry Groshev
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 3 of the License, or
@@ -110,7 +106,10 @@ int mtPixy::SVG::Op::create_cairo (
 }
 
 
+
 /// mtPixy::SVG	----------------------------------------------------------------
+
+
 
 mtPixy::SVG::SVG ()
 	:
@@ -191,3 +190,19 @@ void mtPixy::SVG::render_free ()
 	m_op->clear_cairo ();
 }
 
+
+
+/// ----------------------------------------------------------------------------
+
+
+
+void mtPixy::Canvas::draw_svg ( SVG const & svg ) const
+{
+	RsvgHandle * const rsvg = svg.get_op()->rsvg;
+	cairo_t * const cr = get_cairo ();
+
+	if ( rsvg && cr )
+	{
+		rsvg_handle_render_cairo ( rsvg, cr );
+	}
+}

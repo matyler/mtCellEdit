@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010-2016 Mark Tyler
+	Copyright (C) 2010-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,11 @@
 	along with this program in the file COPYING.
 */
 
+#ifndef CUI_H_
+#define CUI_H_
+
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -25,20 +30,13 @@
 #include <time.h>
 #include <pango/pangocairo.h>
 
-#ifdef CAIRO_HAS_PDF_SURFACE
 #include <cairo-pdf.h>
 #if (CAIRO_VERSION_MAJOR > 1) || ((CAIRO_VERSION_MAJOR == 1) && (CAIRO_VERSION_MINOR >= 6))
 	#define USE_CAIRO_EPS
 #endif
-#endif
 
-#ifdef CAIRO_HAS_PS_SURFACE
 #include <cairo-ps.h>
-#endif
-
-#ifdef CAIRO_HAS_SVG_SURFACE
 #include <cairo-svg.h>
-#endif
 
 
 
@@ -47,6 +45,7 @@
 
 
 #define CUI_CELL_MAX_PIXELS	5000
+#define CUI_PANGO_SCALE		0.75
 
 
 
@@ -96,4 +95,8 @@ int cui_sheet_paste_area (
 #ifndef DEBUG
 #pragma GCC visibility pop
 #endif
+
+
+
+#endif		// CUI_H_
 

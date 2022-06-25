@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2020 Mark Tyler
+	Copyright (C) 2012-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -337,39 +337,23 @@ int Backend::undo_report_updates ( int const error )
 {
 	if ( error < 0 )
 	{
-		char const * mes[] = { "?",
+		char const * const mes[] = { "?",
 		"Error during operation.",
 		"Unable to begin operation due to problem with undo system.",
 		"Undo history lost.",
 		"Undo history lost.  Possible data corruption.",
-		"cell locked.  Operation aborted.",
+		"Cell locked.  Operation aborted.",
 		"Sheet locked.  Operation aborted."
 				};
 
-		char	const	* msg;
-		size_t		mi;
+		size_t		mi = ((size_t) -error );
 
-
-		mi = ((size_t) -error );
-		if ( mi >= sizeof ( mes ) / sizeof ( msg[0] ) )
+		if ( mi >= sizeof ( mes ) / sizeof ( mes[0] ) )
 		{
 			mi = 0;
 		}
 
-		msg = mes[mi];
-
-		if ( error == CUI_ERROR_LOCKED_CELL )
-		{
-			static char	buf[2048];
-
-
-			snprintf ( buf, sizeof ( buf ), "%s %s",
-				cui_error_str (), msg );
-
-			msg = buf;
-		}
-
-		fprintf ( stderr, "Undo Error: %s\n\n", msg );
+		fprintf ( stderr, "Undo Error: %s\n\n", mes[mi] );
 	}
 
 	return error;

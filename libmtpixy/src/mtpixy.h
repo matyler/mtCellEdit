@@ -112,11 +112,11 @@ struct mtPalette
 
 ///	mtColor		--------------------------------------------------------
 
-#define pixy_int_2_red( A )		( (A >> 16) & 0xFF )
-#define pixy_int_2_green( A )		( (A >> 8) & 0xFF )
-#define pixy_int_2_blue( A )		(A & 0xFF)
-#define pixy_rgb_2_int( R, G, B )	((R << 16) + (G << 8) + B)
-#define pixy_rgb_2_brightness(R,G,B)	((299 * R + 587 * G + 114 * B) / 1000)
+#define pixy_int_2_red( A )		( ((A) >> 16) & 0xFF )
+#define pixy_int_2_green( A )		( ((A) >> 8) & 0xFF )
+#define pixy_int_2_blue( A )		( (A) & 0xFF )
+#define pixy_rgb_2_int( R, G, B )	( ((R) << 16) + ((G) << 8) + (B) )
+#define pixy_rgb_2_brightness(R,G,B)	( (299*(R) + 587*(G) + 114*(B)) / 1000 )
 
 
 
@@ -736,19 +736,23 @@ public:
 		int max_width		// 0=No max width
 		);
 
-	int set_size ( int size );
+	int set_font ( char const * name, int size );
 	void set_style (
 		int bold,
 		int italics,
 		StyleUnderline underline,
 		int strikethrough
 		);
-	void set_row_pad (
-		int row_pad		// Y start of glyph
-		);
+	inline void set_row_pad ( int const row_pad ) // Y start of glyph
+	{
+		m_row_pad = row_pad;
+	}
 
-	int get_width () const;
-	int get_height () const;
+	inline std::string const & get_name () const	{ return m_name; }
+	inline int get_size () const	{ return m_size; }
+	inline int get_height () const	{ return m_height; }
+	inline int get_width () const	{ return m_width; }
+	inline int get_baseline () const { return m_baseline; }
 
 private:
 	void set_style ();
@@ -757,15 +761,18 @@ private:
 
 	std::unique_ptr<FontData> m_font_data;
 
-	int		m_height;		// Glyph height in pixels
-	int		m_width;		// Glyph width in pixels
-	int		m_baseline;
+	std::string	m_name;
+	int		m_size		= 0;
 
-	int		m_style_bold;
-	int		m_style_italics;
-	StyleUnderline	m_style_underline;
-	int		m_style_strikethrough;
-	int		m_style_row_pad;
+	int		m_height	= 0;	// Glyph height in pixels
+	int		m_width		= 0;	// Glyph width in pixels
+	int		m_baseline	= 0;
+	int		m_row_pad	= 0;
+
+	int		m_style_bold	= 0;
+	int		m_style_italics = 0;
+	StyleUnderline	m_style_underline = STYLE_UNDERLINE_NONE;
+	int		m_style_strikethrough = 0;
 
 	MTKIT_RULE_OF_FIVE( Font )
 };
@@ -908,8 +915,10 @@ public:
 		);
 	int create_pixmap ( Pixmap & pixmap );
 
-private:
 	class Op;
+	Op const * get_op () const { return m_op.get(); }
+
+private:
 	std::unique_ptr<Op> m_op;
 
 	MTKIT_RULE_OF_FIVE( SVG )

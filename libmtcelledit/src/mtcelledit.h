@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2020 Mark Tyler
+	Copyright (C) 2009-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -801,7 +801,7 @@ int ced_sheet_recalculate (		// Do a complete recalculation of all
 	);
 
 int ced_sheet_get_geometry (		// Get the maximum row/column indexes
-	CedSheet	* sheet,
+	CedSheet const	* sheet,
 	int		* row_max,	// NULL = Don't get
 	int		* col_max	// NULL = Don't get
 	);

@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, qtbase5-dev, libmtdatawell, libmtqex5, libmtpixy, libmtkit
 Standards-Version: 3.9.3
-Homepage: http://ced.marktyler.org/
+Homepage: https://www.marktyler.org/
 
 Package: mtdatawell-qt5
 Architecture: any

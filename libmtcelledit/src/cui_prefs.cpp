@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2016 Mark Tyler
+	Copyright (C) 2012-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "cui.h"
 
 
 
@@ -84,7 +84,7 @@ static int cb_ ## NAME( \
 	void		* const	user_data \
 	) \
 { \
-	prefnewSTATE	* const	state = (prefnewSTATE *)user_data; \
+	prefnewSTATE	* const	state = static_cast<prefnewSTATE *>(user_data);\
 \
 \
 	if ( cb_prep_cell ( state, cell ) ) \

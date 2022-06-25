@@ -404,7 +404,7 @@ int pixy_lasso (
 
 	if ( ! pixmap->alpha )
 	{
-		if ( pixy_pixmap_create_alpha ( pixmap ) || ! pixmap->alpha )
+		if ( pixy_pixmap_create_alpha ( pixmap ) )
 		{
 			return 1;
 		}

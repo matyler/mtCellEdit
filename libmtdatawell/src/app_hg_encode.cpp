@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2020 Mark Tyler
+	Copyright (C) 2019-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -35,8 +35,7 @@ public:
 private:
 	FileOps	const * const	m_fops;
 
-	EncodeFile ( const EncodeFile & );	// Disable copy constructor
-	EncodeFile & operator = (const EncodeFile &); // Disable = operator
+	MTKIT_RULE_OF_FIVE( EncodeFile )
 };
 
 

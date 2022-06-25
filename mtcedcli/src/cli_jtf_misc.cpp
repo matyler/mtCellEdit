@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2020 Mark Tyler
+	Copyright (C) 2012-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -283,8 +283,8 @@ static int cb_scan_prefs (
 	if ( cell->prefs )
 	{
 		CedCellPrefs const * const def = ced_cell_prefs_default ();
-		int		tot,
-				list_i_cell[] = {
+		int		tot;
+		int	const	list_i_cell[] = {
 				cell->prefs->align_horizontal,
 				cell->prefs->color_background,
 				cell->prefs->color_foreground,
@@ -296,8 +296,8 @@ static int cb_scan_prefs (
 				cell->prefs->locked,
 				cell->prefs->border_type,
 				cell->prefs->border_color
-				},
-				list_i_def[] = {
+				};
+		int	const	list_i_def[] = {
 				def->align_horizontal,
 				def->color_background,
 				def->color_foreground,
@@ -309,15 +309,13 @@ static int cb_scan_prefs (
 				def->locked,
 				def->border_type,
 				def->border_color
-				}
-				;
-		char		* list_c_cell[] = {
+				};
+		char	const * const list_c_cell[] = {
 				cell->prefs->format_datetime,
 				cell->prefs->num_thousands,
 				cell->prefs->text_prefix,
 				cell->prefs->text_suffix
-				}
-				;
+				};
 		static char const * const list_i_name[] = {
 				"align_horizontal",
 				"color_background",
@@ -336,8 +334,7 @@ static int cb_scan_prefs (
 				"num_thousands",
 				"text_prefix",
 				"text_suffix"
-				}
-				;
+				};
 
 
 		printf ( "r%ic%i\n", row, col );

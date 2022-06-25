@@ -1,7 +1,6 @@
 libmtkit	./configure --libdir=/usr/lib/arm-linux-gnueabihf
-libmtcelledit	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 libmtpixy	./configure --libdir=/usr/lib/arm-linux-gnueabihf
-libmtcedui	./configure --libdir=/usr/lib/arm-linux-gnueabihf
+libmtcelledit	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 mtutils	./configure
 mtcedutils	./configure
 mtcedcli	./configure

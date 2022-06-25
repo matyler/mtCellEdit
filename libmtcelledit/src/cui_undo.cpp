@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010-2017 Mark Tyler
+	Copyright (C) 2010-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "cui.h"
 
 
 #define FUNCTION_UNDO_HEADER \
@@ -201,7 +201,7 @@ static int cui_undo_atom_new (
 	int		const	fn_id
 	)
 {
-	CuiUndoAtom * const atom = (CuiUndoAtom *)
+	CuiUndoAtom * const atom = static_cast<CuiUndoAtom *>
 		( calloc ( 1, sizeof ( CuiUndoAtom ) ) );
 
 	if ( ! atom )
@@ -284,7 +284,7 @@ static CuiUndoStep * cui_undo_step_new (
 	CedSheet	* const	sheet
 	)
 {
-	CuiUndoStep * const step = (CuiUndoStep *)
+	CuiUndoStep * const step = static_cast<CuiUndoStep *>
 		( calloc ( 1, sizeof ( CuiUndoStep ) ) );
 
 	if ( ! step )
@@ -449,17 +449,11 @@ static int cui_undo_commit_step (
 static int check_for_locked_cells_cb (
 	CedSheet	* const	ARG_UNUSED ( sheet ),
 	CedCell		* const	cell,
-	int		const	row,
-	int		const	col,
-	void		* const	user_data
+	int		const	ARG_UNUSED ( row ),
+	int		const	ARG_UNUSED ( col ),
+	void		* const	ARG_UNUSED ( user_data )
 	)
 {
-	CedCellRef	* const	cref = (CedCellRef *)user_data;
-
-
-	cref->row_d = row;
-	cref->col_d = col;
-
 	if ( cell->prefs && cell->prefs->locked )
 	{
 		return 1;
@@ -490,20 +484,6 @@ int cui_check_sheet_lock (
 	return 0;
 }
 
-
-
-static char	* cui_error_buf[2048];
-
-
-
-char const * cui_error_str ( void )
-{
-	// Get the error string to report to user
-
-	return (char const *)cui_error_buf;
-}
-
-
 static int cui_check_cell_lock (	// Are any of these cells locked?
 	CedSheet	* const	sheet,
 	int		const	r,
@@ -513,10 +493,6 @@ static int cui_check_cell_lock (	// Are any of these cells locked?
 	)
 	// 1 = locked
 {
-	int		i;
-	CedCellRef	cref;
-
-
 	if ( ! sheet )
 	{
 		return 0;
@@ -527,28 +503,15 @@ static int cui_check_cell_lock (	// Are any of these cells locked?
 		return 0;
 	}
 
-	i = ced_sheet_scan_area ( sheet, r, c, rowtot, coltot,
-		check_for_locked_cells_cb, &cref );
+	int const i = ced_sheet_scan_area ( sheet, r, c, rowtot, coltot,
+			check_for_locked_cells_cb, nullptr );
 
 	if ( i )
 	{
-		if ( i == 2 )
-		{
-			snprintf ( (char *)cui_error_buf,
-				sizeof ( cui_error_buf ),
-				"r%ic%i", cref.row_d, cref.col_d );
-		}
-		else
-		{
-			snprintf ( (char *)cui_error_buf,
-				sizeof ( cui_error_buf ),
-				"Problem scanning for locked cells." );
-		}
-
-		i = CUI_ERROR_LOCKED_CELL;
+		return CUI_ERROR_LOCKED_CELL;
 	}
 
-	return i;
+	return 0;
 }
 
 

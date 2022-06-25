@@ -2,9 +2,9 @@ Source: libmtcelledit
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, bison, libmtkit
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, bison, libcairo2-dev, libpango1.0-dev, libmtkit, libmtpixy
 Standards-Version: 3.9.3
-Homepage: http://ced.marktyler.org/
+Homepage: https://www.marktyler.org/
 
 Package: libmtcelledit
 Architecture: any

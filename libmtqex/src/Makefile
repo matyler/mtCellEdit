@@ -37,7 +37,7 @@ install:
 uninstall:
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_NAME)
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_SONAME)
-		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
+		cd $(DESTDIR)$(HEAD_INSTALL); rm -f $(HEADER)
 
 clean:
 		rm -f moc_*.cpp *.o *.so.$(LIB_SONUM) mtqex4.h mtqex5.h

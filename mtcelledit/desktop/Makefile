@@ -6,12 +6,10 @@ MTDESKXML	:= $(BIN_NAME).xml
 
 .PHONY:		all install uninstall clean
 
-
 all:		$(MTDESK) $(MTDESKXML)
 
-
 $(MTDESK):	desktop.txt svg.svg
-		./builddesktop.sh $< "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" > $@
+		./builddesktop.sh $< "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" "$(ICONDIR)/scalable/apps/$(BIN_NAME).svg" "$(APPIMAGE_PREFIX)" > $@
 
 $(MTDESKXML):	mime.xml.txt
 		./builddesktop.sh $< "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" > $@

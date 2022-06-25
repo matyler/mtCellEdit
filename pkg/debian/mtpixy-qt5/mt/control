@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, qtbase5-dev, libmtkit, libmtpixy, libmtqex5, inkscape
 Standards-Version: 3.9.3
-Homepage: http://ced.marktyler.org/
+Homepage: https://www.marktyler.org/
 
 Package: mtpixy-qt5
 Architecture: any

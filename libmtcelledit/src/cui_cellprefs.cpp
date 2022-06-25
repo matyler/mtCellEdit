@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,11 +15,13 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "cui.h"
 
 
 
 CuiCellPrefChange::CuiCellPrefChange ()
+	:
+	cell_vals ()
 {
 }
 

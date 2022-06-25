@@ -89,6 +89,7 @@ An important decision I have taken is to release it as free software using the G
 | 2019-5-25  | 3.3         | libmtPixyUI merged into libmtPixy. mtDataWell added. |
 | 2020-6-25  | 3.4         | mtDWUtils, mtCrul added. |
 | 2021-6-25  | 3.5         | All Qt 4 code removed. Cherry-picked C++11 features introduced. libmtGin, mtGinUtils added. |
+| 2022-6-25  | 3.6         | libmtCedUI merged into libmtCellEdit. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

@@ -62,9 +62,9 @@ SCAN_DIRS()
 
 cd $CWD/..
 
-SCAN_DIRS	"test $APPS_DIR_ALL"	"src/mtConf.txt"
-SCAN_DIRS	"*/desktop/"		"src/builddesktop.sh"
-SCAN_DIRS	"*/man/"		"src/buildman.sh"
-SCAN_FILES	"*/src/*.py"		"src/buildpy.sh"
+SCAN_DIRS	"test $APPS_DIR_ALL"	"$CWD/src/mtConf.txt"
+SCAN_DIRS	"*/desktop/"		"$CWD/src/builddesktop.sh"
+SCAN_DIRS	"*/man/"		"$CWD/src/buildman.sh"
+SCAN_FILES	"*/src/*.py"		"$CWD/src/buildpy.sh"
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -275,9 +275,6 @@ MainWindow::MainWindow ( Backend * const be )
 	lastExportGraphType ( CUI_GRAPH_TYPE_PDF )
 {
 	// Preparation
-
-	memset ( &cui_render, 0, sizeof ( cui_render ) );
-
 	ced_init ();
 
 	cedFile = cui_file_new ();
@@ -354,9 +351,12 @@ MainWindow::MainWindow ( Backend * const be )
 	// Set up preference changes callback
 
 	uprefs.set_callback ( PREFS_FONT_PANGO_NAME, [this]()
-		{ pref_change_font(); } );
+		{ pref_change_font(); press_GraphRedraw (); } );
 
 	uprefs.set_callback ( PREFS_FONT_SIZE, [this]()
+		{ pref_change_font(); } );
+
+	uprefs.set_callback ( PREFS_WINDOW_RENDERER, [this]()
 		{ pref_change_font(); } );
 
 	uprefs.set_callback ( PREFS_ROW_PAD, [this]()

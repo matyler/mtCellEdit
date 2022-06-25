@@ -188,13 +188,20 @@ int mtGin::Thread::terminate ()
 	return res;
 }
 
-int mtGin::Thread::join () const
+int mtGin::Thread::join ()
 {
 	int res = 1;
 
 	if ( 0 == SDL_LockMutex ( m_mutex ) )
 	{
-		if ( m_status == THREAD_RUNNING )
+		if ( m_status == THREAD_PAUSED )
+		{
+			m_status = THREAD_TERMINATED;
+		}
+
+		if (	m_status == THREAD_RUNNING
+			|| m_status == THREAD_TERMINATED
+			)
 		{
 			res = 0;	// Wait for thread to end
 		}

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -310,7 +310,8 @@ void MainWindow::projectGraphRedraw ()
 	CedBook		* const book = cedFile->cubook->book;
 
 	mtPixmap * const pixmap = cui_graph_render_pixmap ( book,
-		book->prefs.active_graph, &err, mprefs.graph_scale );
+		book->prefs.active_graph, &err, mprefs.graph_scale,
+		mprefs.font_pango_name.c_str() );
 	graphWidget->setPixmap ( pixmap );
 
 	if ( err >= 0 )
@@ -389,7 +390,7 @@ void MainWindow::press_GraphExport ()
 		if ( cui_graph_render_file ( cedFile->cubook->book,
 			graphname, filename.toUtf8 ().data (),
 			lastExportGraphType, NULL,
-			mprefs.graph_scale )
+			mprefs.graph_scale, mprefs.font_pango_name.c_str() )
 			)
 		{
 			QMessageBox::critical ( this, "Error",

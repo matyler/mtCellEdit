@@ -468,7 +468,7 @@ int pixy_pixmap_get_information (
 	if ( PIXY_PIXMAP_BPP_RGB == pixmap->bpp )
 	{
 		int const cube_items = 256*256*256;
-		int * cube = (int *)calloc( cube_items, sizeof(*cube) );
+		int * cube = (int *)calloc( (size_t)cube_items, sizeof(*cube) );
 		if ( ! cube )
 		{
 			return 1;

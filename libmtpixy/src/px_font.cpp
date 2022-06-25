@@ -27,15 +27,17 @@ namespace mtPixy
 class FontData
 {
 public:
-	explicit FontData ( char const * name );
+	FontData ();
 	~FontData ();
+
+	int set_name ( char const * name );
 
 /// ----------------------------------------------------------------------
 
-	PangoFontDescription * m_font_desc;
-	PangoFontMap	* m_font_map;
-	PangoContext	* m_context;
-	PangoLayout	* m_layout;
+	PangoFontDescription * m_font_desc	= nullptr;
+	PangoFontMap	* m_font_map		= nullptr;
+	PangoContext	* m_context		= nullptr;
+	PangoLayout	* m_layout		= nullptr;
 private:
 };
 
@@ -43,11 +45,8 @@ private:
 
 
 
-mtPixy::FontData::FontData (
-	char	const	* const	name
-	)
+mtPixy::FontData::FontData ()
 	:
-	m_font_desc	( pango_font_description_from_string ( name ) ),
 	m_font_map	( pango_ft2_font_map_new () ),
 	m_context	( pango_font_map_create_context ( m_font_map ) ),
 	m_layout	( pango_layout_new ( m_context ) )
@@ -81,42 +80,67 @@ mtPixy::FontData::~FontData ()
 	}
 }
 
+int mtPixy::FontData::set_name ( char const * const name )
+{
+	PangoFontDescription * const new_font_desc =
+		pango_font_description_from_string ( name );
+
+	if ( new_font_desc )
+	{
+		if ( m_font_desc )
+		{
+			pango_font_description_free ( m_font_desc );
+		}
+
+		m_font_desc = new_font_desc;
+	}
+	else
+	{
+		std::cerr << "set_name: bad font name: '" << name << "'\n";
+		return 1;
+	}
+
+	return 0;
+}
+
+
+
+/// ----------------------------------------------------------------------------
+
+
+
 mtPixy::Font::Font (
 	char	const	* const	name,
 	int		const	size
 	)
 	:
-	m_font_data	( new FontData ( name ) ),
-	m_height	( 0 ),
-	m_width		( 0 ),
-	m_baseline	( 0 ),
-	m_style_bold	( 0 ),
-	m_style_italics	( 0 ),
-	m_style_underline ( STYLE_UNDERLINE_NONE ),
-	m_style_strikethrough ( 0 ),
-	m_style_row_pad	( 0 )
+	m_font_data	( new FontData )
 {
-	set_size ( size );
+	if ( set_font ( name, size ) )
+	{
+		set_font ( "Sans", 12 );
+	}
 }
 
 mtPixy::Font::~Font ()
 {
 }
 
-int mtPixy::Font::set_size (
-	int	const	size
+int mtPixy::Font::set_font (
+	char	const	* const	name,
+	int		const	size
 	)
 {
-	if ( size < 1 || ! m_font_data )
+	if ( size < 1 || ! name )
 	{
 		return 1;
 	}
 
+	m_font_data->set_name ( name );
 
 	PangoRectangle	logical;
 
-
-	pango_layout_set_text ( m_font_data->m_layout, "01234567890", -1 );
+	pango_layout_set_text ( m_font_data->m_layout, "0123456789", -1 );
 	pango_font_description_set_weight ( m_font_data->m_font_desc,
 		PANGO_WEIGHT_NORMAL );
 	pango_font_description_set_size ( m_font_data->m_font_desc,
@@ -127,7 +151,9 @@ int mtPixy::Font::set_size (
 	pango_layout_get_extents ( m_font_data->m_layout, NULL, &logical );
 	pango_extents_to_pixels ( NULL, &logical );
 
-	m_width = logical.width / 11;
+	m_name = name;
+	m_size = size;
+	m_width = logical.width / 10;
 	m_height = logical.height;
 	m_baseline = PANGO_PIXELS ( pango_layout_get_baseline (
 		m_font_data->m_layout ) );
@@ -155,13 +181,6 @@ void mtPixy::Font::set_style (
 
 		set_style ();
 	}
-}
-
-void mtPixy::Font::set_row_pad (
-	int	const	row_pad
-	)
-{
-	m_style_row_pad = row_pad;
 }
 
 mtPixmap * mtPixy::Font::render_pixmap (
@@ -199,7 +218,7 @@ mtPixmap * mtPixy::Font::render_pixmap (
 		w = logical_rect.width;
 	}
 
-	h = m_height + 2 * m_style_row_pad;
+	h = m_height + 2 * m_row_pad;
 	basel = PANGO_PIXELS ( pango_layout_get_baseline (
 		m_font_data->m_layout ) );
 
@@ -218,7 +237,7 @@ mtPixmap * mtPixy::Font::render_pixmap (
 		bitmap.num_grays = 256;
 		bitmap.pixel_mode = FT_PIXEL_MODE_GRAY;
 
-		int y = m_baseline - basel + m_style_row_pad;
+		int y = m_baseline - basel + m_row_pad;
 
 		pango_ft2_render_layout( &bitmap, m_font_data->m_layout, 0, y );
 	}
@@ -297,15 +316,5 @@ void mtPixy::Font::set_style ()
 
 	pango_layout_set_attributes ( m_font_data->m_layout, list );
 	pango_attr_list_unref ( list );
-}
-
-int mtPixy::Font::get_width () const
-{
-	return m_width;
-}
-
-int mtPixy::Font::get_height () const
-{
-	return m_height;
 }
 

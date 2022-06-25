@@ -24,12 +24,13 @@
 #include <pwd.h>
 #include <errno.h>
 
-#include <cairo.h>
-#include <pango/pango.h>
+#include <cairo-pdf.h>
+#include <cairo-ps.h>
+#include <cairo-svg.h>
 #include <pango/pangoft2.h>
+#include <pango/pangocairo.h>
 
-#include "mtpixy.h"
-
+#include "mtpixy_cairo.h"
 
 
 
@@ -68,6 +69,7 @@ enum
 	PIXY_EFFECT_SOFTEN		= 2,
 	PIXY_EFFECT_EMBOSS		= 3
 };
+
 
 
 mtPixmap * pixy_pixmap_from_data (
@@ -113,6 +115,7 @@ int pixmap_pixmap_quantize_pnn (
 	int		coltot,		// Total colours to quantize to
 	mtPalette	* pal		// Destination palette,NULL= Use image
 	);
+
 
 
 /// PAINTING -------------------------------------------------------------------

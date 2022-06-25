@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -331,7 +331,6 @@ private:
 	void updateMenus ();
 	void updateQuicksumLabel ();
 	void updateRecalcBook ();
-	void updateRender ();
 	void updateSheetSelector ();
 	void updateTitleBar ();
 
@@ -404,7 +403,6 @@ private:
 	CuiFile		* cedFile;
 	CuiClip		* cedClipboard;
 
-	std::unique_ptr<mtPixy::Font> cui_font;
 	CuiRender	cui_render;
 
 	int		sheetRows,

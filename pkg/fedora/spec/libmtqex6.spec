@@ -1,11 +1,11 @@
-Name:			libmtcedui
+Name:			libmtqex6
 Version:		@MT_VERSION@
 Release:		@MT_RELVER@%{?dist}
-Summary:		MT Spreadsheet UI Engine
+Summary:		Qt6 Dialogs and Utility Functions
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy libmtcelledit cairo-devel pango-devel
-Requires:		libmtkit libmtpixy libmtcelledit cairo pango
+BuildRequires:		libmtkit libmtpixy qt6-qtbase-devel
+Requires:		libmtkit libmtpixy qt6-qtbase
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt
@@ -16,7 +16,7 @@ Requires:		libmtkit libmtpixy libmtcelledit cairo pango
 %setup -q
 
 %build
-@MT_CONF@
+@MT_CONF@ --use-qt6
 make
 
 %install

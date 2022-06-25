@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -347,6 +347,8 @@ void Mainwindow::press_help_about ()
 		VERSION"\n"
 	"\n"
 	"Copyright (C) " MT_COPYRIGHT_YEARS " Mark Tyler.\n"
+	"\n"
+	"https://www.marktyler.org/\n"
 	"\n"
 	"This program is free software: you can redistribute it and/or modify "
 	"it under the terms of the GNU General Public License as published by "

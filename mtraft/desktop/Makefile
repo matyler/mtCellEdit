@@ -1,6 +1,5 @@
 include		../_conf.txt
 
-
 ICONDIR		:= $(DESTDIR)$(DATA_INSTALL)/icons/hicolor
 MTDESK		:= $(BIN_NAME).desktop
 
@@ -10,7 +9,7 @@ MTDESK		:= $(BIN_NAME).desktop
 all:		$(MTDESK)
 
 $(MTDESK):	mtraft.desktop.txt svg.svg
-		./builddesktop.sh $< "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" > $@
+		./builddesktop.sh $< "$(BIN_INSTALL)" "$(BIN_NAME)" "$(APP_NAME)" "$(BIN_SUFFIX)" "$(ICONDIR)/scalable/apps/$(BIN_NAME).svg" "$(APPIMAGE_PREFIX)" > $@
 
 install:
 		install -d $(DESTDIR)$(DATA_INSTALL)/applications

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -87,9 +87,6 @@ private:
 	void create_audio_file ();
 	void fill_buffer ();
 
-	CreateFLAC ( const CreateFLAC & );	// Disable copy constructor
-	CreateFLAC & operator = (const CreateFLAC &);	// Disable = operator
-
 /// ----------------------------------------------------------------------------
 
 	static size_t	const	AUDIO_SECS = 60;
@@ -98,5 +95,7 @@ private:
 	AudioWrite		m_audio;
 
 	short		* const	m_buf;
+
+	MTKIT_RULE_OF_FIVE( CreateFLAC )
 };
 

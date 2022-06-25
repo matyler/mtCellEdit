@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2018 Mark Tyler
+	Copyright (C) 2012-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "cui.h"
 
 #include <sys/stat.h>
 
@@ -296,30 +296,6 @@ int cui_file_load (
 	}
 
 	fio_checkset_ro ( file );	// Set RO if needed
-
-	return 0;
-}
-
-int cui_sheet_check_geometry (
-	CedSheet	* const sheet
-	)
-{
-	int		r,
-			c;
-
-
-	if ( ced_sheet_get_geometry ( sheet, &r, &c ) )
-	{
-		return 2;
-	}
-
-	if (	r > CUI_SHEET_MAX_ROW ||
-		c > CUI_SHEET_MAX_COL ||
-		(r * c) > CUI_SHEET_MAX_AREA
-		)
-	{
-		return 1;
-	}
 
 	return 0;
 }
@@ -865,6 +841,26 @@ CedBookFile * cui_file_get_graph (
 	}
 
 	return graph;
+}
+
+int cui_sheet_check_geometry ( CedSheet	* const sheet )
+{
+	int r, c;
+
+	if ( ced_sheet_get_geometry ( sheet, &r, &c ) )
+	{
+		return 2;
+	}
+
+	if (	r > CUI_SHEET_MAX_ROW ||
+		c > CUI_SHEET_MAX_COL ||
+		(r * c) > CUI_SHEET_MAX_AREA
+		)
+	{
+		return 1;
+	}
+
+	return 0;
 }
 
 static int scan_2dyear (

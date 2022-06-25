@@ -1,7 +1,6 @@
 libmtkit	./configure --libdir=/usr/lib64
-libmtcelledit	./configure --libdir=/usr/lib64
 libmtpixy	./configure --libdir=/usr/lib64
-libmtcedui	./configure --libdir=/usr/lib64
+libmtcelledit	./configure --libdir=/usr/lib64
 mtutils	./configure
 mtcedutils	./configure
 mtcedcli	./configure.slackware12.0

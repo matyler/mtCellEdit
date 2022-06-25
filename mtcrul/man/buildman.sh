@@ -12,12 +12,13 @@ fi
 
 BIN_UPPER=$(echo "$BIN_NAME" | tr '[a-z]' '[A-Z]')
 
+DATE=$(date +%Y-%m-%d)
 
 # HEADER
 cat << EOF
 $BIN_UPPER
 Version $2
-%%date(%Y-%m-%d)
+$DATE
 
 %!encoding: utf-8
 
@@ -32,7 +33,7 @@ cat "$1" | awk -v CF="$BIN_NAME" '{ gsub ("@BIN_NAME@", CF, $0); print }'
 cat << EOF
 
 = HOMEPAGE =
-http://ced.marktyler.org/
+https://www.marktyler.org/
 
 
 = AUTHOR =

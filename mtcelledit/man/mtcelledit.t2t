@@ -22,7 +22,7 @@
 
 
 = FILES =
-~/.cache/libmtCedUI/clipboard.ledger.zip
+~/.cache/libmtcelledit/clipboard.ledger.zip
 	Used for copy and paste between mtCellEdit instances.
 
 ~/.config/@BIN_NAME@/prefs.txt

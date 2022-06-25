@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ class CuiCellPrefChange;
 #define PREFS_WINDOW_W			"main_window_w"
 #define PREFS_WINDOW_H			"main_window_h"
 #define PREFS_WINDOW_STATE		"main_window_state"
+#define PREFS_WINDOW_RENDERER		"main_window_renderer"
 
 #define PREFS_SHARED_WINDOW_X		"~/shared/window_x"
 #define PREFS_SHARED_WINDOW_Y		"~/shared/window_y"
@@ -113,11 +114,6 @@ int be_titlebar_text (
 
 
 
-int be_cedrender_set_font_width (
-	CuiRender	* render
-	);
-	// 0 = font_width set
-
 void be_cedrender_set_header_width (
 	CuiRender	* render,
 	int		max
@@ -137,9 +133,7 @@ void be_quicksum_label (
 	);
 
 char const * be_get_error_update_text (
-	int		error,
-	char		* buf,
-	size_t		buflen
+	int		error
 	);
 
 void be_update_file_to_book (
@@ -227,56 +221,57 @@ void be_find (
 class MemPrefs
 {
 public:
-	std::string		last_dir;
+	std::string	last_dir;
 
-	int			window_x		= 0;
-	int			window_y		= 0;
-	int			window_w		= 0;
-	int			window_h		= 0;
-	int			window_state		= 0;
+	int		window_x		= 0;
+	int		window_y		= 0;
+	int		window_w		= 0;
+	int		window_h		= 0;
+	int		window_state		= 0;
+	int		window_renderer		= 0;
 
-	int			shared_window_x		= 0;
-	int			shared_window_y		= 0;
-	int			shared_window_w		= 0;
-	int			shared_window_h		= 0;
+	int		shared_window_x		= 0;
+	int		shared_window_y		= 0;
+	int		shared_window_w		= 0;
+	int		shared_window_h		= 0;
 
-	std::string		help_file;
-	std::string		help_browser;
+	std::string	help_file;
+	std::string	help_browser;
 
-	int			file_lock_load		= 0;
-	int			file_lock_save		= 0;
+	int		file_lock_load		= 0;
+	int		file_lock_save		= 0;
 
-	std::string		font_pango_name;
-	int			font_size		= 0;
+	std::string	font_pango_name;
+	int		font_size		= 0;
 
-	int			row_pad			= 0;
-	int			recent_filename_len	= 0;
-	int			year_start_2d		= 0;
+	int		row_pad			= 0;
+	int		recent_filename_len	= 0;
+	int		year_start_2d		= 0;
 
-	int			find_wildcards		= 0;
-	int			find_case_sensitive	= 0;
-	int			find_value		= 0;
-	int			find_all_sheets		= 0;
+	int		find_wildcards		= 0;
+	int		find_case_sensitive	= 0;
+	int		find_value		= 0;
+	int		find_all_sheets		= 0;
 
-	std::string		find_text;
+	std::string	find_text;
 
-	int			clipboard_use_system	= 0;
+	int		clipboard_use_system	= 0;
 
-	int			page_width		= 0;
-	int			page_height		= 0;
-	int			page_margin_x		= 0;
-	int			page_margin_y		= 0;
+	int		page_width		= 0;
+	int		page_height		= 0;
+	int		page_margin_x		= 0;
+	int		page_margin_y		= 0;
 
-	int			page_header_left	= 0;
-	int			page_header_centre	= 0;
-	int			page_header_right	= 0;
-	int			page_footer_left	= 0;
-	int			page_footer_centre	= 0;
-	int			page_footer_right	= 0;
+	int		page_header_left	= 0;
+	int		page_header_centre	= 0;
+	int		page_header_right	= 0;
+	int		page_footer_left	= 0;
+	int		page_footer_centre	= 0;
+	int		page_footer_right	= 0;
 
-	double			graph_scale		= 0.0;
+	double		graph_scale		= 0.0;
 
-	int			sheet_prefs_persist	= 0;
+	int		sheet_prefs_persist	= 0;
 
 	mtKit::UPrefUIEdit	ui_editor;
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015-2017 Mark Tyler
+	Copyright (C) 2015-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ static int nodetot_populate (
 	}
 
 	if (	nt->totmin > 0 &&
-		nt->totmax > 0 &&
+//		nt->totmax > 0 &&	// Not needed as next test proves > 0
 		nt->totmin < nt->totmax
 		)
 	{

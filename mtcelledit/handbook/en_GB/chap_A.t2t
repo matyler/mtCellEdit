@@ -596,6 +596,13 @@ In mtCellEdit and mtCedCLI, when saving a file to disk a temporary file is used 
 
 
 
+==A.10 Historic Design Choices==[SEC10_]
+When I first started the mtCellEdit project, some design decisions were forced on me by the limited hardware and software available at the time.  As things changed over time I was able to improve the project by taking advantage of improvements to hardware such as faster devices.  Likewise, the software that mtCellEdit relies on has also changed.  For example when I started I used GTK+ version 2, which continued until 2016 when I switched over to using Qt version 5 by default.
+
+===A.10.1 Font Rendering===[SEC10_1]
+During 2010-2016, versions 1.0 to 2.6 of mtCellEdit rendered text directly using FreeType or a hard coded ASCII font, which was the fastest method available and was desirable on slower hardware manufactured before 2005.  However, by 2016, even cheap PC hardware was fast enough to comfortably use Pango to render fonts with nice luxuries such as kerning and font substitution.  By 2022 and version 3.6, I started using Cairo to render what appeared on screen which enables luxuries such as multicoloured emojis on many systems, such as 💯 and 🤩.  PC hardware manufactured after 2014 should have enough speed to do this efficiently (as proven by a cheap PC such as the Raspberry Pi).  A user preference can be selected to change the screen rendering back to Pango (main_window_renderer) if the user wants things rendered slightly faster.
+
+
 
 -------------------------------------------------
 [Previous chap_06.html] | [Contents chap_00.html] | [Next chap_B.html]

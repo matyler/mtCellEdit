@@ -23,9 +23,8 @@ mtCellEdit then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
 | libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
-| libmtCellEdit | libmtKit         | The low level spreadsheet engine, including all file handling and general operations. |
 | libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo, librsvg | The core pixel engine, including all file handling and general operations. |
-| libmtCedUI    | libmtKit, libmtPixy, libmtCellEdit, Pango, Cairo | The high level spreadsheet engine (toolkit agnostic UI code), e.g. graph and sheet rendering. |
+| libmtCellEdit | libmtKit, libmtPixy, Pango, Cairo | The spreadsheet engine, including all file handling and general operations. |
 | libmtQEX      | libmtKit, libmtPixy, Qt5 | Various Qt function utilities including preferences editor. |
 
 
@@ -34,7 +33,7 @@ The other optional parts of the suite have these dependencies:
 | **Package**   | **Dependencies** | **Description** |
 | libmtDataWell | libmtKit, libmtPixy, libsndfile | Crypto and random data library. |
 | libmtGin      | libmtKit, libmtPixy, libsndfile, SDL2, libgl | Graphical Interface Nexus library (SDL, OpenGL). |
-| mtCedCLI      | libmtKit, libmtCellEdit, libmtCedUI, readline | Command line spreadsheet. |
+| mtCedCLI      | libmtKit, libmtPixy, libmtCellEdit, readline | Command line spreadsheet. |
 | mtCedUtils    | libmtKit, libmtCellEdit | Command line text tools, mtNetLog, mtRDC. |
 | mtCrul        | libmtKit, libmtPixy, libmtGin, libmtQEX, Qt5, libgl | Point cloud measuring tool. |
 | mtDataWell    | libmtKit, libmtPixy, libmtDataWell, libmtQEX, Qt5 | Crypto and random data app. |
@@ -55,9 +54,8 @@ The other optional parts of the suite have these dependencies:
 As outlined above you must build and install the packages in this order:
 
 - libmtKit
-- libmtCellEdit
 - libmtPixy
-- libmtCedUI
+- libmtCellEdit
 - libmtQEX
 - mtCellEdit
 

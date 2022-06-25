@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		CLI Spreadsheet
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit libmtcedui readline-devel
-Requires:		libmtkit libmtcelledit libmtcedui readline
+BuildRequires:		libmtkit libmtcelledit readline-devel
+Requires:		libmtkit libmtcelledit readline
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

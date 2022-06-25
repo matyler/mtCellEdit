@@ -174,7 +174,7 @@ mtcedcli >
 mtcedcli > # Error - cell is locked
 mtcedcli > select r44c4
 mtcedcli > paste prefs
-Undo Error: r45c5 cell locked.  Operation aborted.
+Undo Error: Cell locked.  Operation aborted.
 
 paste_clipboard_at_cursor: Unable to paste.
 
@@ -500,8 +500,8 @@ start_col = 1
 locked = 0
 mtcedcli > print prefs state
 main_font_name = 'Sans'
-main_font_size = '12'
-main_row_pad = '1'
+main_font_size = '16'
+main_row_pad = '2'
 page_footer_centre = '0'
 page_footer_left = '6'
 page_footer_right = '4'

@@ -1,26 +1,19 @@
 libmtkit	libmtkit	1
-libmtcelledit	libmtcelledit	1
 libmtpixy	libmtpixy	1
-libmtcedui	libmtcedui	1
+libmtcelledit	libmtcelledit	1
+libmtdatawell	libmtdatawell
+libmtgin	libmtgin
 libmtqex5	libmtqex	1
+mtutils	mtutils
+mtcedutils	mtcedutils
+mtdwutils	mtdwutils
+mtpixyutils	mtpixyutils
+mtcedcli	mtcedcli
+mtdwcli	mtdwcli
+mtpixycli	mtpixycli
+mtginutils	mtginutils
 mtcelledit-qt5	mtcelledit	1
-mtutils	mtutils	1
-mtcedutils	mtcedutils	1
-mtcedcli	mtcedcli	1
-libmtdatawell	libmtdatawell	1
-mtdatawell-qt5	mtdatawell	1
-mtdwutils	mtdwutils	1
-mtdwcli	mtdwcli	1
-mtraft-qt5	mtraft	1
-mtpixy-qt5	mtpixy	1
-mtpixyutils	mtpixyutils	1
-mtpixycli	mtpixycli	1
-libmtgin	libmtgin	1
-mtginutils	mtginutils	1
-mtcrul-qt5	mtcrul	1
-libmtqex6	libmtqex
-mtcelledit-qt6	mtcelledit
-mtdatawell-qt6	mtdatawell
-mtraft-qt6	mtraft
-mtpixy-qt6	mtpixy
-mtcrul-qt6	mtcrul
+mtdatawell-qt5	mtdatawell
+mtraft-qt5	mtraft
+mtpixy-qt5	mtpixy
+mtcrul-qt5	mtcrul

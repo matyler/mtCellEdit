@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -25,15 +25,12 @@
 
 
 
-struct my_error_mgr
+typedef struct
 {
 	struct jpeg_error_mgr	pub;		// "public" fields
 	jmp_buf			setjmp_buffer;	// for return to caller
-};
 
-
-
-typedef struct my_error_mgr * my_error_ptr;
+} my_error_mgr;
 
 
 
@@ -41,26 +38,23 @@ METHODDEF ( void ) my_error_exit (
 	j_common_ptr cinfo
 	)
 {
-	my_error_ptr myerr = (my_error_ptr) cinfo->err;
+	my_error_mgr * myerr = (my_error_mgr *) cinfo->err;
 	longjmp ( myerr->setjmp_buffer, 1 );
 }
 
 
 
-static struct my_error_mgr	jerr;
-
-
-
 static int jpeg_load_init (
-	FILE		* const fp,
+	my_error_mgr		* const	jerr,
+	FILE			* const	fp,
 	struct jpeg_decompress_struct * const cinfo
 	)
 {
 	jpeg_create_decompress ( cinfo );
-	cinfo->err = jpeg_std_error ( &jerr.pub );
-	jerr.pub.error_exit = my_error_exit;
+	cinfo->err = jpeg_std_error ( &jerr->pub );
+	jerr->pub.error_exit = my_error_exit;
 
-	if ( setjmp ( jerr.setjmp_buffer ) )
+	if ( setjmp ( jerr->setjmp_buffer ) )
 	{
 		return 1;
 	}
@@ -73,6 +67,7 @@ static int jpeg_load_init (
 }
 
 static int jpeg_load_cmyk (
+	my_error_mgr		* const	jerr,
 	unsigned char		* const	canmem,
 	int			const	w,
 	int			const	h,
@@ -94,7 +89,7 @@ static int jpeg_load_cmyk (
 	int		i, j, k, r, g, b;
 
 
-	if ( setjmp ( jerr.setjmp_buffer ) )
+	if ( setjmp ( jerr->setjmp_buffer ) )
 	{
 		free ( memx );
 		return 1;
@@ -131,6 +126,7 @@ static int jpeg_load_cmyk (
 }
 
 static int jpeg_load_rgb (
+	my_error_mgr		* const	jerr,
 	unsigned char		* const	canmem,
 	int			const	w,
 	int			const	h,
@@ -142,7 +138,7 @@ static int jpeg_load_rgb (
 	int		i;
 
 
-	if ( setjmp ( jerr.setjmp_buffer ) )
+	if ( setjmp ( jerr->setjmp_buffer ) )
 	{
 		return 1;
 	}
@@ -166,11 +162,13 @@ mtPixmap * pixy_pixmap_load_jpeg ( char const * const filename )
 	}
 
 
+	my_error_mgr	jerr;
 	struct jpeg_decompress_struct cinfo;
 	FILE		* fp;
 	int		w, h;
 	mtPixmap	* image = NULL;
 
+	memset ( &jerr, 0, sizeof(jerr) );
 
 	fp = fopen ( filename, "rb" );
 	if ( NULL == fp )
@@ -178,7 +176,7 @@ mtPixmap * pixy_pixmap_load_jpeg ( char const * const filename )
 		return NULL;
 	}
 
-	if ( jpeg_load_init ( fp, &cinfo ) )
+	if ( jpeg_load_init ( &jerr, fp, &cinfo ) )
 	{
 		goto fail;
 	}
@@ -198,7 +196,7 @@ mtPixmap * pixy_pixmap_load_jpeg ( char const * const filename )
 		pixy_palette_set_grey ( &image->palette );
 		image->palette_file = 1;
 
-		if ( jpeg_load_rgb ( image->canvas, w, h, 1, &cinfo ) )
+		if ( jpeg_load_rgb ( &jerr, image->canvas, w, h, 1, &cinfo ) )
 		{
 			goto fail;
 		}
@@ -211,7 +209,7 @@ mtPixmap * pixy_pixmap_load_jpeg ( char const * const filename )
 			goto fail;
 		}
 
-		if ( jpeg_load_rgb ( image->canvas, w, h, 3, &cinfo ) )
+		if ( jpeg_load_rgb ( &jerr, image->canvas, w, h, 3, &cinfo ) )
 		{
 			goto fail;
 		}
@@ -225,7 +223,7 @@ mtPixmap * pixy_pixmap_load_jpeg ( char const * const filename )
 			goto fail;
 		}
 
-		if ( jpeg_load_cmyk ( image->canvas, w, h, 3, &cinfo ) )
+		if ( jpeg_load_cmyk ( &jerr, image->canvas, w, h, 3, &cinfo ) )
 		{
 			goto fail;
 		}
@@ -267,11 +265,13 @@ int pixy_pixmap_save_jpeg (
 	}
 
 
+	my_error_mgr	jerr;
 	struct jpeg_compress_struct cinfo;
 	JSAMPROW	row_pointer;
 	FILE		* fp;
 	int		i;
 
+	memset ( &jerr, 0, sizeof(jerr) );
 
 	fp = fopen ( filename, "wb" );
 	if ( NULL == fp )

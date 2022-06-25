@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2016 Mark Tyler
+	Copyright (C) 2009-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -14,6 +14,11 @@
 	You should have received a copy of the GNU General Public License
 	along with this program in the file COPYING.
 */
+
+#ifndef CED_H_
+#define CED_H_
+
+
 
 #include <stdlib.h>
 #include <string.h>
@@ -126,4 +131,8 @@ CedToken const * ced_token_get (	// Get token structure for a function
 #ifndef DEBUG
 #pragma GCC visibility pop
 #endif
+
+
+
+#endif		// CED_H_
 

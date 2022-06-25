@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2020 Mark Tyler
+	Copyright (C) 2019-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -80,7 +80,6 @@ private:
 
 	mtDW::GlyphIndex const * const m_hg_index;
 
-	FileOps ( const FileOps & );		// Disable copy constructor
-	FileOps & operator = (const FileOps &);	// Disable = operator
+	MTKIT_RULE_OF_FIVE( FileOps )
 };
 

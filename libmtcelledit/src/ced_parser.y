@@ -16,7 +16,7 @@
 */
 
 %{
-	#include "private.h"
+	#include "ced.h"
 
 
 

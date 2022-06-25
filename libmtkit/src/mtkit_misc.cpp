@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 	along with this program in the file COPYING.
 */
 
+#include <time.h>
 #include <sys/time.h>
 #include "private.h"
 
@@ -386,6 +387,18 @@ uint8_t mtKit::BitShifter::get_byte ( uint8_t const input )
 	m_salt ^= input;
 
 	return (uint8_t)( ( (input << s) | (input >> (8 - s)) ) ^ t );
+}
+
+double mtKit::Clock::now ()
+{
+	struct timespec ts;
+
+	if ( clock_gettime ( CLOCK_MONOTONIC, &ts ) == -1 )
+	{
+		return 0.0;
+	}
+
+	return (double)ts.tv_sec + (double)ts.tv_nsec / 1000000000.0;
 }
 
 

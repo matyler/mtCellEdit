@@ -21,7 +21,7 @@ MT_PARSE_ARGS libmtkit libmtpixy libmtqex5
 # NOTE: we use *-qt5 & qex5, but this Qt reference is irrelevant until we set CONF below.
 
 case "$1" in
-"mtcelledit"* )	MT_PARSE_ARGS libmtcelledit libmtcedui mtcelledit-qt5;;
+"mtcelledit"* )	MT_PARSE_ARGS libmtcelledit mtcelledit-qt5;;
 "mtdatawell"* )	MT_PARSE_ARGS libmtdatawell mtdatawell-qt5;;
 "mtpixy"* )	MT_PARSE_ARGS mtpixy-qt5;;
 "mtraft"* )	MT_PARSE_ARGS libmtcelledit mtraft-qt5;;

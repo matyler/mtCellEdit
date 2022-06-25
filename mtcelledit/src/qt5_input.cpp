@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -735,8 +735,8 @@ void CedViewArea::mouseEventRouter (
 	switch ( caller )
 	{
 	case 0:	// Mouse press on sheet area
-		r = cui_ren_row_from_y ( row_start, crender, yy );
-		c = cui_ren_column_from_x ( col_start, crender, xx );
+		r = crender->row_from_y ( row_start, yy );
+		c = crender->column_from_x ( col_start, xx );
 
 		if ( cedview->mainwindow()->isEditingCellText () )
 		{
@@ -809,13 +809,11 @@ void CedViewArea::mouseEventRouter (
 				cedview->mainwindow()->projectGetSheetGeometry (
 					&r2, NULL );
 
-				c1 = c2 = cui_ren_column_from_x ( col_start,
-					crender, xx );
+				c1 = c2 = crender->column_from_x(col_start, xx);
 			}
 			else if ( row_start )
 			{
-				r1 = r2 = cui_ren_row_from_y ( row_start,
-					crender, yy );
+				r1 = r2 = crender->row_from_y ( row_start, yy );
 
 				cedview->mainwindow()->projectGetSheetGeometry (
 					NULL, &c2 );
@@ -835,14 +833,12 @@ void CedViewArea::mouseEventRouter (
 				cedview->mainwindow()->projectGetSheetGeometry (
 					&r2, NULL );
 
-				c2 = cui_ren_column_from_x ( col_start,
-					crender, xx );
+				c2 = crender->column_from_x ( col_start, xx );
 			}
 			else if ( row_start )
 			{
 				r1 = sheet->prefs.cursor_r1;
-				r2 = cui_ren_row_from_y ( row_start, crender,
-					yy );
+				r2 = crender->row_from_y ( row_start, yy );
 				cedview->mainwindow()->projectGetSheetGeometry (
 					NULL, &c2 );
 			}
@@ -861,8 +857,8 @@ void CedViewArea::mouseEventRouter (
 		break;
 
 	case 2:	// Mouse movement on sheet area
-		r = cui_ren_row_from_y ( row_start, crender, yy );
-		c = cui_ren_column_from_x ( col_start, crender, xx );
+		r = crender->row_from_y ( row_start, yy );
+		c = crender->column_from_x ( col_start, xx );
 
 		cedview->mainwindow()->setCursorRange ( sheet->prefs.cursor_r1,
 			sheet->prefs.cursor_c1, r, c, 0, 0, 0 );
@@ -877,13 +873,13 @@ void CedViewArea::mouseEventRouter (
 			cedview->mainwindow()->projectGetSheetGeometry ( &r2,
 				NULL );
 
-			c2 = cui_ren_column_from_x ( col_start, crender, xx );
+			c2 = crender->column_from_x ( col_start, xx );
 		}
 		else if ( row_start )
 		{
 			r1 = sheet->prefs.cursor_r1;
 			c1 = 1;
-			r2 = cui_ren_row_from_y ( row_start, crender, yy );
+			r2 = crender->row_from_y ( row_start, yy );
 
 			cedview->mainwindow()->projectGetSheetGeometry ( NULL,
 				&c2 );

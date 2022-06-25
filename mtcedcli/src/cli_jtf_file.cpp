@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2020 Mark Tyler
+	Copyright (C) 2012-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -272,7 +272,8 @@ int Backend::jtf_export_output_graph (
 
 	if ( cui_graph_render_file ( file()->cubook->book,
 		file()->cubook->book->prefs.active_graph,
-		args[0], filetype, NULL, 1 )
+		args[0], filetype, NULL, 1,
+		prefs().get_string( MAIN_FONT_NAME ).c_str() )
 		)
 	{
 		fprintf ( stderr, "Error exporting graph output.\n\n" );
@@ -314,11 +315,14 @@ int Backend::jtf_export_output_sheet (
 		return 2;
 	}
 
-	if ( cui_export_output ( prefs(), sh, args[0], file()->name, filetype,
-		prefs().get_int ( MAIN_ROW_PAD ),
-		prefs().get_string ( MAIN_FONT_NAME ).c_str(),
-		prefs().get_int ( MAIN_FONT_SIZE )
-		) )
+	CuiRender render;
+
+	render.set_backend_cairo( prefs().get_string( MAIN_FONT_NAME ).c_str(),
+		prefs().get_int ( MAIN_FONT_SIZE ) );
+	render.set_sheet ( sh );
+	render.set_row_pad ( prefs().get_int ( MAIN_ROW_PAD ) );
+
+	if ( render.export_output ( prefs(), args[0], file()->name, filetype ) )
 	{
 		fprintf ( stderr, "Error exporting sheet output.\n\n" );
 

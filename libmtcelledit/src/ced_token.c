@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "ced.h"
 
 
 

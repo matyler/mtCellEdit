@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,9 +24,24 @@ int MainWindow::projectSetFont (
 	int		const	sz
 	)
 {
-	std::unique_ptr<mtPixy::Font> newfont ( new mtPixy::Font ( name, sz ) );
+	int res = 0;
 
-	if ( ! newfont )
+	switch ( mprefs.window_renderer )
+	{
+	case 0:
+		res = cui_render.set_backend_cairo ( name, sz );
+		break;
+
+	case 1:
+		res = cui_render.set_backend_pango ( name, sz );
+		break;
+
+	default:
+		res = 1;
+		break;
+	}
+
+	if ( res )
 	{
 		QMessageBox::critical ( this, "Error",
 			QString ( "Unable to open font %1 size %2."
@@ -34,9 +49,6 @@ int MainWindow::projectSetFont (
 
 		return 1;
 	}
-
-	cui_render.font = newfont.get();
-	cui_font.reset ( newfont.release() );
 
 	updateViewConfig ();
 

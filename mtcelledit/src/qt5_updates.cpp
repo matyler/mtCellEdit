@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,7 +27,9 @@ void MainWindow::updateView ()
 
 void MainWindow::updateViewConfig ()
 {
-	updateRender ();
+	cui_render.set_sheet ( projectSetSheet () );
+	cui_render.set_row_pad ( mprefs.row_pad );
+
 	updateView ();
 }
 
@@ -156,16 +158,6 @@ void MainWindow::updateRecentFiles ()
 			mtQEX::qstringFromC ( buf ) );
 
 		act_FileRecent[ i ]->setVisible ( true );
-	}
-
-	// Hide separator if not needed
-	if ( i > 0 )
-	{
-		act_FileRecentSeparator->setVisible ( true );
-	}
-	else
-	{
-		act_FileRecentSeparator->setVisible ( false );
 	}
 }
 
@@ -545,14 +537,6 @@ painted over if the text cell isn't selected.
 	updateQuicksumLabel ();
 }
 
-void MainWindow::updateRender ()
-{
-	cui_render.sheet = projectSetSheet ();
-	cui_render.row_pad = mprefs.row_pad;
-
-	be_cedrender_set_font_width ( &cui_render );
-}
-
 CuiRender * MainWindow::projectGetRender ()
 {
 	return &cui_render;
@@ -606,15 +590,9 @@ void MainWindow::updateMainArea ()
 	viewTab->updateRedraw ();
 }
 
-int MainWindow::projectReportUpdates (
-	int	const	error
-	)
+int MainWindow::projectReportUpdates ( int const error )
 {
-	char	const	* msg;
-	char		buf [ 2048 ];
-
-
-	msg = be_get_error_update_text ( error, buf, sizeof ( buf ) );
+	char const * const msg = be_get_error_update_text ( error );
 
 	if ( ! msg )
 	{
@@ -622,8 +600,7 @@ int MainWindow::projectReportUpdates (
 	}
 
 	// Report this error to the user
-	QMessageBox::critical ( this, "Error",
-		mtQEX::qstringFromC ( msg ) );
+	QMessageBox::critical ( this, "Error", mtQEX::qstringFromC ( msg ) );
 
 	return error;
 }

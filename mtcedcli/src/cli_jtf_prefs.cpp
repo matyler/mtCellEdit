@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012-2020 Mark Tyler
+	Copyright (C) 2012-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 
 void Backend::prefs_init ()
 {
-	m_uprefs.add_int ( MAIN_ROW_PAD, m_row_pad, 1 );
+	m_uprefs.add_int ( MAIN_ROW_PAD, m_row_pad, 2 );
 	m_uprefs.add_string ( MAIN_FONT_NAME, m_font_name, "Sans" );
-	m_uprefs.add_int ( MAIN_FONT_SIZE, m_font_size, 12 );
+	m_uprefs.add_int ( MAIN_FONT_SIZE, m_font_size, 16 );
 	m_uprefs.add_int ( CUI_INIFILE_PAGE_WIDTH, m_page_width, 297 );
 	m_uprefs.add_int ( CUI_INIFILE_PAGE_HEIGHT, m_page_height, 210 );
 	m_uprefs.add_int ( CUI_INIFILE_PAGE_MARGIN_X, m_page_margin_x, 10 );

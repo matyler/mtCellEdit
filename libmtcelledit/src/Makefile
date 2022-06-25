@@ -1,10 +1,11 @@
 include		../_conf.txt
 
-HEADER		:= mtcelledit.h
+HEADER		:= mtcelledit.h mtcedui.h
 PARSER		:= ced_parser.c
 PARSER_REPORT	:= ced_parser_report.txt
 OBJS		:= $(patsubst %.y,%.o,$(wildcard *.y))
 OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)) $(OBJS))
 
 .PHONY:		all install uninstall clean
 
@@ -13,15 +14,18 @@ all:		$(LIB_SONAME)
 
 
 $(LIB_SONAME):	$(OBJS)
-		$(CC) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
+		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
 $(OBJS):	*.h
 
 $(PARSER):	ced_parser.y
 		bison $< -W --report=all --report-file=$(PARSER_REPORT) -o $@
 
-# .c.o Implicit rule
-# .cpp.o Implicit rule
+%.o:		%.cpp
+		$(CXX) -I$(CURDIR) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+%.o:		%.c
+		$(CC) -I$(CURDIR) $(CPPFLAGS) $(CFLAGS) -c $<
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)
@@ -33,7 +37,7 @@ install:
 uninstall:
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_NAME)
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_SONAME)
-		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
+		cd $(DESTDIR)$(HEAD_INSTALL); rm -f $(HEADER)
 
 clean:
 		rm -f *.o *.so.$(LIB_SONUM) $(PARSER) $(PARSER_REPORT)

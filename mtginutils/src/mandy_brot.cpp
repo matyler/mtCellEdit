@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 Mark Tyler
+	Copyright (C) 2021-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -191,7 +191,7 @@ void Mandelbrot::start_timer ()
 		return;
 	}
 
-	m_time_start = (double)SDL_GetTicks();
+	m_clock.restart ();
 	printf ( "Mandelbrot::build_thread -cx %.15g -cy %.15g -range %.15g"
 		" -depth %i\n",
 		get_cx(), get_cy(), m_range_w, (int)m_depth_max );
@@ -204,9 +204,8 @@ void Mandelbrot::finish_timer () const
 		return;
 	}
 
-	double const time_finish = (double)SDL_GetTicks();
 	printf ( "Mandelbrot::build_thread time=%.15g secs\n",
-		(time_finish - m_time_start) / 1000.0 );
+		m_clock.seconds());
 }
 
 void Mandelbrot::build_single_worker ()

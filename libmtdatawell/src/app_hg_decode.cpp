@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2020 Mark Tyler
+	Copyright (C) 2019-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -38,8 +38,7 @@ private:
 	uint8_t zmem[7];
 	size_t zmem_len;
 
-	DecodeFile ( const DecodeFile & );	// Disable copy constructor
-	DecodeFile & operator = (const DecodeFile &); // Disable = operator
+	MTKIT_RULE_OF_FIVE( DecodeFile )
 };
 
 

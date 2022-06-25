@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@ void Backend::prefs_init ()
 	uprefs.add_int ( PREFS_WINDOW_W, mprefs.window_w, 400 );
 	uprefs.add_int ( PREFS_WINDOW_H, mprefs.window_h, 400 );
 	uprefs.add_int ( PREFS_WINDOW_STATE, mprefs.window_state, 0 );
+	uprefs.add_option ( PREFS_WINDOW_RENDERER, mprefs.window_renderer, 0,
+		{ "Cairo", "Pango" } );
+		// Order must match CuiRender::RENDERER_*
 
 	uprefs.set_invisible ( PREFS_WINDOW_X );
 	uprefs.set_invisible ( PREFS_WINDOW_Y );
@@ -59,7 +62,7 @@ void Backend::prefs_init ()
 		"Sans" );
 	uprefs.add_int ( PREFS_FONT_SIZE, mprefs.font_size, 16, 1, 128 );
 
-	uprefs.add_int ( PREFS_ROW_PAD,	mprefs.row_pad, 1, 0, 4 );
+	uprefs.add_int ( PREFS_ROW_PAD,	mprefs.row_pad, 2, 0, 4 );
 	uprefs.add_int ( PREFS_RECENT_FILENAME_LEN, mprefs.recent_filename_len,
 		80, 50, 500 );
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -144,20 +144,6 @@ int Backend::register_project (
 	return 0;
 }
 
-int be_cedrender_set_font_width (
-	CuiRender	* const	render
-	)
-{
-	if ( ! render->font )
-	{
-		return 1;
-	}
-
-	render->font_width = render->font->get_width ();
-
-	return 0;		// Success
-}
-
 void be_cedrender_set_header_width (
 	CuiRender	* const	render,
 	int			max
@@ -175,7 +161,7 @@ void be_cedrender_set_header_width (
 		digits = 5;
 	}
 
-	render->row_header_width = digits * render->font_width;
+	render->set_row_header_width ( digits * render->font_width() );
 }
 
 void be_sheet_ref (
@@ -281,46 +267,29 @@ void be_quicksum_label (
 	}
 }
 
-char const * be_get_error_update_text (
-	int		const	error,
-	char		* const	buf,
-	size_t		const	buflen
-	)
+char const * be_get_error_update_text ( int const error )
 {
 	if ( error == 0 )
 	{
 		return NULL;
 	}
 
-	static char const * mes[] = { "?",
+	static char const * const mes[] = { "?",
 		"Error during operation.",
 		"Unable to begin operation due to problem with undo system.",
 		"Undo history lost.",
 		"Undo history lost.  Possible data corruption.",
-		"cell locked.  Operation aborted.",
+		"Cell locked.  Operation aborted.",
 		"Sheet locked.  Operation aborted."
 				};
-	char	const	* msg;
-	int		mi;
-
-
-	mi = -error;
+	int		mi = -error;
 
 	if ( mi < 0 || mi >= (int)( sizeof ( mes ) / sizeof ( mes[0] ) ) )
 	{
 		mi = 0;
 	}
 
-	msg = mes[mi];
-
-	if ( error == CUI_ERROR_LOCKED_CELL )
-	{
-		snprintf ( buf, buflen, "%s %s", cui_error_str (), msg );
-
-		msg = buf;
-	}
-
-	return msg;
+	return mes[mi];
 }
 
 void be_update_file_to_book (

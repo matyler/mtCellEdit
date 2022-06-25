@@ -257,7 +257,7 @@ MTCF_PRE_CONF()
 	"YES" )
 		I_EX="-fsanitize=undefined $DEBUG_I_EX"
 		L_EX="-fsanitize=undefined -lm -O1 -Wl,--as-needed,-z,relro,-z,now"
-		CFLAGS+=" -std=gnu11"
+		CFLAGS+=" -std=gnu17"
 		CFLAGS+=" -Wbad-function-cast -Wstrict-prototypes -Wnested-externs"
 		CXXFLAGS+=" -std=gnu++17"
 		;;
@@ -457,6 +457,11 @@ MTCF_POST_CONF()
 		echo "MOC           = $MOC"	>> $CONF_FILE
 	fi
 
+	if [ "$APPIMAGE_PREFIX" != "" ]
+	then
+		echo "APPIMAGE_PREFIX = $APPIMAGE_PREFIX" >> $CONF_FILE
+	fi
+
 	# Always comes last
 	echo "MAKE_DIRS     = $MAKE_DIRS"	>> $CONF_FILE
 }
@@ -488,13 +493,7 @@ MT_GET_MOC_5()
 
 MT_GET_MOC_6()
 {
-	if hash moc-qt6 2>/dev/null
-	then
-		MOC="moc-qt6"
-	else
-		MOC="moc"
-	fi
-
+	MOC=$(pkg-config Qt6 --variable=moc)
 	MOC="$MOC $(pkg-config Qt6Widgets --cflags)"
 }
 

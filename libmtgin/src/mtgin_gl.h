@@ -21,7 +21,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 
-#include "mtgin.h"
+#include <mtgin.h>
 
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -339,12 +339,9 @@ void MainWindow::press_SheetExportOutput ()
 			continue;
 		}
 
-		if ( cui_export_output ( uprefs, sheet,
+		if ( projectGetRender()->export_output ( uprefs,
 			filename.toUtf8 ().data (),
-			cedFile->name, lastExportSheetType,
-			mprefs.row_pad,
-			mprefs.font_pango_name.c_str(),
-			mprefs.font_size )
+			cedFile->name, lastExportSheetType )
 			)
 		{
 			QMessageBox::critical ( this, "Error",
@@ -821,7 +818,7 @@ void MainWindow::sheetChanged (
 
 CedSheet * MainWindow::projectGetSheet ()
 {
-	return cui_render.sheet;
+	return cui_render.sheet();
 }
 
 CuiFile * MainWindow::projectGetCedFile ()
@@ -840,11 +837,11 @@ void MainWindow::projectSetSheetGeometry ()
 CedSheet * MainWindow::projectSetSheet ()
 {
 	// Automatically update renderer to this new value
-	cui_render.sheet = cui_file_get_sheet ( cedFile );
+	cui_render.set_sheet ( cui_file_get_sheet ( cedFile ) );
 
 	projectSetSheetGeometry ();
 
-	return cui_render.sheet;
+	return cui_render.sheet();
 }
 
 void MainWindow::projectGetSheetGeometry (

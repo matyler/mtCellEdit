@@ -559,10 +559,11 @@ public:
 	int resume ();
 		// 0=Restarted; 1=Error: not currently paused
 
-	int terminate ();		// Ask the worker to terminate.
+	int terminate ();	// Ask the worker to terminate.
 		// 0=Status changed; 1=Error: not started / already terminated
 
-	int join () const;		// Wait for thread to finish
+	int join ();		// Wait for thread to finish. If paused will be
+				// terminated.
 		// 0=Thread finished; 1=Error: already finished / not started
 
 	void get_progress ( double & done, double & tot ) const;

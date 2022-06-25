@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2021 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "ced.h"
 
 
 
@@ -720,7 +720,7 @@ static int recurse_max_col (
 }
 
 int ced_sheet_get_geometry (
-	CedSheet	* const	sheet,
+	CedSheet const * const	sheet,
 	int		* const	row_max,
 	int		* const	col_max
 	)

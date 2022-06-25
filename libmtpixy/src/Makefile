@@ -1,6 +1,6 @@
 include		../_conf.txt
 
-HEADER		:= mtpixy.h
+HEADER		:= mtpixy.h mtpixy_cairo.h
 OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
 
@@ -15,8 +15,11 @@ $(LIB_SONAME):	$(OBJS)
 
 $(OBJS):	*.h
 
-# .c.o Implicit rule
-# .cpp.o Implicit rule
+%.o:		%.cpp
+		$(CXX) -I$(CURDIR) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+%.o:		%.c
+		$(CC) -I$(CURDIR) $(CPPFLAGS) $(CFLAGS) -c $<
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)
@@ -28,7 +31,7 @@ install:
 uninstall:
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_NAME)
 		rm -f $(DESTDIR)$(LIB_INSTALL)/$(LIB_SONAME)
-		rm -f $(DESTDIR)$(HEAD_INSTALL)/$(HEADER)
+		cd $(DESTDIR)$(HEAD_INSTALL); rm -f $(HEADER)
 
 clean:
 		rm -f *.o *.so.$(LIB_SONUM)

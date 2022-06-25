@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 	along with this program in the file COPYING.
 */
 
-#include "private.h"
+#include "ced.h"
 
 
 
@@ -1024,8 +1024,8 @@ static int html_borders (
 	)
 {
 	char	const	* type = "";
-	char	const	* pos[4] = { "top", "bottom", "left", "right" };
-	int		shft[4] = {
+	char	const * const pos[4] = { "top", "bottom", "left", "right" };
+	int	const	shft[4] = {
 				CED_CELL_BORDER_TOP_SHIFT,
 				CED_CELL_BORDER_BOTTOM_SHIFT,
 				CED_CELL_BORDER_LEFT_SHIFT,
