@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2021 Mark Tyler
+	Copyright (C) 2018-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,12 @@
 	along with this program in the file COPYING.
 */
 
+#ifndef WELL_H_
+#define WELL_H_
+
+
+
+#include "mtdatawell_sqlite.h"
 #include "core.h"
 
 
@@ -56,7 +62,7 @@ public:
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::Sqlite	m_db;
+	mtDW::Sqlite	m_db;
 
 private:
 	void get_todo_filename_internal ( std::string & res );
@@ -143,12 +149,12 @@ public:
 /// ----------------------------------------------------------------------------
 
 	mtKit::Random		m_random;
-	mtKit::BitShifter	m_bitshift;
+	mtDW::BitShifter	m_bitshift;
 
 	FileDB			m_file_db;
 
 private:
-	WellPrefs * create_well_prefs ();
+	static WellPrefs * create_well_prefs ();
 	void new_well_prefs ();
 	void store_well_state ();
 	void restore_well_state ();
@@ -192,10 +198,14 @@ private:
 /// ----------------------------------------------------------------------------
 
 	FileDB		& m_file_db;
-	mtKit::SqliteAddRecord m_rec;
+	mtDW::SqliteAddRecord m_rec;
 };
 
 
 
 }	// namespace mtDW
+
+
+
+#endif		// WELL_H_
 

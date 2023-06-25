@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ public:
 
 /// ----------------------------------------------------------------------------
 
-	mtDW::Database		db;
+	mtDW::PathDB		db;
 	mtDW::Homoglyph		hg_index;
 	mtDW::Utf8Font		font_index;
 	mtKit::Exit		exit;

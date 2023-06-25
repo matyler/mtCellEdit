@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2021 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -725,7 +725,7 @@ public:
 
 
 
-	Font (				// Create new Pango font structure
+	explicit Font (			// Create new Pango font structure
 		char const * name = "Sans",
 		int size = 12
 		);

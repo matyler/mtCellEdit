@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -411,8 +411,6 @@ private:
 	QAction		* act_image_to_indexed;
 	QAction		* act_image_crop;
 
-	QAction		* act_palette_merge_duplicates;
-	QAction		* act_palette_remove_unused;
 	QAction		* act_palette_create_from_canvas;
 	QAction		* act_palette_quantize_pnn;
 
@@ -883,6 +881,7 @@ public:
 
 	int get_type ();
 	int get_num ();
+	std::string get_filename ();
 
 private:
 	QSpinBox	* m_sbox_num;

@@ -15,6 +15,11 @@
 	along with this program in the file COPYING.
 */
 
+#ifndef TAP_H_
+#define TAP_H_
+
+
+
 #include <sndfile.h>
 
 #include "core.h"
@@ -149,4 +154,8 @@ public:
 
 
 }	// namespace mtDW
+
+
+
+#endif		// TAP_H_
 

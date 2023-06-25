@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -121,7 +121,7 @@ int Crul::DB::open ( std::string const & dir )
 
 void Crul::DB::clear_cache_index ( int const id )
 {
-	mtKit::SqliteStmt stmt ( m_db );
+	mtDW::SqliteStmt stmt ( m_db );
 
 	char const * const sql =
 		"DELETE FROM "	DB_TABLE_CACHE_PTS_IDX

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 Mark Tyler
+	Copyright (C) 2021-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -58,12 +58,15 @@ class Vertex
 {
 public:
 	Vertex (
-		double const x1 = 0.0,
-		double const y1 = 0.0,
-		double const z1 = 0.0
+		double const x1,
+		double const y1,
+		double const z1
 		)
 		:
 		x (x1), y (y1), z (z1)
+	{}
+
+	Vertex () : x (0.0), y (0.0), z (0.0)
 	{}
 
 	// Undefined result if contents are inf/nan.

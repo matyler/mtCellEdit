@@ -1,9 +1,5 @@
 ----------- scripts/01.txt -----------
 
-
-Checking error table ...
-Error table is valid: 66 items
-
 mtDWCLI > well add path ../..
 mtDWCLI > 
 mtDWCLI > butt add otp bertie_06
@@ -28,10 +24,6 @@ mtDWCLI >
 
 ----------- scripts/11.txt -----------
 
-
-Checking error table ...
-Error table is valid: 66 items
-
 mtDWCLI > well save file 1      d1/001.bin
 mtDWCLI > well save file 2      d1/002.bin
 mtDWCLI > well save file 3      d1/003.bin
@@ -45,10 +37,6 @@ mtDWCLI >
 mtDWCLI > 
 
 ----------- scripts/21.txt -----------
-
-
-Checking error table ...
-Error table is valid: 66 items
 
 mtDWCLI > butt set otp jane_54
 mtDWCLI > 
@@ -89,10 +77,6 @@ mtDWCLI >
 
 ----------- scripts/31.txt -----------
 
-
-Checking error table ...
-Error table is valid: 66 items
-
 mtDWCLI > soda decode d2/000.bin.soda                   d3/000.bin
 mtDWCLI > soda decode d2/001.bin.soda                   d3/001.bin
 mtDWCLI > soda decode d2/002.bin.soda                   d3/002.bin
@@ -120,10 +104,6 @@ mtDWCLI >
 
 ----------- scripts/12.txt -----------
 
-
-Checking error table ...
-Error table is valid: 66 items
-
 mtDWCLI > app homoglyph encode h1/in.001.txt h1/000000 h2/in.001.txt
 
 mtDWCLI > 
@@ -134,10 +114,6 @@ mtDWCLI > app homoglyph decode h2/in.001.txt h3/000000
 mtDWCLI > 
 
 ----------- scripts/13.txt -----------
-
-
-Checking error table ...
-Error table is valid: 66 items
 
 mtDWCLI > app utf8font encode h1/in.002.txt 1   h2/in.002.txt
 mtDWCLI > app utf8font encode h1/in.003.txt 2   h2/in.003.txt
@@ -169,10 +145,6 @@ mtDWCLI > app utf8font clean h2/in.014.txt      h3/in.014.txt
 mtDWCLI > 
 
 ----------- scripts/../tmp/r2.txt -----------
-
-
-Checking error table ...
-Error table is valid: 66 items
 
 mtDWCLI > butt add otp rndfiles_1
 Butt OTP already exists
@@ -280,10 +252,6 @@ mtDWCLI > soda encode r1/000099 r2/000099.soda
 mtDWCLI > 
 
 ----------- scripts/../tmp/r3.txt -----------
-
-
-Checking error table ...
-Error table is valid: 66 items
 
 mtDWCLI > soda decode r2/000000.soda r3/000000
 mtDWCLI > soda decode r2/000001.soda r3/000001

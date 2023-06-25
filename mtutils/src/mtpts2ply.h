@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ class pCloudNdata;
 class pCloudNkey
 {
 public:
-	pCloudNkey (
+	explicit pCloudNkey (
 		double	x = 0.0,
 		double	y = 0.0,
 		double	z = 0.0
@@ -60,7 +60,7 @@ private:
 class pCloudNdata
 {
 public:
-	pCloudNdata (
+	explicit pCloudNdata (
 		int	intensity = 0,
 		int	r = 0,
 		int	g = 0,

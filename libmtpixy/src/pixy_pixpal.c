@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2021 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -324,17 +324,106 @@ int pixy_pixmap_palette_sort (
 	return 0;
 }
 
+static int pixy_remove_palette_items (
+	mtPixmap		* const	pixmap,	// Must exist
+	unsigned char	const * const	togo	// 256 item array: 0=keep 1=lose
+	)
+{
+	int		i, j;
+	int	const	coltot = pixmap->palette.size;
+	mtColor	* const	col = &pixmap->palette.color[0];
+	size_t	const	colsize = sizeof( col[0] );
+
+	// Move required colours to the front of the palette.
+	for ( i=0, j=0; j < coltot; j++ )
+	{
+		if ( togo[j] )
+		{
+			int const ip1 = i + 1;
+
+			if ( ip1 < coltot )
+			{
+				memmove ( &col[i], &col[ip1],
+					colsize * (size_t)(coltot - ip1) );
+			}
+
+			continue;
+		}
+
+		// Not removed so move to the next item.
+		i++;
+	}
+
+	// Set new palette size
+	pixmap->palette.size = MAX(PIXY_PALETTE_COLOR_TOTAL_MIN, coltot-(j-i));
+
+	return (j - i);		// Items removed
+}
+
+static int pixy_palette_merge_duplicates_rgb (
+	mtPixmap	* const	pixmap,
+	int		* const	tot
+	)
+{
+	// Caller checks pixmap exists
+
+	unsigned char	dupes[PIXY_PALETTE_COLOR_TOTAL_MAX];
+	int		i, j;
+	int	const	coltot = pixmap->palette.size;
+	mtColor	* const	col = &pixmap->palette.color[0];
+
+	dupes[0] = 0;
+
+	for ( i = 1; i < coltot; i++ )
+	{
+		for ( j = 0; j < i; j++ )
+		{
+			if (	col[i].red	== col[j].red &&
+				col[i].green	== col[j].green &&
+				col[i].blue	== col[j].blue
+				)
+			{
+				dupes[i] = 1;
+				break;
+			}
+			else
+			{
+				dupes[i] = 0;
+			}
+		}
+	}
+
+	int const found = pixy_remove_palette_items ( pixmap, dupes );
+
+	if ( tot )
+	{
+		tot[0] = found;
+	}
+
+	return 0;
+}
+
 int pixy_palette_merge_duplicates (
 	mtPixmap	* const	pixmap,
 	int		* const	tot
 	)
 {
+	if ( ! pixmap )
+	{
+		return 1;
+	}
+
+	if ( PIXY_PIXMAP_BPP_RGB == pixmap->bpp )
+	{
+		return pixy_palette_merge_duplicates_rgb ( pixmap, tot );
+	}
+
 	if ( PIXY_PIXMAP_BPP_INDEXED != pixmap->bpp || ! pixmap->canvas )
 	{
 		return 1;
 	}
 
-	unsigned char		dupes[256];
+	unsigned char		dupes[PIXY_PALETTE_COLOR_TOTAL_MAX];
 	int			i, j, found = 0;
 	int		const	coltot = pixmap->palette.size;
 	mtColor	const * const	col = &pixmap->palette.color[0];
@@ -360,13 +449,53 @@ int pixy_palette_merge_duplicates (
 		}
 	}
 
-	unsigned char		* img = pixmap->canvas;
-	unsigned char	* const	ilim = img + pixmap->width * pixmap->height;
-
-	for ( ; img < ilim; img++ )
+	if ( tot )
 	{
-		img[0] = dupes[ img[0] ];
+		tot[0] = found;
 	}
+
+	if ( found )
+	{
+		unsigned char * img = pixmap->canvas;
+		unsigned char * const ilim = img+pixmap->width * pixmap->height;
+
+		for ( ; img < ilim; img++ )
+		{
+			img[0] = dupes[ img[0] ];
+		}
+	}
+
+	return 0;
+}
+
+static int pixy_palette_remove_unused_rgb (
+	mtPixmap	* const	pixmap,
+	int		* const	tot
+	)
+{
+	unsigned char		conv[ PIXY_PALETTE_COLOR_TOTAL_MAX ];
+	int			i;
+	int			histogram[ PIXY_PALETTE_COLOR_TOTAL_MAX ];
+	mtColor		* const	col = &pixmap->palette.color[0];
+	int		const	coltot = pixmap->palette.size;
+	unsigned char		* img = pixmap->canvas;
+	unsigned char	* const	ilim = img + 3 * pixmap->width * pixmap->height;
+
+	get_histogram_rgb ( img, ilim, histogram, col, coltot );
+
+	for ( i = 0; i < coltot; i++ )
+	{
+		if ( histogram[i] )
+		{
+			conv[i] = 0;
+		}
+		else
+		{
+			conv[i] = 1;
+		}
+	}
+
+	int const found = pixy_remove_palette_items ( pixmap, conv );
 
 	if ( tot )
 	{
@@ -381,11 +510,20 @@ int pixy_palette_remove_unused (
 	int		* const	tot
 	)
 {
-	if ( PIXY_PIXMAP_BPP_INDEXED != pixmap->bpp || ! pixmap->canvas )
+	if ( ! pixmap )
 	{
 		return 1;
 	}
 
+	if ( PIXY_PIXMAP_BPP_RGB == pixmap->bpp )
+	{
+		return pixy_palette_remove_unused_rgb ( pixmap, tot );
+	}
+
+	if ( PIXY_PIXMAP_BPP_INDEXED != pixmap->bpp || ! pixmap->canvas )
+	{
+		return 1;
+	}
 
 	unsigned char		conv[ PIXY_PALETTE_COLOR_TOTAL_MAX ];
 	int			i, j, found;
@@ -394,7 +532,6 @@ int pixy_palette_remove_unused (
 	int		const	coltot = pixmap->palette.size;
 	unsigned char		* img = pixmap->canvas;
 	unsigned char	* const	ilim = img + pixmap->width * pixmap->height;
-
 
 	get_histogram ( img, ilim, histogram );
 
@@ -415,6 +552,10 @@ int pixy_palette_remove_unused (
 
 			conv[i] = (unsigned char)( j++ );
 		}
+		else
+		{
+			conv[i] = 0;
+		}
 	}
 
 	for ( ; img < ilim; img++ )
@@ -422,8 +563,8 @@ int pixy_palette_remove_unused (
 		img[0] = conv[ img[0] ];
 	}
 
-	pixy_palette_set_size ( &pixmap->palette, MAX ( coltot - found,
-		PIXY_PALETTE_COLOR_TOTAL_MIN ) );
+	// Set new palette size
+	pixmap->palette.size = MAX(coltot-found, PIXY_PALETTE_COLOR_TOTAL_MIN );
 
 	if ( tot )
 	{

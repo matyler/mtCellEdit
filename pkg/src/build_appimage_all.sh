@@ -7,7 +7,23 @@
 set -e
 
 
-wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/7/linuxdeployqt-7-x86_64.AppImage"
+CENTOS7="https://github.com/probonopd/linuxdeployqt/releases/download/7/linuxdeployqt-7-x86_64.AppImage"
+MISC8="https://github.com/probonopd/linuxdeployqt/releases/download/8/linuxdeployqt-continuous-x86_64.AppImage"
+LATEST="https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+
+DLFILE="$CENTOS7"
+#DLFILE="$MISC8"
+#DLFILE="$LATEST"
+
+
+CWD=$(pwd)
+VERSION=$(cat $CWD/../VERSION)
+
+echo CWD	= $CWD
+echo VERSION	= $VERSION
+
+
+wget -c "$DLFILE"
 chmod a+x linuxdeployqt*.AppImage
 
 
@@ -17,6 +33,14 @@ for PKG in "mtcelledit-qt5" "mtpixy-qt5"
 do
 	echo	./build_appimage.sh $PKG
 		./build_appimage.sh $PKG
+done
+
+PKGQT="qt5"
+
+for PKG in "mtCellEdit" "mtPixy"
+do
+	echo	rename $PKG-$PKGQT $PKG-$VERSION-$PKGQT $PKG-$PKGQT*.AppImage
+		rename $PKG-$PKGQT $PKG-$VERSION-$PKGQT $PKG-$PKGQT*.AppImage
 done
 
 

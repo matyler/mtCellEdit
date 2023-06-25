@@ -13,7 +13,7 @@ MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
 MTCF_CHECK_LIBS mtkit gif jpeg
-MTCF_PKGCONFIG "cairo pangoft2 librsvg-2.0 libpng"
+MTCF_PKGCONFIG "cairo pangoft2 pangocairo librsvg-2.0 libpng"
 
 MTCF_ADD_APP_NAME
 MTCF_VERSION_BIN_NAME

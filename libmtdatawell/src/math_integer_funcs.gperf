@@ -1,0 +1,86 @@
+%{
+
+#ifndef MATH_INTEGER_FUNCS_H_
+#define MATH_INTEGER_FUNCS_H_
+
+#include "math_grammar.h"
+
+
+
+namespace mtDW
+{
+namespace IntegerFunc
+{
+
+
+
+class ArgData : public mtDW::FuncArgData< mtDW::Integer >
+{
+public:
+	ArgData ( std::vector< mtDW::Integer > & a, size_t const argtot )
+		:
+		FuncArgData	( a, argtot )
+	{
+	}
+};
+
+
+
+typedef void (* Func) ( ArgData & );
+
+
+
+void fn_abs	( ArgData & );
+void fn_bit_and	( ArgData & );
+void fn_bit_not	( ArgData & );
+void fn_bit_or	( ArgData & );
+void fn_bit_xor	( ArgData & );
+void fn_gcd	( ArgData & );
+void fn_lcm	( ArgData & );
+void fn_max	( ArgData & );
+void fn_min	( ArgData & );
+void fn_mod	( ArgData & );
+
+%}
+
+
+%language=C++
+%define lookup-function-name	lookup_name
+%define class-name		Function
+%readonly-tables
+%global-table
+%define word-array-name		function_name_list
+
+
+%struct-type
+
+struct func_def_t
+{
+	char	const	* name;
+	Func		func;
+	size_t		arg_tot;
+	char	const	* help;
+};
+
+
+
+%%
+abs,		fn_abs,		1,	"Return the absolute value of a1."
+bit_and,	fn_bit_and,	2,	"Return the bitwise and of a1 and a2."
+bit_not,	fn_bit_not,	1,	"Return the bitwise not of a1."
+bit_or,		fn_bit_or,	2,	"Return the bitwise or of a1 and a2."
+bit_xor,	fn_bit_xor,	2,	"Return the bitwise xor of a1 and a2."
+gcd,		fn_gcd,		2,	"Return the greatest common divisor of a1 and a2."
+lcm,		fn_lcm,		2,	"Return the lowest common multiple of a1 and a2."
+max,		fn_max,		2,	"Return the larger of a1 and a2."
+min,		fn_min,		2,	"Return the smaller of a1 and a2."
+mod,		fn_mod,		2,	"Return a1 mod a2."
+%%
+
+
+}}	// namespace mtDW::IntegerFunc
+
+
+
+#endif		// MATH_INTEGER_FUNCS_H_
+

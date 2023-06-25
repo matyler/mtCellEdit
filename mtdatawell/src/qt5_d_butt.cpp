@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -398,7 +398,7 @@ void DialogButtInfo::press_bucket_add ()
 		return;
 	}
 
-	mtDW::Database & db = mainwindow.backend.db;
+	mtDW::PathDB & db = mainwindow.backend.db;
 
 	int error = 0;
 	mtQEX::BusyDialog busy ( this, nullptr,
@@ -550,7 +550,7 @@ void DialogButtInfo::press_otp_import ()
 		return;
 	}
 
-	mtDW::Database & db = mainwindow.backend.db;
+	mtDW::PathDB & db = mainwindow.backend.db;
 	int error = 0;
 
 	mtQEX::BusyDialog busy ( this, nullptr, [&error, &db, &filename]()

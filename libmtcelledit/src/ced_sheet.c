@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2021 Mark Tyler
+	Copyright (C) 2008-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -969,7 +969,7 @@ int ced_sheet_set_column_width_list (
 	CedSheet	* const	sheet,
 	int		const	col,
 	int		const	coltot,
-	int		* const	width_list
+	int	const * const	width_list
 	)
 {
 	if (	! sheet					||

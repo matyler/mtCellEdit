@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -190,6 +190,8 @@ void Mainwindow::press_palette_new ()
 			dialog.get_type () );
 		backend.uprefs.set ( PREFS_FILE_NEW_PALETTE_NUM,
 			dialog.get_num () );
+		backend.uprefs.set ( PREFS_FILE_NEW_PALETTE_FILE,
+			dialog.get_filename () );
 		press_palette_load_default ();
 	}
 }
@@ -219,14 +221,14 @@ DialogPaletteNew::DialogPaletteNew (
 	grid->addWidget ( new QLabel ( "Palette Size" ), 0, 0 );
 	grid->addWidget ( m_sbox_num, 0, 1 );
 
-	std::string &pal_file =parent->backend.mprefs.file_new_palette_file;
+	std::string const &pal_file = parent->mprefs.file_new_palette_file;
 	m_file_edit = new QLineEdit ( mtQEX::qstringFromC ( pal_file.c_str() ));
 	m_file_edit->setReadOnly ( true );
 	auto button = new QPushButton ( "Select" );
 	grid->addWidget ( new QLabel ( "File" ), 1, 0 );
 	grid->addWidget ( m_file_edit, 1, 1 );
 	grid->addWidget ( button, 1, 2 );
-	connect ( button, &QPushButton::pressed, [parent, &pal_file, this]()
+	connect ( button, &QPushButton::pressed, [parent, this]()
 		{
 			QString const filename = QFileDialog::getOpenFileName (
 				parent, "Select Palette File",
@@ -238,7 +240,6 @@ DialogPaletteNew::DialogPaletteNew (
 			if ( ! filename.isEmpty () )
 			{
 				m_file_edit->setText ( filename );
-				pal_file = filename.toUtf8 ().data ();
 			}
 		});
 
@@ -300,5 +301,10 @@ int DialogPaletteNew::get_type ()
 	}
 
 	return 0;
+}
+
+std::string DialogPaletteNew::get_filename ()
+{
+	return m_file_edit->text().toStdString ();
 }
 

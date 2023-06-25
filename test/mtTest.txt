@@ -25,7 +25,9 @@ esac
 export LANG=C
 
 # On error exit
-set -e
+#set -e
+# On error don't exit
+set +e
 
 > $VALG_LOGFILE
 
@@ -77,6 +79,21 @@ cmp_diff()
 	unset DIFF
 
 	diff -Nurp "$2" "$3" && DIFF=1
+
+	cmp_arg "$1" "$DIFF" "1"
+
+	unset DIFF
+}
+
+cmp_bin()
+{
+	echo
+	echo Comparing with checked results ...
+	echo
+
+	unset DIFF
+
+	cmp "$2" "$3" && DIFF=1
 
 	cmp_arg "$1" "$DIFF" "1"
 

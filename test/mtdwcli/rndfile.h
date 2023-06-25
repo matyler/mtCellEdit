@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public:
 
 	mtKit::Exit	exit;
 
-	mtDW::Database	m_db;
+	mtDW::PathDB	m_db;
 
 	int		m_file_tot	= 1000;
 	int		m_file_size_min	= 1000;

@@ -1,11 +1,18 @@
 include		../_conf.txt
 
+OBJS_BIGMAN	:= $(patsubst %.cpp,%.o,$(wildcard bigman*.cpp))
 OBJS_LANTER	:= $(patsubst %.cpp,%.o,$(wildcard lanter*.cpp))
 OBJS_MANDY	:= $(patsubst %.cpp,%.o,$(wildcard mandy*.cpp))
 OBJS_SOREC	:= $(patsubst %.cpp,%.o,$(wildcard sorec*.cpp))
 OBJS_SOUP	:= $(patsubst %.cpp,%.o,$(wildcard soup*.cpp))
 
-BINS		= mtsorec mtsoup mtmandy mtlanter
+BINS		=		\
+		mtbigman	\
+		mtlanter	\
+		mtmandy		\
+		mtsorec		\
+		mtsoup		\
+
 
 .PHONY:		all install uninstall clean
 
@@ -14,6 +21,9 @@ all:		$(BINS)
 
 
 mtlanter:	$(OBJS_LANTER)
+		$(CXX) $^ -o $@ $(LDFLAGS)
+
+mtbigman:	$(OBJS_BIGMAN)
 		$(CXX) $^ -o $@ $(LDFLAGS)
 
 mtmandy:	$(OBJS_MANDY)
@@ -25,10 +35,11 @@ mtsorec:	$(OBJS_SOREC)
 mtsoup:		$(OBJS_SOUP)
 		$(CXX) $^ -o $@ $(LDFLAGS)
 
-$(OBJS_LANTER):	lanter.h
-$(OBJS_MANDY):	mandy.h
-$(OBJS_SOREC):	sorec.h
-$(OBJS_SOUP):	soup.h
+$(OBJS_BIGMAN):	bigman*.h
+$(OBJS_LANTER):	lanter*.h
+$(OBJS_MANDY):	mandy*.h
+$(OBJS_SOREC):	sorec*.h
+$(OBJS_SOUP):	soup*.h
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule

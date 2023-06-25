@@ -90,6 +90,7 @@ An important decision I have taken is to release it as free software using the G
 | 2020-6-25  | 3.4         | mtDWUtils, mtCrul added. |
 | 2021-6-25  | 3.5         | All Qt 4 code removed. Cherry-picked C++11 features introduced. libmtGin, mtGinUtils added. |
 | 2022-6-25  | 3.6         | libmtCedUI merged into libmtCellEdit. |
+| 2023-6-25  | 3.7         | Experimental Qt 6 port now works for Qt 6.4 on Arch, Fedora, Suse, Ubuntu, Debian. Major refactoring of libmtkit, and merging of CLI apps into their companion Utils modules. mtNush & NushUtils added. |
 
 -------------------------------------------------
 [Previous chap_01.html] | [Contents chap_00.html] | [Next chap_03.html]

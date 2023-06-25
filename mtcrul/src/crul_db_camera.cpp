@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020-2021 Mark Tyler
+	Copyright (C) 2020-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ int Crul::DB::load_cameras ( std::map<int, Crul::Camera> * const map )
 			" FROM " DB_TABLE_CAMERA_LIST
 			;
 
-		mtKit::SqliteGetRecord rec ( m_db, sql );
+		mtDW::SqliteGetRecord rec ( m_db, sql );
 		Crul::Camera cam;
 
 		for ( int i = 0; 0 == rec.next (); i++ )
@@ -112,8 +112,8 @@ int Crul::DB::save_cameras ( std::map<int, Crul::Camera> const * const map )
 	{
 		m_db.empty_table ( DB_TABLE_CAMERA_LIST );
 
-		mtKit::SqliteTransaction trans ( m_db );
-		mtKit::SqliteAddRecord rec ( m_db, DB_TABLE_CAMERA_LIST );
+		mtDW::SqliteTransaction trans ( m_db );
+		mtDW::SqliteAddRecord rec ( m_db, DB_TABLE_CAMERA_LIST );
 
 		rec.add_field ( DB_FIELD_ID );
 		rec.add_field ( DB_FIELD_LABEL );

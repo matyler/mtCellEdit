@@ -65,6 +65,12 @@ typedef struct mtZip		mtZip;
 // that if the argument is used in the future then the compiler causes an error
 // and reminds the programmer to remove the macro.
 
+#define RETURN_ON_ERROR( A )					\
+	{							\
+		int const roe = A;				\
+		if ( roe ) return roe;				\
+	}
+
 
 
 enum
@@ -1028,17 +1034,14 @@ int string_strip_extension (		// Case insensitive
 
 class Arg;
 class ArgBase;
-class ArithEncode;
-class ArithDecode;
-class BitPackRead;
-class BitPackWrite;
-class BitShifter;
 class Busy;
 class ByteFileRead;
 class ByteFileWrite;
 class CliItem;
+class CliShell;
 class CliTab;
 class Clock;
+class CStrPtr;
 class Exit;
 class FileLock;
 class LineFileRead;
@@ -1049,7 +1052,6 @@ class UPrefBase;
 class UPrefUIEdit;
 class UserPrefs;
 
-namespace ByteCube {}
 namespace ChunkFile {}
 
 enum PrefType
@@ -1175,6 +1177,29 @@ wasteful in conversions.
 
 
 
+class CliShell
+{
+public:
+	std::string const & read_line ( char const * prompt );
+
+	inline bool finished () const { return m_finished; }
+
+	void add_history ();
+		// This only adds to history if different from the old line
+
+	void clear_history ();
+
+	static void bind_tab ();	// Use TAB to expand filenames
+	static void bind_tilde ();	// Expand ~ to user home
+
+private:
+	std::string	m_line;
+	std::string	m_old_line;
+	bool		m_finished	= false;
+};
+
+
+
 class CliTab
 {
 public:
@@ -1197,6 +1222,26 @@ private:
 	std::unique_ptr<CliItem> const m_root;
 
 	MTKIT_RULE_OF_FIVE( CliTab )
+};
+
+
+
+class CStrPtr		// Store and own a freshly allocated C string pointer
+{
+public:
+	explicit CStrPtr ( char * ptr )
+		: m_ptr ( ptr )			{}
+	~CStrPtr ()				{ free ( m_ptr );	}
+
+	inline char * c_str () const		{ return m_ptr;		}
+
+	inline char operator [](size_t i) const	{ return m_ptr[i];	}
+	inline bool operator ! () const		{ return ! m_ptr;	}
+
+private:
+	char	* const	m_ptr;
+
+	MTKIT_RULE_OF_FIVE( CStrPtr )
 };
 
 
@@ -1392,149 +1437,6 @@ private:
 
 
 }	// namespace ChunkFile
-
-
-
-namespace ByteCube
-{
-	enum
-	{
-		CUBE_MEMTOT	= 16777216
-	};
-
-unsigned char * create_bytecube (
-	size_t	const	n		// 2-256
-	);
-	// On successful allocation, all bytes are zero'd out
-
-int count_bits ( int b );		// Count 1's in first 8 bits
-
-int encode (				// Create serial encoding of a cube.
-	unsigned char const * mem,	// 256x256x256 cube of 16MB.
-					// NOTE: each byte MUST be 0 or 1!!!!!
-	unsigned char ** buf,		// Put buffer pointer here on success.
-	size_t * buflen			// Size of output buffer.
-	);
-
-int decode (				// Read serial encoding to create a cube
-	unsigned char const * mem,	// Serial memory
-	size_t memlen,			// Size of input buffer
-	unsigned char ** buf		// Put cube pointer here on success:
-					// 256x256x256 = 16MB
-	);
-
-}	// namespace ByteCube
-
-
-
-class ArithEncode
-{
-public:
-	ArithEncode ();
-
-	void push_mem ( uint8_t const * mem, size_t len ); // 1 <= len <= 7
-
-	int pop_code ( int span, int & code );		// 2 <= span <= 256
-		// 0 = OK, data left to encode
-		// 1 = OK, data all encoded
-
-	int get_encoded_byte_count () const;
-
-private:
-	uint64_t	m_mem;		// Current data
-	uint64_t	m_span_mem;	// Current total span in m_mem
-	uint64_t	m_span_popped;	// Current total popped
-};
-
-
-
-class ArithDecode
-{
-public:
-	ArithDecode ();
-
-	int push_code (
-		int code,	// 0 <= code <= 255
-		int span	// 2 <= span <= 256
-		);
-		// 0 = OK, code packed
-		// 1 = not sent, full (i.e. span * m_span_mem > 7 bytes)
-		// -1 = Error
-
-	int pop_mem ( uint8_t * dest, size_t & size );
-			// dest Must be >= 7 bytes
-
-	int get_encoded_byte_count () const;
-
-private:
-	uint64_t	m_mem;		// Current data
-	uint64_t	m_span_mem;	// Current total span in m_mem
-};
-
-
-
-class BitPackWrite
-{
-public:
-	BitPackWrite ();
-	~BitPackWrite ();
-
-	int write ( int byte, int bit_tot );
-	unsigned char const * get_buf () const;
-//	size_t get_buf_len () const;	// Bytes written (0=nothing)
-
-private:
-	int buf_expand ();
-
-	unsigned char	* m_buf;		// Beginning of buffer
-	unsigned char	* m_buflim;		// Writes must be before this
-	unsigned char	* m_cwl;		// Current write location
-	int		m_bit_next;
-	size_t		m_buf_size;
-};
-
-
-
-class BitPackRead
-{
-public:
-	BitPackRead ( unsigned char const * mem, size_t memlen );
-
-	int read ( int &byte, int bit_tot );
-//	void restart ( unsigned char const * mem, size_t memlen );
-//	size_t bytes_left () const;
-
-private:
-	unsigned char	const * m_mem_start;
-	unsigned char	const * m_mem;
-	unsigned char	const *	m_memlim;
-	int			m_bit_next;
-};
-
-
-
-class BitShifter
-{
-public:
-	BitShifter ();
-	~BitShifter ();
-
-	// NOTE: random must be seeded by the caller.
-	int set_shifts ( Random &random );
-	int set_shifts ( int const shifts[8] );	// shifts[] contains *ALL* 0..7
-	inline void set_salt ( int i )	{ m_salt = i; }
-	inline void set_pos ( int i )	{ m_pos = i; }
-
-	uint8_t get_byte ( uint8_t input );
-	void get_shifts ( int shifts[8] ) const;
-	inline int get_salt () const	{ return m_salt; }
-	inline int get_pos () const	{ return m_pos; }
-
-protected:
-	int		m_pos;
-	int		m_shifts[ 8 ];
-	int		m_salt;
-};
 
 
 

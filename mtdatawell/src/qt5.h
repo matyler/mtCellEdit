@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

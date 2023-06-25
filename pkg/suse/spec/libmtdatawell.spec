@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		MT Crypto and random data routines
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy sqlite3-devel libsndfile-devel
-Requires:		libmtkit libmtpixy libsqlite3-0 libsndfile
+BuildRequires:		libmtkit libmtpixy sqlite3-devel libsndfile-devel gmp-devel mpfr-devel gperf
+Requires:		libmtkit libmtpixy libsqlite3-0 libsndfile libgmp10 libmpfr6
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

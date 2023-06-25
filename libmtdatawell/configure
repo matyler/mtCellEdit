@@ -12,8 +12,8 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit mtpixy
-MTCF_PKGCONFIG "sndfile"
+MTCF_CHECK_LIBS mtkit mtpixy mpfr gmp
+MTCF_PKGCONFIG "sqlite3 sndfile"
 
 MTCF_ADD_APP_NAME
 

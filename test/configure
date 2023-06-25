@@ -12,10 +12,10 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit mtcelledit mtdatawell pthread rt mtpixy
+MTCF_CHECK_LIBS mtkit mtcelledit mtdatawell pthread rt mtpixy gmp mpfr
 MTCF_PKGCONFIG "sndfile"
 
-MAKE_DIRS="mtpixycli mtpixyutils libmtcelledit mtcedcli mtcedutils mtrdc mtdwcli mtdwutils"
+MAKE_DIRS="mtpixycli mtpixyutils libmtcelledit mtcedcli mtcedutils mtrdc mtdwcli mtdwutils mtnushutils"
 
 MTCF_POST_CONF
 

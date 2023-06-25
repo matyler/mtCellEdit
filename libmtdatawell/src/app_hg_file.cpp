@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2020 Mark Tyler
+	Copyright (C) 2019-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -290,7 +290,7 @@ static void count_utf8 (
 	try
 	{
 		uint8_t const zmem[7] = {0};
-		mtKit::ArithEncode ari;
+		mtDW::ArithEncode ari;
 
 		for ( ; src < end; )
 		{

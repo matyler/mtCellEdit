@@ -1,0 +1,49 @@
+= NAME =
+@BIN_NAME@ - command line big number utilities
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ [OPTION]... [FILE] ]...
+
+
+= DESCRIPTION =
+mtNushUtils is Mark Tyler's NUmber SHell Utilities.
+It is a collection of command line functions for manipulating large numbers using infix mathematical expressions.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-cli**
+	Use the interactive CLI mode.
+**-b** INTEGER
+	Set the bit precision for floating point number mode (default=10, range=10..32).
+	Bits used for numbers are 2^b, so 10 allocates 2^10 bits for each number.
+**-funcs**
+	Print out all of the functions for the current mode.
+**-i** STRING
+	Load this input file.  "-" loads from stdin.
+**-integer**
+	Use integer number mode.
+**-float**
+	Use floating point number mode (default).
+**-rational**
+	Use rational number mode.
+**-v**
+	Verbose.
+**-vars**
+	Print out all of the variables and their values.
+
+
+= CAVEATS =
+Don't begin an expression with a minus sign, otherwise it will be interpreted as a switch:
+
+nushutils "-2*2"
+
+Instead, use a space or brackets:
+
+nushutils " -2*2"
+
+nushutils "(-2*2)"
+
+

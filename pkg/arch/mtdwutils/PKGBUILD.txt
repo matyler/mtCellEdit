@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="Data Well Utils"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('libmtkit' 'libmtdatawell')
+depends=('libmtkit' 'libmtdatawell' 'gmp' 'mpfr')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

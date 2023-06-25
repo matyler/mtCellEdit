@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2022 Mark Tyler
+	Copyright (C) 2019-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,29 +22,30 @@
 class EncodeFile
 {
 public:
-	explicit EncodeFile ( FileOps * fops );
+	EncodeFile ();
 	~EncodeFile ();
 
 	int init ( char const * buf, int buflen, int capacity );
 
 /// ----------------------------------------------------------------------------
 
-	unsigned char	* m_buf;
-	size_t		m_buflen;
+	unsigned char * buf () const { return m_buf; };
+	size_t buflen () const { return m_buflen; };
 
 private:
-	FileOps	const * const	m_fops;
+
+	unsigned char	* m_buf;
+	size_t		m_buflen;
 
 	MTKIT_RULE_OF_FIVE( EncodeFile )
 };
 
 
 
-EncodeFile::EncodeFile ( FileOps * fops )
+EncodeFile::EncodeFile ()
 	:
 	m_buf		( NULL ),
-	m_buflen	( 0 ),
-	m_fops		( fops )
+	m_buflen	( 0 )
 {
 }
 
@@ -123,7 +124,7 @@ int FileOps::encode_hg_file ( mtDW::Well * const well )
 		return 1;
 	}
 
-	EncodeFile enc ( this );
+	EncodeFile enc;
 
 	if ( enc.init ( m_file_covert_buf, m_file_covert_len,
 		m_file_in_utf8_bytes
@@ -132,10 +133,10 @@ int FileOps::encode_hg_file ( mtDW::Well * const well )
 		return 1;
 	}
 
-	uint8_t const * buf = enc.m_buf;
+	uint8_t const * buf = enc.buf();
 	size_t bufpos = 0;
-	size_t buflen = enc.m_buflen;
-	mtKit::ArithEncode ari;
+	size_t buflen = enc.buflen();
+	mtDW::ArithEncode ari;
 	unsigned char rnd[8192] = {0};
 	uint8_t zmem[7] = {0};
 	unsigned char const * src = (unsigned char const *)m_file_in_buf;
@@ -231,8 +232,6 @@ int FileOps::encode_utf8font_file ( int const type )
 	{
 		return 1;
 	}
-
-	EncodeFile enc ( this );
 
 	unsigned char const * src = (unsigned char const *)m_file_in_buf;
 	unsigned char const * const end =

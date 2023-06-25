@@ -15,9 +15,12 @@
 	along with this program in the file COPYING.
 */
 
-#include <mtkit_sqlite.h>
+#ifndef CORE_H_
+#define CORE_H_
 
-#include "mtdatawell.h"
+
+
+#include "mtdatawell_sqlite.h"
 
 #include <string.h>
 #include <math.h>
@@ -32,6 +35,15 @@ namespace mtDW
 
 
 
+class ArithEncode;
+class ArithDecode;
+class BitShifter;
+class ByteBuf;
+class FilenameSwap;
+class OpenDir;
+
+
+
 std::string prepare_path ( char const * path );
 
 void get_temp_filename (
@@ -43,6 +55,77 @@ void get_temp_filename (
 int remove_dir (
 	std::string	const	&path	// MUST end in MTKIT_DIR_SEP
 	);
+
+
+
+class ArithEncode
+{
+public:
+	ArithEncode ();
+
+	void push_mem ( uint8_t const * mem, size_t len ); // 1 <= len <= 7
+
+	int pop_code ( int span, int & code );		// 2 <= span <= 256
+		// 0 = OK, data left to encode
+		// 1 = OK, data all encoded
+
+	int get_encoded_byte_count () const;
+
+private:
+	uint64_t	m_mem;		// Current data
+	uint64_t	m_span_mem;	// Current total span in m_mem
+	uint64_t	m_span_popped;	// Current total popped
+};
+
+
+
+class ArithDecode
+{
+public:
+	ArithDecode ();
+
+	int push_code (
+		int code,	// 0 <= code <= 255
+		int span	// 2 <= span <= 256
+		);
+		// 0 = OK, code packed
+		// 1 = not sent, full (i.e. span * m_span_mem > 7 bytes)
+		// -1 = Error
+
+	int pop_mem ( uint8_t * dest, size_t & size );
+			// dest Must be >= 7 bytes
+
+	int get_encoded_byte_count () const;
+
+private:
+	uint64_t	m_mem;		// Current data
+	uint64_t	m_span_mem;	// Current total span in m_mem
+};
+
+
+
+class BitShifter
+{
+public:
+	BitShifter ();
+	~BitShifter ();
+
+	// NOTE: random must be seeded by the caller.
+	int set_shifts ( mtKit::Random &random );
+	int set_shifts ( int const shifts[8] );	// shifts[] contains *ALL* 0..7
+	inline void set_salt ( int i )	{ m_salt = i; }
+	inline void set_pos ( int i )	{ m_pos = i; }
+
+	uint8_t get_byte ( uint8_t input );
+	void get_shifts ( int shifts[8] ) const;
+	inline int get_salt () const	{ return m_salt; }
+	inline int get_pos () const	{ return m_pos; }
+
+protected:
+	int		m_pos;
+	int		m_shifts[ 8 ];
+	int		m_salt;
+};
 
 
 
@@ -139,97 +222,5 @@ int report_error ( int error );		// Output get_error_text to stderr
 
 
 
-#define RETURN_ON_ERROR( A )					\
-	{							\
-		int const roe = A;				\
-		if ( roe ) return roe;				\
-	}
-
-
-
-enum
-{
-	ERROR_MIN			= -999999999,
-
-	ERROR_ANALYSIS_INSANITY		,
-
-	ERROR_AUDIO_BAD_CHANNELS	,
-	ERROR_AUDIO_DECODE_EXCEPTION	,
-	ERROR_AUDIO_DECODE_INSANITY	,
-	ERROR_AUDIO_ENCODE		,
-	ERROR_AUDIO_ENCODE_INSANITY	,
-	ERROR_AUDIO_OPEN_INPUT		,
-	ERROR_AUDIO_OPEN_OUTPUT		,
-	ERROR_AUDIO_READ		,
-	ERROR_AUDIO_TOO_SMALL		,
-	ERROR_AUDIO_WRITE		,
-	ERROR_AUDIO_WRITE_INSANITY	,
-	ERROR_AUDIO_ZERO_INPUT		,
-
-	ERROR_BUTT_OTP_DELETE_ACTIVE	,
-	ERROR_BUTT_OTP_EXISTS		,
-	ERROR_BUTT_OTP_MISSING		,
-	ERROR_BUTT_OTP_NO_WELL		,
-	ERROR_BUTT_OTP_OPEN_BUCKET	,
-	ERROR_BUTT_OTP_READ_BUFFER	,
-	ERROR_BUTT_OTP_READ_ONLY	,
-
-	ERROR_DISK_OTP_READ_ONLY	,
-
-	ERROR_HEAP_EMPTY		,
-
-	ERROR_IMAGE_DECODE_EXCEPTION	,
-	ERROR_IMAGE_ENCODE_INSANITY	,
-	ERROR_IMAGE_INVALID_BOTTLE	,
-	ERROR_IMAGE_OPEN_OUTPUT		,
-	ERROR_IMAGE_TOO_SMALL		,
-	ERROR_IMAGE_WRITE		,
-
-	ERROR_IMPORT_OTP_BAD_DIR	,
-	ERROR_IMPORT_OTP_EXISTS		,
-	ERROR_IMPORT_OTP_OPEN_DIR	,
-
-	ERROR_LOAD_INPUT		,
-
-	ERROR_OTP_NAME_ILLEGAL		,
-	ERROR_OTP_NAME_TOO_LARGE	,
-	ERROR_OTP_NAME_TOO_SMALL	,
-
-	ERROR_SODA_BAD_CHUNK_ID		,
-	ERROR_SODA_BAD_HEADER		,
-	ERROR_SODA_BAD_HEADER_ID	,
-	ERROR_SODA_BIG_CHUNK		,
-	ERROR_SODA_DECODE_INSANITY	,
-	ERROR_SODA_DECODE_NO_BUTT	,
-	ERROR_SODA_DECODE_NO_XOR	,
-	ERROR_SODA_ENCODE_EXCEPTION	,
-	ERROR_SODA_ENCODE_INSANITY	,
-	ERROR_SODA_ENCODE_SIZE		,
-	ERROR_SODA_ENCODE_WRITE		,
-	ERROR_SODA_FILE_CHUNK_1		,
-	ERROR_SODA_FILE_ID		,
-	ERROR_SODA_FILE_WRITE		,
-	ERROR_SODA_MISSING_DATA		,
-	ERROR_SODA_OPEN_INFO		,
-	ERROR_SODA_OPEN_INPUT		,
-	ERROR_SODA_OPEN_INSANITY	,
-	ERROR_SODA_OPEN_OUTPUT		,
-	ERROR_SODA_UTREE_ALLOC		,
-
-	ERROR_TAP_BOTTLE_INVALID	,
-	ERROR_TAP_DECODE_INSANITY	,
-	ERROR_TAP_ENCODE_BAD_BOTTLE	,
-	ERROR_TAP_ENCODE_INSANITY	,
-	ERROR_TAP_ENCODE_SAVE_PNG	,
-	ERROR_TAP_OPEN_SODA_INSANITY	,
-	ERROR_TAP_UNKNOWN_BOTTLE	,
-
-	ERROR_WELL_SAVE_FILE_INSANITY	,
-	ERROR_WELL_SAVE_FILE_OPEN	,
-	ERROR_WELL_SAVE_FILE_WRITE	,
-
-	ERROR_MAX			,
-
-	ERROR_NONE			= 0
-};
+#endif		// CORE_H_
 

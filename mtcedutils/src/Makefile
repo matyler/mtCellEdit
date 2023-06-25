@@ -21,7 +21,10 @@ OBJS_CED	:= $(sort $(patsubst %.c,%.o,$(wildcard ced*.c)))
 OBJS_CED	:= $(sort $(patsubst %.cpp,%.o,$(wildcard ced*.cpp)) $(OBJS_CED))
 OBJS_RDC	:= $(sort $(patsubst %.c,%.o,$(wildcard rdc*.c)))
 OBJS_RDC	:= $(sort $(patsubst %.cpp,%.o,$(wildcard rdc*.cpp)) $(OBJS_RDC))
-BINS		:= cedutils mtrdc mtnetlog
+OBJS_CLI	:= $(sort $(patsubst %.cpp,%.o,$(wildcard cli*.cpp)))
+
+BINS		:= cedutils mtrdc mtnetlog mtcedcli
+
 
 .PHONY:		all install uninstall clean
 
@@ -38,6 +41,11 @@ mtrdc:		$(OBJS_RDC)
 		$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(OBJS_RDC):	rdc.h
+
+mtcedcli:	$(OBJS_CLI)
+		$(CXX) $^ -o $@ $(LDFLAGS)
+
+$(OBJS_CLI):	cli*.h
 
 mtnetlog:	mtnetlog.o
 		$(CXX) $^ -o $@ $(LDFLAGS)

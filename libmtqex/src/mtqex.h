@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013-2020 Mark Tyler
+	Copyright (C) 2013-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -151,7 +151,7 @@ class SaveFileDialog : public QFileDialog
 
 public:
 	SaveFileDialog (
-		QWidget * par = NULL,
+		QWidget * parent = NULL,
 		QString title = QString (),
 		QStringList formatList = QStringList (),
 		int format = 0,

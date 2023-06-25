@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ int Crul::DB::load_rulers ( std::map<int, Crul::Ruler> * const map )
 			" FROM " DB_TABLE_RULER_LIST
 			;
 
-		mtKit::SqliteGetRecord rec ( m_db, sql );
+		mtDW::SqliteGetRecord rec ( m_db, sql );
 		Crul::Ruler ruler;
 
 		for ( int i = 0; 0 == rec.next (); i++ )
@@ -100,8 +100,8 @@ int Crul::DB::save_rulers ( std::map<int, Crul::Ruler> const * const map )
 	{
 		m_db.empty_table ( DB_TABLE_RULER_LIST );
 
-		mtKit::SqliteTransaction trans ( m_db );
-		mtKit::SqliteAddRecord rec ( m_db, DB_TABLE_RULER_LIST );
+		mtDW::SqliteTransaction trans ( m_db );
+		mtDW::SqliteAddRecord rec ( m_db, DB_TABLE_RULER_LIST );
 
 		rec.add_field ( DB_FIELD_ID );
 		rec.add_field ( DB_FIELD_LABEL );

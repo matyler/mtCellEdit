@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ void mtDW::FileDB::get_todo_filename_internal ( std::string & res )
 			" WHERE "	DB_FIELD_ID " >= ?1"
 			" LIMIT 1;" );
 
-		mtKit::SqliteGetRecord record ( m_db, sql );
+		mtDW::SqliteGetRecord record ( m_db, sql );
 
 		record.stmt.bind_int64 ( 1, (sqlite3_int64)m_file_id );
 

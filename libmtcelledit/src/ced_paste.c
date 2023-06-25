@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2021 Mark Tyler
+	Copyright (C) 2008-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,8 +21,7 @@
 
 typedef struct
 {
-	CedSheet	* sheet,
-			* newsheet;
+	CedSheet	* sheet;
 	int		row,
 			column,
 			max_row,
@@ -364,7 +363,7 @@ int ced_sheet_paste_area (
 	int		const	mode
 	)
 {
-	pasteSTATE	state = { sheet, paste, row, column, 0, 0, 0, 0,
+	pasteSTATE	state = { sheet, row, column, 0, 0, 0, 0,
 			0, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL
 			};
 	int		res,

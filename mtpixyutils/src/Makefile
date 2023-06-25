@@ -14,29 +14,38 @@ APPS		:=		\
 		pixyscale	\
 		pixytwit	\
 
-OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
+OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard pixyutils*.cpp)))
+OBJS_CLI	:= $(sort $(patsubst %.cpp,%.o,$(wildcard cli*.cpp)))
+
+BINS		:= $(BIN_NAME) mtpixycli
+
 
 .PHONY:		all install uninstall clean
 
 
-all:		$(BIN_NAME)
+all:		$(BINS)
 
 
 $(BIN_NAME):	$(OBJS)
 		$(CXX) $^ -o $@ $(LDFLAGS)
 
-$(OBJS):	*.h
+$(OBJS):	pixyu*.h
+
+mtpixycli:	$(OBJS_CLI)
+		$(CXX) $^ -o $@ $(LDFLAGS)
+
+$(OBJS_CLI):	cli*.h
 
 # .c.o Implicit rule
 # .cpp.o Implicit rule
 
 install:
 		install -d $(DESTDIR)$(BIN_INSTALL)
-		install $(BIN_NAME) $(DESTDIR)$(BIN_INSTALL)
+		install $(BINS) $(DESTDIR)$(BIN_INSTALL)
 		cd $(DESTDIR)$(BIN_INSTALL); for APP in $(APPS); do ln -sfv $(BIN_NAME) $$APP; done
 
 uninstall:
-		cd $(DESTDIR)$(BIN_INSTALL); rm $(BIN_NAME) $(APPS)
+		cd $(DESTDIR)$(BIN_INSTALL); rm $(BINS) $(APPS)
 
 clean:
-		rm -f *.o $(BIN_NAME)
+		rm -f *.o $(BINS)

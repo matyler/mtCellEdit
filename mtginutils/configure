@@ -13,7 +13,7 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 
 MTCF_PRE_CONF
-MTCF_CHECK_LIBS mtkit mtpixy mtcelledit mtgin stdc++
+MTCF_CHECK_LIBS mtkit mtpixy mtcelledit mtdatawell mtgin gmp mpfr stdc++
 MTCF_PKGCONFIG "sdl2 gl"
 MTCF_VERSION_BIN_NAME
 

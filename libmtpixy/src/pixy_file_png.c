@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2020 Mark Tyler
+	Copyright (C) 2008-2023 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -271,13 +271,7 @@ mtPixmap * pixy_pixmap_load_png ( char const * const filename )
 		goto fail;
 	}
 
-	// Lower width/height limits are checked in pixy_image_new
-	if (	pwidth > PIXY_PIXMAP_WIDTH_MAX	||
-		pheight > PIXY_PIXMAP_HEIGHT_MAX
-		)
-	{
-		goto fail;
-	}
+	// Width/height limits are checked in pixy_image_new
 
 	if (	color_type != PNG_COLOR_TYPE_PALETTE ||
 		bit_depth > 8

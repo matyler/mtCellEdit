@@ -14,7 +14,7 @@ In order to compile and run mtPixy you must have several packages already presen
 - A GNU toolchain (gcc, gmake, gawk, etc).
 - Qt version 5.
 - txt2tags.
-- Inkscape (to build the GUI app icons)
+- Inkscape (to build the GUI app icons).
 
 
 These must also include library headers, which some operating systems provide in separate packages.
@@ -22,15 +22,14 @@ These must also include library headers, which some operating systems provide in
 mtPixy then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
+| libmtKit      | zlib, readline | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees. |
 | libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo, librsvg | The core pixel engine, including all file handling and general operations. |
 | libmtQEX      | libmtKit, Qt5    | Various Qt function utilities including preferences editor. |
 
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
-| mtPixyCLI     | libmtKit, libmtPixy, readline | Command line pixel editor |
-| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel tools |
+| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools, including: mtPixyCLI. |
 
 
 ==3.2 Compilation==[SEC2]

@@ -3,15 +3,13 @@ libmtpixy	./configure --libdir=/usr/lib64
 libmtcelledit	./configure --libdir=/usr/lib64
 mtutils	./configure
 mtcedutils	./configure
-mtcedcli	./configure.slackware12.0
 libmtdatawell	./configure --libdir=/usr/lib64
 mtdwutils	./configure
-mtdwcli	./configure.slackware12.0
 mtpixyutils	./configure
-mtpixycli	./configure.slackware12.0
 libmtqex5	./configure --use-qt5 --libdir=/usr/lib64
 mtcelledit-qt5	./configure --use-qt5
 mtdatawell-qt5	./configure --use-qt5
+mtnush-qt5	./configure --use-qt5
 mtraft-qt5	./configure --use-qt5
 mtpixy-qt5	./configure --use-qt5
 libmtgin	./configure --libdir=/usr/lib64

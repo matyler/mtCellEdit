@@ -14,7 +14,8 @@ In order to compile and run mtDataWell you must have several packages already pr
 - A GNU toolchain (gcc, gmake, gawk, etc).
 - Qt version 5.
 - txt2tags.
-- Inkscape (to build the GUI app icons)
+- Inkscape (to build the GUI app icons).
+- gperf.
 
 
 These must also include library headers, which some operating systems provide in separate packages.
@@ -22,17 +23,16 @@ These must also include library headers, which some operating systems provide in
 mtDataWell then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
+| libmtKit      | zlib, readline | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees. |
 | libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo, librsvg | The core pixel engine, including all file handling and general operations. |
-| libmtDataWell | libmtKit, libmtPixy, libsndfile | Crypto and random data library. |
+| libmtDataWell | libmtKit, libmtPixy, libsqlite3, libsndfile, libgmp, libmpfr | Crypto, math, and random data library. |
 | libmtQEX      | libmtKit, libmtPixy, Qt5 | Various Qt function utilities including preferences editor. |
 
 
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
-| mtDWCLI       | libmtKit, libmtDataWell, readline | Command line crypto and random data app. |
-| mtDWUtils     | libmtKit, libmtDataWell | Command line crypto and random data utilities. |
+| mtDWUtils     | libmtKit, libmtDataWell, libgmp, libmpfr | Command line crypto, math, and random data utilities, including: mtDWCLI, mtNushUtils. |
 
 
 

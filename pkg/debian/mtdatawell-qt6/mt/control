@@ -1,0 +1,13 @@
+Source: mtdatawell-qt6
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, qt6-base-dev, libmtdatawell, libmtqex6, libmtpixy, libmtkit
+Standards-Version: 3.9.3
+Homepage: https://www.marktyler.org/
+
+Package: mtdatawell-qt6
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt6 Crypto and Random Data Program
+ .

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ void mtDW::Soda::Op::db_add_encode (
 			strftime ( buf_date, sizeof(buf_date), fmt, tmp );
 		}
 
-		mtKit::SqliteAddRecord rec ( m_db, DB_TABLE_LOG_ENCODE );
+		mtDW::SqliteAddRecord rec ( m_db, DB_TABLE_LOG_ENCODE );
 
 		rec.add_field ( DB_FIELD_DATETIME );
 		rec.add_field ( DB_FIELD_FILENAME );

@@ -1,0 +1,13 @@
+Source: mtpixy-qt6
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, qt6-base-dev, libmtkit, libmtpixy, libmtqex6, inkscape
+Standards-Version: 3.9.3
+Homepage: https://www.marktyler.org/
+
+Package: mtpixy-qt6
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt6 Pixel GUI
+ .

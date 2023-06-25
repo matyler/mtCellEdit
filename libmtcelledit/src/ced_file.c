@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2022 Mark Tyler
+	Copyright (C) 2008-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1020,23 +1020,22 @@ static int export_tsv (
 // On entry cell->prefs must exist
 static int html_borders (
 	outSTATE	* const	state,
-	CedCell		* const	cell
+	CedCell	const * const	cell
 	)
 {
-	char	const	* type = "";
-	char	const * const pos[4] = { "top", "bottom", "left", "right" };
-	int	const	shft[4] = {
+	static char const * const pos[4] = { "top", "bottom", "left", "right" };
+	static int const shft[4] = {
 				CED_CELL_BORDER_TOP_SHIFT,
 				CED_CELL_BORDER_BOTTOM_SHIFT,
 				CED_CELL_BORDER_LEFT_SHIFT,
 				CED_CELL_BORDER_RIGHT_SHIFT
 				};
 
-
 	int i;
 
 	for ( i = 0; i < 4; i ++ )
 	{
+		char	const	* type;
 		int const bord = ( cell->prefs->border_type >> shft[i] ) &
 			CED_CELL_BORDER_MASK;
 

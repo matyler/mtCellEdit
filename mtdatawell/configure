@@ -19,7 +19,7 @@ MTCF_PARSE_ARGS "$@"
 MTCF_PRINT_HELP
 MTCF_PRE_CONF
 
-MTCF_CHECK_LIBS mtkit mtpixy mtdatawell stdc++
+MTCF_CHECK_LIBS mtkit mtpixy mtdatawell mpfr gmp stdc++
 
 MTCF_ENABLE_QT_QEX
 MTCF_VERSION_BIN_NAME

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,12 @@
 	along with this program in the file COPYING.
 */
 
+#ifndef SODA_H_
+#define SODA_H_
+
+
+
+#include "mtdatawell_sqlite.h"
 #include "core.h"
 
 
@@ -76,7 +82,7 @@ public:
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::Sqlite		m_db;
+	mtDW::Sqlite		m_db;
 
 private:
 	int encode_raw () const;
@@ -101,9 +107,9 @@ private:
 class SodaTransaction::Op
 {
 public:
-	mtKit::SqliteTransaction trans;
+	mtDW::SqliteTransaction trans;
 
-	inline explicit Op ( mtKit::Sqlite const & db )
+	inline explicit Op ( mtDW::Sqlite const & db )
 		:
 		trans ( db )
 	{
@@ -113,4 +119,8 @@ public:
 
 
 }	// namespace mtDW
+
+
+
+#endif		// SODA_H_
 

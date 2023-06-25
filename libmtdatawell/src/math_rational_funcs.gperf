@@ -1,0 +1,78 @@
+%{
+
+#ifndef MATH_RATIONAL_FUNCS_H_
+#define MATH_RATIONAL_FUNCS_H_
+
+#include "math_grammar.h"
+
+
+
+namespace mtDW
+{
+namespace RationalFunc
+{
+
+
+
+class ArgData : public mtDW::FuncArgData< mtDW::Rational >
+{
+public:
+	ArgData ( std::vector< mtDW::Rational > & a, size_t const argtot )
+		:
+		FuncArgData	( a, argtot )
+	{
+	}
+};
+
+
+
+typedef int (* Func) ( ArgData & );
+
+
+
+int fn_abs	( ArgData & );
+int fn_denom	( ArgData & );
+int fn_inv	( ArgData & );
+int fn_max	( ArgData & );
+int fn_min	( ArgData & );
+int fn_numer	( ArgData & );
+
+%}
+
+
+%language=C++
+%define lookup-function-name	lookup_name
+%define class-name		Function
+%readonly-tables
+%global-table
+%define word-array-name		function_name_list
+
+
+%struct-type
+
+struct func_def_t
+{
+	char	const	* name;
+	Func		func;
+	size_t		arg_tot;
+	char	const	* help;
+};
+
+
+
+%%
+abs,		fn_abs,		1,	"Return the absolute value of a1."
+denom,		fn_denom,	1,	"Return the denominator."
+inv,		fn_inv,		1,	"Return the reciprocal."
+max,		fn_max,		2,	"Return the larger of a1 and a2."
+min,		fn_min,		2,	"Return the smaller of a1 and a2."
+numer,		fn_numer,	1,	"Return the numerator."
+%%
+
+
+}}	// namespace mtDW::RationalFunc
+
+
+
+#endif		// MATH_RATIONAL_FUNCS_H_
+

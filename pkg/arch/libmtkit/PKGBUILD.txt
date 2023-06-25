@@ -5,7 +5,7 @@ pkgrel=@MT_RELVER@
 pkgdesc="MT Low level C/C++ routines"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('zlib' 'sqlite')
+depends=('zlib' 'sqlite' 'readline')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

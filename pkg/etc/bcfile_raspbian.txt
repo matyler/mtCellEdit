@@ -3,15 +3,13 @@ libmtpixy	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 libmtcelledit	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 mtutils	./configure
 mtcedutils	./configure
-mtcedcli	./configure
 libmtdatawell	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 mtdwutils	./configure
-mtdwcli	./configure
 mtpixyutils	./configure
-mtpixycli	./configure
 libmtqex5	./configure --use-qt5 --libdir=/usr/lib/arm-linux-gnueabihf
 mtcelledit-qt5	./configure --use-qt5
 mtdatawell-qt5	./configure --use-qt5
+mtnush-qt5	./configure --use-qt5
 mtraft-qt5	./configure --use-qt5
 mtpixy-qt5	./configure --use-qt5
 libmtgin	./configure --libdir=/usr/lib/arm-linux-gnueabihf

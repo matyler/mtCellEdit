@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		MT Low level C/C++ routines
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		zlib-devel libsqlite3x-devel
-Requires:		zlib libsqlite3x
+BuildRequires:		zlib-devel libsqlite3x-devel readline-devel
+Requires:		zlib libsqlite3x readline
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

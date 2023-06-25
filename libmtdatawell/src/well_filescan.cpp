@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2020 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ mtDW::FileScan::FileScan (
 	m_file_db	( db ),
 	m_rec		( db.m_db, DB_TABLE_FILES )
 {
-	mtKit::SqliteTransaction trans ( db.m_db );
+	mtDW::SqliteTransaction trans ( db.m_db );
 
 	m_rec.add_field ( DB_FIELD_FILENAME );
 	m_rec.end_field ();

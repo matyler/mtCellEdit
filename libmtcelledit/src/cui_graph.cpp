@@ -85,7 +85,7 @@ void renSTATE::render_text ( char const * const txt )
 
 	cairo_save ( cr );
 
-	cairo_translate ( cr, m_x, m_y );
+	cairo_translate ( cr, (int)(m_x + 0.5), (int)(m_y + 0.5) );
 	pango_layout_set_text ( layout, txt, -1 );
 
 	pango_font_description_set_size ( font_desc,

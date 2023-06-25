@@ -1,8 +1,10 @@
 include		../_conf.txt
 
-HEADER		:= mtkit.h mtkit_sqlite.h
+HEADER		:= mtkit.h
+
 OBJS		:= $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 OBJS		:= $(sort $(patsubst %.c,%.o,$(wildcard *.c)) $(OBJS))
+
 
 .PHONY:		all install uninstall clean
 

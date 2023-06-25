@@ -45,7 +45,7 @@ int Crul::DB::load_model (
 			" FROM "	DB_TABLE_CACHE_PTS_IDX
 			" WHERE "	DB_FIELD_ID	" = ?1";
 
-		mtKit::SqliteGetRecord idx ( m_db, sql );
+		mtDW::SqliteGetRecord idx ( m_db, sql );
 		idx.stmt.bind_int64 ( 1, CACHE_TYPE_MODEL );
 
 		if ( 0 != idx.next () )
@@ -127,9 +127,9 @@ int Crul::DB::save_model (
 
 	try
 	{
-		mtKit::SqliteTransaction trans ( m_db );
+		mtDW::SqliteTransaction trans ( m_db );
 
-		mtKit::SqliteAddRecord rec_idx ( m_db, DB_TABLE_CACHE_PTS_IDX );
+		mtDW::SqliteAddRecord rec_idx ( m_db, DB_TABLE_CACHE_PTS_IDX );
 
 		rec_idx.add_field ( DB_FIELD_ID );
 		rec_idx.add_field ( DB_FIELD_NAME );

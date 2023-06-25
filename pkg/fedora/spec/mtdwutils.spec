@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Data Well Utils
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtdatawell
-Requires:		libmtkit libmtdatawell
+BuildRequires:		libmtkit libmtdatawell gmp-devel mpfr-devel
+Requires:		libmtkit libmtdatawell gmp mpfr
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

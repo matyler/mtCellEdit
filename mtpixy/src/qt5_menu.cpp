@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -167,8 +167,6 @@ void Mainwindow::update_menus ()
 		act_image_to_rgb->setEnabled ( false );
 		act_image_to_indexed->setEnabled ( true );
 
-		act_palette_merge_duplicates->setEnabled ( false );
-		act_palette_remove_unused->setEnabled ( false );
 		act_palette_create_from_canvas->setEnabled ( true );
 		act_palette_quantize_pnn->setEnabled ( true );
 
@@ -186,8 +184,6 @@ void Mainwindow::update_menus ()
 		act_image_to_rgb->setEnabled ( true );
 		act_image_to_indexed->setEnabled ( false );
 
-		act_palette_merge_duplicates->setEnabled ( true );
-		act_palette_remove_unused->setEnabled ( true );
 		act_palette_create_from_canvas->setEnabled ( false );
 		act_palette_quantize_pnn->setEnabled ( false );
 
@@ -440,6 +436,8 @@ void Mainwindow::create_menu ()
 	QAction * act_palette_swap_ab;
 	QAction * act_palette_size;
 	QAction * act_palette_sort;
+	QAction * act_palette_merge_duplicates;
+	QAction * act_palette_remove_unused;
 
 	QEX_MENU ( palette_new, "New ...", NULL, "document-new" )
 	QEX_MENU ( palette_size, "Set Palette Size ...", NULL, NULL )

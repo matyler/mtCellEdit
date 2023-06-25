@@ -1,7 +1,13 @@
 include		../_conf.txt
 
-HEADER		:= mtdatawell.h
+HEADER		:= mtdatawell.h mtdatawell_math.h mtdatawell_sqlite.h
 OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
+
+OBJS_GPERF	:=			\
+		math_integer_funcs.h	\
+		math_float_funcs.h	\
+		math_rational_funcs.h	\
+
 
 .PHONY:		all install uninstall clean
 
@@ -12,12 +18,17 @@ all:		$(LIB_SONAME)
 $(LIB_SONAME):	$(OBJS)
 		$(CXX) -shared -o $@ $^ $(LDFLAGS) -Wl,-soname,$@
 
-$(OBJS):	*.h
+$(OBJS):	*.h $(OBJS_GPERF)
 
 
-# .c.o Implicit rule
-# .cpp.o Implicit rule
+%.o:		%.cpp
+		$(CXX) -I$(CURDIR) $(CPPFLAGS) $(CXXFLAGS) -c $<
 
+%.o:		%.c
+		$(CC) -I$(CURDIR) $(CPPFLAGS) $(CFLAGS) -c $<
+
+%.h:		%.gperf
+		gperf -D $< --output-file=$@
 
 install:
 		install -d $(DESTDIR)$(LIB_INSTALL)
@@ -32,4 +43,4 @@ uninstall:
 		cd $(DESTDIR)$(HEAD_INSTALL); rm -f $(HEADER)
 
 clean:
-		rm -f *.o *.so.$(LIB_SONUM)
+		rm -f *.o *.so.$(LIB_SONUM) $(OBJS_GPERF)

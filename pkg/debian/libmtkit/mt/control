@@ -2,7 +2,7 @@ Source: libmtkit
 Section: unknown
 Priority: extra
 Maintainer: Mark Tyler <mt@marktyler.org>
-Build-Depends: debhelper (>= 8.0.0), autotools-dev, zlib1g-dev, libsqlite3-dev
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, zlib1g-dev, libsqlite3-dev, libreadline-dev
 Standards-Version: 3.9.3
 Homepage: https://www.marktyler.org/
 

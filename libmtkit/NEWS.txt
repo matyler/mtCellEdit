@@ -1,3 +1,7 @@
+3.7	2023-6-25
+
+	* CStrPtr & CliShell added.
+
 3.3	2019-5-25
 
 	* mtkit_file_*lock() added.

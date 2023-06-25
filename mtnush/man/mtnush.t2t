@@ -1,0 +1,23 @@
+= NAME =
+@BIN_NAME@ - big number calculator
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ allows you to evaluate infix mathematical expressions using arbitrary precision numbers.
+Integer, Float, and Rational number modes are supported.
+Set the preferences to set the precision of Float number mode, and how many digits to show per number in the output text.
+When saving the number, no digits are snipped.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.

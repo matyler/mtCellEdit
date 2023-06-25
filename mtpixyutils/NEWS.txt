@@ -1,3 +1,8 @@
+3.7	2023-6-25
+
+	* mtPixyCLI merged into mtPixyUtils module.
+	* Readline functions abstracted to libmtkit.
+
 3.3	2019-5-25
 
 	* cmp, fade added
@@ -13,3 +18,4 @@
 0.0	2016-8-7
 
 	* mtpixyutils started
+

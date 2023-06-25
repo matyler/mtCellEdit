@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		MT Graphical Interface Nexus Utils
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtpixy libmtgin libmtcelledit libSDL2-devel
-Requires:		libmtkit libmtpixy libmtgin libmtcelledit libSDL2-2_0-0
+BuildRequires:		libmtkit libmtpixy libmtgin libmtcelledit libmtdatawell libSDL2-devel
+Requires:		libmtkit libmtpixy libmtgin libmtcelledit libmtdatawell libSDL2-2_0-0
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

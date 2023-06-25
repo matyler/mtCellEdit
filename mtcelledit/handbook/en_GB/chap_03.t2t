@@ -14,7 +14,8 @@ In order to compile and run mtCellEdit you must have several packages already pr
 - A GNU toolchain (gcc, gmake, gawk, etc).
 - Qt version 5.
 - txt2tags.
-- Inkscape (to build the GUI app icons)
+- Inkscape (to build the GUI app icons).
+- gperf.
 
 
 These must also include library headers, which some operating systems provide in separate packages.
@@ -22,7 +23,7 @@ These must also include library headers, which some operating systems provide in
 mtCellEdit then requires various libraries that I have created:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtKit      | zlib, libsqlite3 | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees, databases. |
+| libmtKit      | zlib, readline | Low level C/C++ routines, including strings, UTF-8, ZIP file handling, preferences, trees. |
 | libmtPixy     | libmtKit, libpng, libjpeg, giflib, FreeType, Pango, Cairo, librsvg | The core pixel engine, including all file handling and general operations. |
 | libmtCellEdit | libmtKit, libmtPixy, Pango, Cairo | The spreadsheet engine, including all file handling and general operations. |
 | libmtQEX      | libmtKit, libmtPixy, Qt5 | Various Qt function utilities including preferences editor. |
@@ -31,18 +32,15 @@ mtCellEdit then requires various libraries that I have created:
 The other optional parts of the suite have these dependencies:
 
 | **Package**   | **Dependencies** | **Description** |
-| libmtDataWell | libmtKit, libmtPixy, libsndfile | Crypto and random data library. |
+| libmtDataWell | libmtKit, libmtPixy, libsqlite3, libsndfile, libgmp, libmpfr | Crypto, math, and random data library. |
 | libmtGin      | libmtKit, libmtPixy, libsndfile, SDL2, libgl | Graphical Interface Nexus library (SDL, OpenGL). |
-| mtCedCLI      | libmtKit, libmtPixy, libmtCellEdit, readline | Command line spreadsheet. |
-| mtCedUtils    | libmtKit, libmtCellEdit | Command line text tools, mtNetLog, mtRDC. |
-| mtCrul        | libmtKit, libmtPixy, libmtGin, libmtQEX, Qt5, libgl | Point cloud measuring tool. |
+| mtCedUtils    | libmtKit, libmtPixy, libmtCellEdit | Command line spreadsheet tools, including: mtNetLog, mtRDC, mtCedCLI. |
+| mtCrul        | libmtKit, libmtPixy, libmtGin, libmtDataWell, libmtQEX, Qt5, libgl | Point cloud measuring tool. |
 | mtDataWell    | libmtKit, libmtPixy, libmtDataWell, libmtQEX, Qt5 | Crypto and random data app. |
-| mtDWCLI       | libmtKit, libmtDataWell, readline | Command line crypto and random data app. |
-| mtDWUtils     | libmtKit, libmtDataWell | Command line crypto and random data utilities. |
+| mtDWUtils     | libmtKit, libmtDataWell, libgmp, libmpfr | Command line crypto, math, and random data utilities, including: mtDWCLI, mtNushUtils. |
 | mtGinUtils    | libmtKit, libmtPixy, libmtCellEdit, libmtGin, SDL2, libgl | mtGin utilities (audio, graphics, and threading demos). |
 | mtPixy        | libmtKit, libmtPixy, libmtQEX, Qt5 | Pixel image editor. |
-| mtPixyCLI     | libmtKit, libmtPixy, readline | Command line pixel image editor. |
-| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools. |
+| mtPixyUtils   | libmtKit, libmtPixy | Command line pixel image tools, including: mtPixyCLI. |
 | mtRaft        | libmtKit, libmtCellEdit, libmtQEX, Qt5 | Directory analysis. |
 | mtUtils       | libmtKit | Command line low level utilities. |
 

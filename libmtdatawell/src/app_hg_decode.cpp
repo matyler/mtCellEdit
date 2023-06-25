@@ -30,7 +30,7 @@ public:
 
 /// ----------------------------------------------------------------------------
 
-	mtKit::ArithDecode ari;
+	mtDW::ArithDecode ari;
 
 	mtFile * memfile;
 

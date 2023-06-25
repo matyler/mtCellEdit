@@ -1,3 +1,7 @@
+3.7	2023-6-25
+
+	* mtBigMan added (arbitrary precision Mandelbrot set viewer).
+
 0.0	2021-1-14
 
 	* mtGinUtils started - Utilities and demos for libmtgin.

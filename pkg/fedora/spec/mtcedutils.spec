@@ -4,8 +4,8 @@ Release:		@MT_RELVER@%{?dist}
 Summary:		Command Line Spreadsheet Utils
 License:		GPLv3+
 Source:			%{name}-%{version}.tar.gz
-BuildRequires:		libmtkit libmtcelledit
-Requires:		libmtkit libmtcelledit
+BuildRequires:		libmtkit libmtpixy libmtcelledit
+Requires:		libmtkit libmtpixy libmtcelledit
 
 %global debug_package %{nil}
 %define FILELIST_TXT	%{_builddir}/filelist.txt

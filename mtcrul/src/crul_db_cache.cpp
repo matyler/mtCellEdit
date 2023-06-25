@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020-2021 Mark Tyler
+	Copyright (C) 2020-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ int Crul::DB::load_cache (
 			" FROM "	DB_TABLE_CACHE_PTS_IDX
 			" WHERE "	DB_FIELD_ID	" = ?1";
 
-		mtKit::SqliteGetRecord idx ( m_db, sql );
+		mtDW::SqliteGetRecord idx ( m_db, sql );
 		idx.stmt.bind_int64 ( 1, type );
 
 		if ( 0 != idx.next () )
@@ -153,9 +153,9 @@ int Crul::DB::save_cache (
 
 	try
 	{
-		mtKit::SqliteTransaction trans ( m_db );
+		mtDW::SqliteTransaction trans ( m_db );
 
-		mtKit::SqliteAddRecord rec_idx ( m_db, DB_TABLE_CACHE_PTS_IDX );
+		mtDW::SqliteAddRecord rec_idx ( m_db, DB_TABLE_CACHE_PTS_IDX );
 
 		rec_idx.add_field ( DB_FIELD_ID );
 		rec_idx.add_field ( DB_FIELD_NAME );

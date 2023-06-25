@@ -15,6 +15,11 @@
 	along with this program in the file COPYING.
 */
 
+#ifndef APP_HG_H_
+#define APP_HG_H_
+
+
+
 #include "core.h"
 
 
@@ -82,4 +87,8 @@ private:
 
 	MTKIT_RULE_OF_FIVE( FileOps )
 };
+
+
+
+#endif		// APP_HG_H_
 

@@ -1,0 +1,13 @@
+Source: libmtqex6
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, qt6-base-dev, libmtkit, libmtpixy
+Standards-Version: 3.9.3
+Homepage: https://www.marktyler.org/
+
+Package: libmtqex6
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt6 Dialogs and Utility Functions
+ .

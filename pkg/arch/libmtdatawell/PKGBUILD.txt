@@ -5,7 +5,8 @@ pkgrel=@MT_RELVER@
 pkgdesc="MT Crypto and random data routines"
 arch=('i686' 'x86_64' 'arm')
 license=('GPL3')
-depends=('libmtkit' 'libmtpixy' 'sqlite' 'libsndfile')
+makedepends=('gperf')
+depends=('libmtkit' 'libmtpixy' 'sqlite' 'libsndfile' 'gmp' 'mpfr')
 source=($pkgname-$pkgver.tar.gz)
 md5sums
 

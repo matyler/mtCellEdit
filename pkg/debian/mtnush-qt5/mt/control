@@ -1,0 +1,13 @@
+Source: mtnush-qt5
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libmtkit, libmtcelledit, libmtdatawell, libgmp-dev, libmpfr-dev, qtbase5-dev, libmtqex5, inkscape
+Standards-Version: 3.9.3
+Homepage: https://www.marktyler.org/
+
+Package: mtnush-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt5 Big Number Calculator
+ .

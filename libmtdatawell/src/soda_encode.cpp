@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -233,7 +233,7 @@ int mtDW::Soda::Op::multi_encode (
 		return report_error ( ERROR_SODA_ENCODE_INSANITY );
 	}
 
-	mtKit::SqliteTransaction trans ( m_db );
+	mtDW::SqliteTransaction trans ( m_db );
 	FilenameSwap	name ( output );
 
 	if ( butt )

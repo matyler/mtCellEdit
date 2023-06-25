@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020-2021 Mark Tyler
+	Copyright (C) 2020-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -197,7 +197,7 @@ class pCloudNdata;
 class pCloudNkey
 {
 public:
-	pCloudNkey (
+	explicit pCloudNkey (
 		double	x = 0.0,
 		double	y = 0.0,
 		double	z = 0.0
@@ -242,7 +242,7 @@ bool pCloudNkey::operator () (
 class pCloudNdata
 {
 public:
-	pCloudNdata (
+	explicit pCloudNdata (
 		double	r = 0,
 		double	g = 0,
 		double	b = 0

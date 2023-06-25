@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2021 Mark Tyler
+	Copyright (C) 2018-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -121,15 +121,15 @@ void mtDW::FilenameSwap::swap ()
 	f2 = f0;
 }
 
-mtDW::Database::Database ()
+mtDW::PathDB::PathDB ()
 {
 }
 
-mtDW::Database::~Database ()
+mtDW::PathDB::~PathDB ()
 {
 }
 
-int mtDW::Database::open ( char const * const path )
+int mtDW::PathDB::open ( char const * const path )
 {
 	try
 	{
@@ -274,4 +274,114 @@ int mtDW::ByteBuf::save ( std::string const &filename ) const
 
 	return 0;
 }
+
+mtDW::BitShifter::BitShifter ()
+	:
+	m_pos		( 0 ),
+	m_shifts	(),
+	m_salt		( 0 )
+{
+	m_shifts[0] = 0;
+	m_shifts[1] = 1;
+	m_shifts[2] = 2;
+	m_shifts[3] = 3;
+	m_shifts[4] = 4;
+	m_shifts[5] = 5;
+	m_shifts[6] = 6;
+	m_shifts[7] = 7;
+}
+
+mtDW::BitShifter::~BitShifter ()
+{
+}
+
+int mtDW::BitShifter::set_shifts ( mtKit::Random &random )
+{
+	static const int BARREL_COMBINATIONS = 8 * 7 * 6 * 5 * 4 * 3 * 2;
+
+	int rand_int = random.get_int ( BARREL_COMBINATIONS );
+
+	try
+	{
+		std::vector<int> items;
+
+		for ( int i = 0; i < 8; i++ )
+		{
+			items.push_back ( i );
+		}
+
+		for ( int i = 8; i > 0; i-- )
+		{
+			int const x = rand_int % i;
+
+			m_shifts[ 8 - i ] = items.at ( (size_t)x );
+			items.erase ( items.begin () + x );
+
+			rand_int /= i;
+		}
+	}
+	catch ( ... )
+	{
+		return 1;
+	}
+
+	m_salt = 0;
+
+/*
+	for ( int i = 0; i < 8; i++ )
+	{
+		printf("m_shifts[%i] = %i\n", i, m_shifts[i] );
+	}
+*/
+
+	return 0;
+}
+
+int mtDW::BitShifter::set_shifts ( int const shifts[8] )
+{
+	// Validate that the inputs are 0..7 in some order (no duplicates)
+	int val[8] = {0};
+	int err = 0;
+
+	for ( int i = 0; i < 8; i++ )
+	{
+		int const k = shifts[i] & 7;
+
+		err += val[ k ];
+		val[ k ]++;
+	}
+
+	if ( err )
+	{
+		// shifts[] contains a duplicate number which is not allowed
+		return 1;
+	}
+
+	for ( int i = 0; i < 8; i++ )
+	{
+		m_shifts[i] = shifts[i] & 7;
+	}
+
+	return 0;
+}
+
+void mtDW::BitShifter::get_shifts ( int shifts[8] ) const
+{
+	for ( int i = 0; i < 8; i++ )
+	{
+		shifts[i] = m_shifts[i];
+	}
+}
+
+uint8_t mtDW::BitShifter::get_byte ( uint8_t const input )
+{
+	int const s = m_shifts[ m_pos ];
+	int const t = m_salt;
+
+	m_pos = (m_pos + 1) & 7;
+	m_salt ^= input;
+
+	return (uint8_t)( ( (input << s) | (input >> (8 - s)) ) ^ t );
+}
+
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2021 Mark Tyler
+	Copyright (C) 2019-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -86,16 +86,14 @@ void mtGin::Vertex::normalize ( Vertex const &a )
 
 	if ( d == 0.0 )
 	{
-		x = 0.0;
-		y = 0.0;
-		z = 0.0;
-
-		return;
+		zero ();
 	}
-
-	x = a.x / d;
-	y = a.y / d;
-	z = a.z / d;
+	else
+	{
+		x = a.x / d;
+		y = a.y / d;
+		z = a.z / d;
+	}
 }
 
 double mtGin::Vertex::speed ( double const time ) const

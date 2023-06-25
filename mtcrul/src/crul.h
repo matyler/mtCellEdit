@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020-2021 Mark Tyler
+	Copyright (C) 2020-2022 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 #include <unistd.h>
 
 // OS
-#include <mtkit_sqlite.h>
+#include <mtdatawell_sqlite.h>
 #include <mtpixy.h>
 #include <mtgin_gl.h>
 
@@ -173,7 +173,7 @@ private:
 
 	std::string	m_dir;
 
-	mtKit::Sqlite	m_db;
+	mtDW::Sqlite	m_db;
 };
 
 
