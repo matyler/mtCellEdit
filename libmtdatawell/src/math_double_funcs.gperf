@@ -1,0 +1,109 @@
+%{
+
+#ifndef MATH_DOUBLE_FUNCS_H_
+#define MATH_DOUBLE_FUNCS_H_
+
+#include "math_grammar.h"
+
+
+
+namespace mtDW
+{
+namespace DoubleFunc
+{
+
+class ArgData : public mtDW::FuncArgData< mtDW::Double >
+{
+public:
+	explicit ArgData ( std::vector< mtDW::Double > & a, size_t const argtot )
+		:
+		FuncArgData	( a, argtot )
+	{
+	}
+};
+
+
+
+typedef void (* Func) ( ArgData & );
+
+void fn_abs	( ArgData & );
+void fn_acos	( ArgData & );
+void fn_asin	( ArgData & );
+void fn_atan	( ArgData & );
+void fn_atan2	( ArgData & );
+void fn_ceil	( ArgData & );
+void fn_cos	( ArgData & );
+void fn_cot	( ArgData & );
+void fn_csc	( ArgData & );
+void fn_exp	( ArgData & );
+void fn_floor	( ArgData & );
+void fn_frac	( ArgData & );
+void fn_is_inf	( ArgData & );
+void fn_is_nan	( ArgData & );
+void fn_is_number( ArgData & );
+void fn_log	( ArgData & );
+void fn_max	( ArgData & );
+void fn_min	( ArgData & );
+void fn_mod	( ArgData & );
+void fn_pi	( ArgData & );
+void fn_round	( ArgData & );
+void fn_sec	( ArgData & );
+void fn_sin	( ArgData & );
+void fn_trunc	( ArgData & );
+
+%}
+
+
+%language=C++
+%define lookup-function-name	lookup_name
+%define class-name		Function
+%readonly-tables
+%global-table
+%define word-array-name		function_name_list
+
+
+%struct-type
+
+struct func_def_t
+{
+	char	const	* name;
+	Func		func;
+	size_t		arg_tot;
+	char	const	* help;
+};
+
+
+%%
+abs,		fn_abs,		1,	"Return the absolute value of a1."
+acos,		fn_acos,	1,	"Return the arccosine of a1."
+asin,		fn_asin,	1,	"Return the arcsine of a1."
+atan,		fn_atan,	1,	"Return the arctangent of a1."
+atan2,		fn_atan2,	2,	"Return the arctangent of coordinate ( a1, a2 )."
+ceil,		fn_ceil,	1,	"Return a1 rounded up to the nearest whole number."
+cos,		fn_cos,		1,	"Return the cosine of a1."
+cot,		fn_cot,		1,	"Return the cotangent of a1."
+csc,		fn_csc,		1,	"Return the cosecant of a1."
+exp,		fn_exp,		1,	"Return e raised to the power of a1."
+floor,		fn_floor,	1,	"Return a1 rounded down to the nearest whole number."
+frac,		fn_frac,	1,	"Return the fractional part of a1."
+is_inf,		fn_is_inf,	1,	"Return 1 if a1 is INF (0 if not)."
+is_nan,		fn_is_nan,	1,	"Return 1 if a1 is NAN (0 if not)."
+is_number,	fn_is_number,	1,	"Return 1 if a1 is a number (0 if not)."
+log,		fn_log,		1,	"Return the natural log of a1."
+max,		fn_max,		2,	"Return the larger of a1 and a2."
+min,		fn_min,		2,	"Return the smaller of a1 and a2."
+mod,		fn_mod,		2,	"Return a1 mod a2."
+pi,		fn_pi,		0,	"Return the number PI."
+round,		fn_round,	1,	"Return a1 rounded to the nearest whole number."
+sec,		fn_sec,		1,	"Return the secant of a1."
+sin,		fn_sin,		1,	"Return the sine of a1."
+trunc,		fn_trunc,	1,	"Return a1 without the fractional part."
+%%
+
+
+}}	// namespace mtDW::DoubleFunc
+
+
+
+#endif		// MATH_DOUBLE_FUNCS_H_
+

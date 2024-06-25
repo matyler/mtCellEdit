@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 Mark Tyler
+	Copyright (C) 2021-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -122,13 +122,25 @@ int mtGin::AudioPlay::queue_data (
 	size_t		const	buflen
 	)
 {
-	if ( SDL_AUDIO_PLAYING != m_status )
+	if ( m_dev_out < 1 || ! buf )
 	{
 		return 1;
 	}
 
 	Uint32 const bytes_tot = (Uint32)(buflen * sizeof(buf[0]));
 	SDL_QueueAudio ( m_dev_out, buf, bytes_tot );
+
+	return 0;
+}
+
+int mtGin::AudioPlay::queue_flush ()
+{
+	if ( m_dev_out < 1 )
+	{
+		return 1;
+	}
+
+	SDL_ClearQueuedAudio ( m_dev_out );
 
 	return 0;
 }
@@ -216,15 +228,10 @@ int mtGin::AudioPlay::pause ()
 		return 1;
 	}
 
-	if ( SDL_AUDIO_PLAYING == m_status )
-	{
-		m_status = SDL_AUDIO_PAUSED;
-		SDL_PauseAudioDevice ( m_dev_out, SDL_TRUE );
+	m_status = SDL_AUDIO_PAUSED;
+	SDL_PauseAudioDevice ( m_dev_out, SDL_TRUE );
 
-		return 0;
-	}
-
-	return 1;
+	return 0;
 }
 
 int mtGin::AudioPlay::resume ()
@@ -234,14 +241,10 @@ int mtGin::AudioPlay::resume ()
 		return 1;
 	}
 
-	if ( SDL_AUDIO_PAUSED == m_status )
-	{
-		m_status = SDL_AUDIO_PLAYING;
-		SDL_PauseAudioDevice ( m_dev_out, SDL_FALSE );
-		return 0;
-	}
+	m_status = SDL_AUDIO_PLAYING;
+	SDL_PauseAudioDevice ( m_dev_out, SDL_FALSE );
 
-	return 1;
+	return 0;
 }
 
 void mtGin::AudioPlay::stop ()

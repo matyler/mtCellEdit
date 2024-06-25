@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2023 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -56,9 +56,9 @@ public:
 	int count_files () const;
 	void remove_all_files ();
 
-	inline int get_file_id () const { return (int)m_file_id; }
-	inline void set_file_id ( int id ) { m_file_id = (uint32_t)id; }
-	inline void increment_file_id () { m_file_id++; }
+	int get_file_id () const	{ return (int)m_file_id; }
+	void set_file_id ( int id )	{ m_file_id = (uint32_t)id; }
+	void increment_file_id ()	{ m_file_id++; }
 
 /// ----------------------------------------------------------------------------
 
@@ -87,9 +87,9 @@ public:
 		// 0 = filled
 		// 1 = not filled
 
-	inline uint64_t get_pos () const { return m_file.get_pos (); }
+	uint64_t get_pos () const	{ return m_file.get_pos (); }
 
-	inline ByteBuf &get_zlib () { return m_buf_zlib; }
+	ByteBuf &get_zlib ()		{ return m_buf_zlib; }
 
 private:
 
@@ -178,8 +178,8 @@ private:
 class WellOpSaveState
 {
 public:
-	inline explicit WellOpSaveState ( Well::Op * op ) : m_op ( op ) {}
-	inline ~WellOpSaveState () { if ( m_op ) m_op->save_state (); }
+	explicit WellOpSaveState ( Well::Op * op ) : m_op ( op ) {}
+	~WellOpSaveState ()	{ if ( m_op ) m_op->save_state (); }
 
 private:
 	Well::Op	* const m_op;

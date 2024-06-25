@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2023 Mark Tyler
+	Copyright (C) 2008-2024 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -385,7 +385,7 @@ static int save_init (
 	int		const	bpp,
 	int		const	w,
 	int		const	h,
-	unsigned char	* const	alpha,
+	unsigned char const * const alpha,
 	int		const	compression,
 	FILE		* const	fp,
 	mtPalette const * const	palette

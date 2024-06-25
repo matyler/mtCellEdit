@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2023 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -67,6 +67,7 @@ class MemPrefs;
 #define PREFS_PALETTE_NUMBER_OPACITY	"palette.number.opacity"
 
 #define PREFS_TEXT_FONT_NAME		"text.font.name"
+#define PREFS_TEXT_FONT_STYLE		"text.font.style"
 #define PREFS_TEXT_FONT_SIZE		"text.font.size"
 #define PREFS_TEXT_FONT_BOLD		"text.font.bold"
 #define PREFS_TEXT_FONT_ITALIC		"text.font.italic"
@@ -77,6 +78,14 @@ class MemPrefs;
 #define PREFS_UNDO_MB_MAX		"undo.mb.max"
 #define PREFS_UNDO_STEPS_MAX		"undo.steps.max"
 
+
+enum
+{
+	RECENT_MENU_TOTAL		= 20,
+	PREFS_RECENT_MAXLEN_DEFAULT	= 80,
+	PREFS_RECENT_MAXLEN_MIN		= 20,
+	PREFS_RECENT_MAXLEN_MAX		= 500
+};
 
 
 /*	------------------
@@ -103,6 +112,10 @@ from within this program.
 class MemPrefs
 {
 public:
+	std::string get_font_name_full () const;
+
+// -----------------------------------------------------------------------------
+
 	int			window_x		= 0;
 	int			window_y		= 0;
 	int			window_w		= 0;
@@ -137,6 +150,7 @@ public:
 	int			ui_scale_palette	= 0;
 
 	std::string		text_font_name;
+	std::string		text_font_style;
 	int			text_font_size		= 0;
 	int			text_font_bold		= 0;
 	int			text_font_italic	= 0;
@@ -170,7 +184,7 @@ public:
 	int get_cline_screenshot () const;
 	int get_ui_scale () const;
 	int get_ui_scale_palette () const;
-	std::string get_titlebar_text ();
+	std::string get_titlebar_text () const;
 
 	void detect_ui_scale ( int menu_height );
 	void calc_ui_scale ();

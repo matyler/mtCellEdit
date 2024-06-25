@@ -1,17 +1,26 @@
 libmtkit	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 libmtpixy	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 libmtcelledit	./configure --libdir=/usr/lib/arm-linux-gnueabihf
+libmtdatawell	./configure --libdir=/usr/lib/arm-linux-gnueabihf
+libmtgin	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 mtutils	./configure
 mtcedutils	./configure
-libmtdatawell	./configure --libdir=/usr/lib/arm-linux-gnueabihf
 mtdwutils	./configure
 mtpixyutils	./configure
+mtginutils	./configure
 libmtqex5	./configure --use-qt5 --libdir=/usr/lib/arm-linux-gnueabihf
+libmtqex6	./configure --use-qt6 --libdir=/usr/lib/arm-linux-gnueabihf
 mtcelledit-qt5	./configure --use-qt5
 mtdatawell-qt5	./configure --use-qt5
 mtnush-qt5	./configure --use-qt5
 mtraft-qt5	./configure --use-qt5
 mtpixy-qt5	./configure --use-qt5
-libmtgin	./configure --libdir=/usr/lib/arm-linux-gnueabihf
-mtginutils	./configure
 mtcrul-qt5	./configure --use-qt5
+mtwasp-qt5	./configure --use-qt5
+mtcelledit-qt6	./configure --use-qt6
+mtdatawell-qt6	./configure --use-qt6
+mtnush-qt6	./configure --use-qt6
+mtraft-qt6	./configure --use-qt6
+mtpixy-qt6	./configure --use-qt6
+mtcrul-qt6	./configure --use-qt6
+mtwasp-qt6	./configure --use-qt6

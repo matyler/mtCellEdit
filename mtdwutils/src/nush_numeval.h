@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -63,25 +63,32 @@ public:
 		NUMBER_SIZE_MAX		= 32
 	};
 
+	int evaluate_double ( char const * text );
 	int evaluate_float ( char const * text );
 	int evaluate_integer ( char const * text );
 	int evaluate_rational ( char const * text );
 		// ERROR_*
 		// ERROR_NONE => result set
 
-	inline std::string const & error () const { return m_error; }
-	inline int error_pos () const { return m_error_pos; }
+	std::string const & error () const { return m_error; }
+	int error_pos () const { return m_error_pos; }
 
-	inline mpfr_prec_t num_bits () const { return m_num_bits; }
+	mpfr_prec_t num_bits () const { return m_num_bits; }
 
-	inline mtDW::Float const & result_float () const
+	mtDW::Double const & result_double () const
+		{ return m_parser_double.result(); }
+
+	mtDW::Float const & result_float () const
 		{ return m_parser_float.result(); }
 
-	inline mtDW::Integer const & result_integer () const
+	mtDW::Integer const & result_integer () const
 		{ return m_parser_integer.result(); }
 
-	inline mtDW::Rational const & result_rational () const
+	mtDW::Rational const & result_rational () const
 		{ return m_parser_rational.result(); }
+
+	int print_double_funcs () const;
+	int print_double_vars () const;
 
 	int print_float_funcs () const;
 	int print_float_vars () const;
@@ -129,6 +136,7 @@ int evaluate (
 
 	mpfr_prec_t	m_num_bits = 1 << NUMBER_SIZE_MIN;
 
+	mtDW::DoubleParser	m_parser_double;
 	mtDW::FloatParser	m_parser_float;
 	mtDW::IntegerParser	m_parser_integer;
 	mtDW::RationalParser	m_parser_rational;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -63,6 +63,11 @@ void show_funcs (
 void MainWindow::press_show_float_funcs ()
 {
 	show_funcs ( this, "Float", m_parser_float );
+}
+
+void MainWindow::press_show_double_funcs ()
+{
+	show_funcs ( this, "Double", m_parser_double );
 }
 
 void MainWindow::press_show_int_funcs ()

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -63,12 +63,16 @@ static int print_help ()
 
 
 
-int Core::evaluate_line ( char const * text )
+int Core::evaluate_line ( char const * const text )
 {
 	int res = 1;
 
 	switch ( m_num_mode )
 	{
+	case MODE_DOUBLE:
+		res = numeval.evaluate_double ( text );
+		break;
+
 	case MODE_FLOAT:
 		res = numeval.evaluate_float ( text );
 		break;
@@ -99,6 +103,10 @@ int Core::evaluate_line ( char const * text )
 
 	switch ( m_num_mode )
 	{
+	case MODE_DOUBLE:
+		std::cout << numeval.result_double().to_string() << "\n";
+		break;
+
 	case MODE_FLOAT:
 		std::cout << numeval.result_float().to_string() << "\n";
 		break;
@@ -119,6 +127,9 @@ int Core::print_funcs () const
 {
 	switch ( m_num_mode )
 	{
+	case MODE_DOUBLE:
+		return numeval.print_double_funcs ();
+
 	case MODE_FLOAT:
 		return numeval.print_float_funcs ();
 
@@ -138,6 +149,9 @@ int Core::print_vars () const
 {
 	switch ( m_num_mode )
 	{
+	case MODE_DOUBLE:
+		return numeval.print_double_vars ();
+
 	case MODE_FLOAT:
 		return numeval.print_float_vars ();
 
@@ -187,6 +201,7 @@ int Core::command_line (
 	args.add ( "funcs",	[this]() { return print_funcs (); } );
 	args.add ( "i",		m_arg_i, [this]() { return argcb_i(); } );
 	args.add ( "integer",	m_num_mode, MODE_INTEGER );
+	args.add ( "double",	m_num_mode, MODE_DOUBLE );
 	args.add ( "float",	m_num_mode, MODE_FLOAT );
 	args.add ( "rational",	m_num_mode, MODE_RATIONAL );
 	args.add ( "v",		m_verbose, 1 );
@@ -246,9 +261,9 @@ public:
 	LoadLine () {}
 	~LoadLine () { set_line ( nullptr ); }
 
-	inline void set_line ( char * txt ) { free ( m_line ); m_line = txt; }
+	void set_line ( char * txt )	{ free ( m_line ); m_line = txt; }
 
-	inline void set_fp_stdin () { m_fp = stdin; }
+	void set_fp_stdin ()		{ m_fp = stdin; }
 	int set_fp_filename ( char const * filename );
 
 	char * load_line ();

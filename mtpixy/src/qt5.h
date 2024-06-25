@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2023 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ class PanView;
 class DialogBrushSettings;
 class DialogClickImage;
 class DialogCRT;
+class DialogEqualize;
 class DialogGetInt;
 class DialogImageIndexed;
 class DialogImageInfo;
@@ -90,7 +91,6 @@ class Mainwindow : public QMainWindow
 public:
 	enum Limits
 	{
-		RECENT_MENU_TOTAL	= 20,
 		CLIPBOARD_MENU_TOTAL	= 12
 	};
 
@@ -291,6 +291,7 @@ private slots:
 	void press_palette_create_from_canvas ();
 	void press_palette_quantize_pnn ();
 	void press_palette_sort ();
+	void press_palette_equalize ();
 
 	void press_selection_all ();
 	void press_selection_none ();
@@ -310,6 +311,7 @@ private slots:
 	void press_effects_soften ();
 	void press_effects_emboss ();
 	void press_effects_normalize ();
+	void press_effects_equalize ();
 	void press_effects_bacteria ();
 
 	void press_options_full_screen ();
@@ -707,6 +709,32 @@ private:
 
 	QSpinBox	* m_sbox_spacing;
 	QSpinBox	* m_sbox_flow;
+};
+
+
+
+class DialogEqualize : public QDialog
+{
+	Q_OBJECT
+
+public:
+	enum
+	{
+		TYPE_EQUALIZE_PALETTE,
+		TYPE_EQUALIZE_IMAGE
+	};
+
+	explicit DialogEqualize ( Mainwindow &mw, int type );
+
+	void get_results ( unsigned char rgb_min_max[6] );
+	std::string const & get_type_text () { return m_type_text; }
+
+private:
+	QSpinBox	* m_sbox[6];
+
+	std::string	m_type_text;
+
+	Mainwindow	&mainwindow;
 };
 
 

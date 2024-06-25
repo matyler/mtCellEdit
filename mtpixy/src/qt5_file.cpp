@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -76,14 +76,15 @@ void Mainwindow::press_file_open ()
 
 void Mainwindow::press_file_save ()
 {
-	if ( backend.file.get_filename () == NULL )
+	char const * const filename = backend.file.get_filename ();
+
+	if ( NULL == filename || 0 == filename[0] )
 	{
 		press_file_save_as ();
 		return;
 	}
 
-	project_save ( backend.file.get_filename (),
-		backend.file.get_filetype () );
+	project_save ( filename, backend.file.get_filetype () );
 }
 
 void Mainwindow::press_file_save_as ()

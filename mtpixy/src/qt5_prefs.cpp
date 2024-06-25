@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -62,6 +62,11 @@ void Mainwindow::create_prefs_callbacks ()
 	backend.uprefs.set_callback ( PREFS_UNDO_STEPS_MAX, [this]()
 		{
 			backend.file.set_undo_steps_max( mprefs.undo_steps_max);
+		} );
+
+	backend.uprefs.set_callback ( PREFS_FILE_RECENT_MAXLEN, [this]()
+		{
+			update_recent_files ();
 		} );
 }
 

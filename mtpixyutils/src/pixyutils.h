@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2022 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -108,7 +108,6 @@ private:
 	int pixy_rida ();
 	int pixy_risa ();
 	int pixy_scale ();
-	int pixy_twit ();
 
 	void set_function ( char const * name );
 

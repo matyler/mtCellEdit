@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2022 Mark Tyler
+	Copyright (C) 2011-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -255,17 +255,6 @@ typedef void (* CuiRenCB) (
 
 // Functions return: 0 = success, NULL = fail; unless otherwise stated.
 
-
-
-#ifdef __cplusplus
-}
-#endif	// __cplusplus
-
-
-
-#ifdef __cplusplus
-
-// C++ API
 
 
 /*
@@ -707,6 +696,18 @@ int cui_graph_duplicate (
 	char	*	* new_name	// Optional - put allocated string to
 					// new name here
 	);
+
+
+
+#ifdef __cplusplus
+}
+#endif	// __cplusplus
+
+
+
+#ifdef __cplusplus
+
+// C++ API
 
 
 

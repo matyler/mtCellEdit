@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2022 Mark Tyler
+	Copyright (C) 2008-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -53,14 +53,14 @@ class SqliteTransaction;
 class Sqlite
 {
 public:
-	inline Sqlite () : m_db () {}
-	inline ~Sqlite () { set_sqlite3 ( NULL ); }
+	Sqlite () : m_db () {}
+	~Sqlite () { set_sqlite3 ( NULL ); }
 
 	int open ( std::string const & filename );
 	void set_sqlite3 ( sqlite3 * db );
-	inline sqlite3 * get_sqlite3 () const { return m_db; };
+	sqlite3 * get_sqlite3 () const { return m_db; };
 
-	inline int exec_sql ( std::string const & sql ) const
+	int exec_sql ( std::string const & sql ) const
 		{ return exec_sql ( sql.c_str () ); };
 	int exec_sql ( char const * const sql ) const;
 
@@ -171,14 +171,14 @@ private:
 class SqliteTransaction
 {
 public:
-	inline explicit SqliteTransaction ( Sqlite const & db )
+	explicit SqliteTransaction ( Sqlite const & db )
 		:
 		m_db		( db )
 	{
 		m_db.exec_sql ( "BEGIN TRANSACTION" );
 	}
 
-	inline ~SqliteTransaction ()
+	~SqliteTransaction ()
 	{
 		m_db.exec_sql ( "COMMIT" );
 	}
@@ -198,7 +198,7 @@ public:
 	int next ();
 		// 0 = Record found, 1 = None found
 
-	inline int get_field_num () const { return m_field_num; }
+	int get_field_num () const { return m_field_num; }
 
 	int get_type ();
 		// = SQLITE_< INTEGER | FLOAT | TEXT | BLOB | NULL >

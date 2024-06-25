@@ -23,7 +23,6 @@ mtPixyUtils is a collection of command line programs to manipulate image files. 
 | pixyrida    | Analyse an RGB image. |
 | pixyrisa    | Analyse an RGB image. |
 | pixyscale   | Scale an image. |
-| pixytwit    | Prepare an image for Twitter. |
 | pixyutils   | Main program which can be run directly or by using a symlink. |
 
 

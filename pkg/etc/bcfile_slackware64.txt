@@ -15,3 +15,4 @@ mtpixy-qt5	./configure --use-qt5
 libmtgin	./configure --libdir=/usr/lib64
 mtginutils	./configure
 mtcrul-qt5	./configure --use-qt5
+mtwasp-qt5	./configure --use-qt5

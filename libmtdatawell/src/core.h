@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -113,13 +113,13 @@ public:
 	// NOTE: random must be seeded by the caller.
 	int set_shifts ( mtKit::Random &random );
 	int set_shifts ( int const shifts[8] );	// shifts[] contains *ALL* 0..7
-	inline void set_salt ( int i )	{ m_salt = i; }
-	inline void set_pos ( int i )	{ m_pos = i; }
+	void set_salt ( int i )	{ m_salt = i; }
+	void set_pos ( int i )	{ m_pos = i; }
 
 	uint8_t get_byte ( uint8_t input );
 	void get_shifts ( int shifts[8] ) const;
-	inline int get_salt () const	{ return m_salt; }
-	inline int get_pos () const	{ return m_pos; }
+	int get_salt () const	{ return m_salt; }
+	int get_pos () const	{ return m_pos; }
 
 protected:
 	int		m_pos;
@@ -144,13 +144,13 @@ public:
 	void load_fill ( std::string const &filename );
 	void load_whole ( std::string const &filename );
 
-	inline uint8_t * get_buf () const { return m_buf; }
-	inline size_t get_size () const { return m_size; }
-	inline size_t get_tot () const { return m_tot; }
-	inline size_t get_pos () const { return m_pos; }
+	uint8_t * get_buf () const { return m_buf; }
+	size_t get_size () const { return m_size; }
+	size_t get_tot () const { return m_tot; }
+	size_t get_pos () const { return m_pos; }
 
-	inline void set_tot ( size_t const tot ) { m_tot = tot; }
-	inline void set_pos ( size_t const pos ) { m_pos = pos; }
+	void set_tot ( size_t const tot ) { m_tot = tot; }
+	void set_pos ( size_t const pos ) { m_pos = pos; }
 
 private:
 	uint8_t		* m_buf = nullptr;
@@ -166,12 +166,12 @@ private:
 class OpenDir
 {
 public:
-	inline explicit OpenDir ( std::string const & path )
+	explicit OpenDir ( std::string const & path )
 	{
 		dp = opendir ( path.c_str () );
 	}
 
-	inline ~OpenDir ()
+	~OpenDir ()
 	{
 		if ( dp )
 		{

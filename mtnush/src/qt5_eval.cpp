@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -182,6 +182,45 @@ void MainWindow::press_save_float_output ()
 		"Save Float number" );
 
 	save_a_number ( this, m_parser_float.result(), filename );
+}
+
+
+
+/// ----------------------------------------------------------------------------
+
+
+
+void MainWindow::press_evaluate_double ()
+{
+	std::string result;
+
+	::evaluate ( result, this, m_text_double_input, m_parser_double,
+		m_text_double_output, 0, mprefs.calc_snip_size );
+
+	update_double_digits_label ( result );
+}
+
+void MainWindow::press_copy_double_output ()
+{
+	QApplication::clipboard()->setText ( m_text_double_output->toPlainText());
+}
+
+void MainWindow::update_double_digits_label ( std::string const & digits )
+{
+	std::string	str ( "Output " );
+
+	str += print_digits_label ( m_parser_double.result(),
+		(int)digits.size() );
+
+	m_group_box_double->setTitle ( str.c_str() );
+}
+
+void MainWindow::press_save_double_output ()
+{
+	std::string const filename = choose_output_filename ( this,
+		"Save Float number" );
+
+	save_a_number ( this, m_parser_double.result(), filename );
 }
 
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022 Mark Tyler
+	Copyright (C) 2022-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 
 std::string const & mtKit::CliShell::read_line ( char const * const prompt )
 {
-	mtKit::CStrPtr line ( ::readline ( prompt ) );
+	mtKit::CMemPtr<char> line ( ::readline ( prompt ) );
 
 	m_old_line = m_line;
 
@@ -35,7 +35,7 @@ std::string const & mtKit::CliShell::read_line ( char const * const prompt )
 	}
 	else
 	{
-		m_line = line.c_str ();
+		m_line = line.ptr ();
 	}
 
 	return m_line;

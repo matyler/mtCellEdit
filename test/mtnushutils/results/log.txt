@@ -986,6 +986,569 @@ Bad Syntax
 nushutils > 
 nushutils > 
 
+----------- scripts/01_double.txt -----------
+
+nushutils > 1
+1
+nushutils > 1.000000000000000000000000000000000000000002
+1
+nushutils > 1.2
+1.2
+nushutils > 1.2e3
+1200
+nushutils > 1.2e-3
+0.0012
+nushutils > 1.2e-30
+1.2e-30
+nushutils > 1.2e30
+1.2e+30
+nushutils > 
+nushutils > 2^0.5
+1.4142135623731
+nushutils > 
+nushutils > 2^2^10
+inf
+nushutils > (2^2)^10
+1048576
+nushutils > 2^(2^10)
+inf
+nushutils > 9^8765 - 7^8765
+-nan
+nushutils > (9^8765 - 7^8765) / (2^1024)
+-nan
+nushutils > (9*7) ^ (8-3*2+1)
+250047
+nushutils > 9 * 7^8 - 3*2 + 1
+51883204
+nushutils > 9 * (7^8) - 3*2 + 1
+51883204
+nushutils > 1/2 + 2/3 * 2
+1.83333333333333
+nushutils > 100+2/3 * 2
+101.333333333333
+nushutils > 
+nushutils > 
+nushutils > 1/0
+inf
+nushutils > 
+nushutils > 1 < 2
+1
+nushutils > 2 < 2
+0
+nushutils > 2 < 1
+0
+nushutils > 
+nushutils > 1 > 2
+0
+nushutils > 2 > 2
+0
+nushutils > 2 > 1
+1
+nushutils > 
+nushutils > 1 <= 2
+1
+nushutils > 2 <= 2
+1
+nushutils > 2 <= 1
+0
+nushutils > 
+nushutils > 1 >= 2
+0
+nushutils > 2 >= 2
+1
+nushutils > 2 >= 1
+1
+nushutils > 
+nushutils > 1 == 2
+0
+nushutils > 2 == 2
+1
+nushutils > 2 == 1
+0
+nushutils > 
+nushutils > 1 != 2
+1
+nushutils > 2 != 2
+0
+nushutils > 2 != 1
+1
+nushutils > 
+nushutils > 1 <=> 2
+-1
+nushutils > 2 <=> 2
+0
+nushutils > 2 <=> 1
+1
+nushutils > 
+nushutils > 1+2 > 1+1
+1
+nushutils > 1+ (2 > 1) +1
+3
+nushutils > 
+nushutils > 2*3+4-6/2
+7
+nushutils > (2*3)+4-(6/2)
+7
+nushutils > 2*(3+4-(6/2))
+8
+nushutils > -(2^4)
+-16
+nushutils > - ( 2 ^ 4 ) 
+-16
+nushutils > -2^4
+16
+nushutils > (-2)^4
+16
+nushutils > 0-2^4
+-16
+nushutils > 
+nushutils > # This is a comment
+nushutils > 
+nushutils > .
+
+
+----------- scripts/11_double.txt -----------
+
+nushutils > a=1
+1
+nushutils > b=2
+2
+nushutils > a+b
+3
+nushutils > 
+nushutils > a += 1
+2
+nushutils > a *= -2
+-4
+nushutils > a -= 2
+-6
+nushutils > a /= 2
+-3
+nushutils > a ^= 4
+81
+nushutils > 
+nushutils > c=1;c*=5+2;c+1
+8
+nushutils > c
+7
+nushutils > c=1;c*=(5+2);c+1
+8
+nushutils > c
+7
+nushutils > 
+nushutils > d=1+2*5
+11
+nushutils > d
+11
+nushutils > 
+nushutils > d=(((1+2*5))+1)+1
+13
+nushutils > d
+13
+nushutils > 
+nushutils > 
+
+----------- scripts/21_double.txt -----------
+
+nushutils > abs(5)
+5
+nushutils > abs(-5)
+5
+nushutils > 
+nushutils > acos(0.5)
+1.0471975511966
+nushutils > acos(1)
+0
+nushutils > acos(1.5)
+nan
+nushutils > 
+nushutils > asin(0.5)
+0.523598775598299
+nushutils > asin(1)
+1.5707963267949
+nushutils > asin(1.5)
+nan
+nushutils > 
+nushutils > atan(-0.5)
+-0.463647609000806
+nushutils > atan(0.5)
+0.463647609000806
+nushutils > atan(1)
+0.785398163397448
+nushutils > atan(1.5)
+0.982793723247329
+nushutils > 
+nushutils > atan2(0,0)
+0
+nushutils > atan2(1,0)
+1.5707963267949
+nushutils > atan2(1,1)
+0.785398163397448
+nushutils > atan2(0,1)
+0
+nushutils > 
+nushutils > ceil(1.1)
+2
+nushutils > ceil(-1.1)
+-1
+nushutils > 
+nushutils > cos(-0.4)
+0.921060994002885
+nushutils > cos(0)
+1
+nushutils > cos(0.4)
+0.921060994002885
+nushutils > 
+nushutils > cot(-0.4)
+-2.36522242003911
+nushutils > cot(0)
+inf
+nushutils > cot(0.4)
+2.36522242003911
+nushutils > 
+nushutils > csc(-0.4)
+-2.56793245554778
+nushutils > csc(0)
+inf
+nushutils > csc(0.4)
+2.56793245554778
+nushutils > 
+nushutils > exp(-0.5)
+0.606530659712633
+nushutils > exp(0)
+1
+nushutils > exp(0.5)
+1.64872127070013
+nushutils > exp(1)
+2.71828182845905
+nushutils > exp(2)
+7.38905609893065
+nushutils > 
+nushutils > floor(1.1)
+1
+nushutils > floor(-1.1)
+-2
+nushutils > 
+nushutils > frac(-1.1)
+-0.1
+nushutils > frac(0)
+0
+nushutils > frac(1.1)
+0.1
+nushutils > 
+nushutils > is_inf(1)
+0
+nushutils > is_inf(1/0)
+1
+nushutils > is_inf((-1)^0.5)
+0
+nushutils > 
+nushutils > is_nan(1)
+0
+nushutils > is_nan(1/0)
+0
+nushutils > is_nan((-1)^0.5)
+1
+nushutils > 
+nushutils > is_number(1)
+1
+nushutils > is_number(1/0)
+0
+nushutils > is_number((-1)^0.5)
+0
+nushutils > 
+nushutils > log(-0.5)
+-nan
+nushutils > log(0)
+-inf
+nushutils > log(0.5)
+-0.693147180559945
+nushutils > log(1)
+0
+nushutils > log(2.5)
+0.916290731874155
+nushutils > 
+nushutils > max(2,3)
+3
+nushutils > max(3,3)
+3
+nushutils > max(3,2)
+3
+nushutils > 
+nushutils > min(2,3)
+2
+nushutils > min(3,3)
+3
+nushutils > min(3,2)
+2
+nushutils > 
+nushutils > mod(5,2)
+1
+nushutils > mod(2,5)
+2
+nushutils > mod(5,5)
+0
+nushutils > mod(10,5)
+0
+nushutils > 
+nushutils > pi()
+3.14159265358979
+nushutils > 
+nushutils > round(1.1)
+1
+nushutils > round(1.5)
+2
+nushutils > round(1.6)
+2
+nushutils > round(-1.1)
+-1
+nushutils > round(-1.5)
+-2
+nushutils > round(-1.6)
+-2
+nushutils > 
+nushutils > sec(-0.5)
+1.13949392732455
+nushutils > sec(0)
+1
+nushutils > sec(0.5)
+1.13949392732455
+nushutils > sec(10.5)
+-2.10288610858088
+nushutils > 
+nushutils > sin(-0.4)
+-0.389418342308651
+nushutils > sin(0)
+0
+nushutils > sin(0.4)
+0.389418342308651
+nushutils > 
+nushutils > trunc(-1.99)
+-1
+nushutils > trunc(-1.1)
+-1
+nushutils > trunc(0)
+0
+nushutils > trunc(1.1)
+1
+nushutils > trunc(1.99)
+1
+nushutils > 
+nushutils > 
+
+----------- scripts/91_double.txt -----------
+
+nushutils > # Illegal symbols (including UTF-8)
+nushutils > 
+nushutils > " £ $ %
+" £ $ %
+^
+Bad Symbol
+
+nushutils > #
+nushutils > 
+nushutils > $
+$
+^
+Bad Symbol
+
+nushutils > %
+%
+^
+Bad Symbol
+
+nushutils > 
+nushutils > 
+nushutils > # Bad numbers
+nushutils > 
+nushutils > 2 2 2
+2 2 2
+  ^
+Bad Syntax
+
+nushutils > 2a
+2a
+ ^
+Bad Syntax
+
+nushutils > 2.1e
+2.1e
+^
+Bad Number
+
+nushutils > 2.1.1
+2.1.1
+   ^
+Bad Syntax
+
+nushutils > 2.e.
+2.e.
+^
+Bad Number
+
+nushutils > 123e+
+123e+
+^
+Bad Number
+
+nushutils > 123.e-
+123.e-
+^
+Bad Number
+
+nushutils > 123.456e+
+123.456e+
+^
+Bad Number
+
+nushutils > 123e
+123e
+^
+Bad Number
+
+nushutils > 123.e
+123.e
+^
+Bad Number
+
+nushutils > 123.456e
+123.456e
+^
+Bad Number
+
+nushutils > 
+nushutils > 
+nushutils > # Unbalanced or improper parentheses
+nushutils > 
+nushutils > (
+(
+ ^
+Bad Syntax
+
+nushutils > )
+)
+^
+Bad Syntax
+
+nushutils > ()
+()
+ ^
+Bad Syntax
+
+nushutils > 2+2)
+2+2)
+   ^
+Bad Syntax
+
+nushutils > (2+2
+(2+2
+    ^
+Missing: )
+
+nushutils > (2+2))
+(2+2))
+     ^
+Bad Syntax
+
+nushutils > ((2+2)
+((2+2)
+      ^
+Missing: )
+
+nushutils > 
+nushutils > 
+nushutils > # Bad use of operators / comparisons
+nushutils > 
+nushutils > 1 <+ 2
+1 <+ 2
+   ^
+Bad Syntax
+
+nushutils > 1 << 2
+1 << 2
+   ^
+Bad Syntax
+
+nushutils > 1 < < 2
+1 < < 2
+    ^
+Bad Syntax
+
+nushutils > 1 + + 2
+1 + + 2
+    ^
+Bad Syntax
+
+nushutils > 1 <> 2
+1 <> 2
+   ^
+Bad Syntax
+
+nushutils > 
+nushutils > 
+nushutils > # Bad variables: uninitialised, or bad syntax
+nushutils > 
+nushutils > unknown
+unknown
+^
+Variable Undefined
+
+nushutils > a=1
+1
+nushutils > a a
+a a
+  ^
+Bad Syntax
+
+nushutils > (a)
+1
+nushutils > 
+nushutils > 
+nushutils > # Bad functions: too many or too few arguments, unknown names
+nushutils > 
+nushutils > pipi()
+pipi()
+^
+Function Unknown
+
+nushutils > pi(1)
+pi(1)
+   ^
+Too Many Function Args
+
+nushutils > pi(1,2)
+pi(1,2)
+   ^
+Too Many Function Args
+
+nushutils > pi(,)
+pi(,)
+   ^
+Too Many Function Args
+
+nushutils > min(1)
+min(1)
+     ^
+Too Few Function Args
+
+nushutils > min(1,2,3)
+min(1,2,3)
+       ^
+Too Many Function Args
+
+nushutils > min(1,)
+min(1,)
+      ^
+Bad Syntax
+
+nushutils > min(,1)
+min(,1)
+    ^
+Bad Syntax
+
+nushutils > 
+nushutils > 
+
 ----------- scripts/01_rational.txt -----------
 
 nushutils > 1

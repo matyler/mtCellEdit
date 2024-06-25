@@ -2,11 +2,7 @@ include		../_conf.txt
 
 HEADER		:= mtdatawell.h mtdatawell_math.h mtdatawell_sqlite.h
 OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
-
-OBJS_GPERF	:=			\
-		math_integer_funcs.h	\
-		math_float_funcs.h	\
-		math_rational_funcs.h	\
+OBJS_GPERF	:= $(sort $(patsubst %.gperf,%.h,$(wildcard *.gperf)))
 
 
 .PHONY:		all install uninstall clean

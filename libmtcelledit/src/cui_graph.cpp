@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2022 Mark Tyler
+	Copyright (C) 2011-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -779,7 +779,7 @@ int renSTATE::utree_get_defaults ( mtUtreeNode * const node )
 	mtkit_utree_bulk_get ( node, NULL, NULL, table_s );
 
 	char const * val = nullptr;
-	if (	mtkit_utree_get_attribute_str ( node, "text", &val )	||
+	if (	mtkit_utree_get_attribute_string ( node, "text", &val )	||
 		mtkit_strnncpy ( m_cbuf, val, sizeof(m_cbuf) )
 		)
 	{

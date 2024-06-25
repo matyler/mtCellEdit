@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-mtwasp-wasp">
+         <comment xml:lang="en">WASP File</comment>
+         <acronym xml:lang="en">WASP</acronym>
+         <expanded-acronym xml:lang="en">Wave Audio Synthesiser Program</expanded-acronym>
+         <generic-icon name="application-x-@BIN_NAME@"/>
+         <magic>
+             <match value="{ @quot;mtWasp" type="string" offset="0"/>
+         </magic>
+         <glob pattern="*.wasp"/>
+  </mime-type>
+</mime-info>
+

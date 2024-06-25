@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,6 +19,36 @@
 
 
 
+int mtDW::DoubleParser::evaluate_internal ( char const * const text )
+{
+	DoubleGrammar grammar ( m_lexer, m_variables );
+
+	try
+	{
+		m_result.set_number ( 0 );
+
+		m_lexer.init ( text );
+		grammar.parse ();
+
+		// We are here, so no errors in the grammar caused a exception
+		m_result = grammar.parse_result ();
+	}
+	catch (...)
+	{
+		int const error = grammar.error();
+
+		return error ? error : mtDW::ERROR_EXCEPTION;
+	}
+
+	return 0;
+}
+
+
+
+/// ----------------------------------------------------------------------------
+
+
+
 int mtDW::FloatParser::evaluate_internal ( char const * const text )
 {
 	FloatGrammar grammar ( m_lexer, m_variables );
@@ -26,7 +56,7 @@ int mtDW::FloatParser::evaluate_internal ( char const * const text )
 	try
 	{
 		// We must create a new number 0 to use the current precision
-		Float tmp ( "0" );
+		Float tmp ( 0 );
 		m_result.swap ( tmp );
 
 		m_lexer.init ( text );
@@ -57,7 +87,7 @@ int mtDW::IntegerParser::evaluate_internal ( char const * const text )
 
 	try
 	{
-		m_result.set_number ( (signed long int)0 );
+		m_result.set_number ( 0 );
 
 		m_lexer.init ( text );
 		grammar.parse ();
@@ -87,7 +117,7 @@ int mtDW::RationalParser::evaluate_internal ( char const * const text )
 
 	try
 	{
-		m_result.set_number ( (signed long int)0 );
+		m_result.set_number ( 0 );
 
 		m_lexer.init ( text );
 		grammar.parse ();

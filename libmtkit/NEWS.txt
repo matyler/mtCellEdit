@@ -1,3 +1,7 @@
+3.8	2024-6-25
+
+	* CStrPtr generalised to CMemPtr.
+
 3.7	2023-6-25
 
 	* CStrPtr & CliShell added.

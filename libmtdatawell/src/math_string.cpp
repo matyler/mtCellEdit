@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,6 +16,88 @@
 */
 
 #include "mtdatawell_math.h"
+
+
+
+namespace {
+
+static std::string snip_number (
+	std::string	const	& numstr,
+	size_t		const	maxlen
+	)
+{
+	size_t const endlen = MIN(
+				MAX( mtDW::Number::STRING_SNIP_MIN, maxlen)
+				, mtDW::Number::STRING_SNIP_MAX
+				);
+
+	if ( numstr.size() <= (endlen * 2) )
+	{
+		return numstr;
+	}
+
+	std::string res ( numstr, 0, endlen );
+
+	res += "~~~~";
+
+	res.append ( numstr, numstr.size() - endlen, endlen );
+
+	return res;
+}
+
+} // namespace
+
+
+
+/// DOUBLE ---------------------------------------------------------------------
+
+
+
+std::string mtDW::Double::to_string () const
+{
+	char txt[128];
+
+	// Note: last 2 digits after decimal point contain errors so ignore them
+	snprintf ( txt, sizeof(txt), "%.15g", m_num );
+
+	return std::string ( txt );
+}
+
+std::string mtDW::Double::to_string_snip (
+	size_t	const	maxlen
+	) const
+{
+	return snip_number ( to_string (), maxlen );
+}
+
+int mtDW::Double::to_file ( FILE * const fp ) const
+{
+	std::string const txt = to_string ();
+
+	if ( txt.size() != fwrite ( txt.c_str(), 1, txt.size(), fp ) )
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+int mtDW::Double::to_filename ( char const * const filename ) const
+{
+	if ( ! filename )
+	{
+		return 1;
+	}
+
+	mtKit::ByteFileWrite file;
+
+	if ( file.open ( filename ) )
+	{
+		return 1;
+	}
+
+	return to_file ( file.get_fp() );
+}
 
 
 
@@ -76,38 +158,6 @@ mpfr_prec_t mtDW::Float::get_str_precision (
 
 	return MAX ( DOUBLE_PRECISION, MIN( (mpfr_prec_t)bits, MPFR_PREC_MAX ));
 }
-
-
-
-namespace {
-
-static std::string snip_number (
-	std::string	const	& numstr,
-	size_t		const	maxlen
-	)
-{
-	size_t const endlen = MIN(
-				MAX( mtDW::Number::STRING_SNIP_MIN, maxlen)
-				, mtDW::Number::STRING_SNIP_MAX
-				);
-
-	if ( numstr.size() <= (endlen * 2) )
-	{
-		return numstr;
-	}
-
-	std::string res ( numstr, 0, endlen );
-
-	res += "~~~~";
-
-	res.append ( numstr, numstr.size() - endlen, endlen );
-
-	return res;
-}
-
-} // namespace
-
-
 
 std::string mtDW::Float::to_string_snip (
 	size_t	const	maxlen

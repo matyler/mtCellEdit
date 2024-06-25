@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2019 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ struct UtreeLoad
 	{
 		char const * val;
 
-		if ( 0 == mtkit_utree_get_attribute_str ( m_soda, name, & val ))
+		if ( 0 == mtkit_utree_get_attribute_string(m_soda, name, & val))
 		{
 			str = val;
 		}
@@ -70,7 +70,7 @@ struct UtreeLoad
 	{
 		char const * val;
 
-		if ( 0 == mtkit_utree_get_attribute_str ( m_soda, name, & val ))
+		if ( 0 == mtkit_utree_get_attribute_string(m_soda, name, & val))
 		{
 			sscanf ( val, "%" PRIu64, &num );
 		}

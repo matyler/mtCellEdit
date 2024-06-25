@@ -50,6 +50,27 @@ run_sh_cli 91_float
 
 
 
+# Double -----------------------------------------------------------------------
+
+txt_title "mtNushUtils - Double"
+CLICOM="nushutils -double -cli"
+
+# ( ) ^ / * - + < <= > >= == != <=> # .
+run_sh_cli 01_double
+
+# Variables, = += -= /= *= ^= ;
+run_sh_cli 11_double
+
+# Functions
+run_sh_cli 21_double
+
+# Errors
+run_sh_cli 91_double
+
+# ------------------------------------------------------------------------------
+
+
+
 # Rational ---------------------------------------------------------------------
 
 txt_title "mtNushUtils - Rational"

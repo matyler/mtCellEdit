@@ -1,0 +1,62 @@
+# Illegal symbols (including UTF-8)
+
+" £ $ %
+£
+$
+%
+
+
+# Bad numbers
+
+2 2 2
+2a
+2.1e
+2.1.1
+2.e.
+123e+
+123.e-
+123.456e+
+123e
+123.e
+123.456e
+
+
+# Unbalanced or improper parentheses
+
+(
+)
+()
+2+2)
+(2+2
+(2+2))
+((2+2)
+
+
+# Bad use of operators / comparisons
+
+1 <+ 2
+1 << 2
+1 < < 2
+1 + + 2
+1 <> 2
+
+
+# Bad variables: uninitialised, or bad syntax
+
+unknown
+a=1
+a a
+(a)
+
+
+# Bad functions: too many or too few arguments, unknown names
+
+pipi()
+pi(1)
+pi(1,2)
+pi(,)
+min(1)
+min(1,2,3)
+min(1,)
+min(,1)
+

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -138,17 +138,17 @@ void FUN::fn_frac ( FUN::ArgData & arg )
 
 void FUN::fn_is_inf ( FUN::ArgData & arg )
 {
-	arg[0].set_number ( arg[0].is_inf () ? "1" : "0" );
+	arg[0].set_number ( arg[0].is_inf () ? 1 : 0 );
 }
 
 void FUN::fn_is_nan ( FUN::ArgData & arg )
 {
-	arg[0].set_number ( arg[0].is_nan () ? "1" : "0" );
+	arg[0].set_number ( arg[0].is_nan () ? 1 : 0 );
 }
 
 void FUN::fn_is_number ( FUN::ArgData & arg )
 {
-	arg[0].set_number ( arg[0].is_number () ? "1" : "0" );
+	arg[0].set_number ( arg[0].is_number () ? 1 : 0 );
 }
 
 void FUN::fn_log ( FUN::ArgData & arg )

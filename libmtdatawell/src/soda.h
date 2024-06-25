@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -77,8 +77,8 @@ public:
 		) const;
 		// Returns error code.  Interpret via get_error_text()
 
-	inline void set_mode ( int m )	{ m_mode = m; }
-	inline int get_mode () const	{ return m_mode; }
+	void set_mode ( int m )	{ m_mode = m; }
+	int get_mode () const	{ return m_mode; }
 
 /// ----------------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ class SodaTransaction::Op
 public:
 	mtDW::SqliteTransaction trans;
 
-	inline explicit Op ( mtDW::Sqlite const & db )
+	explicit Op ( mtDW::Sqlite const & db )
 		:
 		trans ( db )
 	{

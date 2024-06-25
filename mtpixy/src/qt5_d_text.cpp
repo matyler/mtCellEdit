@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -99,6 +99,7 @@ void DialogPasteText::press_select_font ()
 			mainwindow.mprefs.text_font_size
 			);
 
+	fnt.setStyleName ( mainwindow.mprefs.text_font_style.c_str() );
 	fnt.setBold ( mainwindow.mprefs.text_font_bold );
 	fnt.setItalic ( mainwindow.mprefs.text_font_italic );
 	fnt.setUnderline ( mainwindow.mprefs.text_font_underline );
@@ -114,6 +115,10 @@ void DialogPasteText::press_select_font ()
 
 	mainwindow.backend.uprefs.set ( PREFS_TEXT_FONT_NAME,
 		fnt.family ().toUtf8 ().data () );
+
+	mainwindow.backend.uprefs.set ( PREFS_TEXT_FONT_STYLE,
+		fnt.styleName ().toUtf8 ().data () );
+
 	mainwindow.backend.uprefs.set ( PREFS_TEXT_FONT_SIZE, fnt.pointSize() );
 	mainwindow.backend.uprefs.set ( PREFS_TEXT_FONT_BOLD, fnt.bold () ?
 		1 : 0 );
@@ -133,7 +138,7 @@ int Mainwindow::render_text_paste ()
 	return backend.file.clipboard_render_text (
 		backend.clipboard,
 		mprefs.text_entry.c_str(),
-		mprefs.text_font_name.c_str(),
+		mprefs.get_font_name_full().c_str(),
 		mprefs.text_font_size,
 		mprefs.text_font_bold,
 		mprefs.text_font_italic,
@@ -165,7 +170,7 @@ void DialogPasteText::update_preview ()
 		pixy_pixmap_get_bytes_per_pixel ( mainwindow.backend.file.
 			get_pixmap () ),
 		mainwindow.mprefs.text_entry.c_str(),
-		mainwindow.mprefs.text_font_name.c_str(),
+		mainwindow.mprefs.get_font_name_full().c_str(),
 		mainwindow.mprefs.text_font_size,
 		mainwindow.mprefs.text_font_bold,
 		mainwindow.mprefs.text_font_italic,
@@ -179,7 +184,8 @@ void DialogPasteText::update_preview ()
 
 void DialogPasteText::update_font_table ()
 {
-	m_label_font_name->setText ( mainwindow.mprefs.text_font_name.c_str() );
+	m_label_font_name->setText ( mainwindow.mprefs.
+		get_font_name_full().c_str() );
 	m_label_font_size->setText ( QString ( "%1" )
 		.arg ( mainwindow.mprefs.text_font_size ) );
 

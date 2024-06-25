@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2022 Mark Tyler
+	Copyright (C) 2019-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ Global::Global ()
 	jump_table[ "rida" ]	= [this](){ return pixy_rida(); };
 	jump_table[ "risa" ]	= [this](){ return pixy_risa(); };
 	jump_table[ "scale" ]	= [this](){ return pixy_scale(); };
-	jump_table[ "twit" ]	= [this](){ return pixy_twit(); };
 
 	ft_table[ "bmp" ]	= PIXY_FILE_TYPE_BMP;
 	ft_table[ "gif" ]	= PIXY_FILE_TYPE_GIF;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2021 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -182,5 +182,35 @@ int mtPixyUI::File::destroy_alpha ()
 	}
 
 	return 1;
+}
+
+int mtPixyUI::File::effect_equalize_image_info (
+	unsigned char rgb_min_max[6]
+	) const
+{
+	return pixy_pixmap_equalize_image_info ( get_pixmap(), rgb_min_max );
+}
+
+int mtPixyUI::File::effect_equalize_palette_info (
+	unsigned char rgb_min_max[6]
+	) const
+{
+	return pixy_pixmap_equalize_palette_info ( get_pixmap(), rgb_min_max );
+}
+
+int mtPixyUI::File::effect_equalize_image (
+	unsigned char const rgb_min_max[6]
+	)
+{
+	return image_new_chores ( pixy_pixmap_equalize_image (
+		get_pixmap(), rgb_min_max ) );
+}
+
+int mtPixyUI::File::effect_equalize_palette (
+	unsigned char const rgb_min_max[6]
+	)
+{
+	return image_new_chores ( pixy_pixmap_equalize_palette (
+		get_pixmap(), rgb_min_max ) );
 }
 

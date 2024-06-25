@@ -16,6 +16,8 @@ ENABLE_MAN_PAGE=
 ENABLE_HANDBOOK=
 ENABLE_DESKTOP=
 
+QT6_LIBS="Qt6Widgets Qt6OpenGL Qt6OpenGLWidgets Qt6Gui Qt6Core"
+
 
 UNDERLINE_TEXT()
 {
@@ -389,7 +391,7 @@ MTCF_POST_CONF()
 		MT_GET_MOC_5
 		;;
 	qt6 )
-		MTCF_PKGCONFIG "Qt6Widgets Qt6OpenGLWidgets"
+		MTCF_PKGCONFIG "$QT6_LIBS"
 		I_EX+=" -DU_TK_QT6"
 		MT_GET_MOC_6
 		;;
@@ -493,29 +495,8 @@ MT_GET_MOC_5()
 
 MT_GET_MOC_6()
 {
-	# As of Qt 6.3 there is no single way to get the location of moc on different Linux distros, so we must hack a solution ...
-
-	ARCH_MOC="/usr/lib/qt6/moc"
-	UBUNTU_MOC="/usr/lib/qt6/libexec/moc"
-	SUSE_MOC="/usr/lib64/qt6/libexec/moc"
-
-	if [ -e "$ARCH_MOC" ]
-	then
-		MOC="$ARCH_MOC"
-	elif [ -e "$UBUNTU_MOC" ]
-	then
-		MOC="$UBUNTU_MOC"
-	elif [ -e "$SUSE_MOC" ]
-	then
-		# Fedora / openSuse
-		MOC="$SUSE_MOC"
-	elif hash qtpaths6 2>/dev/null
-	then
-		MOC=$(qtpaths6 --binaries-dir)"/moc"
-	else
-		MOC="moc"
-	fi
-
-	MOC="$MOC $(pkg-config Qt6Widgets Qt6OpenGLWidgets --cflags)"
+	# This works with Qt 6.4+ on the major distros
+	MOC="$(pkg-config --variable=libexecdir Qt6Widgets)/moc"
+	MOC="$MOC $(pkg-config $QT6_LIBS --cflags)"
 }
 

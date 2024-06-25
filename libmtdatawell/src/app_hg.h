@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2019-2022 Mark Tyler
+	Copyright (C) 2019-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -52,15 +52,15 @@ public:
 	int encode_utf8font_file ( int type );
 	int cleanse_file ();
 
-	inline int get_file_size () const { return m_file_in_len; }
-	inline int get_covert_size () const { return m_file_covert_len; }
-	inline int get_utf8_len () const { return m_file_in_utf8; }
+	int get_file_size () const		{ return m_file_in_len; }
+	int get_covert_size () const		{ return m_file_covert_len; }
+	int get_utf8_len () const		{ return m_file_in_utf8; }
 		// -1=not UTF-8 else glyph total
-	inline int get_utf8_bit_capacity () const { return m_file_in_utf8_bits;}
-	inline int get_utf8_byte_capacity () const{return m_file_in_utf8_bytes;}
-	inline int get_utf8_encoded_tot () const{return m_file_in_utf8_encoded;}
-	inline int get_utf8_roots_tot () const { return m_file_in_utf8_roots; }
-	inline int get_utf8_misc_tot () const { return m_file_in_utf8_misc; }
+	int get_utf8_bit_capacity () const	{ return m_file_in_utf8_bits;}
+	int get_utf8_byte_capacity () const	{return m_file_in_utf8_bytes;}
+	int get_utf8_encoded_tot () const	{return m_file_in_utf8_encoded;}
+	int get_utf8_roots_tot () const		{ return m_file_in_utf8_roots; }
+	int get_utf8_misc_tot () const		{ return m_file_in_utf8_misc; }
 
 private:
 	void file_in_set ( char * buf, int len );

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2018 Mark Tyler
+	Copyright (C) 2008-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -352,7 +352,7 @@ mtUtreeNode * mtkit_utree_load_mem (
 					goto error;
 				}
 
-				res = mtkit_utree_set_attribute_str ( current,
+				res = mtkit_utree_set_attribute_string( current,
 					newtxt, newval );
 
 				free ( newtxt );
@@ -1229,7 +1229,7 @@ int mtkit_utree_get_attribute_double (
 	return mtkit_strtod ( txt, value, NULL, 1 );
 }
 
-int mtkit_utree_get_attribute_str (
+int mtkit_utree_get_attribute_string (
 	mtUtreeNode		* const	node,
 	char		const	* const	name,
 	char		const *	* const	value
@@ -1243,7 +1243,7 @@ int mtkit_utree_get_attribute_str (
 	return 0;
 }
 
-static int mtkit_utree_set_attribute_int (
+int mtkit_utree_set_attribute_int (
 	mtUtreeNode		* const	node,
 	char		const	* const	name,
 	int			const	value
@@ -1257,7 +1257,7 @@ static int mtkit_utree_set_attribute_int (
 	return mtkit_utree_set_attribute_real ( node, name, txt );
 }
 
-static int mtkit_utree_set_attribute_double (
+int mtkit_utree_set_attribute_double (
 	mtUtreeNode		* const	node,
 	char		const	* const	name,
 	double			const	value
@@ -1271,7 +1271,7 @@ static int mtkit_utree_set_attribute_double (
 	return mtkit_utree_set_attribute_real ( node, name, txt );
 }
 
-int mtkit_utree_set_attribute_str (
+int mtkit_utree_set_attribute_string (
 	mtUtreeNode		* const	node,
 	char		const	* const	name,
 	char		const	* const	value
@@ -1315,7 +1315,7 @@ int mtkit_utree_bulk_get (
 		{
 			if ( table_s->var )
 			{
-				if ( ! mtkit_utree_get_attribute_str ( node,
+				if ( ! mtkit_utree_get_attribute_string ( node,
 					table_s->name, &n ) )
 				{
 					if ( mtkit_strfreedup( table_s->var, n))
@@ -1359,7 +1359,7 @@ int mtkit_utree_bulk_set (
 {
 	BULK_LOOP_SET ( table_i, mtkit_utree_set_attribute_int )
 	BULK_LOOP_SET ( table_d, mtkit_utree_set_attribute_double )
-	BULK_LOOP_SET ( table_s, mtkit_utree_set_attribute_str )
+	BULK_LOOP_SET ( table_s, mtkit_utree_set_attribute_string )
 
 	return 0;
 }

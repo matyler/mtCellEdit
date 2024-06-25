@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021-2022 Mark Tyler
+	Copyright (C) 2021-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,14 +15,29 @@
 	along with this program in the file COPYING.
 */
 
-#include "mandy.h"
+#include "mandy_brot.h"
+
+
+
+// Switch to arbitrary precision in this range:
+static constexpr char const * const AXIS_RANGE_MIN_BIGNUM_TXT = "1.0e-120";
+static constexpr char const * const AXIS_RANGE_MAX_BIGNUM_TXT = "1.0e-12";
 
 
 
 Mandelbrot::Mandelbrot ()
 	:
-	m_pal		( m_palette.get_palette () ),
-	m_work		( WORK_QUEUE_SIZE )
+	k_axis_range_min_bignum	( AXIS_RANGE_MIN_BIGNUM_TXT ),
+	k_axis_range_max_bignum	( AXIS_RANGE_MAX_BIGNUM_TXT ),
+	k_axis_range_default	( AXIS_RANGE_DEFAULT ),
+	k_axis_range_max	( AXIS_RANGE_MAX ),
+	k_cxy_min		( AXIS_CXY_MIN ),
+	k_cxy_max		( AXIS_CXY_MAX ),
+	k_cxy_default		( AXIS_CXY_DEFAULT ),
+	m_double		( m_settings ),
+	m_float			( m_settings ),
+	m_float_fast		( m_settings ),
+	m_rational		( m_settings )
 {
 }
 
@@ -32,7 +47,7 @@ Mandelbrot::~Mandelbrot ()
 
 int Mandelbrot::get_status () const
 {
-	switch ( m_thread[0].get_status () )
+	switch ( m_settings.thread[0].get_status () )
 	{
 	case mtGin::Thread::THREAD_NOT_STARTED:
 	case mtGin::Thread::THREAD_FINISHED:
@@ -69,7 +84,7 @@ int Mandelbrot::set_pixmap_size (
 		return 1;
 	}
 
-	m_pixmap.reset ( pixmap );
+	m_settings.pixmap.reset ( pixmap );
 
 	clear_pixmap ();
 
@@ -78,48 +93,98 @@ int Mandelbrot::set_pixmap_size (
 
 void Mandelbrot::calculate_range_h ()
 {
-	int const w = pixy_pixmap_get_width ( m_pixmap.get() );
-	int const h = pixy_pixmap_get_height ( m_pixmap.get() );
+	int const w = pixy_pixmap_get_width ( get_pixmap() );
+	int const h = pixy_pixmap_get_height ( get_pixmap() );
+
+/*
 	double const aspect = (w == 0) ? 0.0 : (double)w / (double)h;
-
 	m_range_h = m_range_w / aspect;
-}
+*/
 
-void Mandelbrot::calculate_xyo ()
-{
-	m_xo = m_cx - m_range_w / 2.0;
-	m_yo = m_cy - m_range_h / 2.0;
+	if ( w == 0 )
+	{
+		m_settings.range_h.set_number ( m_settings.range_w );
+		return;
+	}
+
+	m_settings.range_h = m_settings.range_w;
+	m_settings.range_h *= h;
+	m_settings.range_h /= w;
 }
 
 void Mandelbrot::zoom_cxyrange (
-	double	const	cx,
-	double	const	cy,
-	double	const	range_w
+	char	const * const	cx,
+	char	const * const	cy,
+	char	const * const	range_w
 	)
 {
-	m_cx = mtkit_double_bound ( cx, AXIS_CXY_MIN, AXIS_CXY_MAX );
-	m_cy = mtkit_double_bound ( cy, AXIS_CXY_MIN, AXIS_CXY_MAX );
-	m_range_w = mtkit_double_bound(range_w, AXIS_RANGE_MIN, AXIS_RANGE_MAX);
+	if ( cx )
+	{
+		m_settings.cx.set_number ( cx );
+		m_settings.cx.set_bound ( k_cxy_min, k_cxy_max );
+	}
+	else
+	{
+		m_settings.cx.set_number ( k_cxy_default );
+	}
+
+	if ( cy )
+	{
+		m_settings.cy.set_number ( cy );
+		m_settings.cy.set_bound ( k_cxy_min, k_cxy_max );
+	}
+	else
+	{
+		m_settings.cy.set_number ( k_cxy_default );
+	}
+
+	if ( range_w )
+	{
+		m_settings.range_w.set_number ( range_w );
+		m_settings.range_w.set_bound ( k_axis_range_min_bignum,
+			k_axis_range_max );
+	}
+	else
+	{
+		m_settings.range_w.set_number ( k_axis_range_default );
+	}
 
 	calculate_range_h ();
 }
 
 void Mandelbrot::set_depth_max ( int const d )
 {
-	m_depth_max = (size_t)mtkit_int_bound( d, DEPTH_MAX_MIN, DEPTH_MAX_MAX);
+	m_settings.depth_max = (size_t)mtkit_int_bound( d, DEPTH_MAX_MIN,
+		DEPTH_MAX_MAX);
 }
 
 void Mandelbrot::set_verbose ( int const v )
 {
-	m_verbose = v;
+	m_settings.verbose = v;
 }
 
-int Mandelbrot::build_mandelbrot_set ( int const threads )
+void Mandelbrot::set_threads ( int const v )
 {
-	if ( threads < THREAD_TOTAL_MIN || threads > THREAD_TOTAL_MAX )
+	m_settings.threads = v;
+}
+
+void Mandelbrot::set_deep_zoom_type ( int const v )
+{
+	m_settings.deep_zoom_type = v;
+}
+
+void Mandelbrot::set_deep_zoom_on ( int const v )
+{
+	m_settings.deep_zoom_on = v;
+}
+
+int Mandelbrot::build_mandelbrot_set ()
+{
+	if ( m_settings.threads < THREAD_TOTAL_MIN
+		|| m_settings.threads > THREAD_TOTAL_MAX )
 	{
 		std::cerr << "build_mandelbrot_set: bad thread number="
-			<< threads << "\n";
+			<< m_settings.threads << "\n";
 		return 1;
 	}
 
@@ -129,8 +194,7 @@ int Mandelbrot::build_mandelbrot_set ( int const threads )
 		return 1;
 	}
 
-	mtPixmap * const pixmap = m_pixmap.get ();
-	if ( ! pixmap )
+	if ( ! get_pixmap() )
 	{
 		std::cerr << "build_mandelbrot_set: no pixmap.\n";
 		return 1;
@@ -138,240 +202,92 @@ int Mandelbrot::build_mandelbrot_set ( int const threads )
 
 	clear_pixmap ();
 
-	m_thread_tot	= threads;
-	m_dest		= pixy_pixmap_get_canvas ( pixmap );
-	calculate_xyo ();
-	m_w		= pixy_pixmap_get_width ( pixmap );
-	m_h		= pixy_pixmap_get_height ( pixmap );
-	m_stride	= m_w * 3;
-	m_w_dec		= m_w - 1;
-	m_h_dec		= m_h - 1;
-	m_pal_size	= m_pal.size();
+	int res;
 
-	if ( threads > 1 )
+	if ( m_settings.verbose )
 	{
-		if ( m_thread[0].init ( [this]() { build_multi_leader (); } ) )
+		printf ( "Mandelbrot::build_mandelbrot_set " );
+		info_to_stdout ();
+	}
+
+	if ( m_settings.deep_zoom_on
+		&& m_settings.range_w > k_axis_range_max_bignum )
+	{
+		if ( m_settings.verbose )
 		{
-			std::cerr <<
-				"build_mandelbrot_set: thread init failure.\n";
-			return 1;
+			std::cout << "m_double build\n";
 		}
 
-		if ( m_thread[0].start () )
-		{
-			std::cerr <<
-				"build_mandelbrot_set: thread start failure.\n";
-			return 1;
-		}
+		res = m_double.build ();
 	}
 	else
 	{
-		if ( m_thread[0].init ( [this]() { build_single_worker (); } ) )
+		switch ( m_settings.deep_zoom_type )
 		{
-			std::cerr <<
-				"build_mandelbrot_set: thread init failure.\n";
-			return 1;
-		}
+		case DEEP_ZOOM_RATIONAL:
+			res = m_rational.build ();
 
-		if ( m_thread[0].start () )
-		{
-			std::cerr <<
-				"build_mandelbrot_set: thread start failure.\n";
-			return 1;
-		}
-	}
-
-	return 0;
-}
-
-void Mandelbrot::start_timer ()
-{
-	if ( ! m_verbose )
-	{
-		return;
-	}
-
-	m_clock.restart ();
-	printf ( "Mandelbrot::build_thread -cx %.15g -cy %.15g -range %.15g"
-		" -depth %i\n",
-		get_cx(), get_cy(), m_range_w, (int)m_depth_max );
-}
-
-void Mandelbrot::finish_timer () const
-{
-	if ( ! m_verbose )
-	{
-		return;
-	}
-
-	printf ( "Mandelbrot::build_thread time=%.15g secs\n",
-		m_clock.seconds());
-}
-
-void Mandelbrot::build_single_worker ()
-{
-	start_timer ();
-
-	for ( int y = 0; y < m_h; y++ )
-	{
-		switch ( m_thread[0].get_status() )
-		{
-		case mtGin::Thread::THREAD_TERMINATED:
-			return;
-		}
-
-		render_line ( y );
-	}
-
-	finish_timer ();
-}
-
-void Mandelbrot::build_multi_leader ()
-{
-	start_timer ();
-
-	m_work.clear ();
-
-	for ( int t = 1; t <= m_thread_tot; t++ )
-	{
-		if ( m_thread[ t ].init ( [this]()
+			if ( m_settings.verbose )
 			{
-				build_multi_workers ();
-			} )
-			)
-		{
-			std::cerr <<
-				"build_mandelbrot_set: thread init failure.\n";
-			return;
-		}
+				std::cout << "m_rational build\n";
+			}
+			break;
 
-		if ( m_thread[ t ].start () )
-		{
-			std::cerr <<
-				"build_mandelbrot_set: thread start failure.\n";
-			return;
-		}
-	}
+		case DEEP_ZOOM_FLOAT:
+			res = m_float.build ();
 
-	for ( int y = 0; y < m_h; )
-	{
-		switch ( m_thread[0].get_status() )
-		{
-		case mtGin::Thread::THREAD_TERMINATED:
-			goto finish;
-		}
+			if ( m_settings.verbose )
+			{
+				std::cout << "m_float build\n";
+			}
+			break;
 
-		int const status = m_work.push ( y );
+		case DEEP_ZOOM_FLOAT_FAST:
+			res = m_float_fast.build ();
 
-		if ( status == mtGin::THREADWORK_PUSH_ADDED )
-		{
-			y++;
-			continue;
-		}
-		else if ( status == mtGin::THREADWORK_PUSH_NOT_ADDED )
-		{
-			SDL_Delay ( 1 );
+			if ( m_settings.verbose )
+			{
+				std::cout << "m_float_fast build\n";
+			}
+			break;
 
-			continue;
-		}
+		case DEEP_ZOOM_DOUBLE:
+			res = m_double.build ();
 
-		std::cerr << "build_multi_leader: unexpected error!\n";
-	}
+			if ( m_settings.verbose )
+			{
+				std::cout << "m_double build\n";
+			}
+			break;
 
-finish:
-	m_work.finished ();
-
-	for ( int i = 1; i <= m_thread_tot; i++ )
-	{
-		m_thread[i].join();
-	}
-
-	finish_timer ();
-}
-
-void Mandelbrot::build_multi_workers ()
-{
-	int y = 0;
-
-	while ( 1 )
-	{
-		switch ( m_work.pop ( y ) )
-		{
-		case mtGin::THREADWORK_POP_EMPTY_WORK_TO_COME:
-			SDL_Delay ( 1 );
-			continue;
-
-		case mtGin::THREADWORK_POP_HAS_WORK:
-			render_line ( y );
-			continue;
-
-		case mtGin::THREADWORK_POP_EMPTY_WORK_FINISHED:
-		case mtGin::THREADWORK_POP_ERROR:
 		default:
-			return;
+			res = 0;
+
+			if ( m_settings.verbose )
+			{
+				std::cout << "No deep render build\n";
+			}
+			break;
 		}
 	}
+
+	return res;
 }
 
-size_t Mandelbrot::calculate (
-	double	const	x,
-	double	const	y
-	) const
+void Mandelbrot::info_to_stdout () const
 {
-	double x2 = 0.0;
-	double y2 = 0.0;
-	double w = 0.0;
-	size_t i = 0;
-
-	while ( (x2 + y2) <= 4.0 && i < m_depth_max )
-	{
-		double const x1 = x2 - y2 + x;
-		double const y1 = w - x2 - y2 + y;
-
-		x2 = x1 * x1;
-		y2 = y1 * y1;
-
-		w = (x1 + y1) * (x1 + y1);
-
-		i++;
-	}
-
-	return i;
-}
-
-void Mandelbrot::render_line ( int const y ) const
-{
-	unsigned char	* d = m_dest + m_stride * y;
-	double	const	mby = m_yo + ((double)y / m_h_dec) * m_range_h;
-
-	for ( int x = 0; x < m_w; x++ )
-	{
-		unsigned char	r, g, b;
-		double	const	mbx = m_xo + ((double)x / m_w_dec) * m_range_w;
-		size_t	const	i = this->calculate ( mbx, mby );
-
-		if ( i < m_depth_max )
-		{
-			size_t const col = i % m_pal_size;
-
-			r = m_pal[ col ].red;
-			g = m_pal[ col ].green;
-			b = m_pal[ col ].blue;
-		}
-		else
-		{
-			r = g = b = 0;
-		}
-
-		*d++ = r;
-		*d++ = g;
-		*d++ = b;
-	}
+	std::cout << "-cx \"" << m_settings.cx.to_string()
+		<< "\" -cy \"" << m_settings.cy.to_string()
+		<< "\" -range \"" << m_settings.range_w.to_string()
+		<< "\" -depth " << m_settings.depth_max
+		<< " -ow " << pixy_pixmap_get_width ( get_pixmap() )
+		<< " -oh " << pixy_pixmap_get_height ( get_pixmap() )
+		<< "\n";
 }
 
 void Mandelbrot::build_terminate ()
 {
-	m_thread[0].terminate ();
+	m_settings.thread[0].terminate ();
 }
 
 int Mandelbrot::zoom_in (
@@ -379,7 +295,7 @@ int Mandelbrot::zoom_in (
 	int	const	y
 	)
 {
-	return zoom ( x, y, 0.5 );
+	return zoom ( x, y, 1, 2 );
 }
 
 int Mandelbrot::zoom_out (
@@ -387,27 +303,27 @@ int Mandelbrot::zoom_out (
 	int	const	y
 	)
 {
-	return zoom ( x, y, 2.0 );
+	return zoom ( x, y, 2, 1 );
 }
 
 void Mandelbrot::zoom_left ()
 {
-	zoom_cxyrange ( m_cx - m_range_w/2, m_cy, m_range_w );
+	m_settings.cx -= m_settings.range_w/2;
 }
 
 void Mandelbrot::zoom_right ()
 {
-	zoom_cxyrange ( m_cx + m_range_w/2, m_cy, m_range_w );
+	m_settings.cx += m_settings.range_w/2;
 }
 
 void Mandelbrot::zoom_up ()
 {
-	zoom_cxyrange ( m_cx, m_cy - m_range_h/2, m_range_w );
+	m_settings.cy -= m_settings.range_h/2;
 }
 
 void Mandelbrot::zoom_down ()
 {
-	zoom_cxyrange ( m_cx, m_cy + m_range_h/2, m_range_w );
+	m_settings.cy += m_settings.range_h/2;
 }
 
 int Mandelbrot::zoom_reset ()
@@ -418,9 +334,9 @@ int Mandelbrot::zoom_reset ()
 		return 1;
 	}
 
-	m_cx = AXIS_CXY_DEFAULT;
-	m_cy = AXIS_CXY_DEFAULT;
-	m_range_w = AXIS_RANGE_DEFAULT;
+	m_settings.cx.set_number ( k_cxy_default );
+	m_settings.cy.set_number ( k_cxy_default );
+	m_settings.range_w.set_number ( k_axis_range_default );
 
 	calculate_range_h ();
 
@@ -430,7 +346,8 @@ int Mandelbrot::zoom_reset ()
 int Mandelbrot::zoom (
 	int	const	x,
 	int	const	y,
-	double	const	scale
+	int	const	multiply,
+	int	const	divide
 	)
 {
 	if ( get_status () != STATUS_IDLE )
@@ -439,16 +356,27 @@ int Mandelbrot::zoom (
 		return 1;
 	}
 
-	double const range_w = m_range_w * scale;
+	mtDW::Rational range_w ( m_settings.range_w );
 
-	if ( range_w < AXIS_RANGE_MIN || range_w > AXIS_RANGE_MAX )
+	if ( multiply != 1 )
 	{
-		std::cerr << "zoom: zoom limit reached. range_w=" << range_w
+		range_w *= multiply;
+	}
+
+	if ( divide != 1 )
+	{
+		range_w /= divide;
+	}
+
+	if ( range_w < k_axis_range_min_bignum || range_w > k_axis_range_max )
+	{
+		std::cerr << "zoom: zoom limit reached. range_w="
+			<< range_w.to_string()
 			<< "\n";
 		return 1;
 	}
 
-	mtPixmap const * const	pixmap = m_pixmap.get ();
+	mtPixmap const * const	pixmap = get_pixmap();
 	int		const	w = pixy_pixmap_get_width ( pixmap );
 	int		const	h = pixy_pixmap_get_height ( pixmap );
 
@@ -465,11 +393,37 @@ int Mandelbrot::zoom (
 	}
 
 	// Current decimal values of this pixel point
+/*
 	calculate_xyo ();
+
 	m_cx = m_xo + m_range_w * ((double)x / ((double)(w - 1)));
 	m_cy = m_yo + m_range_h * ((double)y / ((double)(h - 1)));
+=>
+	m_cx = m_cx - m_range_w / 2.0 + m_range_w * ((double)x / ((double)(w - 1)));
+	m_cy = m_cy - m_range_h / 2.0 + m_range_h * ((double)y / ((double)(h - 1)));
+=>
+	m_cx = m_cx + m_range_w * (x / (w - 1) - 1.0/2.0);
+	m_cy = m_cy + m_range_h * (y / (h - 1) - 1.0/2.0);
+=>
+	m_cx = m_cx + m_range_w * ( 2*x / 2*(w - 1) - (w-1) / 2*(w - 1) );
+	m_cy = m_cy + m_range_h * ( 2*y / 2*(h - 1) - (h-1) / 2*(h - 1) );
+=>
+	m_cx = m_cx + m_range_w * ( (2*x - w + 1) / 2*(w - 1) );
+	m_cy = m_cy + m_range_h * ( (2*y - h + 1) / 2*(h - 1) );
+*/
 
-	m_range_w = range_w;
+	mtDW::Rational dx ( 2*x - w + 1 );
+	dx *= m_settings.range_w;
+	dx /= 2*(w - 1);
+	m_settings.cx += dx;
+
+	mtDW::Rational dy ( 2*y - h + 1 );
+	dy *= m_settings.range_h;
+	dy /= 2*(h - 1);
+	m_settings.cy += dy;
+
+	m_settings.range_w.set_number ( range_w );
+
 	calculate_range_h ();
 
 	return 0;
@@ -477,7 +431,7 @@ int Mandelbrot::zoom (
 
 void Mandelbrot::clear_pixmap () const
 {
-	mtPixmap	* const	pixmap = m_pixmap.get();
+	mtPixmap	* const	pixmap = m_settings.pixmap.get();
 	unsigned char	* const	dest = pixy_pixmap_get_canvas ( pixmap );
 	int		const	w = pixy_pixmap_get_width ( pixmap );
 	int		const	h = pixy_pixmap_get_height ( pixmap );

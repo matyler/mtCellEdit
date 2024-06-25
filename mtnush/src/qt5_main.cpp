@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -163,6 +163,7 @@ MainWindow::MainWindow ( Cline & cline )
 ///	Calculator tabs --------------------------------------------------------
 
 	ADD_CALCULATOR_TAB( "Float", float )
+	ADD_CALCULATOR_TAB( "Double", double )
 	ADD_CALCULATOR_TAB( "Integer", int )
 	ADD_CALCULATOR_TAB( "Rational", rational )
 

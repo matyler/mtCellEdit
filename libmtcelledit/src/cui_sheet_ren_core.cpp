@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011-2022 Mark Tyler
+	Copyright (C) 2011-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -323,7 +323,7 @@ void SheetRenCore::get_cell_text_rgb (
 	int		const	col,
 	CedCell const * const	cell,
 	unsigned char		color[3]
-	)
+	) const
 {
 	if ( has_cursor ( row, col ) )
 	{

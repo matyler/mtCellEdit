@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -38,10 +38,10 @@ class OTP
 public:
 	explicit OTP ( Butt::Op & op );
 
-	inline std::string const & get_path () const { return m_path; }
-	inline std::string const & get_name () const { return m_name; }
-	inline int get_bucket () const		{ return m_bucket; }
-	inline int get_position () const	{ return m_position; }
+	std::string const & get_path () const { return m_path; }
+	std::string const & get_name () const { return m_name; }
+	int get_bucket () const		{ return m_bucket; }
+	int get_position () const	{ return m_position; }
 
 	void set_path ( std::string const & name );
 
@@ -121,11 +121,11 @@ public:
 	int empty_buckets ();
 		// Returns error code.  Interpret via get_error_text()
 
-	inline bool is_read_only() const{ return (m_status & STATUS_READ_ONLY);}
+	bool is_read_only() const	{ return (m_status & STATUS_READ_ONLY);}
 	void set_read_only ();
 	void set_read_write ();
 
-	inline int get_write_next () const	{ return m_write_next; }
+	int get_write_next () const	{ return m_write_next; }
 
 	void get_otp_list ( std::vector<OTPinfo> &list ) const;
 

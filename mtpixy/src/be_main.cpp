@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ void Backend::detect_ui_scale ( int const menu_height )
 	calc_ui_scale ();
 }
 
-std::string Backend::get_titlebar_text ()
+std::string Backend::get_titlebar_text () const
 {
 	char	const * const	f = file.get_filename ();
 	std::string	const	fullname ( f ? f : "" );

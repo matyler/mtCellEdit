@@ -7,6 +7,7 @@
 
 SUDO=""
 MAKE_ARGS="-j 8"
+PKGQT="qt5"
 
 . ./src/_build_global.txt
 
@@ -21,11 +22,13 @@ MT_PARSE_ARGS libmtkit libmtpixy libmtqex5
 # NOTE: we use *-qt5 & qex5, but this Qt reference is irrelevant until we set CONF below.
 
 case "$1" in
-"mtcelledit"* )	MT_PARSE_ARGS libmtcelledit mtcelledit-qt5;;
-"mtdatawell"* )	MT_PARSE_ARGS libmtdatawell mtdatawell-qt5;;
-"mtpixy"* )	MT_PARSE_ARGS mtpixy-qt5;;
-"mtraft"* )	MT_PARSE_ARGS libmtcelledit mtraft-qt5;;
-"mtcrul"* )	MT_PARSE_ARGS mtcrul-qt5;;
+"mtcelledit"* )	MT_PARSE_ARGS libmtcelledit mtcelledit-$PKGQT;;
+"mtdatawell"* )	MT_PARSE_ARGS libmtdatawell mtdatawell-$PKGQT;;
+"mtpixy"* )	MT_PARSE_ARGS mtpixy-$PKGQT;;
+"mtraft"* )	MT_PARSE_ARGS libmtcelledit mtraft-$PKGQT;;
+"mtnush"* )	MT_PARSE_ARGS libmtdatawell mtnush-$PKGQT;;
+"mtcrul"* )	MT_PARSE_ARGS libmtdatawell libmtgin mtcrul-$PKGQT;;
+"mtwasp"* )	MT_PARSE_ARGS libmtdatawell libmtgin mtwasp-$PKGQT;;
 * )
 	echo
 	echo "ERROR - argument '$1' not recognised"
@@ -46,8 +49,8 @@ APPDIR=$(pwd)/appdir
 rm -rf $APPDIR
 ./build_install.sh flush
 
-PRECONF="CFLAGS=\"-I$APPDIR/usr/include -O1 -std=gnu11\""
-PRECONF="$PRECONF CXXFLAGS=\"-I$APPDIR/usr/include -O1 -std=gnu++11\""
+PRECONF="CFLAGS=\"-I$APPDIR/usr/include -O2 -std=gnu11\""
+PRECONF="$PRECONF CXXFLAGS=\"-I$APPDIR/usr/include -O2 -std=gnu++11\""
 PRECONF="$PRECONF LDFLAGS=\"-L$APPDIR/usr/lib -Wl,--as-needed\""
 PRECONF="$PRECONF APPIMAGE_PREFIX=\"../..\""
 

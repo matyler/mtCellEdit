@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2021 Mark Tyler
+	Copyright (C) 2016-2023 Mark Tyler
 
 	Code ideas and portions from mtPaint:
 	Copyright (C) 2004-2006 Mark Tyler
@@ -194,6 +194,11 @@ mtPixmap * pixy_pixmap_effect_rgb_action (
 	int		const	it
 	)
 {
+	if ( ! pixmap )
+	{
+		return NULL;
+	}
+
 	if ( PIXY_PIXMAP_BPP_RGB != pixmap->bpp || ! pixmap->canvas )
 	{
 		return NULL;
@@ -307,6 +312,11 @@ mtPixmap * pixy_pixmap_effect_normalize (
 	mtPixmap const	* const	pixmap
 	)
 {
+	if ( ! pixmap )
+	{
+		return NULL;
+	}
+
 	if ( PIXY_PIXMAP_BPP_RGB != pixmap->bpp || ! pixmap->canvas )
 	{
 		return NULL;
@@ -357,6 +367,11 @@ mtPixmap * pixy_pixmap_effect_bacteria (
 	int		const	n
 	)
 {
+	if ( ! pixmap )
+	{
+		return NULL;
+	}
+
 	if ( PIXY_PIXMAP_BPP_INDEXED != pixmap->bpp || ! pixmap->canvas )
 	{
 		return NULL;
@@ -368,7 +383,6 @@ mtPixmap * pixy_pixmap_effect_bacteria (
 	{
 		return NULL;
 	}
-
 
 	int	const	w = pixmap->width - 2;
 	int	const	h = pixmap->height - 2;

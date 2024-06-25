@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 Mark Tyler
+	Copyright (C) 2021-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -226,6 +226,7 @@ public:
 
 	int queue_data ( short const * buf, size_t buflen );
 				// Push raw data to queue (now)
+	int queue_flush ();
 	int queue_file_data ();	// Push audio file data to queue (if required)
 		// 0=Success; 1=Wrong mode; -1=File I/O error (EOF)
 

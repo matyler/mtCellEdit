@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2021 Mark Tyler
+	Copyright (C) 2008-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -483,6 +483,23 @@ int ced_cell_create_output (
 		}
 	}
 
+	goto finish;
+
+finish_long:
+	// On entry: mtkit_strnncat has truncated the text, so fix to UTF8 char
+	{
+		int const lim = (int)((outlen/4) - 1);
+		int const off = mtkit_utf8_offset ( (unsigned char *)out, lim );
+
+		if ( off < 0 )
+		{
+			snprintf ( out, outlen, "Err:11,0" );
+			return -1;		// Unable to truncate properly
+		}
+
+		out[ off ] = 0;
+	}
+
 finish:
 
 	if ( hjustify )
@@ -498,10 +515,4 @@ finish:
 	}
 
 	return 0;		// Success
-
-finish_long:
-
-	snprintf ( out, outlen, "Err:11,0" );
-
-	return -1;		// Text too long
 }

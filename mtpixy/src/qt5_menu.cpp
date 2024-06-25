@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2022 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -199,19 +199,16 @@ void Mainwindow::update_menus ()
 
 void Mainwindow::update_recent_files ()
 {
-	char		buf[ 2048 ];
-	int		maxlen, c;
-	size_t		i;
+	int const maxlen = mtkit_int_bound ( mprefs.file_recent_maxlen,
+		PREFS_RECENT_MAXLEN_MIN, PREFS_RECENT_MAXLEN_MAX
+		);
 
+	int c = 0;
 
-	maxlen = mprefs.file_recent_maxlen;
-	if ( maxlen < 50 || maxlen > 150 )
+	for ( size_t i = 0; i < RECENT_MENU_TOTAL; i++ )
 	{
-		maxlen = 80;
-	}
+		char buf[ 2048 ];
 
-	for ( c = 0, i = 0; i < RECENT_MENU_TOTAL; i++ )
-	{
 		if ( 1 == mtkit_snip_filename (
 			backend.mprefs.recent_image.filename ( i + 1 ).c_str(),
 			buf, sizeof ( buf ), maxlen )
@@ -436,6 +433,7 @@ void Mainwindow::create_menu ()
 	QAction * act_palette_swap_ab;
 	QAction * act_palette_size;
 	QAction * act_palette_sort;
+	QAction * act_palette_equalize;
 	QAction * act_palette_merge_duplicates;
 	QAction * act_palette_remove_unused;
 
@@ -454,6 +452,7 @@ void Mainwindow::create_menu ()
 	QEX_MENU ( palette_remove_unused, "Remove Unused Colours", NULL, NULL )
 	QEX_MENU ( palette_create_from_canvas, "Create from Canvas", NULL, NULL)
 	QEX_MENU ( palette_quantize_pnn, "Quantize", NULL, NULL )
+	QEX_MENU ( palette_equalize, "Equalize ...", NULL, NULL )
 	QEX_MENU ( palette_sort, "Sort Colours", NULL, "view-sort-ascending" )
 
 	QMenu * palette_menu = menuBar ()->addMenu ( "&Palette" );
@@ -477,11 +476,13 @@ void Mainwindow::create_menu ()
 	palette_menu->addSeparator ();
 	palette_menu->addAction ( act_palette_create_from_canvas );
 	palette_menu->addAction ( act_palette_quantize_pnn );
+	palette_menu->addAction ( act_palette_equalize );
 	palette_menu->addAction ( act_palette_sort );
 
 	QAction * act_effects_transform_color;
 	QAction * act_effects_invert;
 	QAction * act_effects_crt;
+	QAction * act_effects_equalize;
 
 	QEX_MENU ( effects_transform_color,"Transform Colour ...","Insert",NULL)
 	QEX_MENU ( effects_invert, "Invert", NULL, NULL )
@@ -491,6 +492,7 @@ void Mainwindow::create_menu ()
 	QEX_MENU ( effects_soften, "Soften ...", NULL, NULL )
 	QEX_MENU ( effects_emboss, "Emboss", NULL, NULL )
 	QEX_MENU ( effects_normalize, "Normalize", NULL, NULL )
+	QEX_MENU ( effects_equalize, "Equalize ...", NULL, NULL )
 	QEX_MENU ( effects_bacteria, "Bacteria ...", NULL, NULL )
 
 	QMenu * effects_menu = menuBar ()->addMenu ( "Effects" );
@@ -504,6 +506,7 @@ void Mainwindow::create_menu ()
 	effects_menu->addAction ( act_effects_soften );
 	effects_menu->addAction ( act_effects_emboss );
 	effects_menu->addAction ( act_effects_normalize );
+	effects_menu->addAction ( act_effects_equalize );
 	effects_menu->addSeparator ();
 	effects_menu->addAction ( act_effects_bacteria );
 

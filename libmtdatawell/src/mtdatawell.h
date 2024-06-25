@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2023 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -197,12 +197,12 @@ public:
 
 	int open ( char const * path );
 
-	inline mtDW::Well * get_well () const { return m_well.get (); }
-	inline mtDW::Butt * get_butt () const { return m_butt.get (); }
-	inline mtDW::Soda * get_soda () const { return m_soda.get (); }
-	inline mtDW::Tap * get_tap () const { return m_tap.get (); }
+	mtDW::Well * get_well () const { return m_well.get (); }
+	mtDW::Butt * get_butt () const { return m_butt.get (); }
+	mtDW::Soda * get_soda () const { return m_soda.get (); }
+	mtDW::Tap * get_tap () const { return m_tap.get (); }
 
-	inline std::string const & get_path () const { return m_path; }
+	std::string const & get_path () const { return m_path; }
 
 private:
 	std::string			m_path;
@@ -353,8 +353,8 @@ private:
 class WellSaveState
 {
 public:
-	inline explicit WellSaveState ( Well const * well ) : m_well ( well ) {}
-	inline ~WellSaveState () { if ( m_well ) m_well->save_state (); }
+	explicit WellSaveState ( Well const * well ) : m_well ( well ) {}
+	~WellSaveState () { if ( m_well ) m_well->save_state (); }
 
 private:
 	Well	const * const m_well;
@@ -508,8 +508,8 @@ private:
 class ButtSaveState
 {
 public:
-	inline explicit ButtSaveState ( Butt * butt ) : m_butt ( butt ) {}
-	inline ~ButtSaveState () { if ( m_butt ) m_butt->save_state (); }
+	explicit ButtSaveState ( Butt * butt ) : m_butt ( butt ) {}
+	~ButtSaveState () { if ( m_butt ) m_butt->save_state (); }
 
 private:
 	Butt	* const	m_butt;
@@ -720,7 +720,7 @@ public:
 	explicit GlyphNode ( std::string const &nodes );
 		// Caller must have validated this string
 
-	inline char get_root () const { return m_root; }
+	char get_root () const { return m_root; }
 
 	int get_index (
 		std::string const &node,

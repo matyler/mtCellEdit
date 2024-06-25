@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,11 @@
 	along with this program in the file COPYING.
 */
 
+#include "static.h"
+#include "be.h"
+
+
+
 #ifdef U_TK_QT5
 	#include <mtqex5.h>
 #endif
@@ -22,11 +27,6 @@
 #ifdef U_TK_QT6
 	#include <mtqex6.h>
 #endif
-
-
-
-#include "static.h"
-#include "be.h"
 
 
 
@@ -119,6 +119,12 @@ private slots:
 	void press_copy_float_output ();
 	void press_save_float_output ();
 
+	void press_evaluate_double ();
+	void press_show_double_funcs ();
+	void press_show_double_vars ();
+	void press_copy_double_output ();
+	void press_save_double_output ();
+
 	void press_evaluate_int ();
 	void press_show_int_funcs ();
 	void press_show_int_vars ();
@@ -135,6 +141,7 @@ private:
 	void create_menu ();
 
 	void update_float_digits_label ( std::string const & digits );
+	void update_double_digits_label ( std::string const & digits );
 	void update_int_digits_label ( std::string const & digits );
 	void update_rational_digits_label ( std::string const & digits );
 
@@ -147,12 +154,17 @@ private:
 	mtDW::MathState		m_math;
 
 	mtDW::FloatParser	m_parser_float;
+	mtDW::FloatParser	m_parser_double;
 	mtDW::IntegerParser	m_parser_integer;
 	mtDW::RationalParser	m_parser_rational;
 
 	QGroupBox		* m_group_box_float	= nullptr;
 	QPlainTextEdit		* m_text_float_input	= nullptr;
 	QPlainTextEdit		* m_text_float_output	= nullptr;
+
+	QGroupBox		* m_group_box_double	= nullptr;
+	QPlainTextEdit		* m_text_double_input	= nullptr;
+	QPlainTextEdit		* m_text_double_output	= nullptr;
 
 	QGroupBox		* m_group_box_int	= nullptr;
 	QPlainTextEdit		* m_text_int_input	= nullptr;
@@ -175,6 +187,13 @@ public:
 		MemPrefs const & mprefs,
 		char const * title,
 		mtDW::FloatParser const * parser
+		);
+
+	DialogVars (
+		MainWindow * mw,
+		MemPrefs const & mprefs,
+		char const * title,
+		mtDW::DoubleParser const * parser
 		);
 
 	DialogVars (
@@ -208,6 +227,7 @@ private:
 	MemPrefs	const	& m_mprefs;
 
 	mtDW::FloatParser	const * const	m_float_parser = nullptr;
+	mtDW::DoubleParser	const * const	m_double_parser = nullptr;
 	mtDW::IntegerParser	const * const	m_integer_parser = nullptr;
 	mtDW::RationalParser	const * const	m_rational_parser = nullptr;
 

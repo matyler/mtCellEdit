@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -99,6 +99,11 @@ void FUN::fn_bit_or ( FUN::ArgData & arg )
 void FUN::fn_bit_xor ( FUN::ArgData & arg )
 {
 	arg[0].bit_xor ( arg[0], arg[1] );
+}
+
+void FUN::fn_factorial ( FUN::ArgData & arg )
+{
+	arg[0].factorial ( arg[0] );
 }
 
 void FUN::fn_gcd ( FUN::ArgData & arg )

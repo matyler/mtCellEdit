@@ -1,3 +1,7 @@
+3.8	2024-6-25
+
+	* Palette & image equalize functions added.
+
 3.7	2023-6-25
 
 	* pixy_palette_merge_duplicates_rgb & pixy_palette_remove_unused_rgb added.

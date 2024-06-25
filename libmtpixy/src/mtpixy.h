@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2023 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -219,6 +219,16 @@ void pixy_palette_transform_color (
 	int		sa,		// Saturation	-100..100
 	int		hu,		// Hue		-1530..1530
 	int		po		// Posterize	1..8
+	);
+
+void pixy_palette_effect_equalize_info (
+	mtPalette const * palette,	// Must be valid
+	unsigned char	rgb_min_max[6]	// rmin, rmin, gmin, gmax, bmin, bmax
+	);
+
+void pixy_palette_effect_equalize (
+	mtPalette	* palette,	// Must be valid
+	unsigned char const rgb_min_max[6] // rmin, rmin, gmin, gmax, bmin, bmax
 	);
 
 ///	mtPixmap	--------------------------------------------------------
@@ -445,6 +455,26 @@ mtPixmap * pixy_pixmap_convert_to_rgb (
 mtPixmap * pixy_pixmap_convert_to_indexed (
 	mtPixmap const	* pixmap,
 	int		dt		// PIXY_DITHER_**
+	);
+
+mtPixmap * pixy_pixmap_equalize_image (
+	mtPixmap	const *	pixmap,
+	unsigned char const rgb_min_max[6] // rmin, rmin, gmin, gmax, bmin, bmax
+	);
+
+mtPixmap * pixy_pixmap_equalize_palette (
+	mtPixmap	const * pixmap,
+	unsigned char const rgb_min_max[6] // rmin, rmin, gmin, gmax, bmin, bmax
+	);
+
+int pixy_pixmap_equalize_image_info (
+	mtPixmap const	* pixmap,
+	unsigned char rgb_min_max[6] // rmin, rmin, gmin, gmax, bmin, bmax
+	);
+
+int pixy_pixmap_equalize_palette_info (
+	mtPixmap const	* pixmap,
+	unsigned char rgb_min_max[6] // rmin, rmin, gmin, gmax, bmin, bmax
 	);
 
 
@@ -1152,6 +1182,7 @@ public:
 	int scale ( int w, int h, int scaletype );	// PIXY_SCALE_*
 	int convert_to_rgb ();
 	int convert_to_indexed ( int dt );	// PIXY_DITHER_*
+
 	int effect_transform_color (
 		int ga,		// Gamma	-100..100
 		int br,		// Brightness	-255..255
@@ -1168,6 +1199,11 @@ public:
 	int effect_emboss ();
 	int effect_normalize ();
 	int effect_bacteria ( int n );
+	int effect_equalize_image_info ( unsigned char rgb_min_max[6] ) const;
+	int effect_equalize_palette_info ( unsigned char rgb_min_max[6]) const;
+	int effect_equalize_image ( unsigned char const rgb_min_max[6] );
+	int effect_equalize_palette ( unsigned char const rgb_min_max[6] );
+
 	int flip_horizontally ();
 	int flip_vertically ();
 	int rotate_clockwise ();

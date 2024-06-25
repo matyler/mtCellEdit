@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -57,6 +57,9 @@ extern "C" {
 namespace mtDW
 {
 
+class Double;
+class DoubleLexer;
+class DoubleParser;
 class Float;
 class FloatLexer;
 class FloatParser;
@@ -192,6 +195,11 @@ public:
 		mpz_init ( m_num );
 	}
 
+	Integer ( int const num )
+	{
+		mpz_init_set_si ( m_num, num );
+	}
+
 	Integer ( signed long int const num )
 	{
 		mpz_init_set_si ( m_num, num );
@@ -248,7 +256,12 @@ public:
 
 	// After initialization, these are the most efficient ways to set values
 
-	void set_number ( signed long int const num = 0 )
+	void set_number ( int const num )
+	{
+		mpz_set_si ( m_num, num );
+	}
+
+	void set_number ( signed long int const num )
 	{
 		mpz_set_si ( m_num, num );
 	}
@@ -305,15 +318,39 @@ public:
 		return *this;
 	}
 
+	Integer & operator += ( unsigned long int const & rhs )
+	{
+		mpz_add_ui ( m_num, m_num, rhs );
+		return *this;
+	}
+
 	Integer & operator -= ( Integer const & rhs )
 	{
 		mpz_sub ( m_num, m_num, rhs.m_num );
 		return *this;
 	}
 
+	Integer & operator -= ( unsigned long int const & rhs )
+	{
+		mpz_sub_ui ( m_num, m_num, rhs );
+		return *this;
+	}
+
 	Integer & operator *= ( Integer const & rhs )
 	{
 		mpz_mul ( m_num, m_num, rhs.m_num );
+		return *this;
+	}
+
+	Integer & operator *= ( unsigned long int const & rhs )
+	{
+		mpz_mul_ui ( m_num, m_num, rhs );
+		return *this;
+	}
+
+	Integer & operator *= ( long int const & rhs )
+	{
+		mpz_mul_si ( m_num, m_num, rhs );
 		return *this;
 	}
 
@@ -325,6 +362,17 @@ public:
 		}
 
 		mpz_tdiv_q ( m_num, m_num, rhs.m_num );
+		return *this;
+	}
+
+	Integer & operator /= ( unsigned long int const & rhs )
+	{
+		if ( rhs == 0 )
+		{
+			throw 123;
+		}
+
+		mpz_tdiv_q_ui ( m_num, m_num, rhs );
 		return *this;
 	}
 
@@ -380,6 +428,11 @@ public:
 	void bit_xor ( Integer const & a, Integer const & b )
 	{
 		mpz_xor ( m_num, a.m_num, b.m_num );
+	}
+
+	void factorial ( Integer const & a )
+	{
+		mpz_fac_ui ( m_num, a.get_number_uli () );
 	}
 
 	// Greatest Common Divisor
@@ -473,408 +526,55 @@ public:
 	mpz_t & get_num ()		{ return m_num; }
 	mpz_t const & get_num () const	{ return m_num; }
 
+///	Conversions ------------------------------------------------------------
+
+	int get_number_si_fits () const
+	{
+		return mpz_fits_sint_p ( m_num );
+	}
+
+	signed long int get_number_si () const
+	{
+		if ( get_number_si_fits () )
+		{
+			return (int)mpz_get_si ( m_num );
+		}
+
+		throw 123;
+	}
+
+	int get_number_sli_fits () const
+	{
+		return mpz_fits_slong_p ( m_num );
+	}
+
+	signed long int get_number_sli () const
+	{
+		if ( get_number_sli_fits () )
+		{
+			return mpz_get_si ( m_num );
+		}
+
+		throw 123;
+	}
+
+	int get_number_uli_fits () const
+	{
+		return mpz_fits_ulong_p ( m_num );
+	}
+
+	unsigned long int get_number_uli () const
+	{
+		if ( get_number_uli_fits () )
+		{
+			return mpz_get_ui ( m_num );
+		}
+
+		throw 123;
+	}
+
 private:
 	mpz_t		m_num;
-};
-
-
-
-class Float
-{
-private:
-	void init_str ( char const * const text )
-	{
-		if ( text )
-		{
-			if ( mpfr_init_set_str ( m_num, text, 10, m_rnd ) )
-			{
-				std::cerr << "Invalid Float: '" << text <<"'\n";
-				throw 123;
-			}
-		}
-		else
-		{
-			mpfr_init ( m_num );
-		}
-	}
-public:
-	Float ()
-	{
-		mpfr_init ( m_num );
-	}
-
-	Float ( double const num )
-	{
-		char buf[128];
-		snprintf ( buf, sizeof(buf), "%.15g", num );
-		init_str ( buf );
-	}
-
-	Float ( Integer const & num )
-	{
-		mpfr_init_set_z ( m_num, num.get_num(), m_rnd );
-	}
-
-	Float ( Float const & num )
-	{
-		mpfr_init_set ( m_num, num.get_num(), m_rnd );
-	}
-
-	Float ( char const * const text )
-	{
-		init_str ( text );
-	}
-
-	Float ( std::string const & text )
-	{
-		init_str ( text.c_str() );
-	}
-
-	~Float ()
-	{
-		mpfr_clear ( m_num );
-	}
-
-	// Move constructor definition needed for creating C arrays
-	Float ( Float && other )
-	{
-		mpfr_init2 ( m_num, MPFR_PREC_MIN );
-		mpfr_swap ( m_num, other.m_num );
-	}
-
-	// Copy assignment
-	Float & operator = ( Float const & other )
-	{
-		if ( this != &other )
-		{
-			mpfr_set ( m_num, other.m_num, m_rnd );
-		}
-
-		return *this;
-	}
-
-	// Move assignment
-	Float & operator = ( Float && other )
-	{
-		if ( this != &other )
-		{
-			mpfr_swap ( m_num, other.m_num );
-		}
-
-		return *this;
-	}
-
-	// After initialization, these are the most efficient ways to set values
-
-	int set_number ( double const num = 0 )
-	{
-		char buf[128];
-		snprintf ( buf, sizeof(buf), "%.15g", num );
-		return set_number ( buf );
-	}
-
-	int set_number ( Float const & num )
-	{
-		return mpfr_set ( m_num, num.m_num, m_rnd );
-	}
-
-	int set_number ( char const * const text )
-	{
-		mpfr_set_prec ( m_num, mpfr_get_default_prec() );
-		return text ? mpfr_set_str ( m_num, text, 10, m_rnd ) : 1;
-	}
-
-	int set_number ( std::string const & text )
-	{
-		return set_number ( text.c_str() );
-	}
-
-///	Logical comparisons ----------------------------------------------------
-
-	int cmp ( Float const & rhs ) const
-	{
-		return mpfr_cmp ( m_num, rhs.m_num );
-	}
-
-	bool operator <  ( Float const & rhs ) const
-	{
-		return mpfr_less_p ( m_num, rhs.m_num ) != 0;
-	}
-
-	bool operator >  ( Float const & rhs ) const
-	{
-		return mpfr_greater_p ( m_num, rhs.m_num ) != 0;
-	}
-
-	bool operator <= ( Float const & rhs ) const
-	{
-		return mpfr_lessequal_p ( m_num, rhs.m_num ) != 0;
-	}
-
-	bool operator >= ( Float const & rhs ) const
-	{
-		return mpfr_greaterequal_p ( m_num, rhs.m_num ) != 0;
-	}
-
-	bool operator == ( Float const & rhs ) const
-	{
-		return mpfr_equal_p ( m_num, rhs.m_num ) != 0;
-	}
-
-	bool operator != ( Float const & rhs ) const
-	{
-		return mpfr_equal_p ( m_num, rhs.m_num ) == 0;
-	}
-
-	void set_bound ( Float const & rmin, Float const & rmax )
-	{
-		if ( *this < rmin )
-		{
-			this->set_number ( rmin );
-			return;
-		}
-
-		if ( *this > rmax )
-		{
-			this->set_number ( rmax );
-			return;
-		}
-	}
-
-///	Arithmetic -------------------------------------------------------------
-
-	Float & operator += ( Float const & rhs )
-	{
-		mpfr_add ( m_num, m_num, rhs.m_num, m_rnd );
-		return *this;
-	}
-
-	Float & operator -= ( Float const & rhs )
-	{
-		mpfr_sub ( m_num, m_num, rhs.m_num, m_rnd );
-		return *this;
-	}
-
-	Float & operator *= ( Float const & rhs )
-	{
-		mpfr_mul ( m_num, m_num, rhs.m_num, m_rnd );
-		return *this;
-	}
-
-	Float & operator /= ( Float const & rhs )
-	{
-		mpfr_div ( m_num, m_num, rhs.m_num, m_rnd );
-		return *this;
-	}
-
-	// NOTE: These friend operators are somewhat inefficient, so not worth
-	// using inside inner loops, but useful for (a+b).to_string().
-
-	friend Float operator + ( Float lhs, Float const & rhs )
-	{
-		lhs += rhs;
-		return lhs;
-	}
-
-	friend Float operator - ( Float lhs, Float const & rhs )
-	{
-		lhs -= rhs;
-		return lhs;
-	}
-
-	friend Float operator * ( Float lhs, Float const & rhs )
-	{
-		lhs *= rhs;
-		return lhs;
-	}
-
-	friend Float operator / ( Float lhs, Float const & rhs )
-	{
-		lhs /= rhs;
-		return lhs;
-	}
-
-///	Convenience functions --------------------------------------------------
-
-	void abs ()
-	{
-		mpfr_abs ( m_num, m_num, m_rnd );
-	}
-
-	void acos ( Float const & a )
-	{
-		mpfr_acos ( m_num, a.m_num, m_rnd );
-	}
-
-	void asin ( Float const & a )
-	{
-		mpfr_asin ( m_num, a.m_num, m_rnd );
-	}
-
-	void atan ( Float const & a )
-	{
-		mpfr_atan ( m_num, a.m_num, m_rnd );
-	}
-
-	void atan2 ( Float const & y, Float const & x )
-	{
-		mpfr_atan2 ( m_num, y.m_num, x.m_num, m_rnd );
-	}
-
-	void ceil ( Float const & a )
-	{
-		mpfr_ceil ( m_num, a.m_num );
-	}
-
-	void cos ( Float const & a )
-	{
-		mpfr_cos ( m_num, a.m_num, m_rnd );
-	}
-
-	void cot ( Float const & a )
-	{
-		mpfr_cot ( m_num, a.m_num, m_rnd );
-	}
-
-	void csc ( Float const & a )
-	{
-		mpfr_csc ( m_num, a.m_num, m_rnd );
-	}
-
-	void exp ( Float const & a )
-	{
-		mpfr_exp ( m_num, a.m_num, m_rnd );
-	}
-
-	void floor ( Float const & a )
-	{
-		mpfr_floor ( m_num, a.m_num );
-	}
-
-	void frac ( Float const & a )
-	{
-		mpfr_frac ( m_num, a.m_num, m_rnd );
-	}
-
-	bool is_inf () const
-	{
-		return mpfr_inf_p ( m_num );
-	}
-
-	bool is_nan () const
-	{
-		return mpfr_nan_p ( m_num );
-	}
-
-	bool is_number () const
-	{
-		return mpfr_number_p ( m_num );
-	}
-
-	void log ( Float const & a )
-	{
-		mpfr_log ( m_num, a.m_num, m_rnd );
-	}
-
-	void max ( Float const & a, Float const & b )
-	{
-		mpfr_max ( m_num, a.m_num, b.m_num, m_rnd );
-	}
-
-	void min ( Float const & a, Float const & b )
-	{
-		mpfr_min ( m_num, a.m_num, b.m_num, m_rnd );
-	}
-
-	void mod ( Float const & a, Float const & b )
-	{
-		mpfr_fmod ( m_num, a.m_num, b.m_num, m_rnd );
-	}
-
-	void negate ()
-	{
-		mpfr_neg ( m_num, m_num, m_rnd );
-	}
-
-	void pi ()
-	{
-		mpfr_const_pi ( m_num, m_rnd );
-	}
-
-	void pow ( Float const & a, Float const & b )
-	{
-		mpfr_pow ( m_num, a.m_num, b.m_num, m_rnd );
-	}
-
-	void round ( Float const & a )
-	{
-		mpfr_round ( m_num, a.m_num );
-	}
-
-	int sign () const
-	{
-		return mpfr_sgn ( m_num );
-	}
-	// -1 : num < 0
-	//  0 : num == 0	NaN is also 0, and sets erange flag
-	// +1 : num > 0
-
-	void sin ( Float const & a )
-	{
-		mpfr_sin ( m_num, a.m_num, m_rnd );
-	}
-
-	void tan ( Float const & a )
-	{
-		mpfr_tan ( m_num, a.m_num, m_rnd );
-	}
-
-	void sec ( Float const & a )
-	{
-		mpfr_sec ( m_num, a.m_num, m_rnd );
-	}
-
-	void swap ( Float & rhs )
-	{
-		mpfr_swap ( m_num, rhs.m_num );
-	}
-
-	void trunc ( Float const & a )
-	{
-		mpfr_trunc ( m_num, a.m_num );
-	}
-
-	size_t get_str_ndigits () const;
-
-///	I/O funcs --------------------------------------------------------------
-
-	std::string to_string () const;
-	std::string to_string_snip ( size_t maxlen ) const;
-	int to_file ( FILE * const fp ) const;
-	int to_filename ( char const * filename ) const;
-
-	int to_stdout () const
-	{
-		return to_file ( stdout );
-	}
-
-	// Get precision bits required to hold this decimal string
-	mpfr_prec_t get_str_precision(char const * const str, size_t length =0);
-		// length = 0 means use strlen(str) to get length
-		// = 53 or more
-
-	static constexpr mpfr_prec_t	DOUBLE_PRECISION = 53;	// Bits
-
-///	Accessor ---------------------------------------------------------------
-
-	mpfr_t & get_num ()			{ return m_num; }
-	mpfr_t const & get_num () const		{ return m_num; }
-
-	static mpfr_rnd_t get_rnd ()		{ return m_rnd; }
-
-private:
-	mpfr_t			m_num;
-	static mpfr_rnd_t const	m_rnd = MPFR_RNDN;
 };
 
 
@@ -898,6 +598,13 @@ public:
 	Rational ()
 	{
 		mpq_init ( m_num );
+	}
+
+	Rational ( int const num )
+	{
+		mpq_init ( m_num );
+
+		set_number ( num );
 	}
 
 	Rational ( signed long int const num )
@@ -967,7 +674,12 @@ public:
 
 	// After initialization, these are the most efficient ways to set values
 
-	void set_number ( signed long int const num = 0 )
+	void set_number ( int const num )
+	{
+		mpq_set_si ( m_num, num, 1 );
+	}
+
+	void set_number ( signed long int const num )
 	{
 		mpq_set_si ( m_num, num, 1 );
 	}
@@ -1216,12 +928,867 @@ public:
 	mpq_t & get_num ()		{ return m_num; }
 	mpq_t const & get_num () const	{ return m_num; }
 
+///	Conversions ------------------------------------------------------------
+
+	double get_number_double () const
+	{
+		return mpq_get_d ( m_num );
+	}
+
 private:
 	void parse_rational_number ( char const * const text );
 
 /// ----------------------------------------------------------------------------
 
 	mpq_t		m_num;
+};
+
+
+
+class Float
+{
+private:
+	void init_str ( char const * const text )
+	{
+		if ( text )
+		{
+			if ( mpfr_init_set_str ( m_num, text, 10, m_rnd ) )
+			{
+				std::cerr << "Invalid Float: '" << text <<"'\n";
+				throw 123;
+			}
+		}
+		else
+		{
+			mpfr_init ( m_num );
+		}
+	}
+public:
+	Float ()
+	{
+		if ( mpfr_init_set_si ( m_num, 0, m_rnd ) )
+		{
+			throw 123;
+		}
+	}
+
+	Float ( int const num )
+	{
+		if ( mpfr_init_set_si ( m_num, num, m_rnd ) )
+		{
+			throw 123;
+		}
+	}
+
+	Float ( double const num )
+	{
+		if ( mpfr_init_set_d ( m_num, num, m_rnd ) )
+		{
+			throw 123;
+		}
+	}
+
+	Float ( Integer const & num )
+	{
+		if ( mpfr_init_set_z ( m_num, num.get_num(), m_rnd ) )
+		{
+			throw 123;
+		}
+	}
+
+	Float ( Float const & num )
+	{
+		if ( mpfr_init_set ( m_num, num.get_num(), m_rnd ) )
+		{
+			throw 123;
+		}
+	}
+
+	Float ( char const * const text )
+	{
+		init_str ( text );
+	}
+
+	Float ( std::string const & text )
+	{
+		init_str ( text.c_str() );
+	}
+
+	~Float ()
+	{
+		mpfr_clear ( m_num );
+	}
+
+	// Move constructor definition needed for creating C arrays
+	Float ( Float && other )
+	{
+		mpfr_init2 ( m_num, MPFR_PREC_MIN );
+		mpfr_swap ( m_num, other.m_num );
+	}
+
+	// Copy assignment
+	Float & operator = ( Float const & other )
+	{
+		if ( this != &other )
+		{
+			mpfr_set ( m_num, other.m_num, m_rnd );
+		}
+
+		return *this;
+	}
+
+	// Move assignment
+	Float & operator = ( Float && other )
+	{
+		if ( this != &other )
+		{
+			mpfr_swap ( m_num, other.m_num );
+		}
+
+		return *this;
+	}
+
+	// After initialization, these are the most efficient ways to set values
+
+	int set_number ( int const num )
+	{
+		set_precision ();
+		return mpfr_set_si ( m_num, num, m_rnd );
+	}
+
+	int set_number ( double const num  )
+	{
+		set_precision ();
+		return mpfr_set_d ( m_num, num, m_rnd );
+	}
+
+	int set_number ( Float const & num )
+	{
+		return mpfr_set ( m_num, num.m_num, m_rnd );
+	}
+
+	int set_number ( Rational const & num )
+	{
+		set_precision ();
+		return mpfr_set_q ( m_num, num.get_num(), m_rnd );
+	}
+
+	int set_number ( char const * const text )
+	{
+		set_precision ();
+		return text ? mpfr_set_str ( m_num, text, 10, m_rnd ) : 1;
+	}
+
+	int set_number ( std::string const & text )
+	{
+		return set_number ( text.c_str() );
+	}
+
+///	Logical comparisons ----------------------------------------------------
+
+	int cmp ( Float const & rhs ) const
+	{
+		return mpfr_cmp ( m_num, rhs.m_num );
+	}
+
+	bool operator <  ( Float const & rhs ) const
+	{
+		return mpfr_less_p ( m_num, rhs.m_num ) != 0;
+	}
+
+	bool operator >  ( Float const & rhs ) const
+	{
+		return mpfr_greater_p ( m_num, rhs.m_num ) != 0;
+	}
+
+	bool operator <= ( Float const & rhs ) const
+	{
+		return mpfr_lessequal_p ( m_num, rhs.m_num ) != 0;
+	}
+
+	bool operator >= ( Float const & rhs ) const
+	{
+		return mpfr_greaterequal_p ( m_num, rhs.m_num ) != 0;
+	}
+
+	bool operator == ( Float const & rhs ) const
+	{
+		return mpfr_equal_p ( m_num, rhs.m_num ) != 0;
+	}
+
+	bool operator != ( Float const & rhs ) const
+	{
+		return mpfr_equal_p ( m_num, rhs.m_num ) == 0;
+	}
+
+	void set_bound ( Float const & min, Float const & max )
+	{
+		if ( *this < min )
+		{
+			this->set_number ( min );
+			return;
+		}
+
+		if ( *this > max )
+		{
+			this->set_number ( max );
+			return;
+		}
+	}
+
+///	Arithmetic -------------------------------------------------------------
+
+	Float & operator += ( Float const & rhs )
+	{
+		mpfr_add ( m_num, m_num, rhs.m_num, m_rnd );
+		return *this;
+	}
+
+	Float & operator -= ( Float const & rhs )
+	{
+		mpfr_sub ( m_num, m_num, rhs.m_num, m_rnd );
+		return *this;
+	}
+
+	Float & operator *= ( Float const & rhs )
+	{
+		mpfr_mul ( m_num, m_num, rhs.m_num, m_rnd );
+		return *this;
+	}
+
+	Float & operator /= ( Float const & rhs )
+	{
+		mpfr_div ( m_num, m_num, rhs.m_num, m_rnd );
+		return *this;
+	}
+
+	// NOTE: These friend operators are somewhat inefficient, so not worth
+	// using inside inner loops, but useful for (a+b).to_string().
+
+	friend Float operator + ( Float lhs, Float const & rhs )
+	{
+		lhs += rhs;
+		return lhs;
+	}
+
+	friend Float operator - ( Float lhs, Float const & rhs )
+	{
+		lhs -= rhs;
+		return lhs;
+	}
+
+	friend Float operator * ( Float lhs, Float const & rhs )
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+	friend Float operator / ( Float lhs, Float const & rhs )
+	{
+		lhs /= rhs;
+		return lhs;
+	}
+
+///	Convenience functions --------------------------------------------------
+
+	void abs ()
+	{
+		mpfr_abs ( m_num, m_num, m_rnd );
+	}
+
+	void acos ( Float const & a )
+	{
+		mpfr_acos ( m_num, a.m_num, m_rnd );
+	}
+
+	void asin ( Float const & a )
+	{
+		mpfr_asin ( m_num, a.m_num, m_rnd );
+	}
+
+	void atan ( Float const & a )
+	{
+		mpfr_atan ( m_num, a.m_num, m_rnd );
+	}
+
+	void atan2 ( Float const & y, Float const & x )
+	{
+		mpfr_atan2 ( m_num, y.m_num, x.m_num, m_rnd );
+	}
+
+	void ceil ( Float const & a )
+	{
+		mpfr_ceil ( m_num, a.m_num );
+	}
+
+	void cos ( Float const & a )
+	{
+		mpfr_cos ( m_num, a.m_num, m_rnd );
+	}
+
+	void cot ( Float const & a )
+	{
+		mpfr_cot ( m_num, a.m_num, m_rnd );
+	}
+
+	void csc ( Float const & a )
+	{
+		mpfr_csc ( m_num, a.m_num, m_rnd );
+	}
+
+	void exp ( Float const & a )
+	{
+		mpfr_exp ( m_num, a.m_num, m_rnd );
+	}
+
+	void floor ( Float const & a )
+	{
+		mpfr_floor ( m_num, a.m_num );
+	}
+
+	void frac ( Float const & a )
+	{
+		mpfr_frac ( m_num, a.m_num, m_rnd );
+	}
+
+	bool is_inf () const
+	{
+		return mpfr_inf_p ( m_num );
+	}
+
+	bool is_nan () const
+	{
+		return mpfr_nan_p ( m_num );
+	}
+
+	bool is_number () const
+	{
+		return mpfr_number_p ( m_num );
+	}
+
+	void log ( Float const & a )
+	{
+		mpfr_log ( m_num, a.m_num, m_rnd );
+	}
+
+	void max ( Float const & a, Float const & b )
+	{
+		mpfr_max ( m_num, a.m_num, b.m_num, m_rnd );
+	}
+
+	void min ( Float const & a, Float const & b )
+	{
+		mpfr_min ( m_num, a.m_num, b.m_num, m_rnd );
+	}
+
+	void mod ( Float const & a, Float const & b )
+	{
+		mpfr_fmod ( m_num, a.m_num, b.m_num, m_rnd );
+	}
+
+	void negate ()
+	{
+		mpfr_neg ( m_num, m_num, m_rnd );
+	}
+
+	void pi ()
+	{
+		mpfr_const_pi ( m_num, m_rnd );
+	}
+
+	void pow ( Float const & a, Float const & b )
+	{
+		mpfr_pow ( m_num, a.m_num, b.m_num, m_rnd );
+	}
+
+	void round ( Float const & a )
+	{
+		mpfr_round ( m_num, a.m_num );
+	}
+
+	int sign () const
+	{
+		return mpfr_sgn ( m_num );
+	}
+	// -1 : num < 0
+	//  0 : num == 0	NaN is also 0, and sets erange flag
+	// +1 : num > 0
+
+	void sin ( Float const & a )
+	{
+		mpfr_sin ( m_num, a.m_num, m_rnd );
+	}
+
+	void tan ( Float const & a )
+	{
+		mpfr_tan ( m_num, a.m_num, m_rnd );
+	}
+
+	void sec ( Float const & a )
+	{
+		mpfr_sec ( m_num, a.m_num, m_rnd );
+	}
+
+	void swap ( Float & rhs )
+	{
+		mpfr_swap ( m_num, rhs.m_num );
+	}
+
+	void trunc ( Float const & a )
+	{
+		mpfr_trunc ( m_num, a.m_num );
+	}
+
+	size_t get_str_ndigits () const;
+
+///	I/O funcs --------------------------------------------------------------
+
+	std::string to_string () const;
+	std::string to_string_snip ( size_t maxlen ) const;
+	int to_file ( FILE * const fp ) const;
+	int to_filename ( char const * filename ) const;
+
+	int to_stdout () const
+	{
+		return to_file ( stdout );
+	}
+
+	// Get precision bits required to hold this decimal string
+	mpfr_prec_t get_str_precision(char const * const str, size_t length =0);
+		// length = 0 means use strlen(str) to get length
+		// = 53 or more
+
+	static constexpr mpfr_prec_t	DOUBLE_PRECISION = 53;	// Bits
+
+///	Accessor ---------------------------------------------------------------
+
+	mpfr_t & get_num ()			{ return m_num; }
+	mpfr_t const & get_num () const		{ return m_num; }
+
+	mpfr_prec_t get_precision () const	{ return mpfr_get_prec(m_num); }
+
+	void set_precision ( mpfr_prec_t const prec = mpfr_get_default_prec() )
+	{
+		mpfr_set_prec ( m_num, prec );
+	}
+
+	static mpfr_rnd_t get_rnd ()		{ return m_rnd; }
+
+///	Conversions ------------------------------------------------------------
+
+	double get_number_double () const
+	{
+		return mpfr_get_d ( m_num, m_rnd );
+	}
+
+private:
+	mpfr_t			m_num;
+	static mpfr_rnd_t const	m_rnd = MPFR_RNDN;
+};
+
+
+
+class Double
+{
+private:
+	void init_str ( char const * const text )
+	{
+		if ( set_number ( text ) )
+		{
+			std::cerr << "Invalid Double: '" << text <<"'\n";
+			throw 123;
+		}
+	}
+public:
+	Double ()
+	{
+		m_num = 0.0;
+	}
+
+	Double ( int const num )
+	{
+		m_num = num;
+	}
+
+	Double ( double const num )
+	{
+		m_num = num;
+	}
+
+	Double ( Double const & num )
+	{
+		m_num = num.m_num;
+	}
+
+	Double ( char const * const text )
+	{
+		init_str ( text );
+	}
+
+	Double ( std::string const & text )
+	{
+		init_str ( text.c_str() );
+	}
+
+/*	No destructor required
+
+	~Double ()
+	{
+	}
+*/
+
+	// Move constructor definition needed for creating C arrays
+	Double ( Double && other )
+	{
+		m_num = other.m_num;
+	}
+
+	// Copy assignment
+	Double & operator = ( Double const & other )
+	{
+		if ( this != &other )
+		{
+			m_num = other.m_num;
+		}
+
+		return *this;
+	}
+
+	// Move assignment
+	Double & operator = ( Double && other )
+	{
+		if ( this != &other )
+		{
+			m_num = other.m_num;
+		}
+
+		return *this;
+	}
+
+	// After initialization, these are the most efficient ways to set values
+
+	void set_number ( int const num )
+	{
+		m_num = num;
+	}
+
+	void set_number ( double const num )
+	{
+		m_num = num;
+	}
+
+	void set_number ( Double const & num )
+	{
+		m_num = num.m_num;
+	}
+
+	int set_number ( char const * const text )
+	{
+		return mtkit_strtod ( text, & m_num, nullptr, 0 );
+	}
+
+	int set_number ( std::string const & text )
+	{
+		return set_number ( text.c_str() );
+	}
+
+///	Logical comparisons ----------------------------------------------------
+
+	int cmp ( Double const & rhs ) const
+	{
+		if ( m_num > rhs.m_num )
+		{
+			return 1;
+		}
+
+		if ( m_num < rhs.m_num )
+		{
+			return -1;
+		}
+
+		return 0;
+	}
+
+	bool operator <  ( Double const & rhs ) const
+	{
+		return m_num < rhs.m_num ? true : false;
+	}
+
+	bool operator >  ( Double const & rhs ) const
+	{
+		return m_num > rhs.m_num ? true : false;
+	}
+
+	bool operator <= ( Double const & rhs ) const
+	{
+		return m_num <= rhs.m_num ? true : false;
+	}
+
+	bool operator >= ( Double const & rhs ) const
+	{
+		return m_num >= rhs.m_num ? true : false;
+	}
+
+	bool operator == ( Double const & rhs ) const
+	{
+		return m_num == rhs.m_num ? true : false;
+	}
+
+	bool operator != ( Double const & rhs ) const
+	{
+		return m_num != rhs.m_num ? true : false;
+	}
+
+	void set_bound ( Double const & min, Double const & max )
+	{
+		if ( m_num < min.m_num )
+		{
+			m_num = min.m_num;
+			return;
+		}
+
+		if ( m_num > max.m_num )
+		{
+			m_num = max.m_num;
+			return;
+		}
+	}
+
+///	Arithmetic -------------------------------------------------------------
+
+	Double & operator += ( Double const & rhs )
+	{
+		m_num = m_num + rhs.m_num;
+		return *this;
+	}
+
+	Double & operator -= ( Double const & rhs )
+	{
+		m_num = m_num - rhs.m_num;
+		return *this;
+	}
+
+	Double & operator *= ( Double const & rhs )
+	{
+		m_num = m_num * rhs.m_num;
+		return *this;
+	}
+
+	Double & operator /= ( Double const & rhs )
+	{
+		m_num = m_num / rhs.m_num;
+		return *this;
+	}
+
+	// NOTE: These friend operators are somewhat inefficient, so not worth
+	// using inside inner loops, but useful for (a+b).to_string().
+
+	friend Double operator + ( Double lhs, Double const & rhs )
+	{
+		lhs += rhs;
+		return lhs;
+	}
+
+	friend Double operator - ( Double lhs, Double const & rhs )
+	{
+		lhs -= rhs;
+		return lhs;
+	}
+
+	friend Double operator * ( Double lhs, Double const & rhs )
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+	friend Double operator / ( Double lhs, Double const & rhs )
+	{
+		lhs /= rhs;
+		return lhs;
+	}
+
+///	Convenience functions --------------------------------------------------
+
+	void abs ()
+	{
+		m_num = ::abs ( m_num );
+	}
+
+	void acos ( Double const & a )
+	{
+		m_num = ::acos ( a.m_num );
+	}
+
+	void asin ( Double const & a )
+	{
+		m_num = ::asin ( a.m_num );
+	}
+
+	void atan ( Double const & a )
+	{
+		m_num = ::atan ( a.m_num );
+	}
+
+	void atan2 ( Double const & y, Double const & x )
+	{
+		m_num = ::atan2 ( y.m_num, x.m_num );
+	}
+
+	void ceil ( Double const & a )
+	{
+		m_num = ::ceil ( a.m_num );
+	}
+
+	void cos ( Double const & a )
+	{
+		m_num = ::cos ( a.m_num );
+	}
+
+	void cot ( Double const & a )
+	{
+		m_num = 1 / ::tan ( a.m_num );
+	}
+
+	void csc ( Double const & a )
+	{
+		m_num = 1 / ::sin ( a.m_num );
+	}
+
+	void exp ( Double const & a )
+	{
+		m_num = ::exp ( a.m_num );
+	}
+
+	void floor ( Double const & a )
+	{
+		m_num = ::floor ( a.m_num );
+	}
+
+	void frac ( Double const & a )
+	{
+		double tmp;
+		m_num = ::modf ( a.m_num, &tmp );
+	}
+
+	bool is_inf () const
+	{
+		return isinf ( m_num ) ? true : false;
+	}
+
+	bool is_nan () const
+	{
+		return isnan ( m_num ) ? true : false;
+	}
+
+	bool is_number () const
+	{
+		return isnormal ( m_num ) ? true : false;
+	}
+
+	void log ( Double const & a )
+	{
+		m_num = ::log ( a.m_num );
+	}
+
+	void max ( Double const & a, Double const & b )
+	{
+		m_num = a.m_num > b.m_num ? a.m_num : b.m_num;
+	}
+
+	void min ( Double const & a, Double const & b )
+	{
+		m_num = a.m_num < b.m_num ? a.m_num : b.m_num;
+	}
+
+	void mod ( Double const & a, Double const & b )
+	{
+		m_num = ::fmod ( a.m_num, b.m_num );
+	}
+
+	void negate ()
+	{
+		m_num = -m_num;
+	}
+
+	void pi ()
+	{
+		m_num = M_PI;
+	}
+
+	void pow ( Double const & a, Double const & b )
+	{
+		m_num = ::pow ( a.m_num, b.m_num );
+	}
+
+	void round ( Double const & a )
+	{
+		m_num = ::round ( a.m_num );
+	}
+
+	int sign () const
+	{
+		if ( m_num < 0 )
+		{
+			return -1;
+		}
+
+		if ( m_num > 0 )
+		{
+			return 1;
+		}
+
+		return 0;
+	}
+	// -1 : num < 0
+	//  0 : num == 0
+	// +1 : num > 0
+
+	void sin ( Double const & a )
+	{
+		m_num = ::sin ( a.m_num );
+	}
+
+	void tan ( Double const & a )
+	{
+		m_num = ::tan ( a.m_num );
+	}
+
+	void sec ( Double const & a )
+	{
+		m_num = 1.0 / ::cos ( a.m_num );
+	}
+
+	void swap ( Double & rhs )
+	{
+		double const tmp = m_num;
+
+		m_num = rhs.m_num;
+		rhs.m_num = tmp;
+	}
+
+	void trunc ( Double const & a )
+	{
+		m_num = ::trunc ( a.m_num );
+	}
+
+///	I/O funcs --------------------------------------------------------------
+
+	std::string to_string () const;
+	std::string to_string_snip ( size_t maxlen ) const;
+	int to_file ( FILE * const fp ) const;
+	int to_filename ( char const * filename ) const;
+
+	int to_stdout () const
+	{
+		return to_file ( stdout );
+	}
+
+///	Accessor ---------------------------------------------------------------
+
+	double get_num () const			{ return m_num; }
+
+private:
+	double			m_num;
 };
 
 
@@ -1278,7 +1845,7 @@ public:
 
 	virtual ~Lexer () {}		// V destructor as we use V funcs below
 
-	inline void init ( char const * const input )
+	void init ( char const * const input )
 	{
 		m_input = m_token = m_symbol = input;
 	}
@@ -1286,32 +1853,29 @@ public:
 	int scan_token ();
 		// TK_*
 
-	inline std::string const & string () const { return m_string; }
+	std::string const & string () const { return m_string; }
 
-	inline int input_pos () const	{ return (int)(m_symbol - m_input); }
+	int input_pos () const	{ return (int)(m_symbol - m_input); }
 
-	inline void rewind_token ()	{ m_symbol = m_token; }
+	void rewind_token ()	{ m_symbol = m_token; }
 
-	inline char const * token_position () const { return m_token; }
-	inline void set_token_position ( char const * const pos )
+	char const * token_position () const { return m_token; }
+	void set_token_position ( char const * const pos )
 		{ m_symbol = m_token = pos; }
 
-	inline static int is_whitespace ( char ch )
+	static int is_whitespace ( char ch )
 	{
 		switch ( ch )
 		{
 		case ' ':
 		case '\t':
-		case '\f':
-		case '\n':
-		case '\r':
 			return 1;
 		}
 
 		return 0;
 	}
 
-	inline static int is_alpha ( char ch )
+	static int is_alpha ( char ch )
 	{
 		if (	(ch >= 'a' && ch <= 'z')	||
 			(ch >= 'A' && ch <= 'Z')
@@ -1323,7 +1887,7 @@ public:
 		return 0;
 	}
 
-	inline static int is_numeric ( char ch )
+	static int is_numeric ( char ch )
 	{
 		if ( (ch >= '0' && ch <= '9') )
 		{
@@ -1348,10 +1912,10 @@ protected:
 
 	int scan_string ();		// variable/function name
 
-	inline char scan_symbol ()	{ return *m_symbol++; }
-	inline void rewind_symbol ()	{ m_symbol--; }
+	char scan_symbol ()	{ return *m_symbol++; }
+	void rewind_symbol ()	{ m_symbol--; }
 
-	inline void assign_string ()	// Tokenize the validated string
+	void assign_string ()	// Tokenize the validated string
 	{
 		// Caller ensures (m_symbol > m_token)
 		m_string.assign ( m_token, (size_t)(m_symbol - m_token) );
@@ -1367,19 +1931,7 @@ private:
 
 
 
-class IntegerLexer : public Lexer
-{
-private:
-	int scan_number ()			override;
-	inline int scan_number_decimal ()	override
-	{
-		return TK_BAD_SYMBOL;
-	}
-};
-
-
-
-class RationalLexer : public Lexer
+class DoubleLexer : public Lexer
 {
 private:
 	int scan_number ()			override;
@@ -1388,6 +1940,26 @@ private:
 
 
 class FloatLexer : public Lexer
+{
+private:
+	int scan_number ()			override;
+};
+
+
+
+class IntegerLexer : public Lexer
+{
+private:
+	int scan_number ()			override;
+	int scan_number_decimal ()		override
+	{
+		return TK_BAD_SYMBOL;
+	}
+};
+
+
+
+class RationalLexer : public Lexer
 {
 private:
 	int scan_number ()			override;
@@ -1469,6 +2041,36 @@ private:
 
 
 
+class DoubleParser : public Parser<Double, DoubleLexer>
+{
+public:
+	int get_function_data (
+		int		index,
+		char	const	** name,
+		std::string	& help
+		) const					override;
+
+private:
+	int evaluate_internal ( char const * text )	override;
+};
+
+
+
+class FloatParser : public Parser<Float, FloatLexer>
+{
+public:
+	int get_function_data (
+		int		index,
+		char	const	** name,
+		std::string	& help
+		) const					override;
+
+private:
+	int evaluate_internal ( char const * text )	override;
+};
+
+
+
 class IntegerParser : public Parser<Integer, IntegerLexer>
 {
 public:
@@ -1499,27 +2101,17 @@ private:
 
 
 
-class FloatParser : public Parser<Float, FloatLexer>
-{
-public:
-	int get_function_data (
-		int		index,
-		char	const	** name,
-		std::string	& help
-		) const				override;
-
-private:
-	int evaluate_internal ( char const * text )	override;
-};
-
-
-
 class IntegerMemory
 {
 /*
 	A class for temporarily holding integer binary data for import/export.
 */
 public:
+	enum
+	{
+		HEADER_SIZE	= 10
+	};
+
 	IntegerMemory () {}
 	~IntegerMemory () { clear(); }
 
@@ -1531,6 +2123,12 @@ public:
 	int import_file ( ::FILE * fp );
 	int import_file ( char const * filename );
 
+	static int import_memory_export_number (
+		unsigned char const * mem,
+		size_t mem_size,
+		int num_sign,
+		Integer & num
+		);
 	int export_number ( Integer & num ) const;
 	int export_file ( ::FILE * fp ) const;
 	int export_file ( char const * filename ) const;

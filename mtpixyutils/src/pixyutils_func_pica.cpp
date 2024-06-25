@@ -84,11 +84,63 @@ static int analyse_image_cells (
 	return 0;
 }
 
+static int analyse_image_cells_detailed (
+	unsigned char	const * const	mem,
+	int			const	w,
+	int			const	h
+	)
+{
+	int		pal[256];		// Index frequency
+
+	printf ( "---------------------\n" );
+	printf ( "Cols in each 8x8 Cell\n" );
+	printf ( "---------------------\n" );
+
+	for ( int yo = 0; yo < h; yo += 8 )
+	{
+		int const ylim = MIN ( 8, h - yo );
+
+		for ( int xo = 0; xo < w; xo += 8 )
+		{
+			int const xlim = MIN ( 8, w - xo );
+			memset ( pal, 0, sizeof(pal) );
+
+			for ( int y = 0; y < ylim; y++ )
+			{
+				int const yoff = w * (y + yo);
+
+				for ( int x = 0; x < xlim; x++ )
+				{
+					int const pix = mem[ x + xo + yoff ];
+
+					pal[ pix ] = 1;
+				}
+			}
+
+			for ( int i = 0; i < 256; i++ )
+			{
+				if ( pal[i] )
+				{
+					printf ( ",%i", i );
+				}
+			}
+
+			printf ( "\t" );
+		}
+
+		puts ("");
+	}
+
+	puts ("");
+
+	return 0;
+}
+
 int Global::pixy_pica ()
 {
 	if ( ut_load_file () )
 	{
-		// Unable to load file - non-fatal error for 'rida'
+		// Unable to load file - non-fatal error for 'pica'
 
 		printf ( "????? %s\n", s_arg );
 
@@ -121,6 +173,11 @@ int Global::pixy_pica ()
 	}
 
 	analyse_image_cells ( mem, w, h );
+
+	if ( i_verbose )
+	{
+		analyse_image_cells_detailed ( mem, w, h );
+	}
 
 	return 0;
 }

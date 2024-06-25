@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016-2020 Mark Tyler
+	Copyright (C) 2016-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -52,7 +52,8 @@ void Backend::prefs_init ()
 	uprefs.set_invisible ( PREFS_CANVAS_ZOOM_GRID_SHOW );
 
 	uprefs.add_int ( PREFS_FILE_RECENT_MAXLEN, mprefs.file_recent_maxlen,
-		80 );
+		PREFS_RECENT_MAXLEN_DEFAULT, PREFS_RECENT_MAXLEN_MIN,
+		PREFS_RECENT_MAXLEN_MAX );
 	uprefs.add_int ( PREFS_FILE_NEW_WIDTH, mprefs.file_new_width, 256 );
 	uprefs.add_int ( PREFS_FILE_NEW_HEIGHT, mprefs.file_new_height, 192 );
 	uprefs.add_int ( PREFS_FILE_NEW_TYPE, mprefs.file_new_type, 2 );
@@ -87,6 +88,7 @@ void Backend::prefs_init ()
 		10 );
 
 	uprefs.add_string ( PREFS_TEXT_FONT_NAME, mprefs.text_font_name,"Sans");
+	uprefs.add_string ( PREFS_TEXT_FONT_STYLE, mprefs.text_font_style, "");
 	uprefs.add_int ( PREFS_TEXT_FONT_SIZE, mprefs.text_font_size, 12 );
 	uprefs.add_int ( PREFS_TEXT_FONT_BOLD, mprefs.text_font_bold, 0 );
 	uprefs.add_int ( PREFS_TEXT_FONT_ITALIC, mprefs.text_font_italic, 0 );
@@ -98,6 +100,7 @@ void Backend::prefs_init ()
 		"Enter Text Here" );
 
 	uprefs.set_invisible ( PREFS_TEXT_FONT_NAME );
+	uprefs.set_invisible ( PREFS_TEXT_FONT_STYLE );
 	uprefs.set_invisible ( PREFS_TEXT_FONT_SIZE );
 	uprefs.set_invisible ( PREFS_TEXT_FONT_BOLD );
 	uprefs.set_invisible ( PREFS_TEXT_FONT_ITALIC );
@@ -111,11 +114,25 @@ void Backend::prefs_init ()
 
 	uprefs.add_ui_defaults ( mprefs.ui_editor );
 
-	mprefs.recent_image.init ( uprefs, PREFS_FILE_RECENT_IMAGE, 20 );
+	mprefs.recent_image.init ( uprefs, PREFS_FILE_RECENT_IMAGE,
+		RECENT_MENU_TOTAL );
 
 	uprefs.load ( m_prefs_filename, BIN_NAME );
 
 	file.set_undo_mb_max ( mprefs.undo_mb_max );
 	file.set_undo_steps_max ( mprefs.undo_steps_max );
+}
+
+std::string MemPrefs::get_font_name_full () const
+{
+	std::string font_name ( this->text_font_name );
+
+	if ( this->text_font_style.size() > 0 )
+	{
+		font_name += " ";
+		font_name += this->text_font_style;
+	}
+
+	return font_name;
 }
 

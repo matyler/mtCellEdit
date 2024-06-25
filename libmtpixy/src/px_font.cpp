@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004-2021 Mark Tyler
+	Copyright (C) 2004-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -138,7 +138,7 @@ int mtPixy::Font::set_font (
 
 	m_font_data->set_name ( name );
 
-	PangoRectangle	logical;
+	PangoRectangle	logical, ink;
 
 	pango_layout_set_text ( m_font_data->m_layout, "0123456789", -1 );
 	pango_font_description_set_weight ( m_font_data->m_font_desc,
@@ -148,15 +148,18 @@ int mtPixy::Font::set_font (
 	pango_layout_set_font_description( m_font_data->m_layout,
 		m_font_data->m_font_desc );
 
-	pango_layout_get_extents ( m_font_data->m_layout, NULL, &logical );
+	pango_layout_get_extents ( m_font_data->m_layout, &ink, &logical );
 	pango_extents_to_pixels ( NULL, &logical );
+
+	// NOTE: pango_extents_to_pixels doesn't also work exactly for all fonts
+	int const yextra = ink.y < 0 ? PANGO_PIXELS (-ink.y) : 0;
 
 	m_name = name;
 	m_size = size;
 	m_width = logical.width / 10;
-	m_height = logical.height;
+	m_height = logical.height + yextra;
 	m_baseline = PANGO_PIXELS ( pango_layout_get_baseline (
-		m_font_data->m_layout ) );
+		m_font_data->m_layout ) ) + yextra;
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ class Backend;
 class Backend
 {
 public:
-	inline Backend () : m_db_path () {}
+	Backend () : m_db_path () {}
 
 	int command_line ( int argc, char const * const * argv );
 		// 0 = Continue running (start UI)

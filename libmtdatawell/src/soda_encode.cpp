@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -46,19 +46,19 @@ public:
 
 	void set ( char const * const name, char const * const val )
 	{
-		err |= mtkit_utree_set_attribute_str ( soda, name, val );
+		err |= mtkit_utree_set_attribute_string ( soda, name, val );
 	}
 
 	void set ( char const * const name, int num )
 	{
 		snprintf ( m_buf, sizeof(m_buf), "%i", num );
-		err |= mtkit_utree_set_attribute_str ( soda, name, m_buf );
+		err |= mtkit_utree_set_attribute_string ( soda, name, m_buf );
 	}
 
 	void set ( char const * const name, uint64_t num )
 	{
 		snprintf ( m_buf, sizeof(m_buf), "%" PRIu64, num );
-		err |= mtkit_utree_set_attribute_str ( soda, name, m_buf );
+		err |= mtkit_utree_set_attribute_string ( soda, name, m_buf );
 	}
 
 	void create_output ()

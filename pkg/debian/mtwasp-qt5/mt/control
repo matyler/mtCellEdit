@@ -1,0 +1,13 @@
+Source: mtwasp-qt5
+Section: unknown
+Priority: extra
+Maintainer: Mark Tyler <mt@marktyler.org>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, qtbase5-dev, libmtkit, libmtgin, libmtdatawell, libmtqex5, libsdl2-dev
+Standards-Version: 3.9.3
+Homepage: https://www.marktyler.org/
+
+Package: mtwasp-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Qt5 Mark Tyler's Wave Audio Synthesiser Program
+ .

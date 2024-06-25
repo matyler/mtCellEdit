@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -74,6 +74,7 @@ public:
 
 enum
 {
+	MODE_DOUBLE,
 	MODE_FLOAT,
 	MODE_INTEGER,
 	MODE_RATIONAL

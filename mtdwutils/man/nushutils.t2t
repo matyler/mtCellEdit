@@ -15,7 +15,7 @@ It is a collection of command line functions for manipulating large numbers usin
 **--version**
 	Output version information and exit.
 **-cli**
-	Use the interactive CLI mode.
+	Use the interactive CLI mode.  "." ends the session.
 **-b** INTEGER
 	Set the bit precision for floating point number mode (default=10, range=10..32).
 	Bits used for numbers are 2^b, so 10 allocates 2^10 bits for each number.
@@ -25,6 +25,8 @@ It is a collection of command line functions for manipulating large numbers usin
 	Load this input file.  "-" loads from stdin.
 **-integer**
 	Use integer number mode.
+**-double**
+	Use double number mode (normal C language double).
 **-float**
 	Use floating point number mode (default).
 **-rational**

@@ -1,3 +1,7 @@
+3.8	2024-6-25
+
+	* twit util removed (Twitter now respects pixel art!).
+
 3.7	2023-6-25
 
 	* mtPixyCLI merged into mtPixyUtils module.

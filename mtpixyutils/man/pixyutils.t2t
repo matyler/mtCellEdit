@@ -14,8 +14,7 @@ mtPixyUtils is a collection of command line functions for manipulating image fil
 **--version**
 	Output version information and exit.
 **-com** STRING
-	Change command (with or without pixy prefix).  Available commands:
-	pixyls, pixynew, pixyresize, pixyscale.
+	Change command (with or without pixy prefix).  For available commands, consult "SEE ALSO".
 **-comp_jpeg** INTEGER
 	Set compression level for JPEG files. Default=85
 **-comp_png** INTEGER
@@ -66,4 +65,3 @@ pixyriba(1),
 pixyrida(1),
 pixyrisa(1),
 pixyscale(1),
-pixytwit(1)

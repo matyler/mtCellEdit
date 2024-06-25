@@ -7,19 +7,17 @@ This document outlines my testing procedures before this release.
 
 Test Systems:
 	DEB
-		Debian 12 (amd64) [x86_64] (2023)
+		Debian 12 (amd64) [x86_64] (2023-2024)
 	RPM
 		CentOS 7.9 XFCE [x86_64] (2014-2022)		+ AppImage
-		AlmaLinux 8.8 [x86_64] (2019-2023)
-		AlmaLinux 9.2 [x86_64] (2022-2023)
-		Fedora 38 XFCE [x86_64] (2023)
-		openSUSE Tumbleweed XFCE [x86_64] (2023-Apr)
+		Fedora 40 XFCE [x86_64] (2024)
+		openSUSE Tumbleweed XFCE [x86_64] (2024-Jan)
 	Arch
-		Arco 23.03.01 [x86_64] (2023)
+		Manjaro 23.1 [x86_64] (2023-2024)
 	Local install
-		Salix 15.0 [x86_64] (2022)
+		Salix 15.0 [x86_64] (2022-2024)
 	bcfile install
-		Raspberry Pi OS (Debian 11) [ARM_32] (2021-2023)
+		Raspberry Pi OS (Debian 12) [ARM_32] (2023-2024)
 
 
 ---------------------------------
@@ -30,7 +28,7 @@ Package deps:
 sudo apt-get install dh-make pbuilder clang clang-tools valgrind bison flex cppcheck txt2tags automake libreadline-dev qtbase5-dev qt6-base-dev libsdl2-dev qtcreator time libpango1.0-dev librsvg2-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev inkscape mesa-common-dev libgl1-mesa-dev libgmp-dev libmpfr-dev gperf
 
 * Install
-	./build_debian.sh --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu" clean
+	./build_debian.sh --preconf "LDFLAGS=-Wl,--as-needed" --conf "debug --libdir=/usr/lib/x86_64-linux-gnu" clean all
 
 * Build using clang-static to expose possible errors:
 	./clang_scan.sh
@@ -68,19 +66,19 @@ sudo apt-get install dh-make pbuilder clang clang-tools valgrind bison flex cppc
 
 
 ------------------------------
-Fedora 38 XFCE [x86_64] (2023)
+Fedora 40 XFCE [x86_64] (2024)
 ------------------------------
 
 Package deps:
 sudo yum install clang clang-analyzer valgrind txt2tags automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools qt5-qtbase-devel qt5-qtsvg qt6-qtbase-devel qt6-qtsvg SDL2-devel cairo-devel pango-devel librsvg2-devel libpng-devel libjpeg-turbo-devel giflib-devel libsqlite3x-devel libsndfile-devel inkscape mesa-libGL-devel libubsan gmp-devel mpfr-devel gperf
 
 * Install
-	./build_fedora.sh --conf "--libdir=/usr/lib64 debug" clean
+	./build_fedora.sh --conf "--libdir=/usr/lib64 debug" clean all
 
 * Smoke test the apps.
 
 * Remove
-	./build_fedora.sh remove clean
+	./build_fedora.sh remove clean all
 
 
 ------------------------------------
@@ -103,68 +101,25 @@ sudo yum install clang clang-analyzer valgrind txt2tags automake gcc gcc-c++ bis
 	./build_install.sh flush
 
 
-----------------------------------
-AlmaLinux 8.8 [x86_64] (2019-2023)
-----------------------------------
-
-sudo yum install epel-release
-sudo dnf config-manager --set-enabled PowerTools
---OR--
-sudo dnf config-manager --set-enabled powertools
-sudo yum update
-
-Package deps:
-sudo yum install clang clang-analyzer valgrind txt2tags make automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools qt5-qtbase-devel qt5-qtsvg SDL2-devel cairo-devel pango-devel librsvg2-devel libpng-devel libjpeg-turbo-devel giflib-devel libsqlite3x-devel libsndfile-devel inkscape mesa-libGL-devel libubsan gmp-devel mpfr-devel gperf
-
-* Install
-	./build_fedora.sh --conf "--libdir=/usr/lib64" clean
-
-* Smoke test the apps.
-
-* Remove
-	./build_fedora.sh remove clean
-
-
-----------------------------------
-AlmaLinux 9.2 [x86_64] (2022-2023)
-----------------------------------
-
-sudo yum install epel-release
-sudo dnf config-manager --set-enabled crb
-sudo yum update
-
-Package deps:
-sudo yum install clang clang-analyzer valgrind make automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools qt5-qtbase-devel qt5-qtsvg qt6-qtbase-devel qt6-qtsvg SDL2-devel cairo-devel pango-devel librsvg2-devel libpng-devel libjpeg-turbo-devel giflib-devel libsqlite3x-devel libsndfile-devel inkscape mesa-libGL-devel libubsan gmp-devel mpfr-devel gperf python3-pip
-pip install txt2tags
-
-* Install
-	./build_fedora.sh --conf "--libdir=/usr/lib64" clean
-
-* Smoke test the apps.
-
-* Remove
-	./build_fedora.sh remove clean
-
-
 --------------------------------------------
-openSUSE Tumbleweed XFCE [x86_64] (2023-Apr)
+openSUSE Tumbleweed XFCE [x86_64] (2024-Jan)
 --------------------------------------------
 
 Package deps:
 sudo zypper install rpm-build automake gcc gcc-c++ bison flex cppcheck readline-devel rpmdevtools libqt5-qtbase-devel qt6-base-devel libQt6Svg6 libSDL2-devel cairo-devel pango-devel librsvg2-devel libpng16-16 libpng-devel libjpeg62-devel libgif7 giflib-devel sqlite3-devel libsndfile-devel txt2tags inkscape Mesa-libGL-devel gmp-devel mpfr-devel gperf
 
 * Install
-	./build_suse.sh --conf "--libdir=/usr/lib64" clean
+	./build_suse.sh --conf "--libdir=/usr/lib64" clean all
 
 * Smoke test the apps.
 
 * Remove
-	./build_suse.sh remove clean
+	./build_suse.sh remove clean all
 
 
------------------------------
-Arco 23.03.01 [x86_64] (2023)
------------------------------
+---------------------------------
+Manjaro 23.1 [x86_64] (2023-2024)
+---------------------------------
 
 Package deps:
 sudo pacman -S base-devel txt2tags qt5-base qt5-svg qt6-base qt6-svg sdl2 clang-analyzer time valgrind cppcheck librsvg libpng giflib libjpeg sqlite libsndfile inkscape mesa gmp mpfr gperf
@@ -179,11 +134,11 @@ sudo pacman -S base-devel txt2tags qt5-base qt5-svg qt6-base qt6-svg sdl2 clang-
 
 
 ------------------------------------------------
-Raspberry Pi OS (Debian 11) [ARM_32] (2021-2023)
+Raspberry Pi OS (Debian 12) [ARM_32] (2023-2024)
 ------------------------------------------------
 
 Package deps:
-sudo apt-get install dh-make pbuilder clang clang-tools valgrind bison flex cppcheck txt2tags automake libreadline-dev qtbase5-dev libsdl2-dev time libpango1.0-dev librsvg2-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev inkscape mesa-common-dev libgl1-mesa-dev libgmp-dev libmpfr-dev gperf
+sudo apt-get install dh-make pbuilder clang clang-tools valgrind bison flex cppcheck txt2tags automake libreadline-dev qtbase5-dev qt6-base-dev libsdl2-dev qtcreator time libpango1.0-dev librsvg2-dev libpng-dev libgif-dev libjpeg-dev libsqlite3-dev libsndfile1-dev inkscape mesa-common-dev libgl1-mesa-dev libgmp-dev libmpfr-dev gperf
 
 * Install
 	./build_install.sh --bcfile etc/bcfile_raspbian.txt
@@ -200,9 +155,9 @@ sudo apt-get install dh-make pbuilder clang clang-tools valgrind bison flex cppc
 	./build_install.sh --bcfile etc/bcfile_raspbian.txt flush
 
 
---------------------------
-Salix 15.0 [x86_64] (2022)
---------------------------
+-------------------------------
+Salix 15.0 [x86_64] (2022-2024)
+-------------------------------
 
 sudo slapt-get -i txt2tags inkscape qt5 SDL2
 

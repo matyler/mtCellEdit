@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 Mark Tyler
+	Copyright (C) 2021-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -284,11 +284,11 @@ void TerraGL::init_buffers ( TerraMap const & map )
 	mtGin::BezierPath bez;
 	bez.set_smooth_curve ( bezpo );
 
-	std::vector< mtGin::GL::VertexRGB > bezls;
 	size_t const ntot = bez.get_size();
 
 	if ( ntot > 1 )
 	{
+		std::vector< mtGin::GL::VertexRGB > bezls;
 		mtGin::Vertex p1, p2, cp1, cp2;
 
 		for ( size_t i = 1; i < ntot; i++ )

@@ -1,0 +1,22 @@
+= NAME =
+@BIN_NAME@ - wave audio synthesiser
+
+
+= SYNOPSIS =
+**@BIN_NAME@** [ **OPTIONS** ] [ FILENAME ]
+
+
+= DESCRIPTION =
+@BIN_NAME@ creates wave audio files from scratch using mathematical expressions.
+
+
+= OPTIONS =
+**--version**
+	Output version information and exit.
+**-prefs** STRING
+	Use this file for program preferences.
+
+
+= FILES =
+~/.config/@BIN_NAME@/prefs.txt
+	Used for storing user preferences.

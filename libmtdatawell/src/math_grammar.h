@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -98,8 +98,9 @@ namespace mtDW
 
 
 
-class IntegerGrammar;
+class DoubleGrammar;
 class FloatGrammar;
+class IntegerGrammar;
 class RationalGrammar;
 
 template < typename Tnum > class FuncArgData;
@@ -229,21 +230,15 @@ protected:
 	/// EXPECT: empty, <exp>, or <exp>;<exp>
 	void parse_nt_input ()
 	{
-		if ( m_lexer.scan_token() == Lexer::TK_END )
-		{
-			m_nt_num.emplace_back ( "0" );
-			return;
-		}
-
-		m_lexer.rewind_token ();
-
 		while (1)
 		{
-			parse_nt_exp_line ();
-
 			switch ( m_lexer.scan_token() )
 			{
 			case Lexer::TK_END:
+				if ( m_nt_num.size() < 1 )
+				{
+					m_nt_num.emplace_back ( 0 );
+				}
 				return;
 
 			case Lexer::TK_EXP_SEP:
@@ -259,13 +254,20 @@ protected:
 
 				// More to parse
 
-				m_nt_num.pop_back();	// ; = lose left result
+				if ( m_nt_num.size() > 0 )
+				{
+					// ; = lose left result
+					m_nt_num.pop_back();
+				}
 
 				// Next item must be the start of a new exp_line
 				continue;
 			}
 
 			m_lexer.rewind_token ();
+
+			// Not the end, or a separator
+			parse_nt_exp_line ();
 		}
 	}
 
@@ -547,66 +549,66 @@ eval_tk2:
 		case Lexer::TK_CMP_LT:
 			if ( n1 < n2 )
 			{
-				n1.set_number("1");
+				n1.set_number(1);
 			}
 			else
 			{
-				n1.set_number("0");
+				n1.set_number(0);
 			}
 			break;
 
 		case Lexer::TK_CMP_LTE:
 			if ( n1 <= n2 )
 			{
-				n1.set_number("1");
+				n1.set_number(1);
 			}
 			else
 			{
-				n1.set_number("0");
+				n1.set_number(0);
 			}
 			break;
 
 		case Lexer::TK_CMP_GT:
 			if ( n1 > n2 )
 			{
-				n1.set_number("1");
+				n1.set_number(1);
 			}
 			else
 			{
-				n1.set_number("0");
+				n1.set_number(0);
 			}
 			break;
 
 		case Lexer::TK_CMP_GTE:
 			if ( n1 >= n2 )
 			{
-				n1.set_number("1");
+				n1.set_number(1);
 			}
 			else
 			{
-				n1.set_number("0");
+				n1.set_number(0);
 			}
 			break;
 
 		case Lexer::TK_CMP_EQ:
 			if ( n1 == n2 )
 			{
-				n1.set_number("1");
+				n1.set_number(1);
 			}
 			else
 			{
-				n1.set_number("0");
+				n1.set_number(0);
 			}
 			break;
 
 		case Lexer::TK_CMP_NEQ:
 			if ( n1 != n2 )
 			{
-				n1.set_number("1");
+				n1.set_number(1);
 			}
 			else
 			{
-				n1.set_number("0");
+				n1.set_number(0);
 			}
 			break;
 
@@ -615,15 +617,15 @@ eval_tk2:
 				int const i = n1.cmp ( n2 );
 				if ( i < 0 )
 				{
-					n1.set_number("-1");
+					n1.set_number(-1);
 				}
 				else if ( i > 0 )
 				{
-					n1.set_number("1");
+					n1.set_number(1);
 				}
 				else
 				{
-					n1.set_number("0");
+					n1.set_number(0);
 				}
 			}
 			break;
@@ -888,12 +890,12 @@ finish:
 
 
 
-class IntegerGrammar : public Grammar< Integer >
+class DoubleGrammar : public Grammar< Double >
 {
 public:
-	IntegerGrammar (
-		IntegerLexer	& lexer,
-		std::map<std::string, Integer> & variables
+	DoubleGrammar (
+		DoubleLexer	& lexer,
+		std::map<std::string, Double> & variables
 		)
 		:
 		Grammar ( lexer, variables )
@@ -915,6 +917,27 @@ public:
 	FloatGrammar (
 		FloatLexer	& lexer,
 		std::map<std::string, Float> & variables
+		)
+		:
+		Grammar ( lexer, variables )
+	{
+	}
+
+private:
+	void parse_nt_func (
+		std::string	const	& name,
+		char		const	* var_token_pos
+		) override;
+};
+
+
+
+class IntegerGrammar : public Grammar< Integer >
+{
+public:
+	IntegerGrammar (
+		IntegerLexer	& lexer,
+		std::map<std::string, Integer> & variables
 		)
 		:
 		Grammar ( lexer, variables )

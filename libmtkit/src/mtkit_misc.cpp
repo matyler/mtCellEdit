@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -174,6 +174,47 @@ int mtKit::string_strip_extension (
 	return 0;
 }
 
+std::string mtKit::string_set_extension (
+	char	const * const	filename,
+	char	const * const	extension1,
+	char	const * const	extension2
+	)
+{
+	if ( ! filename )
+	{
+		return "";
+	}
+
+	if ( ! extension1 )
+	{
+		return filename;
+	}
+
+	char * const buf = mtkit_set_filename_extension ( filename, extension1,
+		extension2, nullptr );
+
+	if ( buf )
+	{
+		try
+		{
+			std::string txt ( buf );
+			free ( buf );
+			return txt;
+		}
+		catch (...)
+		{
+			free ( buf );
+			throw;	// No memory to create a string so give up
+		}
+	}
+
+	return filename;
+}
+
+
+/// ----------------------------------------------------------------------------
+
+
 mtKit::Random::Random ()
 	:
 	m_seed (0)
@@ -238,6 +279,10 @@ void mtKit::Random::get_data (
 	}
 }
 
+
+/// ----------------------------------------------------------------------------
+
+
 mtKit::FileLock::FileLock ()
 	:
 	m_id		( -1 )
@@ -274,6 +319,8 @@ void mtKit::FileLock::unset ()
 	}
 }
 
+
+/// ----------------------------------------------------------------------------
 
 
 double mtKit::Clock::now ()

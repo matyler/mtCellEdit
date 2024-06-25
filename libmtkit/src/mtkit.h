@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008-2022 Mark Tyler
+	Copyright (C) 2008-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -785,13 +785,25 @@ int mtkit_utree_get_attribute_double (
 	//  0 = Attribute value returned
 	//  1 = Attribute found, value not double
 
-int mtkit_utree_get_attribute_str (
+int mtkit_utree_get_attribute_string (
 	mtUtreeNode		* node,
 	char		const	* name,
 	char		const	** value
 	);
 
-int mtkit_utree_set_attribute_str (
+int mtkit_utree_set_attribute_int (
+	mtUtreeNode		* node,
+	char		const	* name,
+	int			value
+	);
+
+int mtkit_utree_set_attribute_double (
+	mtUtreeNode		* node,
+	char		const	* name,
+	double			value
+	);
+
+int mtkit_utree_set_attribute_string (
 	mtUtreeNode		* node,
 	char		const	* name,
 	char		const	* value
@@ -1019,7 +1031,7 @@ std::string basename ( std::string const & path );
 
 int string_from_data (
 	std::string	& str,	// Push data + '\0' into here
-	void	const * data,
+	void	const	* data,
 	size_t		size
 	);
 
@@ -1029,6 +1041,13 @@ int string_strip_extension (		// Case insensitive
 	);
 	// 0 = No change
 	// 1 = ".extension" removed from the end of "filename"
+
+std::string string_set_extension (
+	char	const	* filename,
+	char	const	* extension1,
+	char	const	* extension2 = nullptr
+	);
+	// Add or replace extension in filename
 
 
 
@@ -1041,7 +1060,6 @@ class CliItem;
 class CliShell;
 class CliTab;
 class Clock;
-class CStrPtr;
 class Exit;
 class FileLock;
 class LineFileRead;
@@ -1051,8 +1069,11 @@ class UPref;
 class UPrefBase;
 class UPrefUIEdit;
 class UserPrefs;
+class Utree;
 
 namespace ChunkFile {}
+
+template < typename T > class CMemPtr;
 
 enum PrefType
 {
@@ -1226,22 +1247,55 @@ private:
 
 
 
-class CStrPtr		// Store and own a freshly allocated C string pointer
+// Store and own a freshly allocated C memory pointer
+template < typename T >
+class CMemPtr
 {
 public:
-	explicit CStrPtr ( char * ptr )
-		: m_ptr ( ptr )			{}
-	~CStrPtr ()				{ free ( m_ptr );	}
+	explicit CMemPtr ( T * ptr = nullptr, size_t buflen = 0 )
+		: m_ptr ( ptr )
+		, m_buflen ( buflen )
+	{}
 
-	inline char * c_str () const		{ return m_ptr;		}
+	~CMemPtr ()
+	{
+		reset ();
+	}
 
-	inline char operator [](size_t i) const	{ return m_ptr[i];	}
-	inline bool operator ! () const		{ return ! m_ptr;	}
+	T * ptr () const
+	{
+		return m_ptr;
+	}
+
+	size_t buflen () const
+	{
+		return m_buflen;
+	}
+
+	T * reset ( T * ptr = nullptr, size_t buflen = 0 )
+	{
+		free ( m_ptr );
+		m_ptr = ptr;
+		m_buflen = buflen;
+
+		return ptr;
+	}
+
+	T operator [](size_t i) const
+	{
+		return m_ptr[i];
+	}
+
+	bool operator ! () const
+	{
+		return ! m_ptr;
+	}
 
 private:
-	char	* const	m_ptr;
+	T	* m_ptr;
+	size_t	m_buflen;
 
-	MTKIT_RULE_OF_FIVE( CStrPtr )
+	MTKIT_RULE_OF_FIVE( CMemPtr )
 };
 
 
@@ -1410,12 +1464,10 @@ public:
 	void close ();
 
 	// User requested encoding (can be overridden by the library).
-/*
 	void set_encoding_deflate (
 		int level,		// mtKit::DEFLATE_LEVEL_*
 		int model		// mtKit::DEFLATE_MODEL_*
 		);
-*/
 	int put_chunk (
 		uint8_t const * buf,
 		uint32_t buflen,
@@ -1747,6 +1799,48 @@ private:
 
 	std::map< std::string const, std::unique_ptr<UPrefBase> > m_map;
 	std::string m_filename;
+};
+
+
+
+class Utree
+{
+public:
+	Utree () {}
+	~Utree ()
+	{
+		mtkit_utree_destroy_node ( m_root );
+//		m_root = nullptr;
+	}
+
+	mtUtreeNode * init ()
+	{
+		mtkit_utree_destroy_node ( m_root );
+		m_root = mtkit_utree_new_root ();
+		return m_root;
+	}
+
+	mtUtreeNode * load ( char const * const filename )
+	{
+		mtkit_utree_destroy_node ( m_root );
+		m_root = mtkit_utree_load_file ( nullptr, filename, nullptr,
+			nullptr );
+		return m_root;
+	}
+
+	int save ( char const * const filename )
+	{
+		return mtkit_utree_save_file ( m_root, filename,
+			MTKIT_UTREE_OUTPUT_DEFAULT, MTKIT_FILE_NONE );
+	}
+
+	mtUtreeNode * get_root () { return m_root; }
+
+private:
+
+	mtUtreeNode * m_root = nullptr;
+
+	MTKIT_RULE_OF_FIVE( Utree )
 };
 
 

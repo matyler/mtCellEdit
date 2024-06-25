@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 Mark Tyler
+	Copyright (C) 2020-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -68,6 +68,11 @@ void Mainwindow::create_cline_files ()
 				if ( i >= cline_files.size() )
 				{
 					return;		// Out of bounds
+				}
+
+				if ( ! ok_to_lose_changes () )
+				{
+					return;
 				}
 
 				project_load ( cline_files[ i ] );

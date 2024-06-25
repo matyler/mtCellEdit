@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015-2021 Mark Tyler
+	Copyright (C) 2015-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -178,7 +178,7 @@ static int output_char (
 			"`abcdefghijklmnopqrstuvwxyz{|}~";
 
 
-	mtkit_utree_get_attribute_str ( node, "range", &range );
+	mtkit_utree_get_attribute_string ( node, "range", &range );
 
 	size_t cht = strlen ( range );
 

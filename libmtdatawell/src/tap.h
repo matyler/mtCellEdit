@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018-2022 Mark Tyler
+	Copyright (C) 2018-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public:
 
 	int64_t get_read_capacity () const;
 
-	inline SF_INFO const * get_info () const { return & m_info; }
+	SF_INFO const * get_info () const	{ return & m_info; }
 
 	static int const BUF_FRAMES = 8192;
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022 Mark Tyler
+	Copyright (C) 2022-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 
 
-#define HEADER_SIZE		10
 #define MPZ_BYTE_ORDER		-1
 #define MPZ_BYTE_ENDIAN		-1
 #define MPZ_BYTE_NAILS		0
@@ -41,11 +40,11 @@ static int read_header (
 		return 1;
 	}
 
-	if ( mem[0] != HEADER_SIZE )
+	if ( mem[0] != mtDW::IntegerMemory::HEADER_SIZE )
 	{
 		std::cerr << "mtDW::IntegerMemory::read_header error: "
 			"bad header size=" << mem[0]
-			<< " expected=" << HEADER_SIZE
+			<< " expected=" << mtDW::IntegerMemory::HEADER_SIZE
 			<< "\n";
 		return 1;
 	}
@@ -74,11 +73,11 @@ static int parse_header (
 {
 	size_t tot;
 
-	if ( mem_size < HEADER_SIZE )
+	if ( mem_size < mtDW::IntegerMemory::HEADER_SIZE )
 	{
 		std::cerr << "mtDW::IntegerMemory::parse_header error: "
 			"mem_size=" << mem_size << " < HEADER_SIZE="
-			<< HEADER_SIZE
+			<< mtDW::IntegerMemory::HEADER_SIZE
 			<< "\n";
 		return 1;
 	}
@@ -268,6 +267,31 @@ int mtDW::IntegerMemory::import_file ( char const * const filename )
 	}
 
 	return import_file ( file.get_fp() );
+}
+
+int mtDW::IntegerMemory::import_memory_export_number (
+	unsigned char	const * const	mem,
+	size_t			const	mem_size,
+	int			const	num_sign,
+	Integer				& num
+	)
+{
+	if ( ! mem || mem_size < 1 )
+	{
+		// Nothing to import, so make num zero
+		num.set_number ( (signed long int)0 );
+		return 0;
+	}
+
+	mpz_import ( num.get_num(), mem_size, MPZ_BYTE_ORDER, 1,
+		MPZ_BYTE_ENDIAN, MPZ_BYTE_NAILS, mem );
+
+	if ( num_sign & 1 )
+	{
+		num.negate();
+	}
+
+	return 0;
 }
 
 int mtDW::IntegerMemory::export_number ( Integer & num ) const

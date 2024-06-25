@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ int mtDW::Lexer::scan_token ()
 		return TK_END;
 	}
 
+restart:
 	while ( is_whitespace ( *m_symbol ) )
 	{
 		m_symbol++;
@@ -78,6 +79,26 @@ int mtDW::Lexer::scan_token ()
 		{
 		case '=':
 			return TK_ASSIGN_DIV;
+		case '*':
+			// Comment
+			while (1)
+			{
+				switch ( scan_symbol () )
+				{
+				case 0:
+					rewind_symbol ();
+					return TK_END;
+				case '*':
+					switch ( scan_symbol () )
+					{
+					case 0:
+						rewind_symbol ();
+						return TK_END;
+					case '/':
+						goto restart;
+					}
+				}
+			}
 		default:
 			rewind_symbol ();
 			return TK_OP_DIV;
@@ -151,6 +172,9 @@ int mtDW::Lexer::scan_token ()
 		return TK_ARG_SEP;
 
 	case ';':
+	case '\f':
+	case '\n':
+	case '\r':
 		return TK_EXP_SEP;
 
 	case '.':
@@ -281,6 +305,17 @@ int mtDW::Lexer::scan_string ()
 	assign_string ();
 
 	return TK_STRING;
+}
+
+
+
+/// DOUBLE ---------------------------------------------------------------------
+
+
+
+int mtDW::DoubleLexer::scan_number ()
+{
+	return scan_number_scientific ();
 }
 
 

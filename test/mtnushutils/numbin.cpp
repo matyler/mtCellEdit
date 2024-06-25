@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022 Mark Tyler
+	Copyright (C) 2022-2023 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -152,18 +152,19 @@ int Backend::cmp_file ( char const * const filename )
 int Backend::himp_file ( char const * const filename )
 {
 	int size = 0;
+	char * const ptr = mtkit_file_load ( filename, &size, MTKIT_FILE_NONE,
+		nullptr );
 
-	mtKit::CStrPtr mem ( mtkit_file_load ( filename, &size, MTKIT_FILE_NONE,
-		nullptr ) );
-
-	if ( ! mem )
+	if ( ! ptr )
 	{
 		std::cerr << "Unable to load file: '" << filename << "'\n";
 		return 1;
 	}
 
+	mtKit::CMemPtr<char> mem ( ptr, (size_t)size );
+
 	if ( m_imem.import_memory_with_header ( (unsigned char const *)
-		mem.c_str(), (size_t)size ) )
+		mem.ptr(), mem.buflen() ) )
 	{
 		// import_memory_with_header reports errors
 		return 1;

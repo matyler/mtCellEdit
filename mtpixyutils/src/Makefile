@@ -12,7 +12,6 @@ APPS		:=		\
 		pixyrida	\
 		pixyrisa	\
 		pixyscale	\
-		pixytwit	\
 
 OBJS		:= $(sort $(patsubst %.cpp,%.o,$(wildcard pixyutils*.cpp)))
 OBJS_CLI	:= $(sort $(patsubst %.cpp,%.o,$(wildcard cli*.cpp)))

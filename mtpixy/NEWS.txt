@@ -1,3 +1,7 @@
+3.8	2024-6-25
+
+	* BUGFIX - Text tool now respects the style chosen from the picker.
+
 3.5	2021-6-25
 
 	* Effects->CRT menu option added

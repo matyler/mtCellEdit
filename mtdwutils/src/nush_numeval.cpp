@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2022-2023 Mark Tyler
+	Copyright (C) 2022-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,6 +18,13 @@
 #include "nush_numeval.h"
 
 
+
+int NumEval::evaluate_double (
+	char	const * const	text
+	)
+{
+	return evaluate ( text, m_parser_double );
+}
 
 int NumEval::evaluate_float (
 	char	const * const	text
@@ -93,6 +100,18 @@ int print_vars ( Tparser & parser )
 	return 0;
 }
 
+int NumEval::print_double_funcs () const
+{
+	return print_funcs ( m_parser_double );
+}
+
+int NumEval::print_double_vars () const
+{
+	return print_vars ( m_parser_double );
+}
+
+
+
 int NumEval::print_float_funcs () const
 {
 	return print_funcs ( m_parser_float );
@@ -103,6 +122,8 @@ int NumEval::print_float_vars () const
 	return print_vars ( m_parser_float );
 }
 
+
+
 int NumEval::print_integer_funcs () const
 {
 	return print_funcs ( m_parser_integer );
@@ -112,6 +133,8 @@ int NumEval::print_integer_vars () const
 {
 	return print_vars ( m_parser_integer );
 }
+
+
 
 int NumEval::print_rational_funcs () const
 {

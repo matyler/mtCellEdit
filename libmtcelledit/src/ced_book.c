@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009-2021 Mark Tyler
+	Copyright (C) 2009-2024 Mark Tyler
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -586,7 +586,7 @@ static int cell_prefs_utree (
 
 		snprintf ( buf, 2048, "r%ic%i", row, col );
 
-		if ( mtkit_utree_set_attribute_str ( child,
+		if ( mtkit_utree_set_attribute_string ( child,
 			CED_FILE_PREFS_CELL_REF, buf ) )
 		{
 			return 1;
@@ -662,7 +662,7 @@ static int cell_prefs_load (
 			MTKIT_UTREE_NODE_TYPE_ELEMENT )
 		)
 	{
-		if ( mtkit_utree_get_attribute_str ( node,
+		if ( mtkit_utree_get_attribute_string ( node,
 			CED_FILE_PREFS_CELL_REF, &txt ) )
 		{
 			continue;
@@ -768,7 +768,7 @@ static int sheet_prefs_utree (
 			return 1;
 		}
 
-		if ( mtkit_utree_set_attribute_str ( child,
+		if ( mtkit_utree_set_attribute_string ( child,
 			CED_FILE_PREFS_SHEET_NAME, name ) )
 		{
 			return 1;
@@ -1338,7 +1338,7 @@ static void parse_book_prefs (
 	{
 		char	const	* txt;
 
-		if ( mtkit_utree_get_attribute_str ( chn,
+		if ( mtkit_utree_get_attribute_string ( chn,
 			CED_FILE_PREFS_SHEET_NAME, &txt ) )
 		{
 			continue;
